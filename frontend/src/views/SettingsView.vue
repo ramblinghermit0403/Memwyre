@@ -59,6 +59,20 @@
               </div>
             </div>
 
+            <!-- Extension Auth Section -->
+            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg p-6 transition-colors duration-300">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Browser Extension Auth</h3>
+              <div class="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
+                <p>Use this token to log in to the Brain Vault Browser Extension.</p>
+              </div>
+              <div class="mt-5">
+                <button @click="copyToken" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                  <span v-if="tokenCopied">Copied!</span>
+                  <span v-else>Copy Extension Token</span>
+                </button>
+              </div>
+            </div>
+
             <!-- Export Section -->
             <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg p-6 transition-colors duration-300">
               <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Export Data</h3>
@@ -93,10 +107,27 @@ const authStore = useAuthStore();
 const router = useRouter();
 const openaiKey = ref(localStorage.getItem('openai_key') || '');
 const geminiKey = ref(localStorage.getItem('gemini_key') || '');
+const tokenCopied = ref(false);
 
 const logout = () => {
   authStore.logout();
   router.push('/login');
+};
+
+const copyToken = async () => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      await navigator.clipboard.writeText(token);
+      tokenCopied.value = true;
+      setTimeout(() => tokenCopied.value = false, 2000);
+    } catch (err) {
+      console.error('Failed to copy token:', err);
+      alert('Failed to copy token');
+    }
+  } else {
+    alert('No token found. Please log in again.');
+  }
 };
 
 const saveKeys = () => {

@@ -1,38 +1,42 @@
-// Background script for context menus and other background tasks
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create({
-        id: "saveToVault",
-        title: "Save selection to Brain Vault",
-        contexts: ["selection"]
-    });
-});
+// Background script for Brain Vault Extension
 
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    if (info.menuItemId === "saveToVault") {
-        const text = info.selectionText;
-        const { token } = await chrome.storage.local.get('token');
+const API_BASE_URL = 'http://localhost:8000/api/v1';
 
-        if (!token) {
-            console.error("Not logged in");
-            return;
-        }
-
-        const API_URL = 'http://localhost:8000/api/v1';
-        const blob = new Blob([text], { type: 'text/plain' });
-        const formData = new FormData();
-        formData.append('file', blob, `Selection from ${tab.title}.txt`);
-
-        try {
-            await fetch(`${API_URL}/documents/upload`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-            console.log("Saved to vault");
-        } catch (error) {
-            console.error("Failed to save", error);
-        }
+// Listen for messages from popup or content script
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'generatePrompt') {
+        generatePrompt(request.data)
+            .then(response => sendResponse({ success: true, data: response }))
+            .catch(error => sendResponse({ success: false, error: error.message }));
+        return true; // Will respond asynchronously
     }
 });
+
+async function generatePrompt(data) {
+    // 1. Get Token from Storage
+    const { token } = await chrome.storage.local.get('token');
+    if (!token) {
+        throw new Error('Not authenticated. Please login via the popup.');
+    }
+
+    // 2. Call Backend API
+    const response = await fetch(`${API_BASE_URL}/prompts/generate`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            query: data.query,
+            template_id: data.templateId || 'standard',
+            context_size: 2000
+        })
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to generate prompt');
+    }
+
+    return await response.json();
+}

@@ -31,6 +31,12 @@ const router = createRouter({
             name: 'editor',
             component: () => import('../views/EditorView.vue'),
             meta: { requiresAuth: true }
+        },
+        {
+            path: '/prompts',
+            name: 'prompts',
+            component: () => import('../views/PromptGeneratorView.vue'),
+            meta: { requiresAuth: true }
         }
     ]
 });

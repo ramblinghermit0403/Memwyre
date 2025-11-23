@@ -1,0 +1,6 @@
+/* Brain Vault Extension Styles */
+
+.brain-vault-injected {
+  border: 2px solid #4F46E5 !important;
+  background-color: rgba(79, 70, 229, 0.1) !important;
+}

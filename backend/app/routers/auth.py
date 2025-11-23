@@ -59,3 +59,12 @@ def login(
         ),
         "token_type": "bearer",
     }
+
+@router.get("/verify", response_model=UserSchema)
+def verify_token(
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Verify current token validity.
+    """
+    return current_user

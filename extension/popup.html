@@ -1,60 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Brain Vault Clipper</title>
+  <title>Brain Vault</title>
   <style>
-    body {
-      width: 300px;
-      padding: 15px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    h2 {
-      margin-top: 0;
-      color: #4F46E5;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4F46E5;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-    button:hover {
-      background-color: #4338ca;
-    }
-    button:disabled {
-      background-color: #a5a5f2;
-      cursor: not-allowed;
-    }
-    #status {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #666;
-    }
-    .hidden {
-      display: none;
-    }
+    body { width: 300px; padding: 16px; font-family: sans-serif; }
+    input, button, textarea { width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
+    button { background-color: #4F46E5; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    button:hover { background-color: #4338CA; }
+    .hidden { display: none; }
+    #result { white-space: pre-wrap; font-size: 12px; background: #f3f4f6; padding: 8px; border-radius: 4px; }
   </style>
 </head>
 <body>
   <h2>Brain Vault</h2>
   
-  <div id="login-section">
-    <input type="email" id="email" placeholder="Email" style="width: 100%; margin-bottom: 10px; padding: 5px;">
-    <input type="password" id="password" placeholder="Password" style="width: 100%; margin-bottom: 10px; padding: 5px;">
-    <button id="login-btn">Login</button>
+  <div id="login-view">
+    <input type="text" id="token-input" placeholder="Paste JWT Token here">
+    <button id="save-token">Save Token</button>
+    <p style="font-size: 12px; color: #666;">Get token from Brain Vault Dashboard > Settings (Coming Soon) or DevTools.</p>
   </div>
 
-  <div id="main-section" class="hidden">
-    <button id="clip-selection">Clip Selection</button>
-    <button id="clip-page">Clip Full Page</button>
-    <button id="logout-btn" style="background-color: #ef4444;">Logout</button>
+  <div id="main-view" class="hidden">
+    <textarea id="query-input" rows="3" placeholder="What do you want to ask?"></textarea>
+    <button id="generate-btn">Generate Prompt</button>
+    <div id="result" class="hidden"></div>
+    <button id="copy-btn" class="hidden">Copy to Clipboard</button>
+    <button id="logout-btn" style="background-color: #ef4444; margin-top: 10px;">Logout</button>
   </div>
-
-  <div id="status"></div>
 
   <script src="popup.js"></script>
 </body>

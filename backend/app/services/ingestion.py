@@ -72,5 +72,14 @@ class IngestionService:
         
         return embedding_ids, chunk_texts, metadatas
 
+    def count_tokens(self, text: str) -> int:
+        """
+        Estimate token count (approx 4 chars per token).
+        For production, use tiktoken.
+        """
+        if not text:
+            return 0
+        return len(text) // 4
+
 # Global instance
 ingestion_service = IngestionService()
