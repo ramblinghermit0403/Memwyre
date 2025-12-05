@@ -9,6 +9,7 @@ from app.services.ingestion import ingestion_service
 from app.db.session import SessionLocal
 from app.models.document import Document
 from app.models.user import User
+from app.models.memory import Memory
 
 # Initialize FastMCP Server
 mcp = FastMCP("Brain Vault")
@@ -144,6 +145,227 @@ async def get_document(doc_id: int) -> str:
              return f"Document with ID {doc_id} not found (Access Denied)."
              
         return doc.content
+    finally:
+        db.close()
+
+@mcp.tool()
+async def generate_prompt(query: str, template: str = "standard") -> str:
+    """
+    Generate a prompt with retrieved context from the vault.
+    Args:
+        query: The user's question or request.
+        template: The template to use ("standard", "code", "summary").
+    """
+    db = SessionLocal()
+    try:
+        user = get_current_user(db)
+        if not user:
+            return "Error: No user found."
+            
+        # 1. Retrieve Context
+        results = vector_store.query(query, n_results=10, where={"user_id": user.id})
+        
+        retrieved_texts = []
+        if results["documents"]:
+            retrieved_texts = results["documents"][0]
+            
+        # 2. Compact Context (Simple limit for MCP)
+        context_str = "\n\n---\n\n".join(retrieved_texts[:5]) # Limit to top 5 chunks
+        
+        # 3. Apply Template
+        if template == "code":
+            prompt = f"""You are an expert coding assistant. Use the following context to answer the user's request.
+
+CONTEXT:
+{context_str}
+
+USER REQUEST:
+{query}
+
+INSTRUCTIONS:
+- Provide clear, efficient code.
+- Explain your reasoning.
+"""
+        elif template == "summary":
+            prompt = f"""Please summarize the following information based on the user's query.
+
+CONTEXT:
+{context_str}
+
+QUERY:
+{query}
+"""
+        else: # Standard
+            prompt = f"""Use the following memory context to answer the question.
+
+MEMORY CONTEXT:
+{context_str}
+
+QUESTION:
+{query}
+"""
+        return prompt
+    finally:
+        db.close()
+
+@mcp.tool()
+async def update_memory(memory_id: str, content: str) -> str:
+    """
+    Update the content of an existing memory.
+    Args:
+        memory_id: The ID of the memory (must start with 'mem_').
+        content: The new content.
+    """
+    if not memory_id.startswith("mem_"):
+        return "Error: Only memories (starting with 'mem_') can be updated via this tool."
+
+    db = SessionLocal()
+    try:
+        user = get_current_user(db)
+        if not user:
+            return "Error: No user found."
+
+        try:
+            mem_id = int(memory_id.split("_")[1])
+        except ValueError:
+            return "Error: Invalid ID format."
+
+        memory = db.query(Memory).filter(Memory.id == mem_id, Memory.user_id == user.id).first()
+        if not memory:
+            return "Error: Memory not found."
+
+        # Update DB
+        memory.content = content
+        db.commit()
+        db.refresh(memory)
+
+        # Update Vector Store
+        if memory.embedding_id:
+            try:
+                vector_store.delete(ids=[memory.embedding_id])
+            except:
+                pass
+        
+        # Re-ingest
+        ids, documents_content, metadatas = ingestion_service.process_text(
+            text=memory.content,
+            document_id=memory.id,
+            title=memory.title,
+            doc_type="memory",
+            metadata={"user_id": user.id, "memory_id": memory.id, "tags": str(memory.tags) if memory.tags else "", "source": "mcp"}
+        )
+        
+        if ids:
+            memory.embedding_id = ids[0]
+            db.commit()
+            
+            vector_store.add_documents(
+                ids=ids,
+                documents=documents_content,
+                metadatas=metadatas
+            )
+
+        return f"Memory {memory_id} updated successfully."
+    except Exception as e:
+        return f"Error updating memory: {str(e)}"
+    finally:
+        db.close()
+
+@mcp.tool()
+async def delete_memory(memory_id: str) -> str:
+    """
+    Delete a memory or document by ID.
+    Args:
+        memory_id: The ID of the item (e.g., 'mem_1' or 'doc_5').
+    """
+    db = SessionLocal()
+    try:
+        user = get_current_user(db)
+        if not user:
+            return "Error: No user found."
+
+        if memory_id.startswith("doc_"):
+            # Handle Document Deletion
+            try:
+                doc_id = int(memory_id.split("_")[1])
+            except ValueError:
+                return "Error: Invalid ID format."
+
+            document = db.query(Document).filter(Document.id == doc_id, Document.user_id == user.id).first()
+            if not document:
+                return "Error: Document not found."
+            
+            # Delete chunks from vector store
+            for chunk in document.chunks:
+                if chunk.embedding_id:
+                    try:
+                        vector_store.delete(ids=[chunk.embedding_id])
+                    except:
+                        pass # Ignore vector store errors
+            
+            db.delete(document)
+            db.commit()
+            return f"Document {memory_id} deleted successfully."
+            
+        elif memory_id.startswith("mem_"):
+            # Handle Memory Deletion
+            try:
+                mem_id = int(memory_id.split("_")[1])
+            except ValueError:
+                return "Error: Invalid ID format."
+
+            memory = db.query(Memory).filter(Memory.id == mem_id, Memory.user_id == user.id).first()
+            if not memory:
+                return "Error: Memory not found."
+            
+            if memory.embedding_id:
+                try:
+                    vector_store.delete(ids=[memory.embedding_id])
+                except:
+                    pass
+                
+            db.delete(memory)
+            db.commit()
+            return f"Memory {memory_id} deleted successfully."
+        
+        else:
+            return "Error: ID must start with 'mem_' or 'doc_'."
+    except Exception as e:
+        return f"Error deleting item: {str(e)}"
+    finally:
+        db.close()
+
+@mcp.tool()
+async def list_memories(limit: int = 10, offset: int = 0) -> str:
+    """
+    List recent memories and documents in the vault.
+    Args:
+        limit: Number of items to return (default 10).
+        offset: Pagination offset (default 0).
+    """
+    db = SessionLocal()
+    try:
+        user = get_current_user(db)
+        if not user:
+            return "Error: No user found."
+            
+        # Fetch Memories
+        memories = db.query(Memory).filter(Memory.user_id == user.id).order_by(Memory.created_at.desc()).limit(limit).offset(offset).all()
+        
+        # Fetch Documents (simple logic, separate query for now)
+        documents = db.query(Document).filter(Document.user_id == user.id).order_by(Document.created_at.desc()).limit(limit).offset(offset).all()
+        
+        results = []
+        for mem in memories:
+            results.append(f"[Memory] ID: mem_{mem.id} | Title: {mem.title} | Created: {mem.created_at}")
+            
+        for doc in documents:
+            results.append(f"[Document] ID: doc_{doc.id} | Title: {doc.title} | Type: {doc.file_type} | Created: {doc.created_at}")
+            
+        if not results:
+            return "No memories found."
+            
+        return "\n".join(results)
     finally:
         db.close()
 
