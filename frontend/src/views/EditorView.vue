@@ -13,15 +13,33 @@
             v-model="title" 
             class="bg-transparent border-none focus:ring-0 text-lg font-medium text-gray-900 dark:text-white placeholder-gray-400 w-full"
             placeholder="Document Title"
+            :disabled="isLocked"
           />
+          <!-- Provenance Badges -->
+          <div class="flex items-center space-x-2" v-if="metadata.source">
+            <span class="px-2 py-0.5 text-xs rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 uppercase">{{ metadata.source }}</span>
+            <span class="px-2 py-0.5 text-xs rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 uppercase">{{ metadata.status }}</span>
+          </div>
         </div>
         <div class="flex items-center space-x-3 shrink-0">
           <span v-if="saving" class="text-sm text-gray-500 dark:text-gray-400">Saving...</span>
           <span v-else-if="lastSaved" class="text-sm text-gray-500 dark:text-gray-400">Saved {{ lastSaved }}</span>
+          
+          <!-- Lock Toggle -->
+          <button 
+            @click="toggleLock" 
+            class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            :class="isLocked ? 'text-red-500' : 'text-green-500'"
+            title="Toggle Lock (Prevent Edits)"
+          >
+            <svg v-if="isLocked" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" /></svg>
+          </button>
+
           <button 
             @click="saveDocument" 
-            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md transition-colors"
-            :disabled="saving"
+            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="saving || isLocked"
           >
             Save
           </button>
@@ -112,15 +130,17 @@ const showPreview = ref(true);
 const showSidebar = ref(false);
 const saving = ref(false);
 const lastSaved = ref(null);
+const isLocked = ref(false); 
+const metadata = ref({ source: '', status: '' });
 const documentId = computed(() => route.params.id);
-
 const editorOptions = computed(() => ({
   automaticLayout: true,
   minimap: { enabled: false },
   wordWrap: 'on',
   fontSize: 14,
   theme: themeStore.isDark ? 'vs-dark' : 'vs',
-  padding: { top: 16, bottom: 16 }
+  padding: { top: 16, bottom: 16 },
+  readOnly: isLocked.value
 }));
 
 const renderedContent = computed(() => md.render(content.value || ''));
@@ -152,6 +172,13 @@ const fetchDocument = async () => {
       title.value = doc.title;
       content.value = doc.content || '';
       tags.value = Array.isArray(doc.tags) ? doc.tags.join(', ') : (doc.tags || '');
+      metadata.value = { 
+        source: doc.source_llm || 'user', 
+        status: doc.status || 'approved' 
+      };
+      // Auto-lock if it's an external memory that is not user-created?
+      // For now, default unlocked unless status is 'archived'
+      if (doc.status === 'archived') isLocked.value = true;
     } else {
       console.error('Document not found in list');
       alert('Document not found');
@@ -232,6 +259,10 @@ const togglePreview = () => {
 
 const toggleSidebar = () => {
   showSidebar.value = !showSidebar.value;
+};
+
+const toggleLock = () => {
+  isLocked.value = !isLocked.value;
 };
 
 const goBack = () => {

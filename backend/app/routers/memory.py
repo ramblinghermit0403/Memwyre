@@ -27,12 +27,50 @@ def create_memory(
     # Generate embedding ID
     embedding_id = str(uuid.uuid4())
     
+    # Check Auto-Approve Setting
+    # Default to True
+    auto_approve = True
+    user_settings = current_user.settings
+    print(f"DEBUG: User Settings Raw: {user_settings} (Type: {type(user_settings)})")
+    
+    if user_settings:
+        if isinstance(user_settings, str):
+            import json
+            try:
+                user_settings = json.loads(user_settings)
+            except:
+                user_settings = {}
+                
+        if isinstance(user_settings, dict):
+            auto_approve = user_settings.get("auto_approve", True)
+            
+    print(f"DEBUG: Auto Approve Evaluated: {auto_approve}")
+        
+    initial_status = "approved" if auto_approve else "pending"
+    
+    # Inbox Logic
+    # If pending -> Always in inbox
+    # If approved -> Only in inbox if it's from Extension/External?
+    # We can use tags to heuristically detect extension usage if source info isn't available
+    is_extension = "extension" in (memory_in.tags or [])
+    
+    # If it's from extension, we WANT it in inbox even if approved (User Request)
+    # If it's pure manual (Web UI), we likely don't want it in inbox if approved.
+    
+    show_in_inbox = True 
+    if initial_status == "approved" and not is_extension:
+        show_in_inbox = False
+        
+    print(f"DEBUG: Status: {initial_status}, ShowInInbox: {show_in_inbox}")
+    
     memory = Memory(
         title=memory_in.title,
         content=memory_in.content,
         user_id=current_user.id,
         tags=memory_in.tags,
-        embedding_id=embedding_id
+        embedding_id=embedding_id,
+        status=initial_status,
+        show_in_inbox=show_in_inbox
     )
     db.add(memory)
     try:
@@ -46,17 +84,33 @@ def create_memory(
     db.refresh(memory)
     print(f"Memory ID: {memory.id}")
     
-    # Add to Vector DB
-    try:
-        vector_store.add_documents(
-            ids=ids,
-            documents=documents_content,
-            metadatas=metadatas
-        )
-        print("Memory added to Vector Store")
-    except Exception as e:
-        print(f"Error adding to Vector Store: {e}")
-        # We might want to rollback DB here or just log error
+    # Ingest and Add to Vector DB
+    # Only if approved
+    if initial_status == "approved":
+        try:
+            ids, documents_content, metadatas = ingestion_service.process_text(
+                text=memory_in.content,
+                document_id=memory.id,
+                title=memory_in.title,
+                doc_type="memory",
+                metadata={"user_id": current_user.id, "memory_id": memory.id, "tags": str(memory_in.tags) if memory_in.tags else ""}
+            )
+            
+            if ids:
+                # Update memory with actual first embedding ID
+                memory.embedding_id = ids[0]
+                db.commit()
+                
+                vector_store.add_documents(
+                    ids=ids,
+                    documents=documents_content,
+                    metadatas=metadatas
+                )
+                print("Memory added to Vector Store")
+                
+        except Exception as e:
+            print(f"Error adding to Vector Store: {e}")
+            # We might want to rollback DB here or just log error
     
     return memory
 
@@ -72,8 +126,11 @@ def read_memories(
     """
     Retrieve memories and documents.
     """
-    # Fetch Memories
-    memories = db.query(Memory).filter(Memory.user_id == current_user.id).all()
+    # Fetch Memories (Only Approved)
+    memories = db.query(Memory).filter(
+        Memory.user_id == current_user.id,
+        Memory.status == "approved"
+    ).all()
     
     # Fetch Documents
     documents = db.query(Document).filter(Document.user_id == current_user.id).all()

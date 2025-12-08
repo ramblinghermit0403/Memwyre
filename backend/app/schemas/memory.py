@@ -21,6 +21,7 @@ class MemoryInDBBase(MemoryBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     type: str = "memory"
+    status: str = "approved"
 
     class Config:
         from_attributes = True

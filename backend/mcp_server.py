@@ -1,15 +1,30 @@
 import asyncio
 import sys
 import os
+import contextlib
 from typing import Any, List, Optional
 from mcp.server.fastmcp import FastMCP
 
-from app.services.vector_store import vector_store
-from app.services.ingestion import ingestion_service
-from app.db.session import SessionLocal
-from app.models.document import Document
-from app.models.user import User
-from app.models.memory import Memory
+# Context manager to redirect stdout to stderr
+@contextlib.contextmanager
+def redirect_stdout_to_stderr():
+    old_stdout = sys.stdout
+    sys.stdout = sys.stderr
+    try:
+        yield
+    finally:
+        sys.stdout = old_stdout
+
+# Perform imports and initialization with stdout redirected
+# This prevents libraries (like ChromaDB) from printing to stdout and breaking the MCP protocol
+with redirect_stdout_to_stderr():
+    from app.services.vector_store import vector_store
+    from app.services.ingestion import ingestion_service
+    from app.db.session import SessionLocal
+    from app.models.document import Document
+    from app.models.user import User
+    from app.models.memory import Memory
+    from app.services.context_builder import context_builder
 
 # Initialize FastMCP Server
 mcp = FastMCP("Brain Vault")
@@ -43,13 +58,93 @@ def get_current_user(db):
     # 3. Fallback to first user (MVP/Single User mode)
     return db.query(User).first()
 
+
+
 @mcp.tool()
-async def search_memory(query: str, top_k: int = 5) -> str:
+async def save_memory(text: str, source: str = "mcp", tags: Optional[List[str]] = None) -> str:
     """
-    Search the Brain Vault memory for relevant context.
+    Save a new memory snippet to the Brain Vault.
     Args:
-        query: The search query.
-        top_k: Number of results to return.
+        text: The content of the memory.
+        source: Source of memory (default 'mcp').
+        tags: Optional list of tags.
+    """
+    db = SessionLocal()
+    try:
+        user = get_current_user(db)
+        if not user:
+            return "Error: No user found."
+
+        # Check Auto-Approve Setting
+        auto_approve = True
+        user_settings = user.settings
+        
+        if user_settings:
+            # Handle JSON stored as string in SQLite if necessary
+            if isinstance(user_settings, str):
+                import json
+                try:
+                    user_settings = json.loads(user_settings)
+                except:
+                    user_settings = {}
+                    
+            if isinstance(user_settings, dict):
+                auto_approve = user_settings.get("auto_approve", True)
+                
+        initial_status = "approved" if auto_approve else "pending"
+        # MCP is external, so always show in inbox as notification? 
+        # Yes, per user request: "stil show the mcp and extension memoires in the inbox even they are pre apporved"
+        show_in_inbox = True
+        
+        import uuid
+        embedding_id = str(uuid.uuid4())
+
+        memory = Memory(
+            user_id=user.id,
+            content=text,
+            title=f"Memory from {source}",
+            source_llm=source,
+            status=initial_status,
+            tags=tags,
+            embedding_id=embedding_id,
+            show_in_inbox=show_in_inbox
+        )
+        db.add(memory)
+        db.commit()
+        db.refresh(memory)
+        
+        # Ingest if approved
+        if initial_status == "approved":
+            try:
+                ids, documents_content, metadatas = ingestion_service.process_text(
+                    text=text,
+                    document_id=memory.id,
+                    title=memory.title,
+                    doc_type="memory",
+                    metadata={"user_id": user.id, "memory_id": memory.id, "tags": str(tags) if tags else "", "source": source}
+                )
+                
+                if ids:
+                    memory.embedding_id = ids[0]
+                    db.commit()
+                    
+                    vector_store.add_documents(ids=ids, documents=documents_content, metadatas=metadatas)
+            except Exception as e:
+                return f"Memory saved but ingestion failed: {str(e)}"
+        
+        return f"Memory saved to Inbox with ID: mem_{memory.id} (Status: {initial_status})"
+    except Exception as e:
+        return f"Error saving memory: {str(e)}"
+    finally:
+        db.close()
+
+@mcp.tool()
+async def search_brain_vault(query: str, purpose: str = "general") -> str:
+    """
+    The PRIMARY tool for searching your memory. Use this to retrieve relevant context, notes, or code snippets from the Brain Vault.
+    Args:
+        query: The semantic search query (e.g., "python fastapi project structure" or "notes on meeting with Bob").
+        purpose: Optional hint for context formatting ("general", "code", "summary").
     """
     db = SessionLocal()
     try:
@@ -57,69 +152,35 @@ async def search_memory(query: str, top_k: int = 5) -> str:
         if not user:
             return "Error: No user found."
             
-        # Filter by user_id
-        results = vector_store.query(query, n_results=top_k, where={"user_id": user.id})
-        
-        if not results["documents"] or not results["documents"][0]:
-            return "No relevant memories found."
-        
-        # Format results
-        formatted_results = []
-        for i, doc in enumerate(results["documents"][0]):
-            formatted_results.append(f"Result {i+1}:\n{doc}")
-        
-        return "\n\n---\n\n".join(formatted_results)
+        ctx = context_builder.build_context(query=query, user_id=user.id, limit_tokens=2000)
+        return ctx["text"]
     finally:
         db.close()
 
 @mcp.tool()
-async def save_memory(text: str, tags: Optional[List[str]] = None) -> str:
+async def get_inbox() -> str:
     """
-    Save a new memory snippet to the Brain Vault.
-    Args:
-        text: The content of the memory.
-        tags: Optional list of tags.
+    Get list of pending memories in the Inbox.
     """
-    # For MVP, we'll assume a default user or require user_id in a real scenario
-    # Here we just use the ingestion service to process the text
-    # Note: In a real multi-user app, we'd need to handle auth context here
-    
-    # We need to create a Document record first to get an ID
     db = SessionLocal()
     try:
         user = get_current_user(db)
         if not user:
-            return "Error: No user found in database to attach memory to."
-
-        doc = Document(
-            title="MCP Memory",
-            content=text,
-            doc_type="memory",
-            user_id=user.id
-        )
-        db.add(doc)
-        db.commit()
-        db.refresh(doc)
+            return "Error: No user found."
+            
+        memories = db.query(Memory).filter(
+            Memory.user_id == user.id,
+            Memory.status == "pending"
+        ).order_by(Memory.created_at.desc()).all()
         
-        # Ingest
-        embedding_ids, chunk_texts, metadatas = ingestion_service.process_text(
-            text=text,
-            document_id=doc.id,
-            title="MCP Memory",
-            doc_type="memory",
-            metadata={"source": "mcp", "tags": ",".join(tags or []), "user_id": user.id}
-        )
-        
-        # FIX: Actually save to vector store
-        vector_store.add_documents(
-            ids=embedding_ids,
-            documents=chunk_texts,
-            metadatas=metadatas
-        )
-        
-        return f"Memory saved successfully with ID: {doc.id}"
-    except Exception as e:
-        return f"Error saving memory: {str(e)}"
+        if not memories:
+            return "Inbox is empty."
+            
+        results = []
+        for mem in memories:
+            results.append(f"ID: mem_{mem.id} | Content: {mem.content[:50]}... | Source: {mem.source_llm}")
+            
+        return "\n".join(results)
     finally:
         db.close()
 
@@ -162,15 +223,9 @@ async def generate_prompt(query: str, template: str = "standard") -> str:
         if not user:
             return "Error: No user found."
             
-        # 1. Retrieve Context
-        results = vector_store.query(query, n_results=10, where={"user_id": user.id})
-        
-        retrieved_texts = []
-        if results["documents"]:
-            retrieved_texts = results["documents"][0]
-            
-        # 2. Compact Context (Simple limit for MCP)
-        context_str = "\n\n---\n\n".join(retrieved_texts[:5]) # Limit to top 5 chunks
+        # 1. Retrieve Context using ContextBuilder (Standardized)
+        ctx = context_builder.build_context(query=query, user_id=user.id, limit_tokens=2000)
+        context_str = ctx["text"]
         
         # 3. Apply Template
         if template == "code":
@@ -366,6 +421,126 @@ async def list_memories(limit: int = 10, offset: int = 0) -> str:
             return "No memories found."
             
         return "\n".join(results)
+    finally:
+        db.close()
+
+# --- RESOURCES ---
+@mcp.resource("brain://inbox")
+async def get_inbox_resource() -> str:
+    """
+    Read the current contents of the Inbox directly as a resource.
+    """
+    db = SessionLocal()
+    try:
+        user = get_current_user(db)
+        if not user:
+            return "Error: No user found."
+            
+        memories = db.query(Memory).filter(
+            Memory.user_id == user.id,
+            Memory.status == "pending"
+        ).order_by(Memory.created_at.desc()).all()
+        
+        if not memories:
+            return "Inbox is empty."
+            
+        results = ["# Brain Vault Inbox"]
+        for mem in memories:
+            results.append(f"- [ID: mem_{mem.id}] ({mem.source_llm}): {mem.content[:100]}...")
+            
+        return "\n".join(results)
+    finally:
+        db.close()
+
+# --- PROMPTS ---
+@mcp.prompt()
+def daily_briefing() -> str:
+    """
+    Generate a briefing prompt based on recent memories.
+    """
+    return "Please review my recent memories from the Brain Vault and provide a summary of what I've been working on and any outstanding tasks in my Inbox."
+
+@mcp.prompt()
+def project_context(project_name: str) -> str:
+    """
+    Generate a prompt to focus on a specific project.
+    """
+    return f"Please search the Brain Vault for all information related to '{project_name}'. Summarize the key points, technical decisions, and current status."
+
+@mcp.tool()
+async def search_by_date(start_date: str, end_date: Optional[str] = None) -> str:
+    """
+    Find memories created within a specific date range.
+    Args:
+        start_date: Start date in YYYY-MM-DD format.
+        end_date: End date in YYYY-MM-DD format (optional, defaults to end of start_date).
+    """
+    db = SessionLocal()
+    try:
+        user = get_current_user(db)
+        if not user:
+            return "Error: No user found."
+            
+        from datetime import datetime, timedelta
+        
+        try:
+            start = datetime.strptime(start_date, "%Y-%m-%d")
+            if end_date:
+                end = datetime.strptime(end_date, "%Y-%m-%d") + timedelta(days=1) # Inclusive of end date
+            else:
+                end = start + timedelta(days=1)
+        except ValueError:
+            return "Error: Invalid date format. Use YYYY-MM-DD."
+            
+        memories = db.query(Memory).filter(
+            Memory.user_id == user.id,
+            Memory.created_at >= start,
+            Memory.created_at < end
+        ).order_by(Memory.created_at.asc()).all()
+        
+        if not memories:
+            return f"No memories found between {start_date} and {end_date or start_date}."
+            
+        results = []
+        for mem in memories:
+            results.append(f"[{mem.created_at.strftime('%Y-%m-%d %H:%M')}] {mem.title}: {mem.content[:200]}...")
+            
+        return "\n".join(results)
+    finally:
+        db.close()
+
+@mcp.tool()
+async def get_all_tags() -> str:
+    """
+    Get a list of all tags currently used in the Brain Vault. 
+    Use this to understand the taxonomy of the user's knowledge.
+    """
+    db = SessionLocal()
+    try:
+        user = get_current_user(db)
+        if not user:
+            return "Error: No user found."
+        
+        # Inefficient but valid for MVP: Fetch all and aggregate
+        memories = db.query(Memory).filter(Memory.user_id == user.id).all()
+        
+        all_tags = set()
+        for mem in memories:
+            if mem.tags:
+                try:
+                    # mem.tags might be a list or a string repr of list depending on SQLite/JSON handling
+                    tags_list = mem.tags if isinstance(mem.tags, list) else eval(mem.tags)
+                    for tag in tags_list:
+                        all_tags.add(tag)
+                except:
+                    pass
+                    
+        sorted_tags = sorted(list(all_tags))
+        
+        if not sorted_tags:
+            return "No tags found."
+            
+        return "Current Tags:\n" + ", ".join([f"#{t}" for t in sorted_tags])
     finally:
         db.close()
 

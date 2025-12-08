@@ -38,24 +38,86 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="px-4 py-8 sm:px-0 space-y-6">
             
+            <!-- Preferences Section -->
+            <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Preferences</h3>
+              <div class="mt-4 space-y-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">Auto-Approve New Memories</span>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Automatically add created memories to the vector store without review.</p>
+                  </div>
+                  <button 
+                    @click="toggleAutoApprove" 
+                    :class="settings.auto_approve ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700'" 
+                    class="relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    <span 
+                      aria-hidden="true" 
+                      :class="settings.auto_approve ? 'translate-x-5' : 'translate-x-0'" 
+                      class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
+                    ></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <!-- API Keys Section -->
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
-              <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">API Keys</h3>
-              <div class="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
-                <p>Manage your API keys for LLM providers.</p>
+              <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Connected LLM Clients</h3>
+              <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                <p>Manage external LLM providers and their permissions.</p>
               </div>
-              <div class="mt-5 space-y-4">
-                <div>
-                  <label for="openai_key" class="block text-sm font-medium text-gray-700 dark:text-gray-300">OpenAI API Key</label>
-                  <input type="password" id="openai_key" v-model="openaiKey" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="sk-..." />
+              
+              <!-- Existing Keys List -->
+              <div class="mt-4 space-y-3" v-if="keys.length > 0">
+                <div v-for="key in keys" :key="key.id" class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div class="flex items-center gap-2">
+                    <span class="font-medium text-gray-900 dark:text-white capitalize">{{ key.provider }}</span>
+                    <span class="text-xs px-2 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300" v-if="key.permissions.read">Read Access</span>
+                  </div>
+                  <button @click="deleteKey(key.id)" class="text-red-600 hover:text-red-800 dark:hover:text-red-400 text-sm">Remove</button>
                 </div>
-                <div>
-                  <label for="gemini_key" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gemini API Key</label>
-                  <input type="password" id="gemini_key" v-model="geminiKey" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="AIza..." />
+              </div>
+
+              <!-- Add New Key -->
+              <div class="mt-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Add New Connection</h4>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Provider</label>
+                    <select v-model="newKey.provider" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                      <option value="openai">OpenAI</option>
+                      <option value="anthropic">Anthropic</option>
+                      <option value="gemini">Google Gemini</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">API Key</label>
+                    <input type="password" v-model="newKey.api_key" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="sk-..." />
+                  </div>
                 </div>
-                <button @click="saveKeys" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                  Save Keys
-                </button>
+                <!-- Permissions Toggles (Simplified) -->
+                <div class="mt-4 flex items-center gap-4">
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" v-model="newKey.permissions.read" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600">
+                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-300">Allow Read</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" v-model="newKey.permissions.write" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600">
+                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-300">Allow Write</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" v-model="newKey.permissions.auto_save" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-700 dark:border-gray-600">
+                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-300">Auto-Save (No Inbox)</span>
+                  </label>
+                </div>
+                
+                <div class="mt-4">
+                  <button @click="addKey" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    Connect Provider
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -110,42 +172,70 @@ import { useToast } from 'vue-toastification';
 const authStore = useAuthStore();
 const router = useRouter();
 const toast = useToast();
-const openaiKey = ref(localStorage.getItem('openai_key') || '');
-const geminiKey = ref(localStorage.getItem('gemini_key') || '');
-const tokenCopied = ref(false);
+const keys = ref([]);
+const settings = ref({ auto_approve: true });
+const newKey = ref({
+  provider: 'openai',
+  api_key: '',
+  permissions: { read: true, write: false, auto_save: false }
+});
 
-const logout = () => {
-  authStore.logout();
-  router.push('/login');
-};
-
-const copyToken = async () => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    try {
-      await navigator.clipboard.writeText(token);
-      tokenCopied.value = true;
-      setTimeout(() => tokenCopied.value = false, 2000);
-      toast.success('Token copied to clipboard');
-    } catch (err) {
-      console.error('Failed to copy token:', err);
-      toast.error('Failed to copy token');
-    }
-  } else {
-    toast.error('No token found. Please log in again.');
+const loadSettings = async () => {
+  try {
+    const res = await api.get('/user/settings');
+    settings.value = { ...settings.value, ...res.data };
+  } catch (err) {
+    console.error(err);
   }
 };
 
-const restartTour = () => {
-  localStorage.removeItem('tour_completed');
-  router.push('/');
+const toggleAutoApprove = async () => {
+  const newVal = !settings.value.auto_approve;
+  settings.value.auto_approve = newVal;
+  try {
+    await api.patch('/user/settings', { auto_approve: newVal });
+    toast.success("Settings updated");
+  } catch (err) {
+    settings.value.auto_approve = !newVal; // revert
+    toast.error("Failed to update settings");
+  }
 };
 
-const saveKeys = () => {
-  localStorage.setItem('openai_key', openaiKey.value);
-  localStorage.setItem('gemini_key', geminiKey.value);
-  toast.success('Keys saved locally (for MVP).');
+const loadKeys = async () => {
+  try {
+    const res = await api.get('/user/llm-keys');
+    keys.value = res.data;
+  } catch (err) {
+    console.error(err);
+  }
 };
+
+const addKey = async () => {
+  if (!newKey.value.api_key) return toast.error("API Key required");
+  try {
+    await api.post('/user/llm-keys', newKey.value);
+    toast.success("Key added");
+    newKey.value.api_key = ""; // clear
+    loadKeys();
+  } catch (err) {
+    toast.error("Failed to add key");
+  }
+};
+
+const deleteKey = async (id) => {
+  if (!confirm("Remove this key?")) return;
+  try {
+    await api.delete(`/user/llm-keys/${id}`);
+    toast.success("Key removed");
+    loadKeys();
+  } catch (err) {
+    toast.error("Failed to remove key");
+  }
+};
+
+// Initial load
+loadKeys();
+loadSettings();
 
 const exportData = async (format) => {
   try {
@@ -157,8 +247,34 @@ const exportData = async (format) => {
     document.body.appendChild(link);
     link.click();
     toast.success(`Exported as ${format.toUpperCase()}`);
+    toast.success(`Exported as ${format.toUpperCase()}`);
   } catch (error) {
     toast.error('Export failed');
   }
+};
+
+const tokenCopied = ref(false);
+
+const copyToken = async () => {
+  if (!authStore.token) {
+    return toast.error("No token available");
+  }
+  try {
+    await navigator.clipboard.writeText(authStore.token);
+    tokenCopied.value = true;
+    toast.success("Token copied to clipboard");
+    setTimeout(() => {
+      tokenCopied.value = false;
+    }, 2000);
+  } catch (err) {
+    console.error("Copy failed", err);
+    toast.error("Failed to copy token");
+  }
+};
+
+const restartTour = () => {
+    localStorage.removeItem('tour_completed');
+    toast.info("Tour reset. Returning to Dashboard...");
+    setTimeout(() => router.push('/'), 1000);
 };
 </script>

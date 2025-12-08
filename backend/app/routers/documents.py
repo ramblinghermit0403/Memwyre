@@ -172,55 +172,71 @@ class MemoryUpdate(BaseModel):
 
 @router.post("/memory", response_model=Any)
 def create_memory(
-    memory: MemoryCreate,
+    memory_in: MemoryCreate,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
-    Create a new memory-type document with automatic chunking.
+    Create a new memory (replaces old document-based memory creation).
+    Respects user Auto-Approve settings.
     """
-    # Create Document Record
-    document = Document(
-        title=memory.title,
-        content=memory.content,
-        source=None,  # Memories don't have a source file
-        file_type=None,
-        doc_type="memory",
-        user_id=current_user.id,
-        tags=memory.tags
-    )
-    db.add(document)
-    db.commit()
-    db.refresh(document)
+    from app.models.memory import Memory
     
-    # Chunk Text using ingestion service
-    ids, documents_content, metadatas = ingestion_service.process_text(
-        text=memory.content,
-        document_id=document.id,
-        title=document.title,
-        doc_type="memory",
-        metadata={"user_id": current_user.id, "tags": str(memory.tags) if memory.tags else ""}
-    )
+    # Check Auto-Approve Setting
+    auto_approve = True
+    user_settings = current_user.settings
     
-    # Store Chunks in DB
-    for i, (embedding_id, chunk_content) in enumerate(zip(ids, documents_content)):
-        chunk = Chunk(
-            document_id=document.id,
-            chunk_index=i,
-            text=chunk_content,
-            embedding_id=embedding_id
-        )
-        db.add(chunk)
+    if user_settings:
+        if isinstance(user_settings, str):
+            import json
+            try:
+                user_settings = json.loads(user_settings)
+            except:
+                user_settings = {}
+                
+        if isinstance(user_settings, dict):
+            auto_approve = user_settings.get("auto_approve", True)
         
+    initial_status = "approved" if auto_approve else "pending"
+    # User upload: If approved, skip inbox. If pending, show in inbox.
+    show_in_inbox = True if initial_status == "pending" else False
+    
+    embedding_id = str(uuid.uuid4())
+    
+    memory = Memory(
+        title=memory_in.title,
+        content=memory_in.content,
+        user_id=current_user.id,
+        tags=memory_in.tags,
+        embedding_id=embedding_id,
+        status=initial_status,
+        show_in_inbox=show_in_inbox,
+        source_llm="user-upload" # or extension
+    )
+    db.add(memory)
     db.commit()
+    db.refresh(memory)
     
-    # Add to Vector Store
-    try:
-        vector_store.add_documents(ids=ids, documents=documents_content, metadatas=metadatas)
-    except Exception as e:
-        print(f"Vector Store Error: {e}")
-    
-    return {"status": "success", "document_id": document.id, "chunks": len(ids)}
+    # Ingest only if approved
+    if initial_status == "approved":
+        try:
+            ids, documents_content, metadatas = ingestion_service.process_text(
+                text=memory_in.content,
+                document_id=memory.id,
+                title=memory_in.title,
+                doc_type="memory",
+                metadata={"user_id": current_user.id, "memory_id": memory.id, "tags": str(memory_in.tags) if memory_in.tags else ""}
+            )
+            
+            if ids:
+                memory.embedding_id = ids[0]
+                db.commit()
+                
+                vector_store.add_documents(ids=ids, documents=documents_content, metadatas=metadatas)
+        except Exception as e:
+            print(f"Vector Store Error: {e}")
+            
+    return {"status": "success", "document_id": memory.id, "chunks": 1 if initial_status == "approved" else 0}
 
 @router.put("/{doc_id}", response_model=Any)
 def update_document(

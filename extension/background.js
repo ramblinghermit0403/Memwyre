@@ -21,12 +21,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         handleRequest(saveMemory, request.data, sendResponse);
         return true;
     }
+    if (request.action === 'saveLLMMemory') {
+        handleRequest(saveLLMMemory, request.data, sendResponse);
+        return true;
+    }
     if (request.action === 'searchMemory') {
         handleRequest(searchMemory, request.data, sendResponse);
         return true;
     }
     if (request.action === 'getDocuments') {
         handleRequest(getDocuments, request.data, sendResponse);
+        return true;
+    }
+    if (request.action === 'getMemories') {
+        handleRequest(getMemories, request.data, sendResponse);
         return true;
     }
 });
@@ -73,12 +81,13 @@ async function generatePrompt(data) {
 
 async function saveMemory(data) {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/documents/memory`, {
+    const response = await fetch(`${API_BASE_URL}/memory/`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
             title: data.title,
-            content: data.content
+            content: data.content,
+            tags: ['extension']
         })
     });
 
@@ -119,6 +128,44 @@ async function getDocuments() {
     if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to fetch documents');
+    }
+
+    return await response.json();
+}
+
+async function getMemories() {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/memory/`, {
+        method: 'GET',
+        headers
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to fetch memories');
+    }
+
+    return await response.json();
+}
+
+async function saveLLMMemory(data) {
+    const headers = await getAuthHeaders();
+    // Using llm/save_memory endpoint which is designed for external inputs
+    const response = await fetch(`${API_BASE_URL}/llm/save_memory`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+            content: data.content,
+            source_llm: data.source || 'extension_content_script',
+            model_name: data.model || 'unknown',
+            tags: ['extension', data.source],
+            url: data.url
+        })
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to save LLM memory');
     }
 
     return await response.json();

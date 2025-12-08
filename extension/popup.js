@@ -139,30 +139,96 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // 3. Search Memory
+    // 3. Search Memory & List Memories
+    const recentMemories = document.getElementById('recent-memories');
+
+    // Load memories on startup if in main view
+    if (token) {
+        loadMemories();
+    }
+
+    async function loadMemories() {
+        recentMemories.innerHTML = '<div class="loading-spinner" style="text-align:center; color:#9ca3af; font-size:12px; padding:20px;">Loading recent memories...</div>';
+        try {
+            const response = await sendMessage('getMemories');
+            if (response.success) {
+                renderMemories(response.data, recentMemories);
+            } else {
+                recentMemories.innerHTML = `<div class="error">Error loading memories: ${response.error}</div>`;
+            }
+        } catch (err) {
+            recentMemories.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+        }
+    }
+
+    function renderMemories(items, container) {
+        container.innerHTML = '';
+        if (items.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:#9ca3af; font-size:12px; padding:20px;">No memories found.</div>';
+            return;
+        }
+
+        items.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'memory-item';
+
+            // Format date
+            const date = new Date(item.created_at).toLocaleDateString();
+            const type = item.type === 'memory' ? 'Memory' : 'Document';
+            const typeColor = item.type === 'memory' ? '#10b981' : '#3b82f6';
+
+            div.innerHTML = `
+                <div class="memory-header">
+                    <h3 class="memory-title">${item.title || 'Untitled'}</h3>
+                    <span class="memory-meta" style="color:${typeColor}">${type} • ${date}</span>
+                </div>
+                <div class="memory-content">${item.content}</div>
+                <button class="copy-btn" data-content="${encodeURIComponent(item.content)}">Copy</button>
+            `;
+            container.appendChild(div);
+        });
+
+        // Add event listeners for copy buttons
+        container.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const content = decodeURIComponent(e.target.dataset.content);
+                navigator.clipboard.writeText(content);
+                const originalText = e.target.textContent;
+                e.target.textContent = 'Copied!';
+                setTimeout(() => e.target.textContent = originalText, 1500);
+            });
+        });
+    }
+
     searchBtn.addEventListener('click', async () => {
         const query = searchQuery.value.trim();
-        if (!query) return;
+        if (!query) {
+            // If empty, reload recent
+            searchResults.classList.add('hidden');
+            recentMemories.classList.remove('hidden');
+            loadMemories();
+            return;
+        }
 
         setLoading(searchBtn, true, 'Searching...');
         searchResults.classList.add('hidden');
+        recentMemories.classList.add('hidden'); // Hide recent list while searching
         searchResults.innerHTML = '';
 
         try {
             const response = await sendMessage('searchMemory', { query });
             if (response.success) {
                 if (response.data.length === 0) {
-                    searchResults.textContent = 'No results found.';
+                    searchResults.innerHTML = '<div style="text-align:center; color:#9ca3af; font-size:12px; padding:20px;">No results found.</div>';
                 } else {
-                    response.data.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'result-item';
-                        div.innerHTML = `
-              <div class="result-meta">${item.metadata.type || 'Memory'} • ${(item.metadata.score || 0).toFixed(2)}</div>
-              <div>${item.content.substring(0, 150)}${item.content.length > 150 ? '...' : ''}</div>
-            `;
-                        searchResults.appendChild(div);
-                    });
+                    // Reuse render logic but map search results to format
+                    const formattedResults = response.data.map(res => ({
+                        title: res.metadata.title || 'Search Result',
+                        content: res.content,
+                        created_at: res.metadata.created_at || new Date().toISOString(),
+                        type: res.metadata.doc_type || 'memory'
+                    }));
+                    renderMemories(formattedResults, searchResults);
                 }
                 searchResults.classList.remove('hidden');
             } else {

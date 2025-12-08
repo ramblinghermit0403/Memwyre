@@ -17,6 +17,12 @@ const router = createRouter({
             meta: { requiresAuth: true }
         },
         {
+            path: '/inbox',
+            name: 'inbox',
+            component: () => import('../views/InboxView.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
             path: '/login',
             name: 'login',
             component: () => import('../views/LoginView.vue')

@@ -9,6 +9,10 @@
             </div>
           </div>
           <div class="flex items-center space-x-4">
+            <router-link id="tour-inbox" to="/inbox" class="relative text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
+              Inbox
+              <span v-if="inboxStore.count > 0" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">{{ inboxStore.count }}</span>
+            </router-link>
             <ThemeToggle />
             <router-link id="tour-settings" to="/settings" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
               Settings
@@ -82,6 +86,11 @@ import FileUpload from '../components/FileUpload.vue';
 import RetrievalTest from '../components/RetrievalTest.vue';
 import ThemeToggle from '../components/ThemeToggle.vue';
 import { createTour } from '../tour';
+import { useInboxStore } from '../stores/inbox';
+
+const inboxStore = useInboxStore();
+inboxStore.fetchInbox();
+inboxStore.connectWebSocket();
 
 const router = useRouter();
 
