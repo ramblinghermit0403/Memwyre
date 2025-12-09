@@ -72,6 +72,7 @@ async def inbox_action(
         
     if action_in.action == "approve":
         memory.status = "approved"
+        memory.show_in_inbox = False
         db.commit()
         db.refresh(memory)
         
@@ -148,3 +149,73 @@ async def inbox_action(
     
     else:
         raise HTTPException(status_code=400, detail="Invalid action")
+
+@router.get("/{memory_id}", response_model=InboxItem)
+def get_inbox_item(
+    memory_id: str,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Get a single pending memory.
+    """
+    try:
+        mem_id_int = int(memory_id.replace("mem_", ""))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+
+    memory = db.query(Memory).filter(
+        Memory.id == mem_id_int, 
+        Memory.user_id == current_user.id
+    ).first()
+    
+    if not memory:
+        raise HTTPException(status_code=404, detail="Memory not found")
+        
+    return InboxItem(
+        id=f"mem_{memory.id}",
+        content=memory.content,
+        source=memory.source_llm or "unknown",
+        created_at=memory.created_at,
+        status=memory.status,
+        details=memory.title
+    )
+
+class InboxUpdate(BaseModel):
+    content: str
+    title: str = None
+
+@router.put("/{memory_id}")
+async def update_inbox_item(
+    memory_id: str,
+    data: InboxUpdate,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Update a pending memory content without approving.
+    """
+    try:
+        mem_id_int = int(memory_id.replace("mem_", ""))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+
+    memory = db.query(Memory).filter(
+        Memory.id == mem_id_int, 
+        Memory.user_id == current_user.id
+    ).first()
+    
+    if not memory:
+        raise HTTPException(status_code=404, detail="Memory not found")
+        
+    memory.content = data.content
+    if data.title:
+        memory.title = data.title
+        
+    db.commit()
+    db.refresh(memory)
+    
+    # Broadcast update
+    await manager.broadcast({"type": "inbox_update", "id": memory_id, "action": "update"})
+    
+    return {"status": "success", "id": memory_id}

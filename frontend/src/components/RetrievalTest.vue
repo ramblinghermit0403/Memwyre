@@ -1,7 +1,8 @@
-~<template>
-  <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg rounded-xl border border-gray-100 dark:border-gray-700 transition-all duration-200 hover:shadow-xl h-full flex flex-col">
-    <div class="p-6 flex-1 flex flex-col">
-      <div class="flex items-center mb-6">
+<template>
+  <div :class="['flex flex-col h-full bg-white dark:bg-gray-800 transition-all duration-200', !embedded ? 'shadow-lg rounded-xl border border-gray-100 dark:border-gray-700' : '']">
+    
+    <!-- Header (only if not embedded) -->
+    <div v-if="!embedded" class="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center">
         <div class="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mr-4">
           <svg class="h-6 w-6 text-green-600 dark:text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -11,58 +12,69 @@
           <h3 class="text-lg font-bold text-gray-900 dark:text-white">Ask Your Brain Vault</h3>
           <p class="text-sm text-gray-500 dark:text-gray-400">Retrieve information from your documents</p>
         </div>
+    </div>
+      
+    <!-- Content -->
+    <div :class="['flex-1 flex flex-col space-y-4', embedded ? '' : 'p-6']">
+      
+      <!-- Input Area -->
+      <div class="relative group">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+           <svg class="h-5 w-5 text-gray-400 group-focus-within:text-green-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+           </svg>
+        </div>
+        <input 
+          type="text" 
+          v-model="query" 
+          @keyup.enter="search" 
+          :disabled="loading"
+          class="block w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all placeholder-gray-400 text-sm"
+          placeholder="Ask a question..." 
+        />
+        <div class="absolute inset-y-0 right-0 flex items-center pr-2">
+             <select v-model="provider" class="h-8 text-xs bg-transparent border-0 text-gray-400 focus:ring-0 cursor-pointer hover:text-gray-600 dark:hover:text-gray-300">
+                <option value="gemini">Gemini</option>
+                <option value="openai">GPT-3.5</option>
+             </select>
+        </div>
       </div>
       
-      <div class="space-y-4 flex-1 flex flex-col">
-        <!-- Provider Selection -->
-        <div>
-          <label for="provider" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">LLM Provider</label>
-          <select v-model="provider" id="provider" class="block w-full border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-            <option value="openai">OpenAI (GPT-3.5)</option>
-            <option value="gemini">Google Gemini</option>
-          </select>
-        </div>
-
-        <div class="relative">
-          <input type="text" v-model="query" @keyup.enter="search" class="block w-full pl-4 pr-12 py-3 border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400" placeholder="Ask a question..." />
-          <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
+      <!-- Loading State -->
+      <div v-if="loading" class="flex items-center justify-center py-8">
+          <div class="flex space-x-1 animate-pulse">
+              <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+              <div class="w-2 h-2 bg-green-500 rounded-full animation-delay-200"></div>
+              <div class="w-2 h-2 bg-green-500 rounded-full animation-delay-400"></div>
           </div>
+          <span class="ml-3 text-sm text-gray-400 font-medium">Thinking...</span>
+      </div>
+
+      <!-- Response Area -->
+      <div v-if="response && !loading" class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4 border border-gray-100 dark:border-gray-700/50 animate-fade-in">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wide">
+                {{ provider === 'gemini' ? 'Gemini' : 'OpenAI' }} Says
+            </span>
+             <button @click="response = ''" class="text-gray-400 hover:text-gray-600">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed prose dark:prose-invert max-w-none">
+          {{ response }}
         </div>
         
-        <button @click="search" :disabled="!query || loading" class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
-          <svg v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          {{ loading ? 'Thinking...' : 'Ask Question' }}
-        </button>
-
-        <div v-if="response" class="mt-6 flex-1 overflow-y-auto max-h-96 custom-scrollbar">
-          <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
-            <h4 class="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center">
-              <svg class="h-4 w-4 mr-2 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Answer ({{ provider === 'gemini' ? 'Gemini' : 'OpenAI' }})
-            </h4>
-            <div class="text-gray-700 dark:text-gray-300 text-sm whitespace-pre-wrap leading-relaxed">
-              {{ response }}
+        <!-- Sources -->
+        <div v-if="context && context.length" class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 border-dashed">
+            <p class="text-xs text-gray-400 mb-2 font-medium">Sources:</p>
+            <div class="space-y-2">
+                <div v-for="(ctx, idx) in context.slice(0, 2)" :key="idx" class="text-[10px] bg-white dark:bg-gray-800 p-2 rounded border border-gray-100 dark:border-gray-700 text-gray-500 truncate">
+                    {{ ctx }}
+                </div>
             </div>
-          </div>
-          
-          <div v-if="context && context.length" class="mt-4">
-            <h4 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Sources</h4>
-            <ul class="space-y-2">
-              <li v-for="(ctx, index) in context" :key="index" class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded p-2 text-xs text-gray-600 dark:text-gray-400 shadow-sm">
-                {{ ctx.substring(0, 150) }}...
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -71,11 +83,18 @@
 import { ref } from 'vue';
 import api from '../services/api';
 
+const props = defineProps({
+  embedded: {
+    type: Boolean,
+    default: false
+  }
+});
+
 const query = ref('');
 const loading = ref(false);
 const response = ref('');
 const context = ref([]);
-const provider = ref('gemini'); // Default to Gemini
+const provider = ref('gemini');
 
 const search = async () => {
   if (!query.value) return;
@@ -85,7 +104,6 @@ const search = async () => {
   context.value = [];
 
   try {
-    // Get API key from localStorage based on provider
     const apiKey = provider.value === 'gemini' 
       ? localStorage.getItem('gemini_key') 
       : localStorage.getItem('openai_key');
@@ -112,3 +130,10 @@ const search = async () => {
   }
 };
 </script>
+
+<style scoped>
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+.animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+</style>

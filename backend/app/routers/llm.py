@@ -57,7 +57,18 @@ async def chat_with_llm(
         results = vector_store.query(request.query, n_results=request.top_k, where=where_clause)
         
         context = []
-        if results["documents"]:
+        if results["documents"] and results.get("distances"):
+            # Filter by relevance (Distance Threshold)
+            # Threshold depends on metric. Chroma default is L2. 
+            # Lower is better. < 1.0 is usually good, > 1.5 is often irrelevant.
+            threshold = 1.5 
+            
+            for i, doc in enumerate(results["documents"][0]):
+                distance = results["distances"][0][i]
+                if distance < threshold:
+                    context.append(doc)
+        elif results["documents"]:
+             # Fallback if no distances returned (unlikely)
              context = results["documents"][0]
 
         # 2. Generate response

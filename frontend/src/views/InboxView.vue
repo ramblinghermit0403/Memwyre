@@ -1,112 +1,187 @@
 <template>
-  <div class="p-6 h-screen overflow-y-auto bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <div class="max-w-4xl mx-auto">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold flex items-center gap-2">
-          <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
-          Memory Inbox
-          <span v-if="store.count > 0" class="ml-2 px-2 py-0.5 text-sm bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300 rounded-full">{{ store.count }}</span>
-        </h1>
-        <div class="text-sm text-gray-500 flex flex-col items-end">
-          <span>{{ authStore.user?.email }}</span>
-          <span :class="store.connected ? 'text-green-500' : 'text-gray-400'">{{ store.connected ? '● Live' : '○ Offline' }}</span>
-        </div>
-      </div>
+  <div class="h-screen flex flex-col bg-white dark:bg-app transition-colors duration-300 font-sans overflow-hidden">
+    <NavBar />
 
-      <div v-if="store.items.length === 0" class="text-center py-20 text-gray-500">
-        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-        <p>You're all caught up! No pending memories.</p>
-      </div>
+    <main class="flex-1 overflow-hidden">
+       <div class="max-w-7xl mx-auto h-full flex pt-6 pb-6 px-4 sm:px-6 lg:px-8 gap-6">
+           
+           <!-- Left Pane: Incoming Items -->
+           <div class="w-1/3 flex flex-col bg-white dark:bg-surface rounded-xl shadow-sm border border-gray-200 dark:border-border overflow-hidden">
+               <div class="p-4 border-b border-gray-200 dark:border-border flex justify-between items-center bg-gray-50/50 dark:bg-gray-800">
+                   <h2 class="text-base font-semibold text-gray-900 dark:text-text-primary">Incoming Items</h2>
+                   <div class="flex gap-2 text-gray-400">
+                       <svg class="w-4 h-4 cursor-pointer hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" /></svg>
+                   </div>
+               </div>
+               
+               <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
+                   <div v-if="store.items.length === 0" class="text-center py-10 text-gray-400 text-sm">
+                       No pending items.
+                   </div>
+                   
+                   <div 
+                     v-for="item in store.items" 
+                     :key="item.id"
+                     @click="selectItem(item)"
+                     :class="['p-4 rounded-lg border cursor-pointer transition-all hover:shadow-sm', 
+                              selectedItem?.id === item.id 
+                                ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800' 
+                                : 'bg-white border-gray-200 dark:bg-gray-800 dark:border-border hover:border-blue-300 dark:hover:border-blue-700']"
+                   >
+                       <h3 class="font-medium text-gray-900 dark:text-text-primary mb-1 line-clamp-2">{{ item.details }}</h3>
+                       <div class="flex justify-between items-end mt-2">
+                           <div class="flex flex-col gap-1">
+                               <span class="text-xs text-gray-500 dark:text-text-secondary">{{ item.source || 'Unknown Source' }}</span>
+                               <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200 w-fit">
+                                   Pending
+                               </span>
+                           </div>
+                           <span class="text-[10px] text-gray-400">{{ formatTimeAgo(item.created_at) }}</span>
+                       </div>
+                   </div>
+               </div>
+           </div>
 
-      <div v-else class="space-y-4">
-        <!-- Inbox Item Card -->
-        <div v-for="item in store.items" :key="item.id" class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4 transition hover:shadow-md">
-          <div class="flex justify-between items-start">
-            <div class="flex-1">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="px-2 py-0.5 text-xs font-medium rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 uppercase">{{ item.source }}</span>
-                
-                <!-- Status Badge -->
-                <span v-if="item.status === 'approved'" class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium">
-                   Auto-Approved Notification
-                </span>
-                
-                <span class="text-xs text-gray-500">{{ new Date(item.timestamp || item.created_at).toLocaleString() }}</span>
-              </div>
-              
-              <div class="text-base mb-4 whitespace-pre-wrap font-bold">{{ item.details }}</div>
-              <div class="text-sm mb-4 whitespace-pre-wrap">{{ item.content }}</div>
-              
-              <!-- Triage Actions -->
-              <div class="flex gap-2">
-                <!-- If Pending -->
-                <template v-if="item.status === 'pending'">
-                  <button @click="store.handleAction(item.id, 'approve')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-md transition flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-                    Approve
-                  </button>
-                  <button @click="openEdit(item)" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-md transition">
-                    Edit
-                  </button>
-                  <button @click="store.handleAction(item.id, 'discard')" class="px-3 py-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm rounded-md transition">
-                    Discard
-                  </button>
-                </template>
-                
-                <!-- If Approved (Notification) -->
-                <template v-if="item.status === 'approved'">
-                   <button @click="store.handleAction(item.id, 'dismiss')" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-md transition flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-                    Dismiss (Keep)
-                  </button>
-                  <button @click="store.handleAction(item.id, 'discard')" class="px-3 py-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm rounded-md transition">
-                    Discard (Delete)
-                  </button>
-                </template>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Edit Modal (Simple implementation) -->
-    <div v-if="editingItem" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl shadow-xl">
-        <h3 class="text-lg font-bold mb-4">Edit Memory</h3>
-        <textarea v-model="editContent" class="w-full h-40 p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg mb-4 resize-none focus:ring-2 focus:ring-indigo-500"></textarea>
-        <div class="flex justify-end gap-2">
-          <button @click="editingItem = null" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
-          <button @click="saveEdit" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Approve & Save</button>
-        </div>
-      </div>
-    </div>
+           <!-- Right Pane: Detail View -->
+           <div class="w-2/3 bg-white dark:bg-surface rounded-xl shadow-sm border border-gray-200 dark:border-border flex flex-col overflow-hidden">
+               <div v-if="selectedItem" class="flex flex-col h-full">
+                   <!-- Content Header -->
+                   <div class="p-6 border-b border-gray-200 dark:border-border">
+                       <div class="flex justify-between items-start mb-4">
+                           <h1 class="text-2xl font-bold text-gray-900 dark:text-text-primary leading-tight">{{ selectedItem.details }}</h1>
+                           <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
+                               Pending
+                           </span>
+                       </div>
+                       <div class="flex items-center gap-6 text-sm text-gray-500 dark:text-text-secondary">
+                           <div class="flex flex-col">
+                               <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Source</span>
+                               <span>{{ selectedItem.source || 'Direct Entry' }}</span>
+                           </div>
+                           <div class="flex flex-col">
+                               <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Received</span>
+                               <span>{{ new Date(selectedItem.created_at).toLocaleString() }}</span>
+                           </div>
+                       </div>
+                   </div>
+
+                   <!-- Content Body -->
+                   <div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
+                       <div class="prose dark:prose-invert max-w-none">
+                           <p class="whitespace-pre-wrap text-gray-700 dark:text-gray-300">{{ selectedItem.content }}</p>
+                       </div>
+                   </div>
+
+                   <!-- Action Footer -->
+                   <div class="p-4 border-t border-gray-200 dark:border-border bg-gray-50 dark:bg-gray-800 flex justify-end gap-3 shrink-0">
+                       <button 
+                         @click="startEditing(selectedItem)"
+                         class="px-4 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-sm flex items-center gap-2"
+                       >
+                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                         Edit Full Content
+                       </button>
+                       <button 
+                         @click="dismissItem(selectedItem)"
+                         class="px-4 py-2 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 shadow-sm flex items-center gap-2"
+                       >
+                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                         Dismiss
+                       </button>
+                       <button 
+                         @click="approveItem(selectedItem)"
+                         class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm flex items-center gap-2 min-w-[100px] justify-center"
+                       >
+                         Approve
+                       </button>
+                   </div>
+               </div>
+
+               <!-- Empty Selection State -->
+               <div v-else class="h-full flex flex-col items-center justify-center text-gray-400">
+                   <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-full mb-4">
+                       <svg class="w-12 h-12 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+                   </div>
+                   <h3 class="text-lg font-medium text-gray-900 dark:text-text-primary">Select an item to review</h3>
+                   <p class="mt-1">Choose a pending memory from the list to view details and take action.</p>
+               </div>
+           </div>
+       </div>
+    </main>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useInboxStore } from '../stores/inbox';
-import { useAuthStore } from '../stores/auth';
+import { useRouter } from 'vue-router';
+import api from '../services/api';
+import NavBar from '../components/NavBar.vue';
+import { useToast } from 'vue-toastification';
 
 const store = useInboxStore();
-const authStore = useAuthStore();
-const editingItem = ref(null);
-const editContent = ref('');
+const router = useRouter();
+const toast = useToast();
+const selectedItem = ref(null);
 
-onMounted(() => {
-  store.fetchInbox();
+onMounted(async () => {
+  await store.fetchInbox();
   store.connectWebSocket();
+  if (store.items.length > 0 && !selectedItem.value) {
+      selectedItem.value = store.items[0];
+  }
 });
 
-const openEdit = (item) => {
-  editingItem.value = item;
-  editContent.value = item.content;
+watch(() => store.items, (newItems) => {
+    if (newItems.length > 0 && !selectedItem.value) {
+        selectedItem.value = newItems[0];
+    } else if (selectedItem.value && !newItems.find(i => i.id === selectedItem.value.id)) {
+        selectedItem.value = newItems.length > 0 ? newItems[0] : null;
+    }
+});
+
+const selectItem = (item) => {
+    selectedItem.value = item;
 };
 
-const saveEdit = async () => {
-  if (!editingItem.value) return;
-  await store.handleAction(editingItem.value.id, 'edit', { content: editContent.value });
-  editingItem.value = null;
+const formatTimeAgo = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = (now - date) / 1000;
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return `${Math.floor(diff / 86400)}d ago`;
+};
+
+const startEditing = (item) => {
+    router.push(`/editor/${item.id}`);
+};
+
+const dismissItem = async (item) => {
+    if (confirm('Dismiss this item from inbox?')) {
+        try {
+            await store.handleAction(item.id, 'dismiss');
+            toast.success('Item dismissed');
+            if (selectedItem.value?.id === item.id) {
+                selectedItem.value = store.items.length > 0 ? store.items[0] : null;
+            }
+        } catch (e) {
+            toast.error('Failed to dismiss item');
+        }
+    }
+};
+
+const approveItem = async (item) => {
+    try {
+        await store.handleAction(item.id, 'approve');
+        toast.success('Item approved and moved to memory');
+        if (selectedItem.value?.id === item.id) {
+            selectedItem.value = store.items.length > 0 ? store.items[0] : null;
+        }
+    } catch (e) {
+        toast.error('Failed to approve item');
+    }
 };
 </script>

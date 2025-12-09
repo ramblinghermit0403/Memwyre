@@ -1,22 +1,16 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
     <!-- Header -->
-    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <div class="flex items-center">
-          <button @click="$router.push('/')" class="mr-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-          </button>
-          <h1 class="text-xl font-bold text-indigo-600 dark:text-indigo-400">Universal Prompt Engine</h1>
-        </div>
-      </div>
-    </header>
+    <NavBar />
 
-    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8">
-      <!-- Left Panel: Controls -->
-      <div class="w-full lg:w-1/3 space-y-6">
+    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+      <div class="mb-8">
+         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Universal Prompt Engine</h1>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Left Panel: Controls -->
+        <div class="w-full lg:w-1/3 space-y-6">
         <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
           <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Configuration</h2>
           
@@ -105,6 +99,7 @@
           </div>
         </div>
       </div>
+      </div>
     </main>
   </div>
 </template>
@@ -113,6 +108,7 @@
 import { ref } from 'vue';
 import api from '../services/api';
 import { useToast } from 'vue-toastification';
+import NavBar from '../components/NavBar.vue';
 
 const query = ref('');
 const templateId = ref('standard');

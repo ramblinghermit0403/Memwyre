@@ -1,12 +1,28 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
+import { jwtDecode } from "jwt-decode";
 
 export const useAuthStore = defineStore('auth', {
-    state: () => ({
-        user: null,
-        token: localStorage.getItem('token') || null,
-        isAuthenticated: !!localStorage.getItem('token'),
-    }),
+    state: () => {
+        const token = localStorage.getItem('token');
+        let user = null;
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                if (!decoded.email) {
+                    throw new Error("Token missing email claim");
+                }
+                user = { email: decoded.email };
+            } catch (e) {
+                localStorage.removeItem('token');
+            }
+        }
+        return {
+            user,
+            token: token || null,
+            isAuthenticated: !!token, // Ensure we check if token is valid? Simplify for now.
+        };
+    },
     actions: {
         async login(email, password) {
             try {
@@ -17,8 +33,15 @@ export const useAuthStore = defineStore('auth', {
                 this.token = response.data.access_token;
                 this.isAuthenticated = true;
                 localStorage.setItem('token', this.token);
-                // Fetch user details if needed, or decode token
-                // For now, we just set isAuthenticated
+
+                try {
+                    const decoded = jwtDecode(this.token);
+                    console.log('Decoded Token (Login):', decoded); // Debug log
+                    this.user = { email: decoded.email || decoded.sub };
+                } catch (e) {
+                    console.error("Token decode failed", e);
+                }
+
                 return true;
             } catch (error) {
                 console.error('Login failed:', error);

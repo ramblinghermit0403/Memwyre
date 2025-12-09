@@ -14,9 +14,18 @@ class LLMService:
     async def generate_response(self, query: str, context: List[str], provider: str = "openai", api_key: Optional[str] = None) -> str:
         if not api_key:
             return "Error: API Key is required."
+            
+        if not context:
+            return "I couldn't find any relevant information in your Brain Vault to answer that. Please try adding more memories or documents related to your specific question."
 
         context_str = "\n\n".join(context)
-        system_prompt = f"You are a helpful assistant. Use the following context to answer the user's question.\n\nContext:\n{context_str}"
+        system_prompt = (
+            "You are the Brain Vault AI, a personal knowledge assistant. "
+            "Use ONLY the following Context to answer the user's question. "
+            "If the answer is not explicitly supported by the Context, state that you do not have enough information. "
+            "Do not hallucinate or use outside knowledge unless it is general definitions to help explain the context.\n\n"
+            f"Context:\n{context_str}"
+        )
         
         if provider == "openai":
             try:

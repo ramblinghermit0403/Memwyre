@@ -1,152 +1,173 @@
 <template>
-  <div class="h-screen flex flex-col bg-white dark:bg-gray-900">
-    <!-- Toolbar -->
-    <header class="h-auto min-h-14 border-b border-gray-200 dark:border-gray-700 flex flex-col justify-center px-4 bg-white dark:bg-gray-800 py-2 space-y-2">
-      <div class="flex items-center justify-between w-full">
-        <div class="flex items-center space-x-4 flex-1">
-          <button @click="goBack" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
+  <div class="h-screen flex flex-col bg-white dark:bg-app text-gray-900 dark:text-gray-100 font-sans">
+    
+    <!-- Clean Header (Title Only + Breadcrumb feel) -->
+    <header class="h-16 shrink-0 border-b border-gray-200 dark:border-border flex items-center justify-between px-6 bg-white dark:bg-surface">
+       <div class="flex items-center gap-4 flex-1">
+          <button @click="goBack" class="text-gray-400 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
           </button>
-          <input 
-            v-model="title" 
-            class="bg-transparent border-none focus:ring-0 text-lg font-medium text-gray-900 dark:text-white placeholder-gray-400 w-full"
-            placeholder="Document Title"
-            :disabled="isLocked"
-          />
-          <!-- Provenance Badges -->
-          <div class="flex items-center space-x-2" v-if="metadata.source">
-            <span class="px-2 py-0.5 text-xs rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 uppercase">{{ metadata.source }}</span>
-            <span class="px-2 py-0.5 text-xs rounded bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 uppercase">{{ metadata.status }}</span>
+          <div class="flex items-center gap-3 w-full max-w-2xl">
+              <span class="text-lg font-bold text-gray-900 dark:text-text-primary whitespace-nowrap">Edit Memory</span>
+              <div class="h-6 w-px bg-gray-200 dark:bg-gray-600"></div>
+              <input 
+                v-model="title" 
+                class="bg-transparent border border-transparent focus:border-gray-300 dark:focus:border-gray-600 hover:border-gray-200 dark:hover:border-gray-700 rounded px-2 py-1 text-sm text-gray-600 dark:text-gray-300 w-full transition-colors"
+                placeholder="Document Title"
+              />
           </div>
-        </div>
-        <div class="flex items-center space-x-3 shrink-0">
-          <span v-if="saving" class="text-sm text-gray-500 dark:text-gray-400">Saving...</span>
-          <span v-else-if="lastSaved" class="text-sm text-gray-500 dark:text-gray-400">Saved {{ lastSaved }}</span>
-          
-          <!-- Lock Toggle -->
-          <button 
-            @click="toggleLock" 
-            class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            :class="isLocked ? 'text-red-500' : 'text-green-500'"
-            title="Toggle Lock (Prevent Edits)"
-          >
-            <svg v-if="isLocked" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" /></svg>
-          </button>
-
-          <button 
-            @click="saveDocument" 
-            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="saving || isLocked"
-          >
-            Save
-          </button>
-          <button 
-            @click="togglePreview" 
-            class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-            title="Toggle Preview"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-          </button>
-          <button 
-            @click="toggleSidebar" 
-            class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-            title="Ask Question"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
-          </button>
-        </div>
-      </div>
-      
-      <!-- Tags Input -->
-      <div class="flex items-center space-x-2 pl-10 w-full">
-        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-        </svg>
-        <input 
-          v-model="tags" 
-          class="bg-transparent border-none focus:ring-0 text-sm text-gray-600 dark:text-gray-300 placeholder-gray-400 w-full"
-          placeholder="Add tags (comma separated)..."
-        />
-      </div>
+       </div>
+       <div class="flex items-center gap-3">
+           <span v-if="saving" class="text-xs text-gray-400 animate-pulse">Saving...</span>
+           <span v-else-if="lastSaved" class="text-xs text-gray-400">Saved {{ lastSaved }}</span>
+           <button 
+             v-if="documentId !== 'new'"
+             @click="deleteDocument"
+             class="p-2 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 rounded-md transition-colors"
+             title="Delete Memory"
+           >
+             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+           </button>
+           <button 
+             v-if="isInboxItem"
+             @click="approveDocument"
+             class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors mr-2"
+           >
+             Approve
+           </button>
+           <button 
+             @click="saveDocument"
+             :disabled="saving"
+             class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors"
+           >
+             Save Changes
+           </button>
+       </div>
     </header>
 
-    <!-- Editor & Preview -->
-    <div class="flex-1 flex overflow-hidden relative">
-      <!-- Editor Pane -->
-      <div :class="['h-full transition-all duration-300', showPreview ? 'w-1/2 border-r border-gray-200 dark:border-gray-700' : 'w-full']">
-        <vue-monaco-editor
-          v-model:value="content"
-          theme="vs-dark"
-          :options="editorOptions"
-          @mount="handleEditorMount"
-          language="markdown"
-          class="h-full w-full"
-        />
-      </div>
-
-      <!-- Preview Pane -->
-      <div v-if="showPreview" class="w-1/2 h-full overflow-auto bg-white dark:bg-gray-900 p-8 prose dark:prose-invert max-w-none">
-        <div v-html="renderedContent"></div>
-      </div>
-
-      <!-- Ask Question Sidebar -->
-      <AskQuestionSidebar 
-        :is-open="showSidebar" 
-        :document-id="documentId" 
-        type="document"
-        @close="showSidebar = false"
-      />
+    <!-- Toolbar (Functional) -->
+    <div class="h-10 shrink-0 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-surface/50 flex items-center px-6 gap-4 overflow-x-auto">
+        <div class="flex items-center gap-1 text-gray-500 dark:text-text-secondary">
+            <button @click="insertText('**', '**')" class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors" title="Bold (Markdown **)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6V4zm0 8h9a5 5 0 015 5 5 5 0 01-5 5H6v-10z" /></svg>
+            </button>
+            <button @click="insertText('*', '*')" class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors" title="Italic (Markdown *)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+            </button>
+             <button @click="insertText('<u>', '</u>')" class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors" title="Underline">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 19h14" /></svg>
+            </button>
+        </div>
+        <div class="h-4 w-px bg-gray-300 dark:bg-gray-600"></div>
+        <div class="flex items-center gap-1 text-gray-500 dark:text-text-secondary">
+            <button @click="insertText('- ')" class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors" title="List">
+                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
+             <button @click="insertText('[', '](url)')" class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors" title="Link">
+                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+            </button>
+             <button @click="insertText('![alt](', ')')" class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors" title="Image">
+                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            </button>
+        </div>
+         <div class="h-4 w-px bg-gray-300 dark:bg-gray-600"></div>
+          <div class="flex items-center gap-1 text-gray-500 dark:text-text-secondary">
+             <button @click="insertText('```\n', '\n```')" class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors" title="Code Block">
+                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+            </button>
+          </div>
     </div>
+
+    <!-- Main Editor Area with Padding to look like a document -->
+    <div class="flex-1 bg-gray-50 dark:bg-app overflow-y-auto p-4 sm:p-8 flex justify-center">
+        <div class="w-full max-w-4xl bg-white dark:bg-surface shadow-sm border border-gray-100 dark:border-border rounded-xl min-h-[600px] flex flex-col p-8 sm:p-12 relative">
+            <vue-monaco-editor
+              v-model:value="content"
+              theme="vs-light"
+              :options="editorOptions"
+              @mount="handleEditorMount"
+              language="markdown"
+              class="h-full w-full min-h-[500px]"
+            />
+        </div>
+    </div>
+
+    <!-- Tags Footer -->
+    <div class="shrink-0 bg-white dark:bg-surface border-t border-gray-200 dark:border-border p-4 px-6 sm:px-8">
+        <div class="max-w-4xl mx-auto w-full">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
+            <input 
+              v-model="tags" 
+              class="w-full border border-gray-200 dark:border-border rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 outline-none transition-shadow bg-gray-50 dark:bg-app"
+              placeholder="project-alpha, onboarding, strategy"
+            />
+        </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, shallowRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor';
-import MarkdownIt from 'markdown-it';
 import api from '../services/api';
 import { useThemeStore } from '../stores/theme';
-import AskQuestionSidebar from '../components/AskQuestionSidebar.vue';
 
 const route = useRoute();
 const router = useRouter();
 const themeStore = useThemeStore();
 
-const md = new MarkdownIt();
+const isInboxItem = ref(false);
 
 const title = ref('');
 const content = ref('');
 const tags = ref('');
-const showPreview = ref(true);
-const showSidebar = ref(false);
 const saving = ref(false);
 const lastSaved = ref(null);
-const isLocked = ref(false); 
-const metadata = ref({ source: '', status: '' });
 const documentId = computed(() => route.params.id);
+const editorInstance = shallowRef(null);
+
 const editorOptions = computed(() => ({
   automaticLayout: true,
   minimap: { enabled: false },
   wordWrap: 'on',
-  fontSize: 14,
-  theme: themeStore.isDark ? 'vs-dark' : 'vs',
+  fontSize: 15,
+  fontFamily: 'Inter, sans-serif',
+  theme: themeStore.isDark ? 'vs-dark' : 'vs-light',
+  lineNumbers: 'off',
   padding: { top: 16, bottom: 16 },
-  readOnly: isLocked.value
+  overviewRulerLanes: 0,
+  hideCursorInOverviewRuler: true,
+  scrollbar: {
+      vertical: 'hidden',
+      horizontal: 'hidden'
+  },
+  scrollBeyondLastLine: false,
 }));
 
-const renderedContent = computed(() => md.render(content.value || ''));
-
 const handleEditorMount = (editor) => {
-  // editor instance available here
+  editorInstance.value = editor;
+  if (themeStore.isDark) {
+    // Force dark theme if needed, usually handled by prop
+  }
+};
+
+const insertText = (prefix, suffix = '') => {
+  const editor = editorInstance.value;
+  if (!editor) return;
+
+  const selection = editor.getSelection();
+  const text = editor.getModel().getValueInRange(selection);
+  const newText = prefix + text + suffix;
+
+  editor.executeEdits('toolbar', [{
+    range: selection,
+    text: newText,
+    forceMoveMarkers: true
+  }]);
+  
+  editor.focus();
 };
 
 const resolvedId = ref(null);
@@ -155,45 +176,55 @@ const fetchDocument = async () => {
   try {
     if (documentId.value === 'new') return;
 
-    // Use /memory/ endpoint which returns both memories and documents with tags
-    const response = await api.get('/memory/');
-    
-    // Find by ID match (handling mem_123 and doc_123 prefixes)
-    let doc = response.data.find(d => d.id === documentId.value);
-    
-    if (!doc) {
-      // Fallback: try to find by numeric ID if prefix is missing in route or vice versa
-      const numericId = documentId.value.split('_').pop();
-      doc = response.data.find(d => d.id.endsWith(`_${numericId}`));
+    // 1. Try fetching from Memory List
+    let found = false;
+    try {
+        const response = await api.get('/memory/');
+        let doc = response.data.find(d => d.id === documentId.value);
+        if (!doc) {
+           const numericId = documentId.value.split('_').pop();
+           doc = response.data.find(d => d.id.endsWith(`_${numericId}`));
+        }
+        
+        if (doc) {
+            resolvedId.value = doc.id;
+            title.value = doc.title;
+            content.value = doc.content || '';
+            tags.value = Array.isArray(doc.tags) ? doc.tags.join(', ') : (doc.tags || '');
+            isInboxItem.value = false;
+            found = true;
+        }
+    } catch (e) { console.log('Not in memory list', e); }
+
+    // 2. If not found, try Inbox
+    if (!found) {
+        try {
+            const inboxRes = await api.get(`/inbox/${documentId.value}`);
+            if (inboxRes.data) {
+                const doc = inboxRes.data;
+                resolvedId.value = doc.id;
+                title.value = doc.details || 'Untitled';
+                content.value = doc.content || '';
+                tags.value = ''; // Pending items might not show tags here yet
+                isInboxItem.value = true;
+                found = true;
+            }
+        } catch (e) {
+             console.log('Not in inbox', e);
+        }
     }
-    
-    if (doc) {
-      resolvedId.value = doc.id; // Store the full ID with prefix (e.g., doc_1, mem_1)
-      title.value = doc.title;
-      content.value = doc.content || '';
-      tags.value = Array.isArray(doc.tags) ? doc.tags.join(', ') : (doc.tags || '');
-      metadata.value = { 
-        source: doc.source_llm || 'user', 
-        status: doc.status || 'approved' 
-      };
-      // Auto-lock if it's an external memory that is not user-created?
-      // For now, default unlocked unless status is 'archived'
-      if (doc.status === 'archived') isLocked.value = true;
-    } else {
-      console.error('Document not found in list');
-      alert('Document not found');
-      router.push('/');
+
+    if (!found) {
+        router.push('/');
     }
+
   } catch (error) {
     console.error('Error fetching document:', error);
   }
 };
 
 const saveDocument = async () => {
-  if (!title.value) {
-    alert('Please enter a title');
-    return;
-  }
+  if (!title.value) return;
   
   saving.value = true;
   try {
@@ -205,104 +236,75 @@ const saveDocument = async () => {
         content: content.value,
         tags: tagsList
       });
-      // Redirect to edit page of new doc
       router.replace(`/editor/mem_${response.data.id}`);
     } else {
-      // Use resolvedId if available, otherwise fallback to documentId
       const targetId = resolvedId.value || documentId.value;
       
-      // Determine endpoint based on ID prefix
-      const isDoc = targetId.startsWith('doc_');
-      const id = targetId.split('_')[1] || targetId;
-      
-      if (isDoc) {
-         await api.put(`/documents/${id}`, {
-          title: title.value,
-          content: content.value,
-          tags: tagsList
-        });
+      if (isInboxItem.value) {
+           await api.put(`/inbox/${targetId}`, {
+              title: title.value,
+              content: content.value
+          });
       } else {
-        // Assume memory
-        await api.put(`/memory/${targetId}`, {
-          title: title.value,
-          content: content.value,
-          tags: tagsList
-        });
+          await api.put(`/memory/${targetId}`, {
+              title: title.value,
+              content: content.value,
+              tags: tagsList
+          });
       }
-      console.log('Updated document:', targetId);
     }
     lastSaved.value = new Date().toLocaleTimeString();
   } catch (error) {
     console.error('Error saving document:', error);
-    
-    if (error.response && error.response.status === 401) return;
-    
-    let errorMessage = error.message;
-    if (error.response?.data?.detail) {
-      const detail = error.response.data.detail;
-      if (typeof detail === 'object') {
-        errorMessage = JSON.stringify(detail);
-      } else {
-        errorMessage = detail;
-      }
-    }
-    
-    alert('Failed to save: ' + errorMessage);
   } finally {
     saving.value = false;
   }
 };
 
-const togglePreview = () => {
-  showPreview.value = !showPreview.value;
+const approveDocument = async () => {
+    if (!confirm('Approve this pending item and move to memory?')) return;
+    try {
+        const targetId = resolvedId.value || documentId.value;
+        await api.post(`/inbox/${targetId}/action`, { action: 'approve' });
+        router.push('/inbox');
+    } catch (e) {
+        console.error('Failed to approve', e);
+        alert('Failed to approve document');
+    }
 };
 
-const toggleSidebar = () => {
-  showSidebar.value = !showSidebar.value;
-};
+const deleteDocument = async () => {
+  if (documentId.value === 'new') {
+    router.push('/');
+    return;
+  }
+  
+  if (!confirm('Are you sure you want to delete this memory? This cannot be undone.')) return;
 
-const toggleLock = () => {
-  isLocked.value = !isLocked.value;
+  try {
+    const targetId = resolvedId.value || documentId.value;
+    // Handle 'mem_' prefix if present in ID but API expects int, or vice versa.
+    // Usually API takes the ID passed.
+    await api.delete(`/memory/${targetId}`);
+    router.push('/');
+  } catch (error) {
+    console.error('Error deleting document:', error);
+    alert('Failed to delete document'); // Simple feedback
+  }
 };
 
 const goBack = () => {
-  router.push('/');
+  router.go(-1);
 };
 
 // Auto-save every 30 seconds if changed
-let autoSaveInterval;
+// Auto-save disabled by user request
 onMounted(() => {
   fetchDocument();
-  autoSaveInterval = setInterval(() => {
-    if (content.value && documentId.value && documentId.value !== 'new') {
-        saveDocument();
-    }
-  }, 30000);
 });
 
 onUnmounted(() => {
-  if (autoSaveInterval) clearInterval(autoSaveInterval);
-});
-
-watch(() => themeStore.isDark, (isDark) => {
-  // Monaco theme update handled by computed options
+  // cleanup
 });
 
 </script>
-
-<style scoped>
-/* Custom scrollbar for preview */
-.prose::-webkit-scrollbar {
-  width: 8px;
-}
-.prose::-webkit-scrollbar-track {
-  background: transparent;
-}
-.prose::-webkit-scrollbar-thumb {
-  background-color: #d1d5db; /* bg-gray-300 */
-  border-radius: 0.25rem; /* rounded */
-}
-.dark .prose::-webkit-scrollbar-thumb {
-  background-color: #4b5563; /* dark:bg-gray-600 */
-}
-</style>

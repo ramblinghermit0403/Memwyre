@@ -2,13 +2,13 @@
   <div class="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
     <!-- Header -->
     <div class="absolute top-0 left-0 right-0 z-10 p-4 flex justify-between items-center pointer-events-none">
-      <div class="flex items-center space-x-4 pointer-events-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <button @click="router.push('/')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
+      <div class="flex items-center space-x-4 pointer-events-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 select-none">
+        <button @click="router.push('/')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors cursor-pointer focus:outline-none">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </button>
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Memory Map</h2>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white cursor-default">Memory Map</h2>
       </div>
       
       <div class="pointer-events-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400">
