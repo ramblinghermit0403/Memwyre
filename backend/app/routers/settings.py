@@ -1,15 +1,16 @@
 from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, Body
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.api import deps
 from app.models.user import User
 
 router = APIRouter()
 
 @router.patch("/settings", response_model=Dict[str, Any])
-def update_settings(
+@router.patch("/settings", response_model=Dict[str, Any])
+async def update_settings(
     settings: Dict[str, Any] = Body(...),
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -34,13 +35,14 @@ def update_settings(
     from sqlalchemy.orm.attributes import flag_modified
     flag_modified(current_user, "settings")
     
-    db.commit()
-    db.refresh(current_user)
+    await db.commit()
+    await db.refresh(current_user)
     
     return current_user.settings
 
 @router.get("/settings", response_model=Dict[str, Any])
-def get_settings(
+@router.get("/settings", response_model=Dict[str, Any])
+async def get_settings(
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """

@@ -1,7 +1,8 @@
 from typing import List, Any, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
 from app.api import deps
 from app.models.user import User
@@ -21,10 +22,13 @@ class ChatResponse(BaseModel):
     response: str
     context: List[str]
 
+from app.models.memory import Memory
+from app.models.document import Document
+
 @router.post("/chat", response_model=ChatResponse)
 async def chat_with_llm(
     request: ChatRequest,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -45,14 +49,13 @@ async def chat_with_llm(
                     request.filter["memory_id"] = int(request.filter["memory_id"])
                 except:
                     pass
-                    
-            # ChromaDB requires $and for multiple conditions
-            where_clause = {
-                "$and": [
-                    {"user_id": current_user.id},
-                    request.filter
-                ]
-            }
+            
+            # ChromaDB/Pinecone filter adaptation
+            # Pinecone uses $and for multiple conditions filter={"$and": [...]}
+            # But specific "document_id" is simple scalar.
+            # Only use $and if we have multiple keys.
+            if len(request.filter) > 0:
+                where_clause.update(request.filter)
             
         results = vector_store.query(request.query, n_results=request.top_k, where=where_clause)
         
@@ -65,8 +68,28 @@ async def chat_with_llm(
             
             for i, doc in enumerate(results["documents"][0]):
                 distance = results["distances"][0][i]
+                
+                # Fallback: If doc text is missing (e.g. from old migration), fetch from DB
+                if not doc and results["metadatas"][0][i]:
+                    meta = results["metadatas"][0][i]
+                    try:
+                        if meta.get("memory_id"):
+                            result = await db.execute(select(Memory).where(Memory.id == int(meta["memory_id"])))
+                            mem = result.scalars().first()
+                            if mem:
+                                doc = mem.content
+                        elif meta.get("document_id"):
+                             result = await db.execute(select(Document).where(Document.id == int(meta["document_id"])))
+                             doc_obj = result.scalars().first()
+                             if doc_obj:
+                                 # This might be full content, but better than nothing
+                                 doc = doc_obj.content
+                    except Exception as e:
+                        print(f"Fallback fetch failed: {e}")
+
                 if distance < threshold:
-                    context.append(doc)
+                    if doc:
+                        context.append(doc)
         elif results["documents"]:
              # Fallback if no distances returned (unlikely)
              context = results["documents"][0]
@@ -83,3 +106,45 @@ async def chat_with_llm(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat failed: {str(e)}")
+
+class SuggestTagsRequest(BaseModel):
+    content: str
+    existing_tags: List[str] = []
+    
+@router.post("/suggest_tags", response_model=List[str])
+async def suggest_tags(
+    request: SuggestTagsRequest,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Generate AI tags for the provided content on demand.
+    """
+    from app.models.client import AIClient
+    from app.core.encryption import encryption_service
+    
+    # Fetch API Key (Gemini preferred for speed/cost)
+    provider = "gemini"
+    result = await db.execute(select(AIClient).where(AIClient.user_id == current_user.id, AIClient.provider == provider))
+    client = result.scalars().first()
+    
+    if not client:
+        provider = "openai"
+        result = await db.execute(select(AIClient).where(AIClient.user_id == current_user.id, AIClient.provider == provider))
+        client = result.scalars().first()
+        
+    if not client:
+        raise HTTPException(status_code=400, detail="No AI provider configured. Please add an API key in Settings.")
+        
+    try:
+        api_key = encryption_service.decrypt(client.encrypted_api_key)
+    except:
+        raise HTTPException(status_code=500, detail="Failed to decrypt API key.")
+        
+    metadata = await llm_service.extract_metadata(
+        content=request.content,
+        existing_tags=request.existing_tags,
+        api_key=api_key
+    )
+    
+    return metadata.get("tags", [])

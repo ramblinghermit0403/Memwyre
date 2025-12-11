@@ -1,7 +1,7 @@
 from typing import List, Optional, Any
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api import deps
 from app.models.user import User
@@ -22,9 +22,10 @@ class PromptGenerationResponse(BaseModel):
     token_count: int
 
 @router.post("/generate", response_model=PromptGenerationResponse)
+@router.post("/generate", response_model=PromptGenerationResponse)
 async def generate_prompt(
     request: PromptGenerationRequest,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """

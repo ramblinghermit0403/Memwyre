@@ -1,7 +1,12 @@
 from typing import List, Any
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 import uuid
+import random
+from datetime import datetime, timedelta
+from sqlalchemy import or_
 
 from app.api import deps
 from app.models.user import User
@@ -9,13 +14,46 @@ from app.models.memory import Memory
 from app.schemas.memory import Memory as MemorySchema, MemoryCreate, MemoryUpdate
 from app.services.vector_store import vector_store
 from app.services.ingestion import ingestion_service
+from app.services.metadata_extraction import metadata_service
+from app.db.session import AsyncSessionLocal
+from app.worker import process_memory_metadata_task, ingest_memory_task
+
 
 router = APIRouter()
 
+@router.get("/tags", response_model=List[str])
+async def get_all_tags(
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Get all unique tags used by the current user.
+    """
+    # Fetch all memories with tags for this user
+    result = await db.execute(select(Memory.tags).where(
+        Memory.user_id == current_user.id, 
+        Memory.tags != None
+    ))
+    memories = result.all()
+    
+    unique_tags = set()
+    for mem in memories:
+        # mem is a Row
+        tags_val = mem.tags if hasattr(mem, 'tags') else mem[0]
+        if tags_val:
+            for tag in tags_val:
+                if tag:
+                    unique_tags.add(tag)
+                    
+    return sorted(list(unique_tags))
+
+
+
 @router.post("/", response_model=MemorySchema)
-def create_memory(
+async def create_memory(
     memory_in: MemoryCreate,
-    db: Session = Depends(deps.get_db),
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -28,10 +66,9 @@ def create_memory(
     embedding_id = str(uuid.uuid4())
     
     # Check Auto-Approve Setting
-    # Default to True
     auto_approve = True
     user_settings = current_user.settings
-    print(f"DEBUG: User Settings Raw: {user_settings} (Type: {type(user_settings)})")
+    # ... Same logic ...
     
     if user_settings:
         if isinstance(user_settings, str):
@@ -44,25 +81,14 @@ def create_memory(
         if isinstance(user_settings, dict):
             auto_approve = user_settings.get("auto_approve", True)
             
-    print(f"DEBUG: Auto Approve Evaluated: {auto_approve}")
-        
     initial_status = "approved" if auto_approve else "pending"
     
-    # Inbox Logic
-    # If pending -> Always in inbox
-    # If approved -> Only in inbox if it's from Extension/External?
-    # We can use tags to heuristically detect extension usage if source info isn't available
     is_extension = "extension" in (memory_in.tags or [])
-    
-    # If it's from extension, we WANT it in inbox even if approved (User Request)
-    # If it's pure manual (Web UI), we likely don't want it in inbox if approved.
     
     show_in_inbox = True 
     if initial_status == "approved" and not is_extension:
         show_in_inbox = False
         
-    print(f"DEBUG: Status: {initial_status}, ShowInInbox: {show_in_inbox}")
-    
     memory = Memory(
         title=memory_in.title,
         content=memory_in.content,
@@ -74,66 +100,90 @@ def create_memory(
     )
     db.add(memory)
     try:
-        db.commit()
+        await db.commit()
         print("Memory committed to DB")
     except Exception as e:
         print(f"Error committing to DB: {e}")
-        db.rollback()
+        await db.rollback()
         raise e
         
-    db.refresh(memory)
+    await db.refresh(memory)
     print(f"Memory ID: {memory.id}")
     
-    # Ingest and Add to Vector DB
-    # Only if approved
+    # Trigger Background Analysis (Auto-Tagging + Similarity) via Celery
+    process_memory_metadata_task.delay(memory.id, current_user.id)
+    
+    # Ingest and Add to Vector DB via Celery
     if initial_status == "approved":
-        try:
-            ids, documents_content, metadatas = ingestion_service.process_text(
-                text=memory_in.content,
-                document_id=memory.id,
-                title=memory_in.title,
-                doc_type="memory",
-                metadata={"user_id": current_user.id, "memory_id": memory.id, "tags": str(memory_in.tags) if memory_in.tags else ""}
-            )
-            
-            if ids:
-                # Update memory with actual first embedding ID
-                memory.embedding_id = ids[0]
-                db.commit()
-                
-                vector_store.add_documents(
-                    ids=ids,
-                    documents=documents_content,
-                    metadatas=metadatas
-                )
-                print("Memory added to Vector Store")
-                
-        except Exception as e:
-            print(f"Error adding to Vector Store: {e}")
-            # We might want to rollback DB here or just log error
+        ingest_memory_task.delay(
+            memory.id,
+            current_user.id,
+            memory_in.content,
+            memory_in.title,
+            memory_in.tags,
+            "user"
+        )
     
     return memory
 
 from app.models.document import Document
 
+class CheckDuplicateRequest(BaseModel):
+    content: str
+
+@router.post("/check-duplicate", response_model=Any)
+async def check_duplicate(
+    request: CheckDuplicateRequest,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Check if content is similar to existing memories (Real-time check).
+    """
+    if not request.content or len(request.content) < 10:
+        return {"is_duplicate": False, "percent": 0.0}
+        
+    try:
+        results = vector_store.query(request.content, n_results=1, where={"user_id": current_user.id})
+        
+        if results["ids"] and results["distances"]:
+             dist = results["distances"][0][0]
+             similarity = (1 - dist) * 100
+             
+             if similarity > 70:
+                 metadata = results["metadatas"][0][0]
+                 return {
+                     "is_duplicate": True,
+                     "percent": round(similarity, 1),
+                     "existing_id": metadata.get("memory_id"),
+                     "title": metadata.get("source_id", "Unknown") # Or fetch title from DB if needed
+                 }
+                 
+        return {"is_duplicate": False, "percent": 0.0}
+    except Exception as e:
+        print(f"Check duplicate failed: {e}")
+        return {"is_duplicate": False, "percent": 0.0}
+
 @router.get("/", response_model=List[MemorySchema])
-def read_memories(
+async def read_memories(
     skip: int = 0,
     limit: int = 100,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
     Retrieve memories and documents.
     """
     # Fetch Memories (Only Approved)
-    memories = db.query(Memory).filter(
+    result_mem = await db.execute(select(Memory).where(
         Memory.user_id == current_user.id,
         Memory.status == "approved"
-    ).all()
+    ))
+    memories = result_mem.scalars().all()
     
     # Fetch Documents
-    documents = db.query(Document).filter(Document.user_id == current_user.id).all()
+    result_doc = await db.execute(select(Document).where(Document.user_id == current_user.id))
+    documents = result_doc.scalars().all()
     
     results = []
     
@@ -170,11 +220,41 @@ def read_memories(
     # Apply pagination
     return results[skip : skip + limit]
 
+@router.get("/review", response_model=Any)
+async def get_daily_review(
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Get the previous 5 memories for review.
+    """
+    # Simply fetch the 5 most recent approved memories
+    result = await db.execute(
+        select(Memory).where(
+            Memory.user_id == current_user.id,
+            Memory.status == "approved"
+        ).order_by(Memory.created_at.desc()).limit(5)
+    )
+    memories = result.scalars().all()
+    
+    results = []
+    for mem in memories:
+        results.append({
+            "id": f"mem_{mem.id}",
+            "title": mem.title,
+            "content": mem.content,
+            "created_at": mem.created_at,
+            "tags": mem.tags,
+            "reason": "recent"
+        })
+        
+    return results
+
 @router.put("/{memory_id}", response_model=MemorySchema)
-def update_memory(
+async def update_memory(
     memory_id: str,
     memory_in: MemoryUpdate,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -191,15 +271,16 @@ def update_memory(
         except ValueError:
              raise HTTPException(status_code=400, detail="Invalid ID format")
     
-    memory = db.query(Memory).filter(Memory.id == real_id, Memory.user_id == current_user.id).first()
+    result = await db.execute(select(Memory).where(Memory.id == real_id, Memory.user_id == current_user.id))
+    memory = result.scalars().first()
     if not memory:
         raise HTTPException(status_code=404, detail="Memory not found")
     
     memory.title = memory_in.title
     memory.content = memory_in.content
     memory.tags = memory_in.tags
-    db.commit()
-    db.refresh(memory)
+    await db.commit()
+    await db.refresh(memory)
     
     # Update Vector DB (Delete old, add new)
     if memory.embedding_id:
@@ -226,7 +307,7 @@ def update_memory(
     # Update memory with the first embedding ID (or we need a better way to track chunks for memories)
     if ids:
         memory.embedding_id = ids[0]
-        db.commit()
+        await db.commit()
 
     vector_store.add_documents(
         ids=ids,
@@ -247,9 +328,9 @@ def update_memory(
     }
 
 @router.delete("/{memory_id}", response_model=Any)
-def delete_memory(
+async def delete_memory(
     memory_id: str,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -258,48 +339,47 @@ def delete_memory(
     if memory_id.startswith("doc_"):
         # Handle Document Deletion
         doc_id = int(memory_id.split("_")[1])
-        document = db.query(Document).filter(Document.id == doc_id, Document.user_id == current_user.id).first()
+        result = await db.execute(select(Document).where(Document.id == doc_id, Document.user_id == current_user.id))
+        document = result.scalars().first()
         if not document:
             raise HTTPException(status_code=404, detail="Document not found")
         
         # Delete chunks from vector store?
-        # We need to find chunks associated with this doc. 
-        # The vector store delete by ID might be tricky if we don't have embedding IDs handy.
-        # But our Document model has chunks relationship.
-        
         for chunk in document.chunks:
             if chunk.embedding_id:
                 vector_store.delete(ids=[chunk.embedding_id])
         
-        db.delete(document)
-        db.commit()
+        await db.delete(document)
+        await db.commit()
         return {"status": "success", "id": memory_id}
         
     elif memory_id.startswith("mem_"):
         # Handle Memory Deletion
         mem_id = int(memory_id.split("_")[1])
-        memory = db.query(Memory).filter(Memory.id == mem_id, Memory.user_id == current_user.id).first()
+        result = await db.execute(select(Memory).where(Memory.id == mem_id, Memory.user_id == current_user.id))
+        memory = result.scalars().first()
         if not memory:
             raise HTTPException(status_code=404, detail="Memory not found")
         
         if memory.embedding_id:
             vector_store.delete(ids=[memory.embedding_id])
             
-        db.delete(memory)
-        db.commit()
+        await db.delete(memory)
+        await db.commit()
         return {"status": "success", "id": memory_id}
     
     else:
         # Fallback for old int IDs if any
         try:
             mem_id = int(memory_id)
-            memory = db.query(Memory).filter(Memory.id == mem_id, Memory.user_id == current_user.id).first()
+            result = await db.execute(select(Memory).where(Memory.id == mem_id, Memory.user_id == current_user.id))
+            memory = result.scalars().first()
             if not memory:
                 raise HTTPException(status_code=404, detail="Memory not found")
             if memory.embedding_id:
                 vector_store.delete(ids=[memory.embedding_id])
-            db.delete(memory)
-            db.commit()
+            await db.delete(memory)
+            await db.commit()
             return {"status": "success", "id": memory_id}
         except ValueError:
              raise HTTPException(status_code=400, detail="Invalid ID format")

@@ -1,6 +1,7 @@
 from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from app.api import deps
 from app.models.user import User
 from app.models.client import AIClient
@@ -10,20 +11,21 @@ from app.core.encryption import encryption_service
 router = APIRouter()
 
 @router.get("/llm-keys", response_model=List[AIClientResponse])
-def get_keys(
-    db: Session = Depends(deps.get_db),
+async def get_keys(
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
     List connected LLM clients.
     """
-    clients = db.query(AIClient).filter(AIClient.user_id == current_user.id).all()
+    result = await db.execute(select(AIClient).where(AIClient.user_id == current_user.id))
+    clients = result.scalars().all()
     return clients
 
 @router.post("/llm-keys", response_model=AIClientResponse)
-def add_key(
+async def add_key(
     client_in: AIClientCreate,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -42,24 +44,25 @@ def add_key(
         permissions=client_in.permissions
     )
     db.add(client)
-    db.commit()
-    db.refresh(client)
+    await db.commit()
+    await db.refresh(client)
     
     return client
 
 @router.delete("/llm-keys/{client_id}")
-def delete_key(
+async def delete_key(
     client_id: int,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
     Remove a connected LLM client.
     """
-    client = db.query(AIClient).filter(AIClient.id == client_id, AIClient.user_id == current_user.id).first()
+    result = await db.execute(select(AIClient).where(AIClient.id == client_id, AIClient.user_id == current_user.id))
+    client = result.scalars().first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
         
-    db.delete(client)
-    db.commit()
+    await db.delete(client)
+    await db.commit()
     return {"status": "success", "message": "Key deleted"}

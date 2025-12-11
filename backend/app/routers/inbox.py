@@ -1,12 +1,14 @@
-from typing import Any, List
+from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from app.api import deps
 from app.models.user import User
 from app.models.memory import Memory
 from app.services.vector_store import vector_store
 from app.services.ingestion import ingestion_service
 from app.services.websocket import manager
+from app.worker import ingest_memory_task
 import asyncio
 from pydantic import BaseModel
 
@@ -18,25 +20,30 @@ class InboxItem(BaseModel):
     source: str
     created_at: Any
     status: str
-    details: str = None
-    similarity_score: float = 0.0 # For duplicates?
+    details: Optional[str] = None
+    similarity_score: float = 0.0 
+    task_type: Optional[str] = None
+    tags: Optional[List[str]] = None
     
 class InboxAction(BaseModel):
     action: str # "approve", "discard", "edit", "dismiss"
     payload: Any = None # If edit, new content
 
 @router.get("/", response_model=List[InboxItem])
-def get_inbox(
-    db: Session = Depends(deps.get_db),
+async def get_inbox(
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
     List pending memories.
     """
-    memories = db.query(Memory).filter(
-        Memory.user_id == current_user.id,
-        Memory.show_in_inbox == True
-    ).order_by(Memory.created_at.desc()).all()
+    result = await db.execute(
+        select(Memory).where(
+            Memory.user_id == current_user.id,
+            Memory.show_in_inbox == True
+        ).order_by(Memory.created_at.desc())
+    )
+    memories = result.scalars().all()
     
     results = []
     for mem in memories:
@@ -46,7 +53,9 @@ def get_inbox(
             source=mem.source_llm or "unknown",
             created_at=mem.created_at,
             status=mem.status,
-            details=mem.title
+            details=mem.title,
+            task_type=mem.task_type,
+            tags=mem.tags
         ))
         
     return results
@@ -55,7 +64,7 @@ def get_inbox(
 async def inbox_action(
     memory_id: str,
     action_in: InboxAction,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -66,35 +75,29 @@ async def inbox_action(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid ID")
 
-    memory = db.query(Memory).filter(Memory.id == mem_id_int, Memory.user_id == current_user.id).first()
+    result = await db.execute(select(Memory).where(
+        Memory.id == mem_id_int, 
+        Memory.user_id == current_user.id
+    ))
+    memory = result.scalars().first()
     if not memory:
         raise HTTPException(status_code=404, detail="Memory not found")
         
     if action_in.action == "approve":
         memory.status = "approved"
         memory.show_in_inbox = False
-        db.commit()
-        db.refresh(memory)
+        await db.commit()
+        await db.refresh(memory)
         
-        # Ingest
-        # Note: In a real app, offload this to a background task to keep API fast
-        ids, documents_content, metadatas = ingestion_service.process_text(
-            text=memory.content,
-            document_id=memory.id,
-            title=memory.title,
-            doc_type="memory",
-            metadata={"user_id": current_user.id, "memory_id": memory.id, "tags": str(memory.tags) if memory.tags else "", "source": memory.source_llm}
+        # ingest logic via Celery
+        ingest_memory_task.delay(
+            memory.id, 
+            current_user.id, 
+            memory.content, 
+            memory.title,
+            memory.tags,
+            memory.source_llm
         )
-        
-        if ids:
-            memory.embedding_id = ids[0]
-            db.commit()
-            
-            vector_store.add_documents(
-                ids=ids,
-                documents=documents_content,
-                metadatas=metadatas
-            )
         
         await manager.broadcast({"type": "inbox_update", "id": memory_id, "action": "approve"})
         return {"status": "approved", "id": memory_id}
@@ -102,7 +105,7 @@ async def inbox_action(
     elif action_in.action == "discard":
         memory.status = "discarded"
         
-        # Ensure it's removed from Vector DB if it was there (e.g. old memory or bug)
+        # Ensure it's removed from Vector DB
         if memory.embedding_id:
             try:
                 vector_store.delete(ids=[memory.embedding_id])
@@ -110,7 +113,7 @@ async def inbox_action(
             except:
                 pass
                 
-        db.commit()
+        await db.commit()
         await manager.broadcast({"type": "inbox_update", "id": memory_id, "action": "discard"})
         return {"status": "discarded", "id": memory_id}
         
@@ -119,31 +122,31 @@ async def inbox_action(
             raise HTTPException(status_code=400, detail="Missing content for edit")
             
         memory.content = action_in.payload["content"]
-        memory.status = "approved" # approving on edit? Or keep pending? Let's approve for now as explicit user action.
+        memory.status = "approved" 
         
-        db.commit()
-        db.refresh(memory)
-        # Ingest logic same as approve... (Duplication here, refactor later)
+        await db.commit()
+        await db.refresh(memory)
         
-        ids, documents_content, metadatas = ingestion_service.process_text(
-            text=memory.content,
-            document_id=memory.id,
-            title=memory.title,
-            doc_type="memory",
-            metadata={"user_id": current_user.id, "memory_id": memory.id, "tags": str(memory.tags) if memory.tags else "", "source": memory.source_llm}
+        await db.commit()
+        await db.refresh(memory)
+        
+        # ingest via Celery
+        ingest_memory_task.delay(
+            memory.id, 
+            current_user.id, 
+            memory.content, 
+            memory.title,
+            memory.tags,
+            memory.source_llm
         )
-        if ids:
-            memory.embedding_id = ids[0]
-            db.commit()
-            vector_store.add_documents(ids=ids, documents=documents_content, metadatas=metadatas)
             
         await manager.broadcast({"type": "inbox_update", "id": memory_id, "action": "edit"})
         return {"status": "approved_edited", "id": memory_id}
         
     elif action_in.action == "dismiss":
-        # Just hide from inbox, keep status (likely 'approved' if auto-approved)
+        # Just hide from inbox
         memory.show_in_inbox = False
-        db.commit()
+        await db.commit()
         await manager.broadcast({"type": "inbox_update", "id": memory_id, "action": "dismiss"})
         return {"status": memory.status, "id": memory_id}
     
@@ -151,9 +154,9 @@ async def inbox_action(
         raise HTTPException(status_code=400, detail="Invalid action")
 
 @router.get("/{memory_id}", response_model=InboxItem)
-def get_inbox_item(
+async def get_inbox_item(
     memory_id: str,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -164,10 +167,11 @@ def get_inbox_item(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid ID")
 
-    memory = db.query(Memory).filter(
+    result = await db.execute(select(Memory).where(
         Memory.id == mem_id_int, 
         Memory.user_id == current_user.id
-    ).first()
+    ))
+    memory = result.scalars().first()
     
     if not memory:
         raise HTTPException(status_code=404, detail="Memory not found")
@@ -178,18 +182,21 @@ def get_inbox_item(
         source=memory.source_llm or "unknown",
         created_at=memory.created_at,
         status=memory.status,
-        details=memory.title
+        details=memory.title,
+        task_type=memory.task_type,
+        tags=memory.tags
     )
 
 class InboxUpdate(BaseModel):
     content: str
-    title: str = None
+    title: Optional[str] = None
+    tags: Optional[List[str]] = None
 
 @router.put("/{memory_id}")
 async def update_inbox_item(
     memory_id: str,
     data: InboxUpdate,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -200,10 +207,11 @@ async def update_inbox_item(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid ID")
 
-    memory = db.query(Memory).filter(
+    result = await db.execute(select(Memory).where(
         Memory.id == mem_id_int, 
         Memory.user_id == current_user.id
-    ).first()
+    ))
+    memory = result.scalars().first()
     
     if not memory:
         raise HTTPException(status_code=404, detail="Memory not found")
@@ -211,9 +219,12 @@ async def update_inbox_item(
     memory.content = data.content
     if data.title:
         memory.title = data.title
+    
+    if data.tags is not None:
+        memory.tags = data.tags
         
-    db.commit()
-    db.refresh(memory)
+    await db.commit()
+    await db.refresh(memory)
     
     # Broadcast update
     await manager.broadcast({"type": "inbox_update", "id": memory_id, "action": "update"})

@@ -92,8 +92,6 @@ async def save_memory(text: str, source: str = "mcp", tags: Optional[List[str]] 
                 auto_approve = user_settings.get("auto_approve", True)
                 
         initial_status = "approved" if auto_approve else "pending"
-        # MCP is external, so always show in inbox as notification? 
-        # Yes, per user request: "stil show the mcp and extension memoires in the inbox even they are pre apporved"
         show_in_inbox = True
         
         import uuid

@@ -1,7 +1,8 @@
 from typing import Any
 from fastapi import APIRouter, Depends
 from fastapi.responses import Response
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 import json
 
 from app.api import deps
@@ -12,12 +13,15 @@ from app.models.document import Document
 router = APIRouter()
 
 @router.get("/json")
-def export_json(
-    db: Session = Depends(deps.get_db),
+async def export_json(
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
-    memories = db.query(Memory).filter(Memory.user_id == current_user.id).all()
-    documents = db.query(Document).filter(Document.user_id == current_user.id).all()
+    result_mem = await db.execute(select(Memory).where(Memory.user_id == current_user.id))
+    memories = result_mem.scalars().all()
+    
+    result_doc = await db.execute(select(Document).where(Document.user_id == current_user.id))
+    documents = result_doc.scalars().all()
     
     data = {
         "memories": [
@@ -46,12 +50,15 @@ def export_json(
     )
 
 @router.get("/md")
-def export_markdown(
-    db: Session = Depends(deps.get_db),
+async def export_markdown(
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
-    memories = db.query(Memory).filter(Memory.user_id == current_user.id).all()
-    documents = db.query(Document).filter(Document.user_id == current_user.id).all()
+    result_mem = await db.execute(select(Memory).where(Memory.user_id == current_user.id))
+    memories = result_mem.scalars().all()
+    
+    result_doc = await db.execute(select(Document).where(Document.user_id == current_user.id))
+    documents = result_doc.scalars().all()
     
     md_content = f"# Brain Vault Export for {current_user.email}\n\n"
     

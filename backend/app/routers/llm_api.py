@@ -1,6 +1,7 @@
 from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from app.api import deps
 from app.models.user import User
 from app.models.memory import Memory
@@ -10,15 +11,18 @@ from app.services.vector_store import vector_store
 from app.services.websocket import manager
 from app.services.context_builder import context_builder
 from app.services.dedupe_job import dedupe_service
+from app.services.metadata_extraction import metadata_service
+from app.db.session import AsyncSessionLocal
+from app.worker import process_memory_metadata_task, dedupe_memory_task, ingest_memory_task
 import asyncio
 
 router = APIRouter()
 
 @router.post("/save_memory", response_model=LLMMemoryResponse)
-def save_memory(
+async def save_memory(
     memory_in: LLMMemoryCreate,
     background_tasks: BackgroundTasks,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -75,44 +79,40 @@ def save_memory(
     )
     db.add(audit)
     
-    db.commit()
-    db.refresh(memory)
+    await db.commit()
+    await db.refresh(memory)
     
     # Update audit with ID
     audit.target_id = str(memory.id)
     db.add(audit)
-    db.commit()
+    await db.commit()
     
-    # Ingest if approved
+    # Ingest if approved via Celery
     if status == "approved":
-        from app.services.ingestion import ingestion_service
-        try:
-            ids, documents_content, metadatas = ingestion_service.process_text(
-                text=memory_in.content,
-                document_id=memory.id,
-                title=memory.title,
-                doc_type="memory",
-                metadata={"user_id": current_user.id, "memory_id": memory.id, "tags": str(memory_in.tags) if memory_in.tags else "", "source": memory_in.source_llm}
-            )
-            if ids:
-                memory.embedding_id = ids[0]
-                db.commit()
-                vector_store.add_documents(ids=ids, documents=documents_content, metadatas=metadatas)
-        except Exception as e:
-            print(f"Ingestion failed: {e}")
+        ingest_memory_task.delay(
+            memory.id,
+            current_user.id,
+            memory_in.content,
+            f"Memory from {memory_in.source_llm}",
+            memory_in.tags,
+            memory_in.source_llm
+        )
 
-    # 4. Trigger Dedupe Job (Background)
-    background_tasks.add_task(dedupe_service.check_duplicates, memory.id, db)
+    # 4. Trigger Dedupe Job (Background Celery)
+    dedupe_memory_task.delay(memory.id)
     
-    # 5. Broadcast via Websocket
-    asyncio.run(manager.broadcast({
+    # 5. Trigger Auto-Tagging (Background Celery)
+    process_memory_metadata_task.delay(memory.id, current_user.id)
+    
+    # 6. Broadcast via Websocket
+    await manager.broadcast({
         "type": "new_memory", 
         "data": {
             "id": f"mem_{memory.id}", 
             "status": memory.status,
             "source": memory.source_llm
         }
-    }))
+    })
     
     return LLMMemoryResponse(
         id=f"mem_{memory.id}",
@@ -121,10 +121,10 @@ def save_memory(
     )
 
 @router.put("/update_memory/{memory_id}", response_model=LLMMemoryResponse)
-def update_memory(
+async def update_memory(
     memory_id: str,
     memory_in: LLMMemoryUpdate,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -135,7 +135,8 @@ def update_memory(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid ID")
 
-    memory = db.query(Memory).filter(Memory.id == mem_id_int, Memory.user_id == current_user.id).first()
+    result = await db.execute(select(Memory).where(Memory.id == mem_id_int, Memory.user_id == current_user.id))
+    memory = result.scalars().first()
     if not memory:
         raise HTTPException(status_code=404, detail="Memory not found")
 
@@ -155,8 +156,8 @@ def update_memory(
     if memory_in.tags:
         memory.tags = memory_in.tags
 
-    db.commit()
-    db.refresh(memory)
+    await db.commit()
+    await db.refresh(memory)
     
     return LLMMemoryResponse(
         id=f"mem_{memory.id}",
@@ -165,9 +166,9 @@ def update_memory(
     )
 
 @router.delete("/delete_memory/{memory_id}")
-def delete_memory(
+async def delete_memory(
     memory_id: str,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     # Soft delete (status=archived) or hard delete? User request said "Soft-delete"
@@ -176,7 +177,8 @@ def delete_memory(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid ID")
         
-    memory = db.query(Memory).filter(Memory.id == mem_id_int, Memory.user_id == current_user.id).first()
+    result = await db.execute(select(Memory).where(Memory.id == mem_id_int, Memory.user_id == current_user.id))
+    memory = result.scalars().first()
     if not memory:
         raise HTTPException(status_code=404, detail="Memory not found")
         
@@ -190,13 +192,14 @@ def delete_memory(
         except:
             pass
             
-    db.commit()
+            
+    await db.commit()
     return {"status": "success", "message": "Memory archived"}
 
 @router.post("/retrieve_context", response_model=ContextResponse)
-def retrieve_context(
+async def retrieve_context(
     request: ContextRequest,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     ctx = context_builder.build_context(
@@ -210,3 +213,114 @@ def retrieve_context(
         snippets=ctx["snippets"],
         token_count=ctx["token_count"]
     )
+
+# Simple In-Memory Cache for insights (reset on restart is fine)
+# Key: user_id, Value: {"insights": [], "timestamp": datetime}
+INSIGHTS_CACHE = {}
+
+@router.get("/insights", response_model=List[str])
+async def get_insights(
+    limit: int = 10,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Generate simplified insights/highlights from recent memories.
+    Cached for 1 hour per user.
+    """
+    # Check Cache
+    cache_entry = INSIGHTS_CACHE.get(current_user.id)
+    if cache_entry:
+        age = datetime.utcnow() - cache_entry["timestamp"]
+        if age < timedelta(hours=1):
+            ids_in_cache = cache_entry.get("memory_count", 0)
+            # If significant new memories added? (Skipping complexity for now)
+            return cache_entry["insights"]
+            
+    # Fetch recent approved memories
+    result = await db.execute(select(Memory).where(
+        Memory.user_id == current_user.id,
+        Memory.status == "approved"
+    ).order_by(Memory.created_at.desc()).limit(20))
+    memories = result.scalars().all()
+    
+    if not memories:
+        return ["No recent memories to analyze. Add some notes to get started!"]
+        
+    # Construct Prompt
+    # Convert memories to a simple text list
+    content_list = []
+    for mem in memories:
+        content_list.append(f"- {mem.title}: {mem.content[:200]}...") # Truncate for tokens
+        
+    combined_content = "\n".join(content_list)
+    
+    # Get API Key
+    from app.models.client import AIClient
+    from app.core.encryption import encryption_service
+    
+    # Provider selection logic (reused)
+    provider = "gemini"
+    result = await db.execute(select(AIClient).where(AIClient.user_id == current_user.id, AIClient.provider == provider))
+    client = result.scalars().first()
+    if not client:
+        provider = "openai"
+        result = await db.execute(select(AIClient).where(AIClient.user_id == current_user.id, AIClient.provider == provider))
+        client = result.scalars().first()
+        
+    api_key = None
+    if client:
+        try:
+            api_key = encryption_service.decrypt(client.encrypted_api_key)
+        except:
+            pass
+            
+    if not api_key:
+        return ["Please configure an AI provider in Settings to see insights."]
+        
+    # Call LLM
+    prompt = f"""Analyze these recent notes and memories from the user:
+{combined_content}
+
+Generate 3-5 short, punchy 'Key Highlights' or 'Insights' that summarize what the user has been focusing on or thinking about.
+Format: Return ONLY a JSON list of strings. Example: ["started learning vue", "worried about project deadline"]"""
+
+    # Reuse LLM Service
+    # We can reuse extract_metadata somewhat, or generate_response. 
+    # generate_response expects a query and context.
+    # Let's use generate_response with specific system prompt override if possible, 
+    # but llm_service.generate_response is chatty.
+    # Let's call llm_service.generate_response effectively.
+    
+    response_text = await llm_service.generate_response(
+        query=prompt, 
+        context=[], 
+        provider=provider, 
+        api_key=api_key
+    )
+    
+    # Parse Response (Handle potential markdown wrap)
+    clean_text = response_text.replace("```json", "").replace("```", "").strip()
+    
+    insights = []
+    try:
+        # Try to find list brackets
+        import re
+        match = re.search(r'\[.*\]', clean_text, re.DOTALL)
+        if match:
+            insights = json.loads(match.group())
+        else:
+             # Split by newlines if not JSON
+             lines = clean_text.split('\n')
+             insights = [line.strip('- ').strip() for line in lines if line.strip()]
+    except:
+        insights = ["Could not parse insights."]
+        
+    # Update Cache
+    INSIGHTS_CACHE[current_user.id] = {
+        "insights": insights, 
+        "timestamp": datetime.utcnow(),
+        "memory_count": len(memories)
+    }
+    
+    return insights

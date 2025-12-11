@@ -5,20 +5,20 @@ from app.routers import auth, retrieval, llm, documents, memory, export, prompts
 from app.db.base import Base
 from app.db.session import engine
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+# Create tables (Async)
+# Base.metadata.create_all(bind=engine) -> Moved to startup event
 
 app = FastAPI(
-    title=settings.PROJECT_NAME,
+    title="AI Brain Vault",
     description="Backend API for AI Brain Vault - Personal Knowledge Base",
-    version="0.1.0",
+    version="1.0.0",
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
 
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific frontend origin
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -41,11 +41,18 @@ app.include_router(ws.router, prefix="/ws", tags=["websocket"])
 async def startup_event():
     # Start background tasks
     from app.services.dedupe_job import dedupe_service
-    from app.db.session import SessionLocal
+    from app.db.session import AsyncSessionLocal
     import asyncio
     
+    from app.services.websocket import manager
+    
+    # Create tables
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
     # We run it as a background task
-    asyncio.create_task(dedupe_service.run_periodic_check(SessionLocal))
+    asyncio.create_task(dedupe_service.run_periodic_check(AsyncSessionLocal))
+    asyncio.create_task(manager.start_redis_listener())
 
 @app.get("/")
 async def root():

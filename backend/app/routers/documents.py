@@ -1,6 +1,7 @@
 from typing import List, Any
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, BackgroundTasks
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 import shutil
 import os
 import uuid
@@ -11,6 +12,16 @@ from app.models.user import User
 from app.models.document import Document, Chunk
 from app.services.vector_store import vector_store
 from app.services.ingestion import ingestion_service
+from app.services.metadata_extraction import metadata_service
+from app.db.session import AsyncSessionLocal
+
+# Wrapper to run in background with fresh session
+async def run_metadata_extraction(memory_id: int, user_id: int):
+    async with AsyncSessionLocal() as db:
+        try:
+            await metadata_service.process_memory_metadata(memory_id, user_id, db)
+        except Exception as e:
+            print(f"Error in background metadata extraction: {e}")
 
 # Text Extraction Libraries
 import pdfplumber
@@ -47,7 +58,7 @@ def extract_text_from_file(file_path: str, file_type: str) -> str:
 @router.post("/upload", response_model=Any)
 async def upload_document(
     file: UploadFile = File(...),
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -78,8 +89,8 @@ async def upload_document(
         user_id=current_user.id
     )
     db.add(document)
-    db.commit()
-    db.refresh(document)
+    await db.commit()
+    await db.refresh(document)
     
     # Chunk Text using ingestion service
     ids, documents_content, metadatas = ingestion_service.process_text(
@@ -100,7 +111,7 @@ async def upload_document(
         )
         db.add(chunk)
         
-    db.commit()
+    await db.commit()
     
     # Add to Vector Store
     try:
@@ -115,16 +126,17 @@ async def upload_document(
     return {"status": "success", "document_id": document.id, "chunks": len(ids)}
 
 @router.get("/", response_model=Any)
-def get_documents(
-    db: Session = Depends(deps.get_db),
+async def get_documents(
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
-    documents = db.query(Document).filter(Document.user_id == current_user.id).all()
+    result = await db.execute(select(Document).where(Document.user_id == current_user.id))
+    documents = result.scalars().all()
     
     # Convert to dictionaries for serialization
-    result = []
+    result_list = []
     for doc in documents:
-        result.append({
+        result_list.append({
             "id": doc.id,
             "title": doc.title,
             "content": doc.content,
@@ -136,15 +148,16 @@ def get_documents(
             "tags": doc.tags
         })
     
-    return result
+    return result_list
 
 @router.delete("/{doc_id}", response_model=Any)
-def delete_document(
+async def delete_document(
     doc_id: int,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
-    document = db.query(Document).filter(Document.id == doc_id, Document.user_id == current_user.id).first()
+    result = await db.execute(select(Document).where(Document.id == doc_id, Document.user_id == current_user.id))
+    document = result.scalars().first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
         
@@ -153,8 +166,8 @@ def delete_document(
     if chunk_ids:
         vector_store.delete(ids=chunk_ids)
         
-    db.delete(document)
-    db.commit()
+    await db.delete(document)
+    await db.commit()
     
     return {"status": "success"}
 
@@ -171,9 +184,10 @@ class MemoryUpdate(BaseModel):
     tags: List[str] = []
 
 @router.post("/memory", response_model=Any)
-def create_memory(
+async def create_memory(
     memory_in: MemoryCreate,
-    db: Session = Depends(deps.get_db),
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -214,8 +228,11 @@ def create_memory(
         source_llm="user-upload" # or extension
     )
     db.add(memory)
-    db.commit()
-    db.refresh(memory)
+    await db.commit()
+    await db.refresh(memory)
+
+    # Trigger Background Analysis (Auto-Tagging + Similarity)
+    background_tasks.add_task(run_metadata_extraction, memory.id, current_user.id)
     
     # Ingest only if approved
     if initial_status == "approved":
@@ -230,7 +247,7 @@ def create_memory(
             
             if ids:
                 memory.embedding_id = ids[0]
-                db.commit()
+                await db.commit()
                 
                 vector_store.add_documents(ids=ids, documents=documents_content, metadatas=metadatas)
         except Exception as e:
@@ -239,16 +256,23 @@ def create_memory(
     return {"status": "success", "document_id": memory.id, "chunks": 1 if initial_status == "approved" else 0}
 
 @router.put("/{doc_id}", response_model=Any)
-def update_document(
+async def update_document(
     doc_id: int,
     memory: MemoryUpdate,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
     Update a document (memory only). Re-chunks and updates vector store.
     """
-    document = db.query(Document).filter(Document.id == doc_id, Document.user_id == current_user.id).first()
+    # Eager load chunks to avoid lazy loading issues in async
+    from sqlalchemy.orm import selectinload
+    result = await db.execute(
+        select(Document)
+        .options(selectinload(Document.chunks))
+        .where(Document.id == doc_id, Document.user_id == current_user.id)
+    )
+    document = result.scalars().first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
     
@@ -258,6 +282,7 @@ def update_document(
     document.tags = memory.tags
     
     # Delete old chunks from vector store
+    # chunks are already loaded due to selectinload
     old_chunk_ids = [chunk.embedding_id for chunk in document.chunks if chunk.embedding_id]
     if old_chunk_ids:
         try:
@@ -267,8 +292,8 @@ def update_document(
     
     # Delete old chunks from DB
     for chunk in document.chunks:
-        db.delete(chunk)
-    db.commit()
+        await db.delete(chunk)
+    await db.commit()
     
     # Re-chunk the updated content using ingestion service
     ids, documents_content, metadatas = ingestion_service.process_text(
@@ -289,7 +314,7 @@ def update_document(
         )
         db.add(chunk)
     
-    db.commit()
+    await db.commit()
     
     # Add to Vector Store
     try:
@@ -305,9 +330,9 @@ class SearchRequest(BaseModel):
     top_k: int = 5
 
 @router.post("/search", response_model=Any)
-def search_documents(
+async def search_documents(
     request: SearchRequest,
-    db: Session = Depends(deps.get_db),
+    db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """

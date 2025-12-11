@@ -22,6 +22,8 @@ class MemoryInDBBase(MemoryBase):
     updated_at: Optional[datetime] = None
     type: str = "memory"
     status: str = "approved"
+    task_type: Optional[str] = None
+    source: Optional[str] = "manually_created"
 
     class Config:
         from_attributes = True
