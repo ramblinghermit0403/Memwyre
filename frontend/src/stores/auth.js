@@ -12,7 +12,10 @@ export const useAuthStore = defineStore('auth', {
                 if (!decoded.email) {
                     throw new Error("Token missing email claim");
                 }
-                user = { email: decoded.email };
+                user = {
+                    email: decoded.email,
+                    name: decoded.name || decoded.email.split('@')[0] // Fallback if name is missing
+                };
             } catch (e) {
                 localStorage.removeItem('token');
             }
@@ -37,7 +40,10 @@ export const useAuthStore = defineStore('auth', {
                 try {
                     const decoded = jwtDecode(this.token);
                     console.log('Decoded Token (Login):', decoded); // Debug log
-                    this.user = { email: decoded.email || decoded.sub };
+                    this.user = {
+                        email: decoded.email || decoded.sub,
+                        name: decoded.name || (decoded.email || decoded.sub).split('@')[0]
+                    };
                 } catch (e) {
                     console.error("Token decode failed", e);
                 }
@@ -48,9 +54,9 @@ export const useAuthStore = defineStore('auth', {
                 throw error;
             }
         },
-        async register(email, password) {
+        async register(email, password, name) {
             try {
-                await api.post('/auth/register', { email, password });
+                await api.post('/auth/register', { email, password, name });
                 return true;
             } catch (error) {
                 console.error('Registration failed:', error);

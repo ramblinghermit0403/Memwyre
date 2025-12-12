@@ -20,10 +20,10 @@
     </div>
 
     <!-- List -->
-    <div v-else class="flex-1 overflow-y-auto">
+    <div v-else class="flex-1 overflow-y-auto custom-scrollbar">
        <div v-if="loading" class="p-8 text-center text-gray-400">Loading...</div>
        <ul v-else class="divide-y divide-gray-100 dark:divide-gray-700">
-         <li v-for="doc in filteredDocuments" :key="doc.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group">
+         <li v-for="doc in paginatedDocuments" :key="doc.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group">
            <div class="px-6 py-4 flex items-center justify-between cursor-pointer" @click="editDocument(doc)">
              <div class="flex-1 min-w-0 pr-4">
                <h4 class="text-base font-medium text-gray-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
@@ -35,7 +35,7 @@
              </div>
              <div class="flex items-center gap-3">
                  <!-- Type Badge (optional, visually small) -->
-                 <!--
+                <!--
                 <span :class="{'bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300': doc.type === 'memory', 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300': doc.type !== 'memory'}" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">
                     {{ doc.type === 'memory' ? 'MEM' : 'DOC' }}
                 </span>
@@ -47,6 +47,29 @@
            </div>
          </li>
        </ul>
+    </div>
+    
+    <!-- Pagination -->
+    <div v-if="filteredDocuments.length > 0" class="p-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-gray-800">
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+            Page {{ currentPage }} of {{ totalPages }}
+        </span>
+        <div class="flex gap-2">
+            <button 
+                @click="currentPage--" 
+                :disabled="currentPage === 1"
+                class="px-3 py-1 text-sm rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+                Previous
+            </button>
+            <button 
+                @click="currentPage++" 
+                :disabled="currentPage === totalPages"
+                class="px-3 py-1 text-sm rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+                Next
+            </button>
+        </div>
     </div>
     
     <ConfirmationModal 
@@ -72,6 +95,8 @@ const toast = useToast();
 const documents = ref([]);
 const loading = ref(false);
 const filterType = ref('all');
+const currentPage = ref(1);
+const itemsPerPage = 5;
 
 // Modal state
 const showModal = ref(false);
@@ -86,6 +111,16 @@ const filteredDocuments = computed(() => {
     if (filterType.value === 'file') return doc.type === 'file' || doc.type === 'document';
     return true;
   });
+});
+
+const totalPages = computed(() => {
+    return Math.ceil(filteredDocuments.value.length / itemsPerPage);
+});
+
+const paginatedDocuments = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return filteredDocuments.value.slice(start, end);
 });
 
 const fetchDocuments = async () => {

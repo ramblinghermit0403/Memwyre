@@ -49,14 +49,20 @@ export const useInboxStore = defineStore('inbox', {
             this.socket.onmessage = (event) => {
                 const msg = JSON.parse(event.data);
                 if (msg.type === 'new_memory' || msg.type === 'inbox_update' || msg.type === 'new_cluster') {
-                    this.fetchInbox(); // Refresh list
+                    // Slight delay to ensure DB transaction is committed & visible
+                    setTimeout(() => {
+                        this.fetchInbox();
+                    }, 500);
                 }
             };
 
             this.socket.onclose = () => {
                 this.connected = false;
                 this.socket = null;
-                // Reconnect logic could go here
+                console.log('WS Connection closed. Reconnecting in 3s...');
+                setTimeout(() => {
+                    this.connectWebSocket(userId);
+                }, 3000);
             };
         }
     }

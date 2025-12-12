@@ -49,6 +49,11 @@
         <form class="mt-8 space-y-6" @submit.prevent="handleRegister">
           <div class="space-y-4">
             <div>
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required v-model="name" class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all bg-gray-50 hover:bg-white" placeholder="John Doe" />
+            </div>
+
+            <div>
               <label for="email-address" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
               <input id="email-address" name="email" type="email" autocomplete="email" required v-model="email" class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all bg-gray-50 hover:bg-white" placeholder="you@example.com" />
             </div>
@@ -130,6 +135,7 @@ import { useAuthStore } from '../stores/auth';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
+const name = ref('');
 const email = ref('');
 const password = ref('');
 const loading = ref(false);
@@ -142,7 +148,7 @@ const handleRegister = async () => {
   loading.value = true;
   error.value = '';
   try {
-    await authStore.register(email.value, password.value);
+    await authStore.register(email.value, password.value, name.value);
     // Show success message or auto-login? 
     // For now, alert and redirect to login as per original flow, but cleaner.
     // Ideally we'd use a toast notification.

@@ -1,21 +1,25 @@
 <template>
-  <nav class="bg-white dark:bg-surface shadow-sm border-b border-gray-200 dark:border-border z-50 relative transition-colors duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <nav class="bg-white/80 dark:bg-surface/80 backdrop-blur-md border-b border-gray-200 dark:border-border sticky top-0 z-50 transition-colors duration-300">
+    <div class="w-full px-6">
       <div class="flex justify-between h-16">
-        <div class="flex">
-          <div class="flex-shrink-0 flex items-center gap-2 select-none cursor-default">
-             <div class="p-1.5 bg-blue-600 rounded-lg">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-             </div>
-            <h1 class="text-xl font-bold text-blue-600 dark:text-primary">Brain Vault</h1>
-          </div>
+        <div class="flex items-center">
+          <router-link to="/" class="flex-shrink-0 flex items-center">
+            <div class="flex items-center gap-2 select-none" id="nav-logo">
+                <!-- Icon -->
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+                <h1 class="text-xl font-bold text-blue-600 dark:text-primary">Brain Vault</h1>
+            </div>
+          </router-link>
         </div>
-        <div class="flex items-center space-x-1">
-           <router-link to="/dashboard" active-class="bg-gray-100 dark:bg-surface-2 text-gray-900 dark:text-text-primary" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-text-secondary dark:hover:text-text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors">
+
+        <div class="flex items-center gap-4">
+          <router-link to="/" active-class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
              Dashboard
           </router-link>
-          
+
           <router-link to="/inbox" active-class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white" class="relative flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
             Inbox
@@ -28,7 +32,6 @@
           </router-link>
 
           <div class="h-6 w-px bg-gray-200 dark:bg-divider mx-2"></div>
-          <ThemeToggle />
           
           <!-- Profile Dropdown -->
           <div class="relative ml-2" v-click-outside="closeProfile">

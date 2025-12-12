@@ -1,27 +1,19 @@
 <template>
-  <div class="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
-    <!-- Header -->
-    <div class="absolute top-0 left-0 right-0 z-10 p-4 flex justify-between items-center pointer-events-none">
-      <div class="flex items-center space-x-4 pointer-events-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 select-none">
-        <button @click="router.push('/')" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors cursor-pointer focus:outline-none">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-        </button>
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white cursor-default">Memory Map</h2>
-      </div>
-      
-      <div class="pointer-events-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400">
+  <div class="h-screen flex flex-col bg-gray-50 dark:bg-app transition-colors duration-300 font-sans overflow-hidden">
+    <NavBar />
+
+    <div class="flex-1 w-full h-full relative cursor-move overflow-hidden">
+      <!-- Legend (Positioned absolutely over graph) -->
+      <div class="absolute top-4 left-4 z-10 pointer-events-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400">
         <span class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-indigo-500"></span> Memory
           <span class="w-3 h-3 rounded-full bg-emerald-500 ml-2"></span> Tag
           <span class="w-3 h-3 rounded-full bg-gray-400 ml-2"></span> Document
         </span>
       </div>
-    </div>
 
     <!-- Graph Container -->
-    <div ref="container" class="flex-1 w-full h-full cursor-move">
+    <div ref="container" class="w-full h-full">
       <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 z-20 backdrop-blur-sm">
         <div class="flex flex-col items-center">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
@@ -40,7 +32,7 @@
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" /></svg>
       </button>
       <button @click="handleResetZoom" class="p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" title="Reset View">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
       </button>
     </div>
 
@@ -50,6 +42,7 @@
       <div class="text-xs text-gray-300 capitalize" ref="tooltipType"></div>
     </div>
   </div>
+  </div>
 </template>
 
 <script setup>
@@ -58,6 +51,7 @@ import * as d3 from 'd3';
 import api from '../services/api';
 import { useRouter } from 'vue-router';
 import { useThemeStore } from '../stores/theme';
+import NavBar from '../components/NavBar.vue';
 
 const container = ref(null);
 const svg = ref(null);

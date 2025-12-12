@@ -1,8 +1,10 @@
 <template>
-  <div class="h-screen flex flex-col bg-white dark:bg-app text-gray-900 dark:text-gray-100 font-sans">
-    
-    <!-- Clean Header (Title Only + Breadcrumb feel) -->
-    <header class="h-16 shrink-0 border-b border-gray-200 dark:border-border flex items-center justify-between px-6 bg-white dark:bg-surface">
+  <div class="h-screen flex flex-col bg-gray-50 dark:bg-app transition-colors duration-300 font-sans overflow-hidden">
+    <!-- Global Nav -->
+    <NavBar />
+
+    <!-- Editor Header (Title & Actions) -->
+    <header class="h-16 shrink-0 border-b border-gray-200 dark:border-border flex items-center justify-between px-6 bg-white dark:bg-surface relative z-10">
        <div class="flex items-center gap-4 flex-1">
           <button @click="goBack" class="text-gray-400 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300 transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
@@ -94,13 +96,41 @@
 
     <!-- Tags Footer -->
     <div class="shrink-0 bg-white dark:bg-surface border-t border-gray-200 dark:border-border p-4 px-6 sm:px-8">
-        <div class="max-w-4xl mx-auto w-full">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
+        <div class="max-w-4xl mx-auto w-full relative">
+            <div class="flex justify-between items-center mb-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tags</label>
+                <button 
+                  @click="generateTags" 
+                  :disabled="generatingTags || !content"
+                  class="text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                >
+                    <svg v-if="generatingTags" class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                    {{ generatingTags ? 'Thinking...' : 'Auto-Tag with AI' }}
+                </button>
+            </div>
             <input 
               v-model="tags" 
+              @input="handleTagInput"
+              @blur="hideSuggestionsWithDelay"
+              @keydown.down.prevent="navigateSuggestions(1)"
+              @keydown.up.prevent="navigateSuggestions(-1)"
+              @keydown.enter.prevent="selectActiveSuggestion"
               class="w-full border border-gray-200 dark:border-border rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 outline-none transition-shadow bg-gray-50 dark:bg-app"
               placeholder="project-alpha, onboarding, strategy"
             />
+            
+            <!-- Tag Suggestions -->
+            <div v-if="filteredSuggestions.length > 0 && showSuggestions" class="absolute bottom-full mb-1 left-0 w-full max-w-sm bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+                <div 
+                  v-for="(suggestion, index) in filteredSuggestions" 
+                  :key="suggestion"
+                  @click="addTag(suggestion)"
+                  :class="['px-4 py-2 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200', activeSuggestionIndex === index ? 'bg-blue-50 dark:bg-blue-900/30' : '']"
+                >
+                    #{{ suggestion }}
+                </div>
+            </div>
         </div>
     </div>
 
@@ -113,6 +143,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor';
 import api from '../services/api';
 import { useThemeStore } from '../stores/theme';
+import NavBar from '../components/NavBar.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -123,10 +154,99 @@ const isInboxItem = ref(false);
 const title = ref('');
 const content = ref('');
 const tags = ref('');
+const allTags = ref([]);
+const filteredSuggestions = ref([]);
+const showSuggestions = ref(false);
+const activeSuggestionIndex = ref(-1);
+
 const saving = ref(false);
 const lastSaved = ref(null);
 const documentId = computed(() => route.params.id);
 const editorInstance = shallowRef(null);
+
+const fetchTags = async () => {
+    try {
+        const response = await api.get('/memory/tags');
+        allTags.value = response.data;
+    } catch (e) {
+        console.error('Failed to fetch tags', e);
+    }
+};
+
+const generatingTags = ref(false);
+
+const generateTags = async () => {
+    if (!content.value) return;
+    generatingTags.value = true;
+    try {
+        const currentTags = tags.value.split(',').map(t => t.trim()).filter(Boolean);
+        
+        const response = await api.post('/llm/suggest_tags', {
+            content: content.value,
+            existing_tags: allTags.value
+        });
+        
+        const suggested = response.data;
+        if (suggested && suggested.length > 0) {
+            const newTags = [...new Set([...currentTags, ...suggested])];
+            tags.value = newTags.join(', ') + ', ';
+        } else {
+            // toast.info('No new tags suggested'); // Toast not imported here, relying on button state visual
+        }
+    } catch (e) {
+        console.error('Auto-tag failed', e);
+        alert('Failed to generate tags. Please check your API key in Settings.');
+    } finally {
+        generatingTags.value = false;
+    }
+};
+
+const handleTagInput = () => {
+    const parts = tags.value.split(',');
+    const currentInput = parts[parts.length - 1].trim().toLowerCase();
+    
+    if (!currentInput) {
+        showSuggestions.value = false;
+        return;
+    }
+    
+    const usedTags = parts.slice(0, -1).map(t => t.trim().toLowerCase());
+    
+    filteredSuggestions.value = allTags.value.filter(tag => 
+        tag.toLowerCase().includes(currentInput) && 
+        !usedTags.includes(tag.toLowerCase()) &&
+        tag.toLowerCase() !== currentInput // Don't suggest exact match if already typed
+    ).slice(0, 5);
+    
+    showSuggestions.value = filteredSuggestions.value.length > 0;
+    activeSuggestionIndex.value = -1;
+};
+
+const addTag = (tag) => {
+    const parts = tags.value.split(',');
+    parts.pop(); // Remove partial
+    parts.push(` ${tag}`);
+    tags.value = parts.join(',') + ', ';
+    showSuggestions.value = false;
+};
+
+const hideSuggestionsWithDelay = () => {
+    setTimeout(() => {
+        showSuggestions.value = false;
+    }, 200);
+};
+
+const navigateSuggestions = (direction) => {
+    if (!showSuggestions.value) return;
+    const len = filteredSuggestions.value.length;
+    activeSuggestionIndex.value = (activeSuggestionIndex.value + direction + len) % len;
+};
+
+const selectActiveSuggestion = () => {
+    if (showSuggestions.value && activeSuggestionIndex.value >= 0) {
+        addTag(filteredSuggestions.value[activeSuggestionIndex.value]);
+    }
+};
 
 const editorOptions = computed(() => ({
   automaticLayout: true,
@@ -205,7 +325,7 @@ const fetchDocument = async () => {
                 resolvedId.value = doc.id;
                 title.value = doc.details || 'Untitled';
                 content.value = doc.content || '';
-                tags.value = ''; // Pending items might not show tags here yet
+                tags.value = Array.isArray(doc.tags) ? doc.tags.join(', ') : (doc.tags || '');
                 isInboxItem.value = true;
                 found = true;
             }
@@ -301,6 +421,7 @@ const goBack = () => {
 // Auto-save disabled by user request
 onMounted(() => {
   fetchDocument();
+  fetchTags();
 });
 
 onUnmounted(() => {
