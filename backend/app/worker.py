@@ -6,6 +6,8 @@ from app.services.ingestion import ingestion_service
 from app.services.vector_store import vector_store
 from app.db.session import AsyncSessionLocal
 from app.models.memory import Memory
+# Import ChatSession to ensure relationship mapper works
+from app.models.chat import ChatSession
 from sqlalchemy.future import select
 import asyncio
 

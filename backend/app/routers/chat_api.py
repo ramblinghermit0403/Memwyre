@@ -135,6 +135,7 @@ async def send_message(
     
     response_text = response.get("output", "")
     sources = response.get("sources", [])
+    message_id = response.get("message_id", 0)
     
     # Update Session Timestamp
     session.updated_at = datetime.utcnow()
@@ -146,7 +147,7 @@ async def send_message(
         background_tasks.add_task(update_chat_title_task, session_id, context)
     
     return ChatMessageResponse(
-        id=0, # Placeholder
+        id=message_id, 
         role="assistant",
         content=response_text,
         created_at=datetime.utcnow(),
@@ -198,3 +199,43 @@ async def delete_sessions(
         await db.commit()
     
     return Response(status_code=204)
+
+
+class FeedbackCreate(BaseModel):
+    feedback: str # "up" or "down"
+
+@router.post("/messages/{message_id}/feedback")
+async def submit_feedback(
+    message_id: int,
+    feedback_in: FeedbackCreate,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+):
+    """Submit feedback for a message."""
+    import json
+    
+    # Verify message ownership via session
+    result = await db.execute(
+        select(ChatMessage)
+        .join(ChatSession)
+        .where(ChatMessage.id == message_id, ChatSession.user_id == current_user.id)
+    )
+    message = result.scalars().first()
+    
+    if not message:
+        raise HTTPException(status_code=404, detail="Message not found")
+        
+    # Update meta_info
+    meta = {}
+    if message.meta_info:
+        try:
+            meta = json.loads(message.meta_info)
+        except:
+            meta = {}
+            
+    meta['feedback'] = feedback_in.feedback
+    message.meta_info = json.dumps(meta)
+    
+    await db.commit()
+    return {"status": "success"}
+

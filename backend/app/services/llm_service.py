@@ -14,11 +14,11 @@ class LLMService:
             return "Error: API Key is required."
             
         if not context:
-            return "I couldn't find any relevant information in your Brain Vault to answer that. Please try adding more memories or documents related to your specific question."
+            return "I couldn't find any relevant information in your MemWyre to answer that. Please try adding more memories or documents related to your specific question."
 
         context_str = "\n\n".join(context)
         system_prompt = (
-            "You are the Brain Vault AI, a personal knowledge assistant. "
+            "You are the MemWyre AI, a personal knowledge assistant. "
             "Use ONLY the following Context to answer the user's question. "
             "If the answer is not explicitly supported by the Context, state that you do not have enough information. "
             "Do not hallucinate or use outside knowledge unless it is general definitions to help explain the context.\n\n"
@@ -83,7 +83,7 @@ class LLMService:
             if len(existing_tags) > 50:
                 tag_context_str += "..."
             
-            system_instruction = f"""You are the 'Brain Vault' AI archivist.
+            system_instruction = f"""You are the 'MemWyre' AI archivist.
 Analyze the user's content and extract structured metadata.
 
 Required Output (JSON):

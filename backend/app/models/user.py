@@ -12,6 +12,8 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
     settings = Column(JSON, default={}) # For user preferences like auto_approve
+    drop_token = Column(String, unique=True, index=True, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     chat_sessions = relationship("app.models.chat.ChatSession", back_populates="user", cascade="all, delete-orphan")
+    api_keys = relationship("app.models.api_key.ApiKey", back_populates="user", cascade="all, delete-orphan")

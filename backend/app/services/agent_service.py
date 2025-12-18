@@ -59,7 +59,7 @@ class SQLChatMessageHistory(BaseChatMessageHistory):
                     messages.append(SystemMessage(content=row.content))
             return messages
 
-    async def add_message(self, message: BaseMessage) -> None:
+    async def add_message(self, message: BaseMessage) -> int:
         async with AsyncSessionLocal() as db:
             role = MessageRole.USER
             if isinstance(message, AIMessage):
@@ -75,6 +75,8 @@ class SQLChatMessageHistory(BaseChatMessageHistory):
             )
             db.add(db_msg)
             await db.commit()
+            await db.refresh(db_msg)
+            return db_msg.id
             
     async def clear(self) -> None:
         pass
@@ -278,12 +280,13 @@ class AgentService:
                             if not exists:
                                 sources.append(source_obj)
 
-            # Save AI Response
-            await chat_history.add_message(AIMessage(content=output))
+            # Save AI Response and get ID
+            ai_message_id = await chat_history.add_message(AIMessage(content=output))
             
             return {
                 "output": output,
-                "sources": sources
+                "sources": sources,
+                "message_id": ai_message_id
             }
             
         except Exception as e:

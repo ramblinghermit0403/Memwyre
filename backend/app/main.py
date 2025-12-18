@@ -9,8 +9,8 @@ from app.db.session import engine
 # Base.metadata.create_all(bind=engine) -> Moved to startup event
 
 app = FastAPI(
-    title="AI Brain Vault",
-    description="Backend API for AI Brain Vault - Personal Knowledge Base",
+    title="MemWyre",
+    description="Backend API for MemWyre - Personal Knowledge Base",
     version="1.0.0",
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
@@ -25,6 +25,8 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
+from app.routers import oauth
+app.include_router(oauth.router, prefix=f"{settings.API_V1_STR}/auth/oauth", tags=["oauth"])
 app.include_router(retrieval.router, prefix=f"{settings.API_V1_STR}/retrieval", tags=["retrieval"])
 app.include_router(llm.router, prefix=f"{settings.API_V1_STR}/llm", tags=["llm"])
 app.include_router(documents.router, prefix=f"{settings.API_V1_STR}/documents", tags=["documents"])
@@ -37,6 +39,8 @@ app.include_router(user_keys.router, prefix=f"{settings.API_V1_STR}/user", tags=
 app.include_router(user_settings.router, prefix=f"{settings.API_V1_STR}/user", tags=["user-settings"])
 app.include_router(feedback.router, prefix=f"{settings.API_V1_STR}/feedback", tags=["feedback"])
 app.include_router(chat_api.router, prefix=f"{settings.API_V1_STR}/chat", tags=["chat"])
+from app.routers import user_api_keys
+app.include_router(user_api_keys.router, prefix=f"{settings.API_V1_STR}/user", tags=["api-keys"])
 app.include_router(ws.router, prefix="/ws", tags=["websocket"])
 
 
@@ -59,7 +63,7 @@ async def startup_event():
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to AI Brain Vault API", "status": "running"}
+    return {"message": "Welcome to MemWyre API", "status": "running"}
 
 @app.get("/health")
 async def health_check():

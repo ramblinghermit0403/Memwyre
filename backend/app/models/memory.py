@@ -22,6 +22,7 @@ class Memory(Base):
     
     # Inbox Visibility: Should this show up in the inbox?
     show_in_inbox = Column(Boolean, default=True)
+    trusted = Column(Boolean, default=True)
     
     task_type = Column(String, nullable=True) # "general", "code", "summary"
     version = Column(Integer, default=1)

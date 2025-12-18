@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 import os
 from typing import Optional
@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "YOUR_SECRET_KEY_HERE"  # Change in production
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     
     
     # Database
@@ -38,8 +39,16 @@ class Settings(BaseSettings):
     GOOGLE_API_KEY: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
 
-    class Config:
-        env_file = os.path.join(BASE_DIR, ".env")
-        extra = "ignore"
+    # OAuth
+    GOOGLE_CLIENT_ID: Optional[str] = os.getenv("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET: Optional[str] = os.getenv("GOOGLE_CLIENT_SECRET")
+    GITHUB_CLIENT_ID: Optional[str] = os.getenv("GITHUB_CLIENT_ID")
+    GITHUB_CLIENT_SECRET: Optional[str] = os.getenv("GITHUB_CLIENT_SECRET")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
+    model_config = SettingsConfigDict(
+        env_file=os.path.join(BASE_DIR, ".env"),
+        extra="ignore"
+    )
 
 settings = Settings()

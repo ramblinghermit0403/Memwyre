@@ -230,3 +230,100 @@ async def update_inbox_item(
     await manager.broadcast({"type": "inbox_update", "id": memory_id, "action": "update"})
     
     return {"status": "success", "id": memory_id}
+
+from bs4 import BeautifulSoup
+import time
+from fastapi import Request
+
+class AgentDropMetadata(BaseModel):
+    model: Optional[str] = None
+    runtime: Optional[str] = None
+    duration_sec: Optional[float] = None
+
+class AgentDropPayload(BaseModel):
+    title: Optional[str] = None
+    content: str
+    confidence: Optional[float] = 0.0
+    job_id: Optional[str] = None
+    metadata: Optional[AgentDropMetadata] = None
+
+# Simple in-memory rate limiter
+# Map of IP -> list of timestamps
+rate_limit_data = {}
+RATE_LIMIT_WINDOW = 60 # seconds
+RATE_LIMIT_MAX_REQUESTS = 10
+
+def strip_html(text: str) -> str:
+    soup = BeautifulSoup(text, "html.parser")
+    return soup.get_text()
+
+@router.post("/drop/{token}")
+async def agent_drop(
+    token: str,
+    request: Request,
+    payload: AgentDropPayload,
+    db: AsyncSession = Depends(deps.get_db)
+) -> Any:
+    """
+    Experimental endpoint for external AI agents to drop results.
+    Uses unique user-specific token.
+    """
+    # 0. Token Check
+    result = await db.execute(select(User).where(User.drop_token == token))
+    user = result.scalars().first()
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid or missing drop token")
+
+    # 1. Size Check
+    body = await request.body()
+    if len(body) > 50 * 1024:
+        raise HTTPException(status_code=413, detail="Payload too large (max 50KB)")
+
+    # 2. Rate Limit
+    client_ip = request.client.host
+    now = time.time()
+    if client_ip not in rate_limit_data:
+        rate_limit_data[client_ip] = []
+    
+    # Filter timestamps in window
+    rate_limit_data[client_ip] = [t for t in rate_limit_data[client_ip] if now - t < RATE_LIMIT_WINDOW]
+    
+    if len(rate_limit_data[client_ip]) >= RATE_LIMIT_MAX_REQUESTS:
+        raise HTTPException(status_code=429, detail="Too many requests. Try again later.")
+    
+    rate_limit_data[client_ip].append(now)
+
+    # 3. Validation & Sanitization
+    clean_content = strip_html(payload.content)
+    if not clean_content.strip():
+         raise HTTPException(status_code=400, detail="Content cannot be empty after stripping HTML")
+
+    # 5. Create Inbox Item (Memory object with pending status)
+    new_memory = Memory(
+        user_id=user.id,
+        title=payload.title or "AI Agent Drop",
+        content=clean_content,
+        source_llm="agent_drop",
+        status="pending",
+        show_in_inbox=True,
+        trusted=False,
+        task_type=payload.job_id # Reuse task_type for job_id if needed
+    )
+    
+    db.add(new_memory)
+    await db.commit()
+    await db.refresh(new_memory)
+
+    # 6. Notify UI
+    await manager.broadcast({
+        "type": "inbox_update", 
+        "id": f"mem_{new_memory.id}", 
+        "action": "new_drop",
+        "title": new_memory.title
+    })
+
+    return {
+        "status": "success",
+        "id": f"mem_{new_memory.id}",
+        "message": "Item added to inbox for review"
+    }
