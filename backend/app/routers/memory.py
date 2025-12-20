@@ -22,6 +22,26 @@ from app.worker import process_memory_metadata_task, ingest_memory_task
 
 router = APIRouter()
 
+@router.get("/agent-facts", response_model=List[MemorySchema])
+async def get_agent_facts(
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Retrieve memories created by agents (source_llm='agent' or tags=['auto-fact']).
+    """
+    from sqlalchemy import cast, String
+    result = await db.execute(
+        select(Memory).where(
+            Memory.user_id == current_user.id,
+            or_(
+                Memory.source_llm == "agent",
+                cast(Memory.tags, String).contains("auto-fact")
+            )
+        ).order_by(Memory.created_at.desc())
+    )
+    return result.scalars().all()
+
 @router.get("/tags", response_model=List[str])
 async def get_all_tags(
     db: AsyncSession = Depends(deps.get_db),

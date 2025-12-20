@@ -225,7 +225,8 @@ class AgentService:
             tools=tools, 
             verbose=True, 
             handle_parsing_errors=True,
-            return_intermediate_steps=True # Capture tool usage
+            return_intermediate_steps=True, # Capture tool usage
+            max_iterations=10 # Ensure enough loops for multiple facts
         )
         
         # 5. Run
@@ -233,9 +234,14 @@ class AgentService:
         history_messages = await chat_history.aget_messages()
         history_text = "\n".join([f"{m.type}: {m.content}" for m in history_messages[:-1]]) 
         
-        final_input = message
+        # Add a clear instruction to record ALL facts independently
+        instruction = "You are a thorough assistant. If the user provides multiple facts, notes, or details, you MUST call 'save_fact' for EACH one independently to ensure they are all recorded. Do not skip any details."
+        
+        final_input = f"{instruction}\n\n"
         if history_text:
-            final_input = f"Previous Conversation:\n{history_text}\n\nCurrent Input: {message}"
+            final_input += f"Previous Conversation:\n{history_text}\n\n"
+        
+        final_input += f"Current Input: {message}"
 
         try:
             result = await agent_executor.ainvoke({"input": final_input})
