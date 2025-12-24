@@ -1,6 +1,6 @@
 # Brain Vault
 
-A 3-tier personal knowledge management system with AI-powered retrieval and universal LLM integration.
+A 3-tier knowledge management system with AI-powered retrieval and universal LLM integration.
 
 ## 🌟 Features
 
