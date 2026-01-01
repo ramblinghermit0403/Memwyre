@@ -127,8 +127,7 @@ async def inbox_action(
         await db.commit()
         await db.refresh(memory)
         
-        await db.commit()
-        await db.refresh(memory)
+
         
         # ingest via Celery
         ingest_memory_task.delay(

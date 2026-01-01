@@ -241,7 +241,7 @@ async def create_memory(
     # Ingest only if approved
     if initial_status == "approved":
         try:
-            ids, documents_content, metadatas = ingestion_service.process_text(
+            ids, documents_content, metadatas = await ingestion_service.process_text(
                 text=memory_in.content,
                 document_id=memory.id,
                 title=memory_in.title,
