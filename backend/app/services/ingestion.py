@@ -6,7 +6,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 import uuid
 import numpy as np
 from sentence_transformers import SentenceTransformer
+import numpy as np
+from sentence_transformers import SentenceTransformer
 import re
+import json
 from app.services.llm_service import llm_service
 
 class IngestionService:
@@ -51,7 +54,7 @@ class IngestionService:
         doc_type: str = "memory",
         metadata: Dict = None,
         enrich: bool = True
-    ) -> tuple[List[str], List[str], List[Dict]]:
+    ) -> tuple[List[str], List[str], List[str], List[Dict]]:
         """
         Process text into chunks with metadata for vector store.
         Uses Semantic Chunking and LLM Enrichment.
@@ -74,6 +77,8 @@ class IngestionService:
         if metadata:
             base_metadata.update(metadata)
         
+        enriched_chunk_texts = [] # Text to be embedded (contains enrichment)
+        
         for i, chunk_text in enumerate(chunks):
             embedding_id = str(uuid.uuid4())
             
@@ -84,21 +89,36 @@ class IngestionService:
             chunk_metadata["chunk_index"] = i
             
             # 2. Enrichment (Summary + QA)
+            enriched_text = chunk_text
+            
             if enrich:
                 enrichment_data = await llm_service.generate_chunk_enrichment(chunk_text)
                 if enrichment_data:
-                    chunk_metadata["summary"] = enrichment_data.get("summary", "")
-                    chunk_metadata["generated_qas"] = str(enrichment_data.get("generated_qas", [])) # Flatten for pinecone metadata if needed, or store in DB
-                    chunk_metadata["entities"] = str(enrichment_data.get("entities", []))
+                    summary = enrichment_data.get("summary", "")
+                    qas = enrichment_data.get("generated_qas", [])
+                    entities = enrichment_data.get("entities", [])
                     
-                    # Also store pure JSON if DB supports it (Postgres specific flow handle elsewhere?)
-                    # Ingestion service returns "metadatas" for vector store.
-                    # Vector store metadata is usually flat.
-                    # complex data should be stored in SQL DB chunks table.
+                    chunk_metadata["summary"] = summary
+                    # Use json.dumps to ensure valid JSON string for Pinecone and easy parsing later
+                    chunk_metadata["generated_qas"] = json.dumps(qas)
+                    chunk_metadata["entities"] = json.dumps(entities)
+                    
+                    # Construct Enriched Text for Embedding
+                    enrichment_context = f"\n\n-- Context --\nSummary: {summary}\n"
+                    if qas:
+                        enrichment_context += "Q&A:\n"
+                        for qa in qas:
+                             if isinstance(qa, dict):
+                                 enrichment_context += f"Q: {qa.get('question', '')}\nA: {qa.get('answer', '')}\n"
+                             elif isinstance(qa, str):
+                                 enrichment_context += f"{qa}\n"
+                                 
+                    enriched_text += enrichment_context
             
+            enriched_chunk_texts.append(enriched_text)
             metadatas.append(chunk_metadata)
         
-        return embedding_ids, chunk_texts, metadatas
+        return embedding_ids, chunk_texts, enriched_chunk_texts, metadatas
 
     def semantic_chunk_text(self, text: str, threshold: float = 0.5) -> List[str]:
         """

@@ -6,6 +6,7 @@ import shutil
 import os
 import uuid
 from datetime import datetime
+import json
 
 from app.api import deps
 from app.models.user import User
@@ -94,7 +95,7 @@ async def upload_document(
     await db.refresh(document)
     
     # Chunk Text using ingestion service
-    ids, documents_content, metadatas = await ingestion_service.process_text(
+    ids, documents_content, enriched_chunk_texts, metadatas = await ingestion_service.process_text(
         text=text,
         document_id=document.id,
         title=document.title,
@@ -104,11 +105,34 @@ async def upload_document(
     
     # Store Chunks in DB
     for i, (embedding_id, chunk_content) in enumerate(zip(ids, documents_content)):
+        # Extract enrichment from metadata
+        meta = metadatas[i]
+        
+        # Parse JSON strings coming from ingestion service
+        qas = []
+        if meta.get("generated_qas"):
+            try:
+                qas = json.loads(meta.get("generated_qas"))
+            except:
+                pass
+                
+        entities = []
+        if meta.get("entities"):
+            try:
+                entities = json.loads(meta.get("entities"))
+            except:
+                pass
+
         chunk = Chunk(
             document_id=document.id,
             chunk_index=i,
             text=chunk_content,
-            embedding_id=embedding_id
+            embedding_id=embedding_id,
+            # Map enriched fields
+            summary=meta.get("summary"),
+            generated_qas=qas,
+            entities=entities,
+            metadata_json=meta 
         )
         db.add(chunk)
         
@@ -119,7 +143,7 @@ async def upload_document(
 
     # Add to Vector Store
     try:
-        vector_store.add_documents(ids=ids, documents=documents_content, metadatas=metadatas)
+        vector_store.add_documents(ids=ids, documents=enriched_chunk_texts, metadatas=metadatas)
     except Exception as e:
         print(f"Vector Store Error: {e}")
         # Non-blocking for now
@@ -241,7 +265,7 @@ async def create_memory(
     # Ingest only if approved
     if initial_status == "approved":
         try:
-            ids, documents_content, metadatas = await ingestion_service.process_text(
+            ids, documents_content, enriched_chunk_texts, metadatas = await ingestion_service.process_text(
                 text=memory_in.content,
                 document_id=memory.id,
                 title=memory_in.title,
@@ -251,9 +275,42 @@ async def create_memory(
             
             if ids:
                 memory.embedding_id = ids[0]
+                db.add(memory)
+                
+                # Save Chunks
+                for i, (embedding_id, chunk_content) in enumerate(zip(ids, documents_content)):
+                    meta = metadatas[i]
+                    
+                    # Parse JSON fields safely
+                    qas = []
+                    if meta.get("generated_qas"):
+                         try:
+                             qas = json.loads(meta.get("generated_qas"))
+                         except:
+                             pass
+                    
+                    entities = []
+                    if meta.get("entities"):
+                         try:
+                             entities = json.loads(meta.get("entities"))
+                         except:
+                             pass
+
+                    chunk = Chunk(
+                        memory_id=memory.id, # Link to Memory
+                        chunk_index=i,
+                        text=chunk_content,
+                        embedding_id=embedding_id,
+                        summary=meta.get("summary"),
+                        generated_qas=qas,
+                        entities=entities,
+                        metadata_json=meta
+                    )
+                    db.add(chunk)
+
                 await db.commit()
                 
-                vector_store.add_documents(ids=ids, documents=documents_content, metadatas=metadatas)
+                vector_store.add_documents(ids=ids, documents=enriched_chunk_texts, metadatas=metadatas)
         except Exception as e:
             print(f"Vector Store Error: {e}")
             
@@ -300,7 +357,7 @@ async def update_document(
     await db.commit()
     
     # Re-chunk the updated content using ingestion service
-    ids, documents_content, metadatas = await ingestion_service.process_text(
+    ids, documents_content, enriched_chunk_texts, metadatas = await ingestion_service.process_text(
         text=memory.content,
         document_id=document.id,
         title=document.title,
@@ -310,11 +367,32 @@ async def update_document(
     
     # Store new chunks in DB
     for i, (embedding_id, chunk_content) in enumerate(zip(ids, documents_content)):
+        # Parse logic if needed for complex metadata, but for update we trust ingestion returns plain dicts unless we parse them
+        # Logic similar to create_memory...
+        meta = metadatas[i]
+        qas = []
+        if meta.get("generated_qas"):
+             try:
+                 qas = json.loads(meta.get("generated_qas"))
+             except:
+                 pass
+        
+        entities = []
+        if meta.get("entities"):
+             try:
+                 entities = json.loads(meta.get("entities"))
+             except:
+                 pass
+
         chunk = Chunk(
             document_id=document.id,
             chunk_index=i,
             text=chunk_content,
-            embedding_id=embedding_id
+            embedding_id=embedding_id,
+            summary=meta.get("summary"),
+            generated_qas=qas,
+            entities=entities,
+            metadata_json=meta
         )
         db.add(chunk)
     
@@ -322,7 +400,7 @@ async def update_document(
     
     # Add to Vector Store
     try:
-        vector_store.add_documents(ids=ids, documents=documents_content, metadatas=metadatas)
+        vector_store.add_documents(ids=ids, documents=enriched_chunk_texts, metadatas=metadatas)
     except Exception as e:
         print(f"Vector Store Error: {e}")
     
@@ -342,7 +420,58 @@ async def search_documents(
     """
     Semantic search over documents and memories.
     """
-    results = vector_store.query(request.query, n_results=request.top_k, where={"user_id": current_user.id})
+    # Use retrieval service for smart search
+    return await retrieval_service.search_memories(
+        query=request.query,
+        user_id=current_user.id,
+        db=db,
+        top_k=request.top_k
+    )
+
+from typing import List, Optional
+class ChunkSchema(BaseModel):
+    id: int
+    text: str
+    chunk_index: int
+    document_id: Optional[int]
+    memory_id: Optional[int]
+    embedding_id: Optional[str]
+    summary: Optional[str]
+    generated_qas: Optional[Any] # Can be list or None
+    entities: Optional[Any]
+    trust_score: Optional[float]
+    class Config:
+        from_attributes = True
+
+@router.get("/memory/{doc_id}/chunks", response_model=List[ChunkSchema])
+async def get_document_chunks(
+    doc_id: str,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Get chunks for a specific memory/document (for Enrichment Sidebar).
+    """
+    # Parse ID
+    try:
+        if "mem_" in doc_id:
+            numeric_id = int(doc_id.split("_")[-1])
+        elif "doc_" in doc_id:
+            numeric_id = int(doc_id.split("_")[-1])
+        else:
+            numeric_id = int(doc_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid Document ID format")
+
+    # Try finding chunks by document_id OR memory_id (since we have dual schema now)
+    query = select(Chunk).where(
+        (Chunk.document_id == numeric_id) | (Chunk.memory_id == numeric_id)
+    ).order_by(Chunk.chunk_index)
+    
+    result = await db.execute(query)
+    chunks = result.scalars().all()
+    
+    return chunks
     
     if not results["documents"]:
         return []

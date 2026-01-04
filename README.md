@@ -123,6 +123,17 @@ python -m uvicorn app.main:app --reload
 
 Backend runs at `http://localhost:8000`
 
+### Worker Setup (Background Tasks)
+
+Requires a running Redis instance.
+
+```bash
+cd backend
+venv\Scripts\activate
+# Windows (requires -P solo)
+celery -A app.celery_app worker --loglevel=info -P solo
+```
+
 ### Frontend Setup
 
 ```bash

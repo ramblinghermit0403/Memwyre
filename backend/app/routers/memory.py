@@ -198,10 +198,15 @@ async def read_memories(
     """
     Retrieve memories and documents.
     """
-    # Fetch Memories (Only Approved)
+    from sqlalchemy import not_, cast, String
+    
+    # Fetch Memories (Only Approved, Exclude Agent Facts)
     result_mem = await db.execute(select(Memory).where(
         Memory.user_id == current_user.id,
-        Memory.status == "approved"
+        Memory.status == "approved",
+        # Filter out Agent Facts
+        or_(Memory.source_llm.is_(None), Memory.source_llm != "agent"),
+        not_(cast(Memory.tags, String).contains("auto-fact"))
     ))
     memories = result_mem.scalars().all()
     

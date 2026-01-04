@@ -6,10 +6,12 @@ from app.services.ingestion import ingestion_service
 from app.services.vector_store import vector_store
 from app.db.session import AsyncSessionLocal
 from app.models.memory import Memory
+from app.models.document import Chunk
 # Import ChatSession to ensure relationship mapper works
 from app.models.chat import ChatSession
 from sqlalchemy.future import select
 import asyncio
+import json
 
 # Helper to run async code in sync Celery task
 def run_async(coro):
@@ -60,7 +62,7 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
     async def _ingest():
         try:
             # 1. Process Text (CPU bound, maybe API bound for embeddings)
-            ids, documents_content, metadatas = await ingestion_service.process_text(
+            ids, documents_content, enriched_chunk_texts, metadatas = await ingestion_service.process_text(
                 text=content,
                 document_id=memory_id,
                 title=title,
@@ -74,25 +76,59 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
             )
             
             if ids:
-                # 2. Add to Vector Store (Sync, I/O bound)
+                # 2. Add to Vector Store (Use Enriched Text)
                 try:
                     vector_store.add_documents(
                         ids=ids,
-                        documents=documents_content,
+                        documents=enriched_chunk_texts, # Embed ENRICHED text
                         metadatas=metadatas
                     )
                 except Exception as e:
                     print(f"Worker Error Adding to Vector Store: {e}")
                     return
 
-                # 3. Update DB with embedding_id (Async)
+                # 3. Update DB with embedding_id AND Save Chunks (Async)
                 async with AsyncSessionLocal() as db:
+                     # Update Memory
                      result = await db.execute(select(Memory).where(Memory.id == memory_id))
                      memory = result.scalars().first()
                      if memory:
                          memory.embedding_id = ids[0]
-                         await db.commit()
-                         print(f"Worker: Ingestion complete for memory {memory_id}")
+                         db.add(memory)
+
+                     # NEW: Save Chunks
+                     for i, (embedding_id, chunk_content) in enumerate(zip(ids, documents_content)):
+                        meta = metadatas[i]
+                        
+                        # Parse JSON fields safely
+                        qas = []
+                        if meta.get("generated_qas"):
+                             try:
+                                 qas = json.loads(meta.get("generated_qas"))
+                             except:
+                                 pass
+                        
+                        entities = []
+                        if meta.get("entities"):
+                             try:
+                                 entities = json.loads(meta.get("entities"))
+                             except:
+                                 pass
+
+                        chunk = Chunk(
+                            memory_id=memory_id, # Link to Memory
+                            chunk_index=i,
+                            text=chunk_content,
+                            embedding_id=embedding_id,
+                            summary=meta.get("summary"),
+                            generated_qas=qas,
+                            entities=entities,
+                            metadata_json=meta
+                        )
+                        db.add(chunk)
+                     
+                     await db.commit()
+                     print(f"Worker: Ingestion complete for memory {memory_id}")
             else:
                  print(f"Worker: No chunks generated for memory {memory_id}")
 

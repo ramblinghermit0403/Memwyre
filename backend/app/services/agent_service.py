@@ -83,43 +83,7 @@ class SQLChatMessageHistory(BaseChatMessageHistory):
 
 # --- 2. Tools ---
 
-class SearchMemoryInput(BaseModel):
-    query: str = Field(description="The query to search for in the brain vault.")
 
-@tool("search_memory", args_schema=SearchMemoryInput)
-def search_memory_tool(query: str):
-    """Search for relevant memories, notes, and documents in the Brain Vault."""
-    # This calls our vector store
-    # Note: vector_store.query is synchronous or we wrap it?
-    # vector_store.query is NOT async in the code I saw earlier (it calls pinecone directly).
-    # But checking vector_store.py... 
-    # `def query(self, query_texts: str, ...)` -> It is synchronous.
-    
-    results = vector_store.query(query, n_results=5)
-    
-    if not results["documents"] or not results["documents"][0]:
-        return "No relevant memories found."
-        
-    # Format
-    docs = results["documents"][0]
-    metas = results["metadatas"][0]
-    ids = results["ids"][0]
-    
-    formatted = []
-    for i, doc in enumerate(docs):
-        meta = metas[i] if i < len(metas) else {}
-        # Prefer memory_id from metadata (DB ID), fallback to document_id, then vector ID
-        doc_id = meta.get("memory_id")
-        if not doc_id:
-             doc_id = meta.get("document_id")
-        
-        if not doc_id:
-             doc_id = ids[i] if i < len(ids) else "unknown"
-             
-        title = meta.get("title", "Untitled")
-        formatted.append(f"Source: {title} [ID: {doc_id}]\nContent: {doc}")
-        
-    return "\n\n---\n\n".join(formatted)
 
 class SaveFactInput(BaseModel):
     fact: str = Field(description="The generic fact or note to save.")
@@ -184,7 +148,53 @@ class AgentService:
 
         llm = get_llm(model)
              
-        # 3. Setup Tools (Same as before)
+        # 3. Setup Tools
+        
+        # 3.1 Search Tool (DynamicWrapper)
+        class SearchMemoryInput(BaseModel):
+             query: str = Field(description="The query to search for in the brain vault.")
+             
+        async def search_memory_wrapper(query: str):
+            """Search for relevant memories."""
+            from app.services.retrieval_service import retrieval_service
+            from app.db.session import AsyncSessionLocal
+            
+            async with AsyncSessionLocal() as db:
+                results = await retrieval_service.search_memories(
+                    query=query,
+                    user_id=user_id,
+                    db=db,
+                    top_k=5
+                )
+            
+            if not results:
+                return "No relevant memories found."
+            
+            formatted = []
+            for res in results:
+                # Format: Source: Title [ID: 123]\nContent: ...
+                meta = res["metadata"]
+                doc_id = meta.get("memory_id") or meta.get("document_id") or "unknown"
+                title = meta.get("title", "Untitled")
+                content = res["text"]
+                
+                # Append enrichment info if available
+                if meta.get("summary"):
+                     content = f"Summary: {meta['summary']}\nDetails: {content}"
+                
+                formatted.append(f"Source: {title} [ID: {doc_id}]\nContent: {content}")
+                
+            return "\n\n---\n\n".join(formatted)
+
+        search_memory_tool_instance = StructuredTool.from_function(
+            func=search_memory_wrapper,
+            name="search_memory",
+            description="Search for relevant memories, notes, and documents in the Brain Vault.",
+            args_schema=SearchMemoryInput,
+            coroutine=search_memory_wrapper
+        )
+        
+        # 3.2 Save Tool
         async def save_fact_wrapper(fact: str):
             """Save a fact."""
             from app.models.memory import Memory
@@ -213,7 +223,7 @@ class AgentService:
             coroutine=save_fact_wrapper
         )
         
-        tools = [search_memory_tool, save_fact_tool_instance]
+        tools = [search_memory_tool_instance, save_fact_tool_instance]
         
         # 4. Create Agent
         prompt = hub.pull("hwchase17/react")

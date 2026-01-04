@@ -65,8 +65,7 @@
     </header>
 
     <!-- Toolbar (Functional) -->
-    <div class="h-10 shrink-0 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-surface/50 flex items-center px-6 gap-4 overflow-x-auto"
-         :class="{ 'opacity-50 pointer-events-none grayscale': isViewMode }">
+    <div v-if="!isViewMode" class="h-10 shrink-0 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-surface/50 flex items-center px-6 gap-4 overflow-x-auto">
         <div class="flex items-center gap-1 text-gray-500 dark:text-text-secondary">
             <button @click="insertText('**', '**')" class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors" title="Bold (Markdown **)">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6V4zm0 8h9a5 5 0 015 5 5 5 0 01-5 5H6v-10z" /></svg>
@@ -100,6 +99,11 @@
 
     <!-- Main Content Area with Absolute Centering and Fixed Sidebar -->
     <div class="flex-1 overflow-hidden bg-gray-50 dark:bg-app relative flex flex-col">
+        <!-- New Left Enrichment Sidebar -->
+        <aside v-if="isViewMode" class="w-72 fixed left-0 top-16 bottom-0 overflow-y-auto border-r border-gray-100 dark:border-border bg-white dark:bg-surface hidden lg:block z-20 shadow-[min(0px)_0px_0px_0px_rgba(0,0,0,0.1)] pt-4">
+             <EnrichmentSidebar :active-chunk="activeChunk" :loading="chunksLoading" />
+        </aside>
+
         <!-- Main Document Container - Absolutely Centered -->
         <div class="w-full h-full overflow-y-auto flex justify-center p-4 sm:p-8">
              <div class="w-full max-w-4xl bg-white dark:bg-surface shadow-sm border border-gray-100 dark:border-border rounded-xl min-h-[calc(100vh-8rem)] flex flex-col p-8 sm:p-12 relative h-fit mb-12">
@@ -221,6 +225,7 @@ import api from '../services/api';
 import { useThemeStore } from '../stores/theme';
 import NavBar from '../components/NavBar.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
+import EnrichmentSidebar from '../components/EnrichmentSidebar.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -352,6 +357,15 @@ const handleEditorMount = (editor) => {
   if (themeStore.isDark) {
     // Force dark theme if needed, usually handled by prop
   }
+  
+  // Listen for cursor changes
+  editor.onDidChangeCursorPosition((e) => {
+      const model = editor.getModel();
+      if (model) {
+          const offset = model.getOffsetAt(e.position);
+          cursorPosition.value = offset;
+      }
+  });
 };
 
 const insertText = (prefix, suffix = '') => {
@@ -429,12 +443,63 @@ const fetchDocument = async () => {
 
     if (!found) {
         router.push('/');
+    } else {
+        // Fetch Chunks for Enrichment Sidebar
+        fetchChunks(resolvedId.value);
     }
 
   } catch (error) {
     console.error('Error fetching document:', error);
   }
 };
+
+const chunks = ref([]);
+const chunksLoading = ref(false);
+
+const fetchChunks = async (id) => {
+    if (!id) return;
+    chunksLoading.value = true;
+    try {
+        const response = await api.get(`/documents/memory/${id}/chunks`);
+        // Calculate offsets
+        let currentOffset = 0;
+        chunks.value = response.data.map(chunk => {
+            const start = currentOffset;
+            const length = chunk.text.length;
+            const end = start + length;
+            // The chunk text might vary slightly from actual editor content due to whitespace normalization in ingestion
+            // But strict linear length is our best approximation without complex alignment
+            currentOffset = end; 
+            return {
+                ...chunk,
+                startOffset: start,
+                endOffset: end
+            };
+        });
+        
+        // Set initial active chunk to the first one
+        if (chunks.value.length > 0) {
+            cursorPosition.value = 0;
+        }
+    } catch (e) {
+        console.error("Failed to fetch chunks", e);
+    } finally {
+        chunksLoading.value = false;
+    }
+};
+
+const cursorPosition = ref(0);
+
+const activeChunk = computed(() => {
+    if (!chunks.value || chunks.value.length === 0) return null;
+    
+    // Find chunk that contains the cursor position
+    const pos = cursorPosition.value;
+    const found = chunks.value.find(c => pos >= c.startOffset && pos < c.endOffset);
+    
+    return found || chunks.value[0]; // Fallback to first
+});
+
 
 const saveDocument = async () => {
   if (!title.value) return;
