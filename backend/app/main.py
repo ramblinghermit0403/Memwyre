@@ -27,8 +27,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
-from app.routers import oauth
-app.include_router(oauth.router, prefix=f"{settings.API_V1_STR}/auth/oauth", tags=["oauth"])
+
 app.include_router(retrieval.router, prefix=f"{settings.API_V1_STR}/retrieval", tags=["retrieval"])
 app.include_router(llm.router, prefix=f"{settings.API_V1_STR}/llm", tags=["llm"])
 app.include_router(documents.router, prefix=f"{settings.API_V1_STR}/documents", tags=["documents"])

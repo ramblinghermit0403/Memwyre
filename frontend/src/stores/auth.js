@@ -77,7 +77,8 @@ export const useAuthStore = defineStore('auth', {
                 // Bypass interceptor to avoid infinite loop -> Create new instance or use fetch?
                 // Actually if we use same api instance, we must flag this request to skip interceptor logic or handle it carefully.
                 // Simpler: Use fetch or a naked axios call for refresh to avoid circular dependency in interceptors.
-                const response = await fetch('http://localhost:8000/api/v1/auth/refresh', {
+                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+                const response = await fetch(`${apiUrl}/auth/refresh`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ refresh_token: this.refreshToken })
