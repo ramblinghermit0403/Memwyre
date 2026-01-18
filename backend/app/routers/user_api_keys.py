@@ -61,10 +61,11 @@ async def create_api_key(
     await db.refresh(api_key)
     
     # Return raw key attached to response object (not stored in DB)
-    response = ApiKeyCreatedResponse.model_validate(api_key)
-    response.key = raw_key
-    
-    return response
+    base_response = ApiKeyResponse.model_validate(api_key)
+    return ApiKeyCreatedResponse(
+        **base_response.model_dump(),
+        key=raw_key
+    )
 
 @router.get("/api-keys", response_model=List[ApiKeyResponse])
 async def list_api_keys(

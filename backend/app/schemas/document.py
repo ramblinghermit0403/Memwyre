@@ -33,7 +33,8 @@ class ChunkCreate(ChunkBase):
 
 class Chunk(ChunkBase):
     id: int
-    document_id: int
+    document_id: Optional[int] = None
+    memory_id: Optional[int] = None
 
     class Config:
         from_attributes = True

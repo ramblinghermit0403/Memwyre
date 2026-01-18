@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = "YOUR_SECRET_KEY_HERE"  # Change in production
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 30
     
     
     # Database
@@ -46,6 +46,12 @@ class Settings(BaseSettings):
     GITHUB_CLIENT_SECRET: Optional[str] = os.getenv("GITHUB_CLIENT_SECRET")
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
     BACKEND_URL: str = os.getenv("BACKEND_URL", "http://localhost:8000")
+
+    # Retrieval Config
+    ENABLE_BM25_FILTER: bool = True
+    
+    # Dual Index Support
+    PINECONE_SPARSE_HOST: Optional[str] = None # Host for the Sparse Index (DotProduct)
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(BASE_DIR, ".env"),

@@ -1,0 +1,1137 @@
+--- Router Verification Results (Tri-State) ---
+
+[PASS] conv-26-q0
+  Query: When did Caroline go to the LGBTQ support group?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q1
+  Query: When did Melanie paint a sunrise?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q3
+  Query: What did Caroline research?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q4
+  Query: What is Caroline's identity?
+  Exp: FACT, Got: FACT
+
+[PASS] conv-26-q5
+  Query: When did Melanie run a charity race?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q6
+  Query: When is Melanie planning on going camping?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q7
+  Query: What is Caroline's relationship status?
+  Exp: FACT, Got: FACT
+
+[PASS] conv-26-q8
+  Query: When did Caroline give a speech at a school?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q9
+  Query: When did Caroline meet up with her friends, family, and mentors?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q10
+  Query: How long has Caroline had her current group of friends for?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[FAIL (FACT)] conv-26-q11
+  Query: Where did Caroline move from 4 years ago?
+  Exp: EPISODIC_SINGLE, Got: FACT
+
+[PASS] conv-26-q12
+  Query: How long ago was Caroline's 18th birthday?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-26-q13
+  Query: What career path has Caroline decided to persue?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q15
+  Query: What activities does Melanie partake in?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q16
+  Query: When did Melanie sign up for a pottery class?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q17
+  Query: When is Caroline going to the transgender conference?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q18
+  Query: Where has Melanie camped?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q19
+  Query: What do Melanie's kids like?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q20
+  Query: When did Melanie go to the museum?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q21
+  Query: When did Caroline have a picnic?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q23
+  Query: What books has Melanie read?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q24
+  Query: What does Melanie do to destress?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q25
+  Query: When did Caroline go to the LGBTQ conference?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q26
+  Query: When did Melanie read the book "nothing is impossible"?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q28
+  Query: When did Caroline go to the adoption meeting?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q29
+  Query: When did Melanie go to the pottery workshop?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q31
+  Query: When did Melanie go camping in June?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q32
+  Query: What LGBTQ+ events has Caroline participated in?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-26-q33
+  Query: When did Caroline go to a pride parade during the summer?
+  Exp: MULTI_HOP, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q34
+  Query: What events has Caroline participated in to help children?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q35
+  Query: When did Melanie go camping in July?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q36
+  Query: When did Caroline join a mentorship program?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q37
+  Query: What did Melanie paint recently?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q38
+  Query: What activities has Melanie done with her family?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-26-q39
+  Query: In what ways is Caroline participating in the LGBTQ community?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-26-q40
+  Query: How many times has Melanie gone to the beach in 2023?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q41
+  Query: When did Caroline join a new activist group?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q43
+  Query: What kind of art does Caroline make?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q44
+  Query: When is Melanie's daughter's birthday?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q45
+  Query: When did Caroline attend a pride parade in August?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-26-q47
+  Query: Who supports Caroline when she has a negative experience?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-26-q48
+  Query: What types of pottery have Melanie and her kids made?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q49
+  Query: When did Caroline and Melanie go to a pride fesetival together?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q51
+  Query: What has Melanie painted?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL (FACT)] conv-26-q52
+  Query: What are Melanie's pets' names?
+  Exp: EPISODIC_SINGLE, Got: FACT
+
+[PASS] conv-26-q53
+  Query: When did Caroline apply to adoption agencies?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q54
+  Query: When did Caroline draw a self-portrait?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-26-q55
+  Query: What subject have Caroline and Melanie both painted?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-26-q56
+  Query: What symbols are important to Caroline?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q57
+  Query: When did Caroline encounter people on a hike and have a negative experience?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q58
+  Query: When did Melanie make a plate in pottery class?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q60
+  Query: What instruments does Melanie play?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q61
+  Query: What musical artists/bands has Melanie seen?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q62
+  Query: When did Melanie go to the park?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q63
+  Query: When is Caroline's youth center putting on a talent show?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q65
+  Query: What are some changes Caroline has faced during her transition journey?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-26-q66
+  Query: What does Melanie do with her family on hikes?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q67
+  Query: When did Caroline go biking with friends?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-26-q68
+  Query: How long has Melanie been practicing art?
+  Exp: MULTI_HOP, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q70
+  Query: What transgender-specific events has Caroline attended?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q71
+  Query: What book did Melanie read from Caroline's suggestion?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q72
+  Query: When did Melanie's friend adopt a child?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q73
+  Query: When did Melanie get hurt?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q74
+  Query: When did Melanie's family go on a roadtrip?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL (FACT)] conv-26-q75
+  Query: How many children does Melanie have?
+  Exp: EPISODIC_SINGLE, Got: FACT
+
+[PASS] conv-26-q76
+  Query: When did Melanie go on a hike after the roadtrip?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-26-q78
+  Query: What items has Melanie bought?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q79
+  Query: When did Caroline pass the adoption interview?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-26-q80
+  Query: When did Melanie buy the figurines?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q0
+  Query: When Jon has lost his job as a banker?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q1
+  Query: When Gina has lost her job at Door Dash?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-30-q3
+  Query: What do Jon and Gina both have in common?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-30-q5
+  Query: What Jon thinks the ideal dance studio should look like?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q6
+  Query: When is Jon's group performing at a festival?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q7
+  Query: When did Gina launch an ad campaign for her store?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q8
+  Query: When was Jon in Paris?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-30-q9
+  Query: Which city have both Jean and John visited?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-30-q10
+  Query: When did Gina team up with a local artist for some cool designs?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q11
+  Query: When did Gina get her tattoo?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q12
+  Query: When did Jon start to go to the gym?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q13
+  Query: When did Gina open her online clothing store?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q14
+  Query: When did Jon start expanding his studio's social media presence?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q15
+  Query: When did Jon host a dance competition?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q16
+  Query: When did Jon go to a fair to get more exposure for his dance studio?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-30-q17
+  Query: Why did Gina decide to start her own clothing store?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[FAIL] conv-30-q18
+  Query: Do Jon and Gina start businesses out of what they love?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-30-q19
+  Query: When did Gina interview for a design internship?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q20
+  Query: When did Gina get accepted for the design internship?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q21
+  Query: When did Jon start reading "The Lean Startup"?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q22
+  Query: When did Gina develop a video presentation to teach how to style her fashion pieces?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q23
+  Query: How did Gina promote her clothes store?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q24
+  Query: Which events has Jon participated in to promote his business venture?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL (FACT)] conv-30-q25
+  Query: What does Jon's dance studio offer?
+  Exp: EPISODIC_SINGLE, Got: FACT
+
+[PASS] conv-30-q26
+  Query: When did Jon receive mentorship to promote his venture?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-30-q27
+  Query: Did Jon and Gina both participate in dance competitions?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-30-q28
+  Query: When was Jon in Rome?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q29
+  Query: Which cities has Jon visited?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q30
+  Query: When Jon is planning to open his dance studio?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q31
+  Query: How long did it take for Jon to open his studio?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-30-q32
+  Query: When did Gina design a limited collection of hoodies?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q33
+  Query: When did Jon visit networking events for his store?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q34
+  Query: When did Gina start being recognized by fashion editors?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q35
+  Query: When did Jon start learning marketing and analytics tools?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q36
+  Query: When did Jon and Gina decide to collaborate to create dance content?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q37
+  Query: When did Gina mention Shia Labeouf?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-30-q38
+  Query: When did Gina go to a dance class with a group of friends?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q0
+  Query: Who did Maria have dinner with on May 3, 2023?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q1
+  Query: When did Maria donate her car?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q2
+  Query: What martial arts has John done?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-41-q3
+  Query: What type of volunteering have John and Maria both done?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-41-q4
+  Query: When did John join the online support group?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q5
+  Query: When did Maria go to the beach?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q6
+  Query: Where has Maria made friends?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q7
+  Query: What items des John mention having as a child?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-41-q9
+  Query: Who gave Maria's family money when she was younger and her family was going through tough times?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-41-q10
+  Query: When did Maria meet Jean?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q11
+  Query: What people has Maria met and helped while volunteering?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-41-q12
+  Query: What test has John taken multiple times?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q13
+  Query: When did Maria's grandmother pass away?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q15
+  Query: What writing classes has Maria taken?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q16
+  Query: When did John get his degree?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q18
+  Query: Who did John go to yoga with?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q19
+  Query: What damages have happened to John's car?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q20
+  Query: When did John take a road trip to the Pacific Northwest?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-41-q21
+  Query: What areas of the U.S. has John been to or is planning to go to?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-41-q22
+  Query: When did John go to a convention with colleagues?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q23
+  Query: What desserts has Maria made?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q24
+  Query: When did John start boot camp with his family?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q25
+  Query: What European countries has Maria been to?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q26
+  Query: What has Maria done to feel closer to her faith?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q27
+  Query: When did John have a party with veterans?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q28
+  Query: What causes does John feel passionate about supporting?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q29
+  Query: What events is Maria planning for the homeless shelter funraiser?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q30
+  Query: What shelters does Maria volunteer at?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q31
+  Query: When did John get his dog Max?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q32
+  Query: What outdoor activities has John done with his colleagues?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q33
+  Query: What types of yoga has Maria practiced?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q34
+  Query: When did Maria join a gym?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q35
+  Query: What states has Maria vacationed at?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q36
+  Query: What music events has John attended?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q37
+  Query: What events for veterans has John participated in?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q38
+  Query: When did Maria get in a car accident?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL (FACT)] conv-41-q40
+  Query: What are the names of John's children?
+  Exp: EPISODIC_SINGLE, Got: FACT
+
+[PASS] conv-41-q42
+  Query: What area was hit by a flood?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q43
+  Query: When was John's old area hit with a flood?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q44
+  Query: What activities has Maria done with her church friends?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q46
+  Query: When did Maria go hiking with her church friends?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q47
+  Query: What exercises has John done?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q48
+  Query: When did John have his first firefighter call-out?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q49
+  Query: What food item did Maria drop off at the homeless shelter?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q51
+  Query: When did Maria start volunteering at the homeless shelter?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-41-q52
+  Query: Who have written notes of gratitude to Maria?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-41-q53
+  Query: When did John help renovate his hometown community center?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q54
+  Query: When did Maria take up community work with her church friends?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q55
+  Query: When did Maria receive a medal from the homeless shelter?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q56
+  Query: When did John participate in a 5K charity run?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q57
+  Query: What causes has John done events for?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q58
+  Query: When did Maria get Coco?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q59
+  Query: When did John go on a camping trip with Max?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL (FACT)] conv-41-q60
+  Query: What are Maria's dogs' names?
+  Exp: EPISODIC_SINGLE, Got: FACT
+
+[PASS] conv-41-q61
+  Query: When did Maria adopt Shadow?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-41-q62
+  Query: How many dogs has Maria adopted from the dog shelter she volunteers at?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-41-q63
+  Query: How many weeks passed between Maria adopting Coco and Shadow?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-41-q91
+  Query: What did John attend with his colleagues in March 2023?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q1
+  Query: What kind of interests do Joanna and Nate share?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-42-q2
+  Query: When did Joanna first watch "Eternal Sunshine of the Spotless Mind?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q3
+  Query: When did Nate win his first video game tournament?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q5
+  Query: What are Joanna's hobbies?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q6
+  Query: How long has Nate had his first two turtles?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-42-q7
+  Query: When did Joanna finish her first screenplay?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q8
+  Query: When did Nate get his first two turtles?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q9
+  Query: What major achievement did Joanna accomplish in January 2022?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q10
+  Query: What emotions is Joanna feeling about the screenplay she submitted?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q11
+  Query: What is Joanna allergic to?
+  Exp: FACT, Got: FACT
+
+[PASS] conv-42-q13
+  Query: When did Joanna have an audition for a writing gig?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q15
+  Query: When did Nate get purple hair?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q16
+  Query: What physical transformation did Nate undergo in April 2022?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q17
+  Query: What movie did Joanna watch on 1 May, 2022?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q18
+  Query: Which outdoor spot did Joanna visit in May?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q19
+  Query: How many times has Joanna found new hiking trails?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q20
+  Query: When did Nate adopt Max?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q21
+  Query: Who was the new addition to Nate's family in May 2022?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q22
+  Query: When did Joanna start writing her third screenplay?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q23
+  Query: Which of Joanna's screenplay were rejected from production companies?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-42-q24
+  Query: When is Nate hosting a gaming party?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q25
+  Query: When did Joanna hike with her buddies?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q26
+  Query: When did Nate win his third tourney?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q27
+  Query: What places has Joanna submitted her work to?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q28
+  Query: When did Nate make vegan icecream and share it with a vegan diet group?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q29
+  Query: When is Joanna going to make Nate's ice cream for her family?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-42-q30
+  Query: What kind of writings does Joanna do?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q31
+  Query: When did Nate win his fourth video game tournament?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q32
+  Query: Where did Joanna travel to in July 2022?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q33
+  Query: When did someone write Joanna a touching letter?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q34
+  Query: What book recommendations has Joanna given to Nate?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q35
+  Query: When did Nate take time off to chill with his pets?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q36
+  Query: When did Joanna share her book with her writers group?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q37
+  Query: When did Nate win an international tournament?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q38
+  Query: When did Joanna make a desert with almond milk?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q39
+  Query: When did Nate attend a cooking show?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q40
+  Query: When did Joanna's laptop crash?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q41
+  Query: When did Joanna make a chocolate tart with raspberries?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q42
+  Query: What movies have both Joanna and Nate seen?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[FAIL] conv-42-q43
+  Query: How long did it take for Joanna to finish writing her book?
+  Exp: MULTI_HOP, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q44
+  Query: When did Nate win a lot of money in a video game tournament?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q45
+  Query: When did Joanna finish up the writing for her book?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q46
+  Query: What board games has Nate played?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q47
+  Query: What places has Nate met new people?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q48
+  Query: When did Nate go to a convention and meet new people?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q49
+  Query: How many times has Joanna's scripts been rejected?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q50
+  Query: What is something Nate gave to Joanna that brings her a lot of joy?
+  Exp: FACT, Got: MULTI_HOP
+
+[FAIL] conv-42-q51
+  Query: When did Nate get Tilly for Joanna?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[FAIL] conv-42-q52
+  Query: How many of Joanna's writing have made it to the big screen?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-42-q53
+  Query: How many times has Nate taken his turtles on a walk?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q54
+  Query: When was Joanna's second movie script shown on the big screens?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q55
+  Query: What is Joanna inspired by?
+  Exp: FACT, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q56
+  Query: What animal do both Nate and Joanna like?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-42-q57
+  Query: When did Joanna plan to go over to Nate's and share recipes?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q58
+  Query: What things has Nate reccomended to Joanna?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-42-q59
+  Query: What does Joanna do to remember happy memories?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q61
+  Query: What mediums does Nate use to play games?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q62
+  Query: How many letters has Joanna recieved?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q63
+  Query: What video games does Nate play?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q64
+  Query: When did Nate win a big Valorant tourney?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q65
+  Query: Which torunament did Nate win in the beginning of November 2022?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL (FACT)] conv-42-q67
+  Query: What pets does Nate have?
+  Exp: EPISODIC_SINGLE, Got: FACT
+
+[PASS] conv-42-q69
+  Query: How many turtles does Nate have?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q70
+  Query: What activities does Nate do with his turtles?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q71
+  Query: What do both Joanna and Nate appreciate the beauty of?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-42-q72
+  Query: When did Joanna plan on going to Nate's to watch him play with his turtles?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q74
+  Query: What recommendations has Nate received from Joanna?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-42-q75
+  Query: What are Nate's favorite desserts?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q76
+  Query: How has Nate tried to disburse his vegan ice-cream recipes?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q77
+  Query: When did Nate win his second tournament?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q78
+  Query: How many video game tournaments has Nate participated in?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q79
+  Query: How many screenplays has Joanna written?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q80
+  Query: How many tournaments has Nate won?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q81
+  Query: What recipes has Joanna made?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-42-q82
+  Query: What recipes has Nate made?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-42-q83
+  Query: What are the skills that Nate has helped others learn?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-42-q86
+  Query: When did Nate take his turtles to the beach?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q0
+  Query: what are John's goals with regards to his basketball career?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-43-q1
+  Query: What are John's goals for his career that are not related to his basketball skills?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-43-q2
+  Query: What items does John collect?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q4
+  Query: What books has Tim read?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q6
+  Query: In which month's game did John achieve a career-high score in points?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q7
+  Query: Which geographical locations has Tim been to?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-43-q9
+  Query: Which endorsement deals has John been offered?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-43-q10
+  Query: When was John in Seattle for a game?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q11
+  Query: What sports does John like besides basketball?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q12
+  Query: What year did John start surfing?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q13
+  Query: What does Tim do to escape reality?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q14
+  Query: What kind of writing does Tim do?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q16
+  Query: After how many weeks did Tim reconnect with the fellow Harry Potter fan from California?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-43-q17
+  Query: How many games has John mentioned winning?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q18
+  Query: What authors has Tim read books from?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q20
+  Query: Which city was John in before traveling to Chicago?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-43-q21
+  Query: Which US cities does John mention visiting to Tim?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q22
+  Query: When did John meet with his teammates after returning from Chicago?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-43-q23
+  Query: When is Tim attending a book conference?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q24
+  Query: Where was John between August 11 and August 15 2023?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-43-q25
+  Query: What similar sports collectible do Tim and John own?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-43-q26
+  Query: Which TV series does Tim mention watching?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q29
+  Query: What schools did John play basketball in and how many years was he with his team during high school?
+  Exp: MULTI_HOP, Got: MULTI_HOP
+
+[PASS] conv-43-q30
+  Query: Which cities has John been to?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q31
+  Query: What month did Tim plan on going to Universal Studios?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q33
+  Query: When does John plan on traveling with his team on a team trip?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q35
+  Query: What outdoor activities does John enjoy?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-43-q36
+  Query: Who is Tim and John's favorite basketball player?
+  Exp: FACT, Got: MULTI_HOP
+
+[PASS] conv-43-q37
+  Query: Which week did Tim visit the UK for the Harry Potter Conference?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q38
+  Query: which country has Tim visited most frequently in his travels?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q39
+  Query: What year did Tim go to the Smoky Mountains?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-43-q40
+  Query: Has Tim been to North Carolina and/or Tennesee states in the US?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-43-q41
+  Query: What kind of fiction stories does Tim write?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q42
+  Query: What has John cooked?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-43-q43
+  Query: What does John like about Lebron James?
+  Exp: EPISODIC_SINGLE, Got: MULTI_HOP
+
+[PASS] conv-43-q44
+  Query: When did John and his wife go on a European vacation?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q45
+  Query: Which country was Tim visiting in the second week of November?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-43-q46
+  Query: Where was Tim in the week before 16 November 2023?
+  Exp: MULTI_HOP, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q47
+  Query: When did John get married at a greenhouse?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q48
+  Query: When did John get an ankle injury in 2023?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[PASS] conv-43-q49
+  Query: How many times has John injured his ankle?
+  Exp: EPISODIC_SINGLE, Got: EPISODIC_SINGLE
+
+[FAIL] conv-43-q50
+  Query: Which book was John reading during his recovery from an ankle injury?
+  Exp: MULTI_HOP, Got: EPISODIC_SINGLE
+
+
+Final Results: 239/283 Passed
+Total Failures: 44

@@ -57,7 +57,7 @@ async def chat_with_llm(
             if len(request.filter) > 0:
                 where_clause.update(request.filter)
             
-        results = vector_store.query(request.query, n_results=request.top_k, where=where_clause)
+        results = await vector_store.query(request.query, n_results=request.top_k, where=where_clause)
         
         context = []
         if results["documents"] and results.get("distances"):

@@ -2,198 +2,135 @@
 
 const API_BASE_URL = 'http://localhost:8000/api/v1';
 
-// Open Side Panel on icon click
-chrome.sidePanel
-    .setPanelBehavior({ openPanelOnActionClick: true })
-    .catch((error) => console.error(error));
+// --- Auth Helper ---
 
-chrome.runtime.onInstalled.addListener(() => {
-    console.log('Brain Vault Extension installed');
+async function fetchWithAuth(endpoint, options = {}) {
+    // 1. Get Tokens
+    const { token, refreshToken } = await chrome.storage.local.get(['token', 'refreshToken']);
 
-    // Create Context Menu
-    chrome.contextMenus.create({
-        id: "save-to-memwyre",
-        title: "Save to MemWyre",
-        contexts: ["page"]
-    });
-});
-
-// Handle Context Menu Clicks
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === "save-to-memwyre") {
-        injectNotification(tab.id, "Saving page...");
-        handleRequest(ingestUrl, { url: tab.url }, (response) => {
-            if (response.success) {
-                injectNotification(tab.id, "✅ Page Saved via MemWyre");
-            } else {
-                injectNotification(tab.id, "❌ Save Failed");
-            }
-        });
-    }
-});
-
-// Helper to show visual feedback (simple alert for now or custom)
-function injectNotification(tabId, message) {
-    chrome.scripting.executeScript({
-        target: { tabId: tabId },
-        func: (msg) => alert(msg), // MVP: Native alert. Ideally custom UI.
-        args: [message]
-    });
-}
-
-// Listen for messages from popup or content script
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'generatePrompt') {
-        handleRequest(generatePrompt, request.data, sendResponse);
-        return true;
-    }
-    if (request.action === 'saveMemory') {
-        handleRequest(saveMemory, request.data, sendResponse);
-        return true;
-    }
-    if (request.action === 'saveLLMMemory') {
-        handleRequest(saveLLMMemory, request.data, sendResponse);
-        return true;
-    }
-    if (request.action === 'searchMemory') {
-        handleRequest(searchMemory, request.data, sendResponse);
-        return true;
-    }
-    if (request.action === 'getDocuments') {
-        handleRequest(getDocuments, request.data, sendResponse);
-        return true;
-    }
-    if (request.action === 'getMemories') {
-        handleRequest(getMemories, request.data, sendResponse);
-        return true;
-    }
-    if (request.action === 'saveToken') {
-        chrome.storage.local.set({
-            token: request.token,
-            refreshToken: request.refreshToken,
-            user: request.user
-        }).then(() => {
-            sendResponse({ success: true });
-        });
-        return true;
-    }
-});
-
-async function handleRequest(handler, data, sendResponse) {
-    try {
-        const result = await handler(data);
-        sendResponse({ success: true, data: result });
-    } catch (error) {
-        sendResponse({ success: false, error: error.message });
-    }
-}
-
-async function getAuthHeaders() {
-    const { token } = await chrome.storage.local.get('token');
     if (!token) {
-        throw new Error('Not authenticated. Please login via the popup.');
+        throw new Error('Not authenticated. Please login via the side panel.');
     }
-    return {
+
+    const url = `${API_BASE_URL}${endpoint}`;
+    const headers = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        ...options.headers
     };
+
+    // 2. Initial Request
+    let response = await fetch(url, { ...options, headers });
+
+    // 3. Handle 401 (Refresh Logic)
+    if (response.status === 401) {
+        console.log("Token expired, attempting refresh...");
+
+        if (!refreshToken) {
+            await logout();
+            throw new Error('Session expired. Please login again.');
+        }
+
+        try {
+            // Try explicit refresh
+            const refreshResp = await fetch(`${API_BASE_URL}/auth/refresh`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ refresh_token: refreshToken }) // Backend schema expected
+            });
+
+            if (!refreshResp.ok) {
+                console.error("Refresh failed", await refreshResp.text());
+                throw new Error('Refresh failed');
+            }
+
+            const data = await refreshResp.json();
+
+            // Save new tokens
+            await chrome.storage.local.set({
+                token: data.access_token,
+                refreshToken: data.refresh_token || refreshToken // Use new or keep old
+            });
+
+            console.log("Token refreshed successfully.");
+
+            // Retry Original Request
+            headers['Authorization'] = `Bearer ${data.access_token}`;
+            response = await fetch(url, { ...options, headers });
+
+        } catch (err) {
+            console.error("Auth Loop Error:", err);
+            await logout();
+            throw new Error('Session expired. Please login again.');
+        }
+    }
+
+    // 4. Handle Standard Errors
+    if (!response.ok) {
+        let errorMsg = 'Request failed';
+        try {
+            const errorData = await response.json();
+            errorMsg = errorData.detail || errorMsg;
+        } catch (e) { }
+        throw new Error(errorMsg);
+    }
+
+    return await response.json();
+}
+
+async function logout() {
+    await chrome.storage.local.remove(['token', 'refreshToken', 'user']);
+    // Optional: Notify sidepanel to show login screen
+    // runtime.sendMessage not reliable if popup closed, but storage listener handles UI
 }
 
 async function generatePrompt(data) {
-    const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/prompts/generate`, {
+    return await fetchWithAuth('/prompts/generate', {
         method: 'POST',
-        headers,
         body: JSON.stringify({
             query: data.query,
             template_id: data.templateId || 'standard',
             context_size: 2000
         })
     });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to generate prompt');
-    }
-
-    return await response.json();
 }
 
 async function saveMemory(data) {
-    const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/memory/`, {
+    return await fetchWithAuth('/memory/', {
         method: 'POST',
-        headers,
         body: JSON.stringify({
             title: data.title,
             content: data.content,
             tags: ['extension']
         })
     });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to save memory');
-    }
-
-    return await response.json();
 }
 
 async function searchMemory(data) {
-    const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/documents/search`, {
+    return await fetchWithAuth('/documents/search', {
         method: 'POST',
-        headers,
         body: JSON.stringify({
             query: data.query,
             top_k: 5
         })
     });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to search memory');
-    }
-
-    return await response.json();
 }
 
 async function getDocuments() {
-    const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/documents/`, {
-        method: 'GET',
-        headers
+    return await fetchWithAuth('/documents/', {
+        method: 'GET'
     });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to fetch documents');
-    }
-
-    return await response.json();
 }
 
 async function getMemories() {
-    const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/memory/`, {
-        method: 'GET',
-        headers
+    return await fetchWithAuth('/memory/', {
+        method: 'GET'
     });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to fetch memories');
-    }
-
-    return await response.json();
 }
 
 async function saveLLMMemory(data) {
-    const headers = await getAuthHeaders();
-    // Using llm/save_memory endpoint which is designed for external inputs
-    const response = await fetch(`${API_BASE_URL}/llm/save_memory`, {
+    return await fetchWithAuth('/llm/save_memory', {
         method: 'POST',
-        headers,
         body: JSON.stringify({
             content: data.content,
             source_llm: data.source || 'extension_content_script',
@@ -202,30 +139,14 @@ async function saveLLMMemory(data) {
             url: data.url
         })
     });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to save LLM memory');
-    }
-
-    return await response.json();
 }
 
 async function ingestUrl(data) {
-    const headers = await getAuthHeaders();
-    const response = await fetch(`${API_BASE_URL}/ingest/url`, {
+    return await fetchWithAuth('/ingest/url', {
         method: 'POST',
-        headers,
         body: JSON.stringify({
             url: data.url,
             tags: ['extension', 'web-clip']
         })
     });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to ingest URL');
-    }
-
-    return await response.json();
 }

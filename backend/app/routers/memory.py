@@ -119,6 +119,15 @@ async def create_memory(
         status=initial_status,
         show_in_inbox=show_in_inbox
     )
+    
+    # MemoryBench Patch: Allow backdating if explicitly tagged
+    normalized_tags = [t.lower() for t in (memory_in.tags or [])]
+    if "memorybench" in normalized_tags and memory_in.created_at:
+        print(f"Applying MemoryBench backdate: {memory_in.created_at}")
+        memory.created_at = memory_in.created_at
+    else:
+        print(f"No backdate applied. Tags: {memory_in.tags}, CreatedAt: {memory_in.created_at}")
+        
     db.add(memory)
     try:
         await db.commit()
@@ -147,6 +156,7 @@ async def create_memory(
 
     # Trigger Dedupe Job (Background Celery)
     dedupe_memory_task.delay(memory.id)
+
     
     return memory
 
@@ -168,7 +178,7 @@ async def check_duplicate(
         return {"is_duplicate": False, "percent": 0.0}
         
     try:
-        results = vector_store.query(request.content, n_results=1, where={"user_id": current_user.id})
+        results = await vector_store.query(request.content, n_results=1, where={"user_id": current_user.id})
         
         if results["ids"] and results["distances"]:
              dist = results["distances"][0][0]
@@ -192,22 +202,28 @@ async def check_duplicate(
 async def read_memories(
     skip: int = 0,
     limit: int = 100,
+    tag: str | None = None,
     db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
     Retrieve memories and documents.
     """
-    from sqlalchemy import not_, cast, String
+    from sqlalchemy import not_, cast, String, and_
     
-    # Fetch Memories (Only Approved, Exclude Agent Facts)
-    result_mem = await db.execute(select(Memory).where(
+    # Build query filters
+    filters = [
         Memory.user_id == current_user.id,
         Memory.status == "approved",
-        # Filter out Agent Facts
         or_(Memory.source_llm.is_(None), Memory.source_llm != "agent"),
         not_(cast(Memory.tags, String).contains("auto-fact"))
-    ))
+    ]
+    
+    if tag:
+        filters.append(cast(Memory.tags, String).contains(tag))
+
+    # Fetch Memories
+    result_mem = await db.execute(select(Memory).where(and_(*filters)))
     memories = result_mem.scalars().all()
     
     # Fetch Documents
@@ -322,10 +338,12 @@ async def update_memory(
         # but ingestion_service generates new IDs for chunks.
         # We should probably delete by metadata filter if possible, but vector_store.delete takes IDs.
         # For now, let's delete the one we know.
-        vector_store.delete(ids=[memory.embedding_id])
+        await vector_store.delete(ids=[memory.embedding_id])
     
     # Chunk and process
-    ids, documents_content, metadatas = await ingestion_service.process_text(
+    # Chunk and process
+    # Chunk and process
+    ids, documents_content, enriched_chunk_texts, metadatas, sparse_values = await ingestion_service.process_text(
         text=memory.content,
         document_id=memory.id, # Using memory.id as document_id for ingestion
         title=memory.title,
@@ -333,17 +351,70 @@ async def update_memory(
         metadata={"user_id": current_user.id, "memory_id": memory.id, "tags": str(memory.tags) if memory.tags else ""}
     )
     
-    # Update memory with the first embedding ID (or we need a better way to track chunks for memories)
+    
+    # Update memory with the first embedding ID
     if ids:
         memory.embedding_id = ids[0]
+        # Save Chunks to DB
+        from app.models.document import Chunk
+        import json
+        
+        # Delete existing chunks for this memory first?
+        # Ideally yes, if we are re-processing content.
+        # But 'chunks' relationship defaults to append unless we clear.
+        # memory.chunks is a relationship.
+        # Let's delete old ones manually to be safe.
+        # But wait, Chunk model has memory_id.
+        await db.execute(select(Chunk).where(Chunk.memory_id == memory.id).execution_options(synchronize_session=False))
+        # Logic to delete? 'delete(Chunk).where...'
+        from sqlalchemy import delete
+        await db.execute(delete(Chunk).where(Chunk.memory_id == memory.id))
+        
+        for i, (embedding_id, chunk_content) in enumerate(zip(ids, documents_content)):
+            meta = metadatas[i]
+            
+            qas = []
+            if meta.get("generated_qas"):
+                try:
+                    qas = json.loads(meta.get("generated_qas"))
+                except:
+                    pass
+            
+            entities = []
+            if meta.get("entities"):
+                try:
+                    entities = json.loads(meta.get("entities"))
+                except:
+                    pass
+                    
+            chunk = Chunk(
+                memory_id=memory.id,
+                chunk_index=i,
+                text=chunk_content,
+                embedding_id=embedding_id,
+                summary=meta.get("summary"),
+                generated_qas=qas,
+                entities=entities,
+                metadata_json=meta
+            )
+            db.add(chunk)
+            
         await db.commit()
 
-    vector_store.add_documents(
-        ids=ids,
-        documents=documents_content,
-        metadatas=metadatas
-    )
-    
+    try:
+        await vector_store.add_documents(
+            ids=ids,
+            documents=enriched_chunk_texts,
+            metadatas=metadatas,
+            sparse_values=sparse_values
+        )
+    except Exception as e:
+        # Log the error or handle it as appropriate. For now, we'll just print.
+        print(f"Error adding documents to vector store: {e}")
+        # Decide how to proceed if adding to vector store fails.
+        # For example, you might want to revert the DB commit or raise an HTTPException.
+        # For this change, we'll let the function continue and return the memory.
+
     # Return with prefix
     return {
         "id": f"mem_{memory.id}",
@@ -380,7 +451,7 @@ async def delete_memory(
         # Delete chunks from vector store?
         for chunk in document.chunks:
             if chunk.embedding_id:
-                vector_store.delete(ids=[chunk.embedding_id])
+                await vector_store.delete(ids=[chunk.embedding_id])
         
         await db.delete(document)
         await db.commit()
@@ -395,7 +466,7 @@ async def delete_memory(
             raise HTTPException(status_code=404, detail="Memory not found")
         
         if memory.embedding_id:
-            vector_store.delete(ids=[memory.embedding_id])
+            await vector_store.delete(ids=[memory.embedding_id])
             
         await db.delete(memory)
         await db.commit()
@@ -410,7 +481,7 @@ async def delete_memory(
             if not memory:
                 raise HTTPException(status_code=404, detail="Memory not found")
             if memory.embedding_id:
-                vector_store.delete(ids=[memory.embedding_id])
+                await vector_store.delete(ids=[memory.embedding_id])
             await db.delete(memory)
             await db.commit()
             return {"status": "success", "id": memory_id}

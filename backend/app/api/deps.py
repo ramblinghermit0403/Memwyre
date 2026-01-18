@@ -26,6 +26,32 @@ async def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
+    # Check for API Key (starts with bv_sk_)
+    if token.startswith("bv_sk_"):
+        import hashlib
+        from app.models.api_key import ApiKey
+        from datetime import datetime
+        
+        hashed = hashlib.sha256(token.encode()).hexdigest()
+        
+        result = await db.execute(select(ApiKey).where(ApiKey.key_hash == hashed, ApiKey.is_active == True))
+        api_key_obj = result.scalars().first()
+        
+        if not api_key_obj:
+             raise credentials_exception
+             
+        # Update usage stats
+        api_key_obj.last_used_at = datetime.now()
+        await db.commit()
+        
+        # Get user
+        result_user = await db.execute(select(User).where(User.id == api_key_obj.user_id))
+        user = result_user.scalars().first()
+        if not user:
+            raise credentials_exception
+        return user
+
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]

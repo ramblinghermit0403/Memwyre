@@ -1,0 +1,213 @@
+Found 30 result files.
+--------------------------------------------------------------------------------
+Q0 [UNKNOWN]
+Question: When did Caroline go to the LGBTQ support group?
+Ground Truth: 7 May 2023
+Prediction: N/A
+Retrieved Items: 8
+Top Contexts: ['USER appreciates support of those close to me', 'User attended LGBTQ support group', 'LGBTQ support group was powerful']
+----------------------------------------
+Q1 [UNKNOWN]
+Question: When did Melanie paint a sunrise?
+Ground Truth: 2022
+Prediction: N/A
+Retrieved Items: 10
+Top Contexts: ['User asks if_painting_is_Melanies', 'Melanie painted lake_sunrise', 'User thanks Melanie']
+----------------------------------------
+Q2 [UNKNOWN]
+Question: What fields would Caroline be likely to pursue in her educaton?
+Ground Truth: Psychology, counseling certification
+Prediction: N/A
+Retrieved Items: 8
+Top Contexts: ['Support group gave User courage to embrace herself', 'Art helps us understand each other', 'Support group gave courage to embrace herself']
+----------------------------------------
+Q3 [UNKNOWN]
+Question: What did Caroline research?
+Ground Truth: Adoption agencies
+Prediction: N/A
+Retrieved Items: 8
+Top Contexts: ['User is_off_to do_some_research', 'User is_researching adoption_agencies', 'Melanie thanks Caroline']
+----------------------------------------
+Q4 [UNKNOWN]
+Question: What is Caroline's identity?
+Ground Truth: Transgender woman
+Prediction: N/A
+Retrieved Items: 10
+Top Contexts: ['Audience related_to what_User_said', 'What_User_said inspired audience_to_be_better_allies', 'User asked what_made_Melanie_try_pottery']
+----------------------------------------
+Q5 [UNKNOWN]
+Question: When did Melanie run a charity race?
+Ground Truth: The sunday before 25 May 2023
+Prediction: N/A
+Retrieved Items: 13
+Top Contexts: ['Support group gave User courage to embrace herself', 'User has courage to embrace self', 'Support group gave courage to embrace herself']
+----------------------------------------
+Q6 [UNKNOWN]
+Question: When is Melanie planning on going camping?
+Ground Truth: June 2023
+Prediction: N/A
+Retrieved Items: 7
+Top Contexts: ['User asks if_painting_is_Melanies', 'Melanie painted lake_sunrise', 'User thanks Melanie']
+----------------------------------------
+Q7 [UNKNOWN]
+Question: What is Caroline's relationship status?
+Ground Truth: Single
+Prediction: N/A
+Retrieved Items: 13
+Top Contexts: ['Audience related_to what_User_said', 'What_User_said inspired audience_to_be_better_allies', 'User asked what_made_Melanie_try_pottery']
+----------------------------------------
+Q8 [UNKNOWN]
+Question: When did Caroline give a speech at a school?
+Ground Truth: The week before 9 June 2023
+Prediction: N/A
+Retrieved Items: 9
+Top Contexts: ['User wants_to_give loving_home_to_kids_in_need', 'User has_goal give kids a loving home', 'Melanie thanks Caroline']
+----------------------------------------
+Q9 [UNKNOWN]
+Question: When did Caroline meet up with her friends, family, and mentors?
+Ground Truth: The week before 9 June 2023
+Prediction: N/A
+Retrieved Items: 12
+Top Contexts: ['USER finds_freeing being yourself and living honestly', 'USER believes we can accept who we are and be content', 'Assistant is_busy_with kids & work']
+----------------------------------------
+DEBUG Q10 KEYS: ["questionId", "question", "questionType", "groundTruth", "containerTag", "timestamp", "durationMs", "results"]
+Q10 [UNKNOWN]
+Question: How long has Caroline had her current group of friends for?
+Ground Truth: 4 years
+Prediction: N/A
+Retrieved Items: 13
+Top Contexts: ['User attended LGBTQ support group', 'LGBTQ support group was powerful', 'Support group made User feel accepted']
+----------------------------------------
+Q11 [UNKNOWN]
+Question: Where did Caroline move from 4 years ago?
+Ground Truth: Sweden
+Prediction: N/A
+Retrieved Items: 7
+Top Contexts: ['User is_grateful_for support from friends and mentors', 'Melanie thanks Caroline', 'User has stories_from_different_cultures']
+----------------------------------------
+Q12 [UNKNOWN]
+Question: How long ago was Caroline's 18th birthday?
+Ground Truth: 10 years ago
+Prediction: N/A
+Retrieved Items: 8
+Top Contexts: ['LGBTQ support group was powerful', 'ASSISTANT was spending the day with my fam volunteering at a homeless shelter', 'LGBTQ support group was powerful']
+----------------------------------------
+Q13 [UNKNOWN]
+Question: What career path has Caroline decided to persue?
+Ground Truth: counseling or mental health for Transgender people
+Prediction: N/A
+Retrieved Items: 9
+Top Contexts: ['User plans_to check out career options', 'User has courage to embrace self', 'User plans_to check_out_career_options']
+----------------------------------------
+Q14 [UNKNOWN]
+Question: Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?
+Ground Truth: Likely no
+Prediction: N/A
+Retrieved Items: 11
+Top Contexts: ['USER appreciates support of those close to me', 'User attended LGBTQ support group', 'LGBTQ support group was powerful']
+----------------------------------------
+Q15 [UNKNOWN]
+Question: What activities does Melanie partake in?
+Ground Truth: pottery, camping, painting, swimming
+Prediction: N/A
+Retrieved Items: 13
+Top Contexts: ['User asks if_painting_is_Melanies', 'Melanie painted lake_sunrise', 'User thanks Melanie']
+----------------------------------------
+Q16 [UNKNOWN]
+Question: When did Melanie sign up for a pottery class?
+Ground Truth: 2 July 2023
+Prediction: N/A
+Retrieved Items: 13
+Top Contexts: ['User was_happy_and_thankful_for support', 'Melanie painted lake_sunrise', 'User asks if_painting_is_Melanies']
+----------------------------------------
+Q17 [UNKNOWN]
+Question: When is Caroline going to the transgender conference?
+Ground Truth: July 2023
+Prediction: N/A
+Retrieved Items: 9
+Top Contexts: ['User heard inspiring transgender stories', 'Art helps us understand each other', 'ASSISTANT was spending the day with my fam volunteering at a homeless shelter']
+----------------------------------------
+Q18 [UNKNOWN]
+Question: Where has Melanie camped?
+Ground Truth: beach, mountains, forest
+Prediction: N/A
+Retrieved Items: 10
+Top Contexts: ['User has courage to embrace self', 'User has_courage_to embrace_herself', 'User asks if_painting_is_Melanies']
+----------------------------------------
+Q19 [UNKNOWN]
+Question: What do Melanie's kids like?
+Ground Truth: dinosaurs, nature
+Prediction: N/A
+Retrieved Items: 10
+Top Contexts: ['Assistant is_busy_with kids & work', 'Assistant is_busy_with kids & work', 'Assistant is_busy_with kids & work']
+----------------------------------------
+Q20 [UNKNOWN]
+Question: When did Melanie go to the museum?
+Ground Truth: 5 July 2023
+Prediction: N/A
+Retrieved Items: 9
+Top Contexts: ['Art helps us understand each other', 'ASSISTANT was spending the day with my fam volunteering at a homeless shelter', 'User commented your_kids_had_so_much_fun_at_the_park']
+----------------------------------------
+Q21 [UNKNOWN]
+Question: When did Caroline have a picnic?
+Ground Truth: The week before 6 July 2023
+Prediction: N/A
+Retrieved Items: 13
+Top Contexts: ['Melanie thanks Caroline', 'User is_creating a library for when I have kids', 'User had picnic_last_week']
+----------------------------------------
+Q22 [UNKNOWN]
+Question: Would Caroline likely have Dr. Seuss books on her bookshelf?
+Ground Truth: Yes, since she collects classic children's books
+Prediction: N/A
+Retrieved Items: 8
+Top Contexts: ['Support group gave User courage to embrace herself', 'Art helps us understand each other', 'Support group gave courage to embrace herself']
+----------------------------------------
+Q23 [UNKNOWN]
+Question: What books has Melanie read?
+Ground Truth: "Nothing is Impossible", "Charlotte's Web"
+Prediction: N/A
+Retrieved Items: 12
+Top Contexts: ['User has courage to embrace self', 'User has_courage_to embrace_herself', 'User asks if_painting_is_Melanies']
+----------------------------------------
+Q24 [UNKNOWN]
+Question: What does Melanie do to destress?
+Ground Truth: Running, pottery
+Prediction: N/A
+Retrieved Items: 10
+Top Contexts: ['User asks if_painting_is_Melanies', 'Melanie painted lake_sunrise', 'User thanks Melanie']
+----------------------------------------
+Q25 [UNKNOWN]
+Question: When did Caroline go to the LGBTQ conference?
+Ground Truth: 10 July 2023
+Prediction: N/A
+Retrieved Items: 8
+Top Contexts: ['User attended LGBTQ support group', 'LGBTQ support group was powerful', 'Art helps us understand each other']
+----------------------------------------
+Q26 [UNKNOWN]
+Question: When did Melanie read the book "nothing is impossible"?
+Ground Truth: 2022
+Prediction: N/A
+Retrieved Items: 12
+Top Contexts: ['Art helps us understand each other', 'ASSISTANT was spending the day with my fam volunteering at a homeless shelter', 'User commented your_kids_had_so_much_fun_at_the_park']
+----------------------------------------
+Q27 [UNKNOWN]
+Question: Would Caroline pursue writing as a career option?
+Ground Truth: LIkely no; though she likes reading, she wants to be a counselor
+Prediction: N/A
+Retrieved Items: 9
+Top Contexts: ['User plans_to check out career options', 'User plans_to check_out_career_options', 'User plans_to_explore career options']
+----------------------------------------
+Q28 [UNKNOWN]
+Question: When did Caroline go to the adoption meeting?
+Ground Truth: The friday before 15 July 2023
+Prediction: N/A
+Retrieved Items: 9
+Top Contexts: ['Art helps us understand each other', 'ASSISTANT was spending the day with my fam volunteering at a homeless shelter', 'User commented your_kids_had_so_much_fun_at_the_park']
+----------------------------------------
+Q29 [UNKNOWN]
+Question: When did Melanie go to the pottery workshop?
+Ground Truth: The Friday before 15 July 2023
+Prediction: N/A
+Retrieved Items: 12
+Top Contexts: ['Art helps us understand each other', 'ASSISTANT was spending the day with my fam volunteering at a homeless shelter', 'User commented your_kids_had_so_much_fun_at_the_park']
+----------------------------------------

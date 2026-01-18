@@ -1,17 +1,23 @@
 from typing import List, Dict, Any
 from app.services.vector_store import vector_store
+from app.core.config import settings
 
 class ContextBuilder:
     def __init__(self):
         pass
 
-    def build_context(self, query: str, user_id: int, limit_tokens: int = 2000) -> Dict[str, Any]:
+    async def build_context(self, query: str, user_id: int, limit_tokens: int = 2000) -> Dict[str, Any]:
         """
         Retrieve and format context. 
         TODO: Implement advanced compression/deduplication.
         """
         # 1. Retrieve
-        results = vector_store.query(query, n_results=10, where={"user_id": user_id})
+        results = await vector_store.query(
+            query, 
+            n_results=5, 
+            where={"user_id": user_id},
+            apply_bm25=settings.ENABLE_BM25_FILTER
+        )
         
         snippets = []
         if results["documents"]:

@@ -10,7 +10,10 @@ import os
 from langchain_aws import BedrockEmbeddings
 import re
 import json
+import asyncio
 from app.services.llm_service import llm_service
+from app.core.aws_config import AWS_CONFIG
+import boto3
 
 class IngestionService:
     def __init__(self, chunk_size: int = 1000, chunk_overlap: int = 200):
@@ -29,9 +32,12 @@ class IngestionService:
         )
         # Initialize semantic model
         try:
+            # Create a boto3 client with custom config
+            client = boto3.client("bedrock-runtime", region_name=os.getenv("AWS_REGION", "us-east-1"), config=AWS_CONFIG)
+            
             self.bedrock_embeddings = BedrockEmbeddings(
-                model_id="amazon.titan-embed-text-v1",
-                region_name=os.getenv("AWS_REGION", "us-east-1")
+                model_id="amazon.titan-embed-text-v2:0",
+                client=client
             )
         except Exception as e:
             print(f"Warning: Failed to load Bedrock embeddings: {e}")
@@ -40,12 +46,6 @@ class IngestionService:
     def chunk_text(self, text: str) -> List[str]:
         """
         Chunk text using RecursiveCharacterTextSplitter.
-        
-        Args:
-            text: The text to chunk
-            
-        Returns:
-            List of text chunks
         """
         return self.text_splitter.split_text(text)
     
@@ -61,16 +61,15 @@ class IngestionService:
         """
         Process text into chunks with metadata for vector store.
         Uses Semantic Chunking and LLM Enrichment.
+        Now optimized with parallel processing.
         """
-        # 1. Chunking
+        # 1. Chunking (Wait for this, it's CPU + Embedding bound)
         if len(text) < 500:
-             chunks = [text] # Small enough
+             chunks = [text] 
+        elif len(text) < 3000:
+             chunks = self.text_splitter.split_text(text)
         else:
-             chunks = self.semantic_chunk_text(text)
-        
-        embedding_ids = []
-        chunk_texts = []
-        metadatas = []
+             chunks = await self.semantic_chunk_text(text) # Now Async!
         
         base_metadata = {
             "document_id": document_id,
@@ -80,52 +79,78 @@ class IngestionService:
         if metadata:
             base_metadata.update(metadata)
         
-        enriched_chunk_texts = [] # Text to be embedded (contains enrichment)
+        # 2. Enrichment (Parallelized)
+        enrichment_tasks = []
+        if enrich:
+            for chunk_text in chunks:
+                enrichment_tasks.append(llm_service.generate_chunk_enrichment(chunk_text))
         
+        # Execute Enrichment concurrently
+        enrichment_results = []
+        if enrichment_tasks:
+            try:
+                enrichment_results = await asyncio.gather(*enrichment_tasks, return_exceptions=True)
+            except Exception as e:
+                print(f"Enrichment batch failed: {e}")
+                # Fallback to empty results
+                enrichment_results = [None] * len(chunks)
+        else:
+            enrichment_results = [None] * len(chunks)
+
+        embedding_ids = []
+        chunk_texts = []
+        metadatas = []
+        enriched_chunk_texts = [] # Text to be embedded
+        
+        # Assemble Results
         for i, chunk_text in enumerate(chunks):
             embedding_id = str(uuid.uuid4())
-            
             embedding_ids.append(embedding_id)
             chunk_texts.append(chunk_text)
             
             chunk_metadata = base_metadata.copy()
             chunk_metadata["chunk_index"] = i
             
-            # 2. Enrichment (Summary + QA)
-            enriched_text = chunk_text
+            # Process Enrichment Result
+            result = enrichment_results[i] if i < len(enrichment_results) else None
             
-            if enrich:
-                enrichment_data = await llm_service.generate_chunk_enrichment(chunk_text)
-                if enrichment_data:
-                    summary = enrichment_data.get("summary", "")
-                    qas = enrichment_data.get("generated_qas", [])
-                    entities = enrichment_data.get("entities", [])
-                    
-                    chunk_metadata["summary"] = summary
-                    # Use json.dumps to ensure valid JSON string for Pinecone and easy parsing later
-                    chunk_metadata["generated_qas"] = json.dumps(qas)
-                    chunk_metadata["entities"] = json.dumps(entities)
-                    
-                    # Construct Enriched Text for Embedding
-                    enrichment_context = f"\n\n-- Context --\nSummary: {summary}\n"
-                    if qas:
-                        enrichment_context += "Q&A:\n"
-                        for qa in qas:
-                             if isinstance(qa, dict):
-                                 enrichment_context += f"Q: {qa.get('question', '')}\nA: {qa.get('answer', '')}\n"
-                             elif isinstance(qa, str):
-                                 enrichment_context += f"{qa}\n"
-                                 
-                    enriched_text += enrichment_context
+            summary = ""
+            qas = []
+            entities = []
+            
+            if isinstance(result, Exception):
+                print(f"Enrichment failed for chunk {i}: {result}")
+            elif result:
+                summary = result.get("summary", "")
+                qas = result.get("generated_qas", [])
+                entities = result.get("entities", [])
+            
+            chunk_metadata["summary"] = summary
+            chunk_metadata["generated_qas"] = json.dumps(qas)
+            chunk_metadata["entities"] = json.dumps(entities)
+            
+            # Construct Enriched Text
+            enriched_text = chunk_text
+            if summary or qas:
+                enrichment_context = f"\n\n-- Context --\nSummary: {summary}\n"
+                if qas:
+                    enrichment_context += "Q&A:\n"
+                    for qa in qas:
+                            if isinstance(qa, dict):
+                                enrichment_context += f"Q: {qa.get('question', '')}\nA: {qa.get('answer', '')}\n"
+                            elif isinstance(qa, str):
+                                enrichment_context += f"{qa}\n"
+                enriched_text += enrichment_context
             
             enriched_chunk_texts.append(enriched_text)
             metadatas.append(chunk_metadata)
         
         return embedding_ids, chunk_texts, enriched_chunk_texts, metadatas
 
-    def semantic_chunk_text(self, text: str, threshold: float = 0.5) -> List[str]:
+    async def semantic_chunk_text(self, text: str, threshold: float = 0.5) -> List[str]:
         """
         Split text semantically using cosine similarity of adjacent sentences.
+        Parallelized embedding generation.
         """
         # Split sentences
         sentences = re.split(r'(?<=[.?!])\s+', text)
@@ -134,34 +159,52 @@ class IngestionService:
         if not sentences: return []
         if len(sentences) == 1: return sentences
         
-        # Encode
+        # Optimized Parallel Embedding Generation
         try:
-            # Bedrock returns list of lists (vectors)
-            embeddings = self.bedrock_embeddings.embed_documents(sentences)
+            # Create concurrent tasks for each sentence
+            # Titan v2 requires single inputs, so we fire them all at once.
+            tasks = [self.bedrock_embeddings.aembed_query(s) for s in sentences]
+            embeddings = await asyncio.gather(*tasks)
         except Exception as e:
-            print(f"Bedrock Embedding failed: {e}")
-            return self.text_splitter.split_text(text) # Fallback
+            print(f"Bedrock Parallel Embedding failed: {e}")
+            # Fallback to sync call if async fails for some reason
+            try:
+                embeddings = self.bedrock_embeddings.embed_documents(sentences)
+            except Exception as inner_e:
+                print(f"Fallback Embedding failed: {inner_e}")
+                return self.text_splitter.split_text(text)
             
+        # Optimization: Vectorized Cosine Similarity
+        embeddings_np = np.array(embeddings) # Shape: (N, D)
+        
+        # Compute Norms
+        norms = np.linalg.norm(embeddings_np, axis=1) # Shape: (N,)
+        
+        # Compute Dot Products for adjacent pairs
+        # dot(v[i-1], v[i]) for i=1..N-1
+        vec_a = embeddings_np[:-1]
+        vec_b = embeddings_np[1:]
+        dots = np.sum(vec_a * vec_b, axis=1)
+        
+        # Compute Cosine Similarities
+        norm_products = norms[:-1] * norms[1:]
+        similarities = np.zeros_like(dots)
+        
+        # Avoid division by zero
+        nonzero = norm_products > 1e-9
+        similarities[nonzero] = dots[nonzero] / norm_products[nonzero]
+        
+        # Form Chunks
         chunks = []
         current_chunk = [sentences[0]]
         
         for i in range(1, len(sentences)):
-            # Cosine sim
-            vec_a = embeddings[i-1]
-            vec_b = embeddings[i]
-            norm_a = np.linalg.norm(vec_a)
-            norm_b = np.linalg.norm(vec_b)
+            sim = similarities[i-1] 
             
-            if norm_a == 0 or norm_b == 0:
-                sim = 0
-            else:
-                sim = np.dot(vec_a, vec_b) / (norm_a * norm_b)
-            
-            if sim < threshold and len(" ".join(current_chunk)) > 150: # Check min size
+            if sim < threshold and len(" ".join(current_chunk)) > 150: 
                 chunks.append(" ".join(current_chunk))
                 current_chunk = [sentences[i]]
             else:
-                # Check max size constraint (500 tokens approx 2000 chars)
                 if len(" ".join(current_chunk)) + len(sentences[i]) > 2000:
                      chunks.append(" ".join(current_chunk))
                      current_chunk = [sentences[i]]
@@ -176,7 +219,6 @@ class IngestionService:
     def count_tokens(self, text: str) -> int:
         """
         Estimate token count (approx 4 chars per token).
-        For production, use tiktoken.
         """
         if not text:
             return 0

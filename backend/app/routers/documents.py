@@ -96,7 +96,7 @@ async def upload_document(
     await db.refresh(document)
     
     # Chunk Text using ingestion service
-    ids, documents_content, enriched_chunk_texts, metadatas = await ingestion_service.process_text(
+    ids, documents_content, enriched_chunk_texts, metadatas, sparse_values = await ingestion_service.process_text(
         text=text,
         document_id=document.id,
         title=document.title,
@@ -144,7 +144,12 @@ async def upload_document(
 
     # Add to Vector Store
     try:
-        vector_store.add_documents(ids=ids, documents=enriched_chunk_texts, metadatas=metadatas)
+        await vector_store.add_documents(
+            ids=ids, 
+            documents=enriched_chunk_texts, 
+            metadatas=metadatas,
+            sparse_values=sparse_values
+        )
     except Exception as e:
         print(f"Vector Store Error: {e}")
         # Non-blocking for now
@@ -193,7 +198,7 @@ async def delete_document(
     # Delete from Vector Store
     chunk_ids = [chunk.embedding_id for chunk in document.chunks if chunk.embedding_id]
     if chunk_ids:
-        vector_store.delete(ids=chunk_ids)
+        await vector_store.delete(ids=chunk_ids)
         
     await db.delete(document)
     await db.commit()
@@ -266,7 +271,7 @@ async def create_memory(
     # Ingest only if approved
     if initial_status == "approved":
         try:
-            ids, documents_content, enriched_chunk_texts, metadatas = await ingestion_service.process_text(
+            ids, documents_content, enriched_chunk_texts, metadatas, sparse_values = await ingestion_service.process_text(
                 text=memory_in.content,
                 document_id=memory.id,
                 title=memory_in.title,
@@ -311,7 +316,12 @@ async def create_memory(
 
                 await db.commit()
                 
-                vector_store.add_documents(ids=ids, documents=enriched_chunk_texts, metadatas=metadatas)
+                await vector_store.add_documents(
+                    ids=ids, 
+                    documents=enriched_chunk_texts, 
+                    metadatas=metadatas,
+                    sparse_values=sparse_values
+                )
         except Exception as e:
             print(f"Vector Store Error: {e}")
             
@@ -348,7 +358,7 @@ async def update_document(
     old_chunk_ids = [chunk.embedding_id for chunk in document.chunks if chunk.embedding_id]
     if old_chunk_ids:
         try:
-            vector_store.delete(ids=old_chunk_ids)
+            await vector_store.delete(ids=old_chunk_ids)
         except Exception as e:
             print(f"Error deleting old chunks: {e}")
     
@@ -358,7 +368,7 @@ async def update_document(
     await db.commit()
     
     # Re-chunk the updated content using ingestion service
-    ids, documents_content, enriched_chunk_texts, metadatas = await ingestion_service.process_text(
+    ids, documents_content, enriched_chunk_texts, metadatas, sparse_values = await ingestion_service.process_text(
         text=memory.content,
         document_id=document.id,
         title=document.title,
@@ -401,7 +411,12 @@ async def update_document(
     
     # Add to Vector Store
     try:
-        vector_store.add_documents(ids=ids, documents=enriched_chunk_texts, metadatas=metadatas)
+        await vector_store.add_documents(
+            ids=ids, 
+            documents=enriched_chunk_texts, 
+            metadatas=metadatas,
+            sparse_values=sparse_values
+        )
     except Exception as e:
         print(f"Vector Store Error: {e}")
     

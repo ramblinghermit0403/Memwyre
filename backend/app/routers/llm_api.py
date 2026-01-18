@@ -190,7 +190,7 @@ async def delete_memory(
     # Remove from Vector DB if exists
     if memory.embedding_id:
         try:
-            vector_store.delete(ids=[memory.embedding_id])
+            await vector_store.delete(ids=[memory.embedding_id])
             memory.embedding_id = None
         except:
             pass
@@ -205,7 +205,7 @@ async def retrieve_context(
     db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
-    ctx = context_builder.build_context(
+    ctx = await context_builder.build_context(
         query=request.query,
         user_id=current_user.id,
         limit_tokens=request.limit_tokens or 2000

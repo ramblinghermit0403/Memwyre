@@ -1,5 +1,6 @@
 import logging
 import os
+import asyncio
 from typing import List, Dict, Any
 from pinecone import Pinecone
 from app.core.config import settings
@@ -20,90 +21,105 @@ class VectorStore:
         # We use the host provided in settings to connect to the specific index
         self.index = self.pc.Index(host=settings.PINECONE_HOST)
         
-        # Embedding Model config
-        self.embedding_model = "llama-text-embed-v2" 
-        # Note: The user said "llama-text-embed-v2". 
-        # Usually Pinecone maps this. We'll try the exact string first.
-        
-    def _get_embedding(self, text: str, input_type: str = "passage") -> List[float]:
-        """
-        Generate embedding using Pinecone Inference API.
-        """
+        # Initialize Bedrock Embeddings Locally (Titan v2)
         try:
-            # Pinecone Inference call
-            embeddings = self.pc.inference.embed(
-                model=self.embedding_model,
-                inputs=[text],
-                parameters={"input_type": input_type, "truncate": "END"}
+            from langchain_aws import BedrockEmbeddings
+            self.bedrock_embeddings = BedrockEmbeddings(
+                model_id="amazon.titan-embed-text-v2:0",
+                region_name=os.getenv("AWS_REGION", "us-east-1")
             )
-            # Return the first embedding values
-            return embeddings[0].values
+            logger.info("Initialized Bedrock Titan v2 Embeddings locally.")
         except Exception as e:
-            logger.error(f"Pinecone Embedding Failed: {e}")
-            # Fallback or re-raise? Re-raise to alert user config is wrong
-            raise e
-
-    def add_documents(self, ids: List[str], documents: List[str], metadatas: List[Dict[str, Any]]):
-        vectors = []
-        for i, doc in enumerate(documents):
-            # Generate embedding
-            embedding = self._get_embedding(doc, input_type="passage")
-            
-            # Clean metadata
-            clean_meta = {k: v for k, v in metadatas[i].items() if v is not None}
-            # Add text to metadata for retrieval
-            clean_meta["text_content"] = documents[i] 
-
-            vectors.append({
-                "id": ids[i], 
-                "values": embedding, 
-                "metadata": clean_meta
-            })
+            logger.error(f"Failed to load Bedrock embeddings: {e}")
+            self.bedrock_embeddings = None
+        
+    async def _async_get_embeddings(self, texts: List[str]) -> List[List[float]]:
+        """
+        Generate embeddings locally using Bedrock (Parallel).
+        """
+        import asyncio
+        if not self.bedrock_embeddings:
+            raise Exception("Bedrock embeddings not initialized")
             
         try:
-            self.index.upsert(vectors=vectors)
+            # Parallel execution for Titan v2
+            tasks = [self.bedrock_embeddings.aembed_query(t) for t in texts]
+            return await asyncio.gather(*tasks)
+        except Exception as e:
+            logger.error(f"Bedrock Async Embedding Failed: {e}")
+            # Fallback
+            return self.bedrock_embeddings.embed_documents(texts)
+
+    async def add_documents(self, ids: List[str], documents: List[str], metadatas: List[Dict[str, Any]]):
+        if not documents:
+            return True
+
+        vectors = []
+        try:
+            # Batch generate embeddings (Parallel)
+            embeddings = await self._async_get_embeddings(documents)
+            
+            for i, doc in enumerate(documents):
+                # Clean metadata
+                clean_meta = {k: v for k, v in metadatas[i].items() if v is not None}
+                # Add text to metadata for retrieval
+                clean_meta["text_content"] = documents[i] 
+    
+                vectors.append({
+                    "id": ids[i], 
+                    "values": embeddings[i], 
+                    "metadata": clean_meta
+                })
+            
+            # Offload blocking IO to thread
+            await asyncio.to_thread(self.index.upsert, vectors=vectors)
             return True
         except Exception as e:
             print(f"Pinecone Upsert Failed: {e}")
             return False
 
-    def query(self, query_texts: str, n_results: int = 5, where: Dict = None) -> Dict:
+    async def query(self, query_texts: str, n_results: int = 5, where: Dict = None, include_values: bool = False) -> Dict:
         """
-        Query Pinecone index.
+        Query Pinecone index asynchronously.
         """
         try:
-            # 1. Generate embedding for query
-            query_embedding = self._get_embedding(query_texts, input_type="query")
-            if not query_embedding:
-                return {"ids": [[]], "distances": [[]], "metadatas": [[]], "documents": [[]]}
+            # 1. Generate embedding for query locally
+            if not self.bedrock_embeddings:
+                 return {"ids": [[]], "distances": [[]], "metadatas": [[]], "documents": [[]], "embeddings": [[]]}
 
-            # 2. Query Pinecone
-            search_results = self.index.query(
+            # Bedrock embedding is synchronous call usually fast or we can async it too?
+            # embed_query is sync in BedrockEmbeddings? Titan v2 client is sync here?
+            # Actually self.bedrock_embeddings.embed_query is blocking too if it uses boto3 sync client!
+            # Let's wrap it just in case, or use aembed_query if available.
+            # aembed_query was used above.
+            
+            query_embedding = await self.bedrock_embeddings.aembed_query(query_texts)
+            
+            if not query_embedding:
+                return {"ids": [[]], "distances": [[]], "metadatas": [[]], "documents": [[]], "embeddings": [[]]}
+
+            # 2. Query Pinecone (Blocking IO -> Thread)
+            search_results = await asyncio.to_thread(
+                self.index.query,
                 vector=query_embedding,
                 top_k=n_results,
                 include_metadata=True,
-                filter=where
+                filter=where,
+                include_values=include_values
             )
+            
+            # ... (rest of logic)
             
             # 3. Format results to match ChromaDB format
             ids = []
             distances = []
             metadatas = []
             documents = []
+            embeddings = []
 
             for match in search_results["matches"]:
                 ids.append(match["id"])
-                # Pinecone returns similarity score (cosine). Chroma returned distance (l2).
-                # We need to be careful with threshold in llm.py if we switch to cosine.
-                # Pinecone cosine: 1.0 is identical.
-                # But llm.py expects distance lower is better? 
-                # Let's check how we initialized Pinecone. Usually likely 'cosine'.
-                
-                # If we assume distance... 
-                # For now let's pass the score/distance as is, but logic in llm.py might need check.
-                # Actually, earlier logic in llm.py: distance < threshold (1.5).
-                # If Pinecone returns cosine similarity (0-1), high is good.
-                # We might need to invert it or check llm.py metric.
+                # Pinecone returns similarity score (cosine). 
                 distances.append(match["score"]) 
                 
                 meta = match["metadata"] if match["metadata"] else {}
@@ -111,19 +127,26 @@ class VectorStore:
                 
                 # Retrieve text from metadata
                 documents.append(meta.get("text_content", ""))
+                
+                # Retrieve values if requested
+                if include_values and match.get("values"):
+                    embeddings.append(match["values"])
 
             return {
                 "ids": [ids],
                 "distances": [distances],
                 "metadatas": [metadatas],
-                "documents": [documents] 
+                "documents": [documents],
+                "embeddings": [embeddings] if include_values else []
             }
             
         except Exception as e:
             print(f"Pinecone Query Failed: {e}")
-            return {"ids": [[]], "distances": [[]], "metadatas": [[]], "documents": [[]]}
+            return {"ids": [[]], "distances": [[]], "metadatas": [[]], "documents": [[]], "embeddings": [[]]}
 
-    def delete(self, ids: List[str]):
-        self.index.delete(ids=ids)
+    async def delete(self, ids: List[str]):
+        if not ids:
+            return
+        await asyncio.to_thread(self.index.delete, ids=ids)
 
 vector_store = VectorStore()

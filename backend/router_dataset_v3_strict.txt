@@ -1,0 +1,1132 @@
+conv-26-q0
+EPISODIC_SINGLE
+When did Caroline go to the LGBTQ support group?
+correct
+conv-26-q1
+EPISODIC_SINGLE
+When did Melanie paint a sunrise?
+correct
+conv-26-q3
+EPISODIC_SINGLE
+What did Caroline research?
+incorrect
+conv-26-q4
+FACT
+What is Caroline's identity?
+incorrect
+conv-26-q5
+EPISODIC_SINGLE
+When did Melanie run a charity race?
+correct
+conv-26-q6
+EPISODIC_SINGLE
+When is Melanie planning on going camping?
+incorrect
+conv-26-q7
+FACT
+What is Caroline's relationship status?
+incorrect
+conv-26-q8
+EPISODIC_SINGLE
+When did Caroline give a speech at a school?
+incorrect
+conv-26-q9
+EPISODIC_SINGLE
+When did Caroline meet up with her friends, family, and mentors?
+incorrect
+conv-26-q10
+MULTI_HOP
+How long has Caroline had her current group of friends for?
+correct
+conv-26-q11
+EPISODIC_SINGLE
+Where did Caroline move from 4 years ago?
+incorrect
+conv-26-q12
+MULTI_HOP
+How long ago was Caroline's 18th birthday?
+correct
+conv-26-q13
+EPISODIC_SINGLE
+What career path has Caroline decided to persue?
+correct
+conv-26-q15
+EPISODIC_SINGLE
+What activities does Melanie partake in?
+incorrect
+conv-26-q16
+EPISODIC_SINGLE
+When did Melanie sign up for a pottery class?
+correct
+conv-26-q17
+EPISODIC_SINGLE
+When is Caroline going to the transgender conference?
+correct
+conv-26-q18
+EPISODIC_SINGLE
+Where has Melanie camped?
+incorrect
+conv-26-q19
+EPISODIC_SINGLE
+What do Melanie's kids like?
+correct
+conv-26-q20
+EPISODIC_SINGLE
+When did Melanie go to the museum?
+incorrect
+conv-26-q21
+EPISODIC_SINGLE
+When did Caroline have a picnic?
+correct
+conv-26-q23
+EPISODIC_SINGLE
+What books has Melanie read?
+incorrect
+conv-26-q24
+EPISODIC_SINGLE
+What does Melanie do to destress?
+incorrect
+conv-26-q25
+EPISODIC_SINGLE
+When did Caroline go to the LGBTQ conference?
+correct
+conv-26-q26
+EPISODIC_SINGLE
+When did Melanie read the book "nothing is impossible"?
+incorrect
+conv-26-q28
+EPISODIC_SINGLE
+When did Caroline go to the adoption meeting?
+incorrect
+conv-26-q29
+EPISODIC_SINGLE
+When did Melanie go to the pottery workshop?
+incorrect
+conv-26-q31
+EPISODIC_SINGLE
+When did Melanie go camping in June?
+correct
+conv-26-q32
+EPISODIC_SINGLE
+What LGBTQ+ events has Caroline participated in?
+incorrect
+conv-26-q33
+MULTI_HOP
+When did Caroline go to a pride parade during the summer?
+incorrect
+conv-26-q34
+EPISODIC_SINGLE
+What events has Caroline participated in to help children?
+incorrect
+conv-26-q35
+EPISODIC_SINGLE
+When did Melanie go camping in July?
+incorrect
+conv-26-q36
+EPISODIC_SINGLE
+When did Caroline join a mentorship program?
+incorrect
+conv-26-q37
+EPISODIC_SINGLE
+What did Melanie paint recently?
+correct
+conv-26-q38
+EPISODIC_SINGLE
+What activities has Melanie done with her family?
+incorrect
+conv-26-q39
+EPISODIC_SINGLE
+In what ways is Caroline participating in the LGBTQ community?
+correct
+conv-26-q40
+EPISODIC_SINGLE
+How many times has Melanie gone to the beach in 2023?
+correct
+conv-26-q41
+EPISODIC_SINGLE
+When did Caroline join a new activist group?
+correct
+conv-26-q43
+EPISODIC_SINGLE
+What kind of art does Caroline make?
+incorrect
+conv-26-q44
+EPISODIC_SINGLE
+When is Melanie's daughter's birthday?
+correct
+conv-26-q45
+EPISODIC_SINGLE
+When did Caroline attend a pride parade in August?
+incorrect
+conv-26-q47
+EPISODIC_SINGLE
+Who supports Caroline when she has a negative experience?
+correct
+conv-26-q48
+EPISODIC_SINGLE
+What types of pottery have Melanie and her kids made?
+incorrect
+conv-26-q49
+EPISODIC_SINGLE
+When did Caroline and Melanie go to a pride fesetival together?
+correct
+conv-26-q51
+EPISODIC_SINGLE
+What has Melanie painted?
+incorrect
+conv-26-q52
+EPISODIC_SINGLE
+What are Melanie's pets' names?
+incorrect
+conv-26-q53
+EPISODIC_SINGLE
+When did Caroline apply to adoption agencies?
+correct
+conv-26-q54
+EPISODIC_SINGLE
+When did Caroline draw a self-portrait?
+correct
+conv-26-q55
+EPISODIC_SINGLE
+What subject have Caroline and Melanie both painted?
+incorrect
+conv-26-q56
+EPISODIC_SINGLE
+What symbols are important to Caroline?
+incorrect
+conv-26-q57
+EPISODIC_SINGLE
+When did Caroline encounter people on a hike and have a negative experience?
+correct
+conv-26-q58
+EPISODIC_SINGLE
+When did Melanie make a plate in pottery class?
+correct
+conv-26-q60
+EPISODIC_SINGLE
+What instruments does Melanie play?
+correct
+conv-26-q61
+EPISODIC_SINGLE
+What musical artists/bands has Melanie seen?
+incorrect
+conv-26-q62
+EPISODIC_SINGLE
+When did Melanie go to the park?
+correct
+conv-26-q63
+EPISODIC_SINGLE
+When is Caroline's youth center putting on a talent show?
+incorrect
+conv-26-q65
+MULTI_HOP
+What are some changes Caroline has faced during her transition journey?
+incorrect
+conv-26-q66
+EPISODIC_SINGLE
+What does Melanie do with her family on hikes?
+incorrect
+conv-26-q67
+EPISODIC_SINGLE
+When did Caroline go biking with friends?
+correct
+conv-26-q68
+MULTI_HOP
+How long has Melanie been practicing art?
+correct
+conv-26-q70
+EPISODIC_SINGLE
+What transgender-specific events has Caroline attended?
+correct
+conv-26-q71
+EPISODIC_SINGLE
+What book did Melanie read from Caroline's suggestion?
+incorrect
+conv-26-q72
+EPISODIC_SINGLE
+When did Melanie's friend adopt a child?
+incorrect
+conv-26-q73
+EPISODIC_SINGLE
+When did Melanie get hurt?
+correct
+conv-26-q74
+EPISODIC_SINGLE
+When did Melanie's family go on a roadtrip?
+correct
+conv-26-q75
+EPISODIC_SINGLE
+How many children does Melanie have?
+incorrect
+conv-26-q76
+MULTI_HOP
+When did Melanie go on a hike after the roadtrip?
+incorrect
+conv-26-q78
+EPISODIC_SINGLE
+What items has Melanie bought?
+correct
+conv-26-q79
+EPISODIC_SINGLE
+When did Caroline pass the adoption interview?
+correct
+conv-26-q80
+EPISODIC_SINGLE
+When did Melanie buy the figurines?
+correct
+conv-30-q0
+EPISODIC_SINGLE
+When Jon has lost his job as a banker?
+correct
+conv-30-q1
+EPISODIC_SINGLE
+When Gina has lost her job at Door Dash?
+correct
+conv-30-q3
+EPISODIC_SINGLE
+What do Jon and Gina both have in common?
+correct
+conv-30-q5
+EPISODIC_SINGLE
+What Jon thinks the ideal dance studio should look like?
+incorrect
+conv-30-q6
+EPISODIC_SINGLE
+When is Jon's group performing at a festival?
+incorrect
+conv-30-q7
+EPISODIC_SINGLE
+When did Gina launch an ad campaign for her store?
+correct
+conv-30-q8
+EPISODIC_SINGLE
+When was Jon in Paris?
+correct
+conv-30-q9
+EPISODIC_SINGLE
+Which city have both Jean and John visited?
+incorrect
+conv-30-q10
+EPISODIC_SINGLE
+When did Gina team up with a local artist for some cool designs?
+correct
+conv-30-q11
+EPISODIC_SINGLE
+When did Gina get her tattoo?
+correct
+conv-30-q12
+EPISODIC_SINGLE
+When did Jon start to go to the gym?
+incorrect
+conv-30-q13
+EPISODIC_SINGLE
+When did Gina open her online clothing store?
+correct
+conv-30-q14
+EPISODIC_SINGLE
+When did Jon start expanding his studio's social media presence?
+correct
+conv-30-q15
+EPISODIC_SINGLE
+When did Jon host a dance competition?
+incorrect
+conv-30-q16
+EPISODIC_SINGLE
+When did Jon go to a fair to get more exposure for his dance studio?
+incorrect
+conv-30-q17
+EPISODIC_SINGLE
+Why did Gina decide to start her own clothing store?
+correct
+conv-30-q18
+EPISODIC_SINGLE
+Do Jon and Gina start businesses out of what they love?
+correct
+conv-30-q19
+EPISODIC_SINGLE
+When did Gina interview for a design internship?
+incorrect
+conv-30-q20
+EPISODIC_SINGLE
+When did Gina get accepted for the design internship?
+incorrect
+conv-30-q21
+EPISODIC_SINGLE
+When did Jon start reading "The Lean Startup"?
+correct
+conv-30-q22
+EPISODIC_SINGLE
+When did Gina develop a video presentation to teach how to style her fashion pieces?
+correct
+conv-30-q23
+EPISODIC_SINGLE
+How did Gina promote her clothes store?
+incorrect
+conv-30-q24
+EPISODIC_SINGLE
+Which events has Jon participated in to promote his business venture?
+incorrect
+conv-30-q25
+EPISODIC_SINGLE
+What does Jon's dance studio offer?
+incorrect
+conv-30-q26
+EPISODIC_SINGLE
+When did Jon receive mentorship to promote his venture?
+correct
+conv-30-q27
+EPISODIC_SINGLE
+Did Jon and Gina both participate in dance competitions?
+correct
+conv-30-q28
+EPISODIC_SINGLE
+When was Jon in Rome?
+correct
+conv-30-q29
+EPISODIC_SINGLE
+Which cities has Jon visited?
+correct
+conv-30-q30
+EPISODIC_SINGLE
+When Jon is planning to open his dance studio?
+incorrect
+conv-30-q31
+MULTI_HOP
+How long did it take for Jon to open his studio?
+incorrect
+conv-30-q32
+EPISODIC_SINGLE
+When did Gina design a limited collection of hoodies?
+correct
+conv-30-q33
+EPISODIC_SINGLE
+When did Jon visit networking events for his store?
+correct
+conv-30-q34
+EPISODIC_SINGLE
+When did Gina start being recognized by fashion editors?
+correct
+conv-30-q35
+EPISODIC_SINGLE
+When did Jon start learning marketing and analytics tools?
+correct
+conv-30-q36
+EPISODIC_SINGLE
+When did Jon and Gina decide to collaborate to create dance content?
+correct
+conv-30-q37
+EPISODIC_SINGLE
+When did Gina mention Shia Labeouf?
+correct
+conv-30-q38
+EPISODIC_SINGLE
+When did Gina go to a dance class with a group of friends?
+correct
+conv-41-q0
+EPISODIC_SINGLE
+Who did Maria have dinner with on May 3, 2023?
+incorrect
+conv-41-q1
+EPISODIC_SINGLE
+When did Maria donate her car?
+correct
+conv-41-q2
+EPISODIC_SINGLE
+What martial arts has John done?
+incorrect
+conv-41-q3
+EPISODIC_SINGLE
+What type of volunteering have John and Maria both done?
+incorrect
+conv-41-q4
+EPISODIC_SINGLE
+When did John join the online support group?
+incorrect
+conv-41-q5
+EPISODIC_SINGLE
+When did Maria go to the beach?
+incorrect
+conv-41-q6
+EPISODIC_SINGLE
+Where has Maria made friends?
+incorrect
+conv-41-q7
+EPISODIC_SINGLE
+What items des John mention having as a child?
+incorrect
+conv-41-q9
+EPISODIC_SINGLE
+Who gave Maria's family money when she was younger and her family was going through tough times?
+correct
+conv-41-q10
+EPISODIC_SINGLE
+When did Maria meet Jean?
+correct
+conv-41-q11
+MULTI_HOP
+What people has Maria met and helped while volunteering?
+incorrect
+conv-41-q12
+EPISODIC_SINGLE
+What test has John taken multiple times?
+incorrect
+conv-41-q13
+EPISODIC_SINGLE
+When did Maria's grandmother pass away?
+correct
+conv-41-q15
+EPISODIC_SINGLE
+What writing classes has Maria taken?
+incorrect
+conv-41-q16
+EPISODIC_SINGLE
+When did John get his degree?
+correct
+conv-41-q18
+EPISODIC_SINGLE
+Who did John go to yoga with?
+incorrect
+conv-41-q19
+EPISODIC_SINGLE
+What damages have happened to John's car?
+incorrect
+conv-41-q20
+EPISODIC_SINGLE
+When did John take a road trip to the Pacific Northwest?
+incorrect
+conv-41-q21
+EPISODIC_SINGLE
+What areas of the U.S. has John been to or is planning to go to?
+incorrect
+conv-41-q22
+EPISODIC_SINGLE
+When did John go to a convention with colleagues?
+correct
+conv-41-q23
+EPISODIC_SINGLE
+What desserts has Maria made?
+incorrect
+conv-41-q24
+EPISODIC_SINGLE
+When did John start boot camp with his family?
+incorrect
+conv-41-q25
+EPISODIC_SINGLE
+What European countries has Maria been to?
+correct
+conv-41-q26
+EPISODIC_SINGLE
+What has Maria done to feel closer to her faith?
+incorrect
+conv-41-q27
+EPISODIC_SINGLE
+When did John have a party with veterans?
+incorrect
+conv-41-q28
+EPISODIC_SINGLE
+What causes does John feel passionate about supporting?
+incorrect
+conv-41-q29
+EPISODIC_SINGLE
+What events is Maria planning for the homeless shelter funraiser?
+incorrect
+conv-41-q30
+EPISODIC_SINGLE
+What shelters does Maria volunteer at?
+incorrect
+conv-41-q31
+EPISODIC_SINGLE
+When did John get his dog Max?
+correct
+conv-41-q32
+EPISODIC_SINGLE
+What outdoor activities has John done with his colleagues?
+incorrect
+conv-41-q33
+EPISODIC_SINGLE
+What types of yoga has Maria practiced?
+incorrect
+conv-41-q34
+EPISODIC_SINGLE
+When did Maria join a gym?
+correct
+conv-41-q35
+EPISODIC_SINGLE
+What states has Maria vacationed at?
+correct
+conv-41-q36
+EPISODIC_SINGLE
+What music events has John attended?
+incorrect
+conv-41-q37
+EPISODIC_SINGLE
+What events for veterans has John participated in?
+incorrect
+conv-41-q38
+EPISODIC_SINGLE
+When did Maria get in a car accident?
+correct
+conv-41-q40
+EPISODIC_SINGLE
+What are the names of John's children?
+incorrect
+conv-41-q42
+EPISODIC_SINGLE
+What area was hit by a flood?
+incorrect
+conv-41-q43
+EPISODIC_SINGLE
+When was John's old area hit with a flood?
+correct
+conv-41-q44
+EPISODIC_SINGLE
+What activities has Maria done with her church friends?
+incorrect
+conv-41-q46
+EPISODIC_SINGLE
+When did Maria go hiking with her church friends?
+correct
+conv-41-q47
+EPISODIC_SINGLE
+What exercises has John done?
+incorrect
+conv-41-q48
+EPISODIC_SINGLE
+When did John have his first firefighter call-out?
+incorrect
+conv-41-q49
+EPISODIC_SINGLE
+What food item did Maria drop off at the homeless shelter?
+correct
+conv-41-q51
+EPISODIC_SINGLE
+When did Maria start volunteering at the homeless shelter?
+correct
+conv-41-q52
+EPISODIC_SINGLE
+Who have written notes of gratitude to Maria?
+incorrect
+conv-41-q53
+EPISODIC_SINGLE
+When did John help renovate his hometown community center?
+correct
+conv-41-q54
+EPISODIC_SINGLE
+When did Maria take up community work with her church friends?
+incorrect
+conv-41-q55
+EPISODIC_SINGLE
+When did Maria receive a medal from the homeless shelter?
+incorrect
+conv-41-q56
+EPISODIC_SINGLE
+When did John participate in a 5K charity run?
+incorrect
+conv-41-q57
+EPISODIC_SINGLE
+What causes has John done events for?
+incorrect
+conv-41-q58
+EPISODIC_SINGLE
+When did Maria get Coco?
+incorrect
+conv-41-q59
+EPISODIC_SINGLE
+When did John go on a camping trip with Max?
+correct
+conv-41-q60
+EPISODIC_SINGLE
+What are Maria's dogs' names?
+correct
+conv-41-q61
+EPISODIC_SINGLE
+When did Maria adopt Shadow?
+incorrect
+conv-41-q62
+EPISODIC_SINGLE
+How many dogs has Maria adopted from the dog shelter she volunteers at?
+incorrect
+conv-41-q63
+EPISODIC_SINGLE
+How many weeks passed between Maria adopting Coco and Shadow?
+incorrect
+conv-41-q91
+EPISODIC_SINGLE
+What did John attend with his colleagues in March 2023?
+incorrect
+conv-42-q1
+EPISODIC_SINGLE
+What kind of interests do Joanna and Nate share?
+incorrect
+conv-42-q2
+EPISODIC_SINGLE
+When did Joanna first watch "Eternal Sunshine of the Spotless Mind?
+incorrect
+conv-42-q3
+EPISODIC_SINGLE
+When did Nate win his first video game tournament?
+correct
+conv-42-q5
+EPISODIC_SINGLE
+What are Joanna's hobbies?
+incorrect
+conv-42-q6
+MULTI_HOP
+How long has Nate had his first two turtles?
+correct
+conv-42-q7
+EPISODIC_SINGLE
+When did Joanna finish her first screenplay?
+correct
+conv-42-q8
+EPISODIC_SINGLE
+When did Nate get his first two turtles?
+incorrect
+conv-42-q9
+EPISODIC_SINGLE
+What major achievement did Joanna accomplish in January 2022?
+correct
+conv-42-q10
+EPISODIC_SINGLE
+What emotions is Joanna feeling about the screenplay she submitted?
+correct
+conv-42-q11
+FACT
+What is Joanna allergic to?
+incorrect
+conv-42-q13
+EPISODIC_SINGLE
+When did Joanna have an audition for a writing gig?
+correct
+conv-42-q15
+EPISODIC_SINGLE
+When did Nate get purple hair?
+correct
+conv-42-q16
+EPISODIC_SINGLE
+What physical transformation did Nate undergo in April 2022?
+incorrect
+conv-42-q17
+EPISODIC_SINGLE
+What movie did Joanna watch on 1 May, 2022?
+incorrect
+conv-42-q18
+EPISODIC_SINGLE
+Which outdoor spot did Joanna visit in May?
+correct
+conv-42-q19
+EPISODIC_SINGLE
+How many times has Joanna found new hiking trails?
+correct
+conv-42-q20
+EPISODIC_SINGLE
+When did Nate adopt Max?
+correct
+conv-42-q21
+EPISODIC_SINGLE
+Who was the new addition to Nate's family in May 2022?
+correct
+conv-42-q22
+EPISODIC_SINGLE
+When did Joanna start writing her third screenplay?
+incorrect
+conv-42-q23
+EPISODIC_SINGLE
+Which of Joanna's screenplay were rejected from production companies?
+incorrect
+conv-42-q24
+EPISODIC_SINGLE
+When is Nate hosting a gaming party?
+incorrect
+conv-42-q25
+EPISODIC_SINGLE
+When did Joanna hike with her buddies?
+incorrect
+conv-42-q26
+EPISODIC_SINGLE
+When did Nate win his third tourney?
+incorrect
+conv-42-q27
+EPISODIC_SINGLE
+What places has Joanna submitted her work to?
+incorrect
+conv-42-q28
+EPISODIC_SINGLE
+When did Nate make vegan icecream and share it with a vegan diet group?
+correct
+conv-42-q29
+EPISODIC_SINGLE
+When is Joanna going to make Nate's ice cream for her family?
+correct
+conv-42-q30
+EPISODIC_SINGLE
+What kind of writings does Joanna do?
+incorrect
+conv-42-q31
+EPISODIC_SINGLE
+When did Nate win his fourth video game tournament?
+correct
+conv-42-q32
+EPISODIC_SINGLE
+Where did Joanna travel to in July 2022?
+correct
+conv-42-q33
+EPISODIC_SINGLE
+When did someone write Joanna a touching letter?
+correct
+conv-42-q34
+EPISODIC_SINGLE
+What book recommendations has Joanna given to Nate?
+incorrect
+conv-42-q35
+EPISODIC_SINGLE
+When did Nate take time off to chill with his pets?
+correct
+conv-42-q36
+EPISODIC_SINGLE
+When did Joanna share her book with her writers group?
+incorrect
+conv-42-q37
+EPISODIC_SINGLE
+When did Nate win an international tournament?
+correct
+conv-42-q38
+EPISODIC_SINGLE
+When did Joanna make a desert with almond milk?
+correct
+conv-42-q39
+EPISODIC_SINGLE
+When did Nate attend a cooking show?
+incorrect
+conv-42-q40
+EPISODIC_SINGLE
+When did Joanna's laptop crash?
+correct
+conv-42-q41
+EPISODIC_SINGLE
+When did Joanna make a chocolate tart with raspberries?
+incorrect
+conv-42-q42
+EPISODIC_SINGLE
+What movies have both Joanna and Nate seen?
+incorrect
+conv-42-q43
+MULTI_HOP
+How long did it take for Joanna to finish writing her book?
+incorrect
+conv-42-q44
+EPISODIC_SINGLE
+When did Nate win a lot of money in a video game tournament?
+incorrect
+conv-42-q45
+EPISODIC_SINGLE
+When did Joanna finish up the writing for her book?
+incorrect
+conv-42-q46
+EPISODIC_SINGLE
+What board games has Nate played?
+incorrect
+conv-42-q47
+EPISODIC_SINGLE
+What places has Nate met new people?
+correct
+conv-42-q48
+EPISODIC_SINGLE
+When did Nate go to a convention and meet new people?
+incorrect
+conv-42-q49
+EPISODIC_SINGLE
+How many times has Joanna's scripts been rejected?
+incorrect
+conv-42-q50
+FACT
+What is something Nate gave to Joanna that brings her a lot of joy?
+incorrect
+conv-42-q51
+EPISODIC_SINGLE
+When did Nate get Tilly for Joanna?
+incorrect
+conv-42-q52
+EPISODIC_SINGLE
+How many of Joanna's writing have made it to the big screen?
+correct
+conv-42-q53
+EPISODIC_SINGLE
+How many times has Nate taken his turtles on a walk?
+correct
+conv-42-q54
+EPISODIC_SINGLE
+When was Joanna's second movie script shown on the big screens?
+correct
+conv-42-q55
+FACT
+What is Joanna inspired by?
+incorrect
+conv-42-q56
+EPISODIC_SINGLE
+What animal do both Nate and Joanna like?
+correct
+conv-42-q57
+EPISODIC_SINGLE
+When did Joanna plan to go over to Nate's and share recipes?
+incorrect
+conv-42-q58
+EPISODIC_SINGLE
+What things has Nate reccomended to Joanna?
+incorrect
+conv-42-q59
+EPISODIC_SINGLE
+What does Joanna do to remember happy memories?
+correct
+conv-42-q61
+EPISODIC_SINGLE
+What mediums does Nate use to play games?
+incorrect
+conv-42-q62
+EPISODIC_SINGLE
+How many letters has Joanna recieved?
+incorrect
+conv-42-q63
+EPISODIC_SINGLE
+What video games does Nate play?
+incorrect
+conv-42-q64
+EPISODIC_SINGLE
+When did Nate win a big Valorant tourney?
+correct
+conv-42-q65
+EPISODIC_SINGLE
+Which torunament did Nate win in the beginning of November 2022?
+correct
+conv-42-q67
+EPISODIC_SINGLE
+What pets does Nate have?
+incorrect
+conv-42-q69
+EPISODIC_SINGLE
+How many turtles does Nate have?
+correct
+conv-42-q70
+EPISODIC_SINGLE
+What activities does Nate do with his turtles?
+incorrect
+conv-42-q71
+EPISODIC_SINGLE
+What do both Joanna and Nate appreciate the beauty of?
+correct
+conv-42-q72
+EPISODIC_SINGLE
+When did Joanna plan on going to Nate's to watch him play with his turtles?
+incorrect
+conv-42-q74
+EPISODIC_SINGLE
+What recommendations has Nate received from Joanna?
+incorrect
+conv-42-q75
+EPISODIC_SINGLE
+What are Nate's favorite desserts?
+incorrect
+conv-42-q76
+EPISODIC_SINGLE
+How has Nate tried to disburse his vegan ice-cream recipes?
+correct
+conv-42-q77
+EPISODIC_SINGLE
+When did Nate win his second tournament?
+correct
+conv-42-q78
+EPISODIC_SINGLE
+How many video game tournaments has Nate participated in?
+incorrect
+conv-42-q79
+EPISODIC_SINGLE
+How many screenplays has Joanna written?
+incorrect
+conv-42-q80
+EPISODIC_SINGLE
+How many tournaments has Nate won?
+incorrect
+conv-42-q81
+EPISODIC_SINGLE
+What recipes has Joanna made?
+incorrect
+conv-42-q82
+EPISODIC_SINGLE
+What recipes has Nate made?
+incorrect
+conv-42-q83
+EPISODIC_SINGLE
+What are the skills that Nate has helped others learn?
+correct
+conv-42-q86
+EPISODIC_SINGLE
+When did Nate take his turtles to the beach?
+correct
+conv-43-q0
+EPISODIC_SINGLE
+what are John's goals with regards to his basketball career?
+incorrect
+conv-43-q1
+EPISODIC_SINGLE
+What are John's goals for his career that are not related to his basketball skills?
+incorrect
+conv-43-q2
+EPISODIC_SINGLE
+What items does John collect?
+incorrect
+conv-43-q4
+EPISODIC_SINGLE
+What books has Tim read?
+incorrect
+conv-43-q6
+EPISODIC_SINGLE
+In which month's game did John achieve a career-high score in points?
+incorrect
+conv-43-q7
+EPISODIC_SINGLE
+Which geographical locations has Tim been to?
+incorrect
+conv-43-q9
+EPISODIC_SINGLE
+Which endorsement deals has John been offered?
+incorrect
+conv-43-q10
+EPISODIC_SINGLE
+When was John in Seattle for a game?
+correct
+conv-43-q11
+EPISODIC_SINGLE
+What sports does John like besides basketball?
+incorrect
+conv-43-q12
+EPISODIC_SINGLE
+What year did John start surfing?
+correct
+conv-43-q13
+EPISODIC_SINGLE
+What does Tim do to escape reality?
+incorrect
+conv-43-q14
+EPISODIC_SINGLE
+What kind of writing does Tim do?
+correct
+conv-43-q16
+MULTI_HOP
+After how many weeks did Tim reconnect with the fellow Harry Potter fan from California?
+correct
+conv-43-q17
+EPISODIC_SINGLE
+How many games has John mentioned winning?
+incorrect
+conv-43-q18
+EPISODIC_SINGLE
+What authors has Tim read books from?
+incorrect
+conv-43-q20
+MULTI_HOP
+Which city was John in before traveling to Chicago?
+incorrect
+conv-43-q21
+EPISODIC_SINGLE
+Which US cities does John mention visiting to Tim?
+incorrect
+conv-43-q22
+MULTI_HOP
+When did John meet with his teammates after returning from Chicago?
+correct
+conv-43-q23
+EPISODIC_SINGLE
+When is Tim attending a book conference?
+correct
+conv-43-q24
+EPISODIC_SINGLE
+Where was John between August 11 and August 15 2023?
+incorrect
+conv-43-q25
+EPISODIC_SINGLE
+What similar sports collectible do Tim and John own?
+correct
+conv-43-q26
+EPISODIC_SINGLE
+Which TV series does Tim mention watching?
+correct
+conv-43-q29
+MULTI_HOP
+What schools did John play basketball in and how many years was he with his team during high school?
+correct
+conv-43-q30
+EPISODIC_SINGLE
+Which cities has John been to?
+incorrect
+conv-43-q31
+EPISODIC_SINGLE
+What month did Tim plan on going to Universal Studios?
+incorrect
+conv-43-q33
+EPISODIC_SINGLE
+When does John plan on traveling with his team on a team trip?
+incorrect
+conv-43-q35
+EPISODIC_SINGLE
+What outdoor activities does John enjoy?
+incorrect
+conv-43-q36
+FACT
+Who is Tim and John's favorite basketball player?
+correct
+conv-43-q37
+EPISODIC_SINGLE
+Which week did Tim visit the UK for the Harry Potter Conference?
+correct
+conv-43-q38
+EPISODIC_SINGLE
+which country has Tim visited most frequently in his travels?
+incorrect
+conv-43-q39
+EPISODIC_SINGLE
+What year did Tim go to the Smoky Mountains?
+correct
+conv-43-q40
+EPISODIC_SINGLE
+Has Tim been to North Carolina and/or Tennesee states in the US?
+incorrect
+conv-43-q41
+EPISODIC_SINGLE
+What kind of fiction stories does Tim write?
+correct
+conv-43-q42
+EPISODIC_SINGLE
+What has John cooked?
+incorrect
+conv-43-q43
+EPISODIC_SINGLE
+What does John like about Lebron James?
+incorrect
+conv-43-q44
+EPISODIC_SINGLE
+When did John and his wife go on a European vacation?
+correct
+conv-43-q45
+EPISODIC_SINGLE
+Which country was Tim visiting in the second week of November?
+incorrect
+conv-43-q46
+MULTI_HOP
+Where was Tim in the week before 16 November 2023?
+incorrect
+conv-43-q47
+EPISODIC_SINGLE
+When did John get married at a greenhouse?
+correct
+conv-43-q48
+EPISODIC_SINGLE
+When did John get an ankle injury in 2023?
+incorrect
+conv-43-q49
+EPISODIC_SINGLE
+How many times has John injured his ankle?
+correct
+conv-43-q50
+MULTI_HOP
+Which book was John reading during his recovery from an ankle injury?
+incorrect

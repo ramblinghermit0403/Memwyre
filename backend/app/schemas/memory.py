@@ -8,7 +8,7 @@ class MemoryBase(BaseModel):
     tags: Optional[List[str]] = None
 
 class MemoryCreate(MemoryBase):
-    pass
+    created_at: Optional[datetime] = None
 
 class MemoryUpdate(MemoryBase):
     pass

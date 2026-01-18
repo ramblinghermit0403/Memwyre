@@ -179,6 +179,11 @@ class AgentService:
                     db=db,
                     top_k=5
                 )
+
+            # Fix #7: Log hop mismatches
+            # If answer_mode is EXTRACTIVE (Single Hop) and we found > 1 fact, it might be a misroute or purity issue.
+            if results and results[0]["metadata"].get("answer_mode") == "EXTRACTIVE" and len(results) > 1:
+                logger.warning(f"LocoMo Misroute: Query '{query}' classified as SINGLE but retrieved {len(results)} facts.")
             
             if not results:
                 return "No relevant memories found."
@@ -187,8 +192,16 @@ class AgentService:
             for res in results:
                 # Format: Source: Title [ID: 123]\nContent: ...
                 meta = res["metadata"]
-                doc_id = meta.get("memory_id") or meta.get("document_id") or "unknown"
+                
+                doc_id = "unknown"
+                if meta.get("memory_id"): doc_id = meta.get("memory_id")
+                elif meta.get("document_id"): doc_id = meta.get("document_id")
+                elif meta.get("fact_id"): doc_id = f"fact-{meta.get('fact_id')}"
+                
                 title = meta.get("title", "Untitled")
+                if meta.get("type") == "fact":
+                    title = "Fact"
+                    
                 content = res["text"]
                 
                 # Append enrichment info if available
@@ -335,7 +348,12 @@ class AgentService:
                                 doc_id = id_match.group(1)
                                 title_text = title_line.replace(f"[ID: {doc_id}]", "").strip()
                             
-                            source_obj = {"title": title_text, "id": doc_id}
+                            # Extract Content
+                            content_text = ""
+                            if "\nContent:" in part:
+                                content_text = part.split("\nContent:", 1)[1].strip()
+
+                            source_obj = {"title": title_text, "id": doc_id, "content": content_text}
                             
                             # Add if unique by ID (or title if no ID)
                             exists = False

@@ -57,7 +57,7 @@ class DedupeService:
             # Query vector store (Sync call)
             # Ensure we are not blocking if possible, but vector_store is sync for now.
             try:
-                results = vector_store.query(memory.content, n_results=5, where={"user_id": memory.user_id})
+                results = await vector_store.query(memory.content, n_results=5, where={"user_id": memory.user_id})
                 print(f"Dedupe: Vector store returned {len(results.get('ids', []))} matches")
             except Exception as vs_e:
                 print(f"Dedupe: Vector store query failed: {vs_e}")

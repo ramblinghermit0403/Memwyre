@@ -1,0 +1,41 @@
+API Key present: True
+API Key start: AIza...
+--- Testing Hop Classification ---
+Query: 'Where do I live?' -> Hop: SINGLE
+Query: 'Who replaced the CEO and then resigned?' -> Hop: MULTI
+
+--- Testing Predicate Extraction (Rule-Based) ---
+Query: 'Where do I live?' -> Predicates: {'lives_in'}
+  [PASS] Found 'lives_in'
+Query: 'Who is my employer?' -> Predicates: {'job_title', 'worked_at', 'works_at'}
+  [PASS] Found 'works_at'
+Query: 'Where was I born?' -> Predicates: {'born_in'}
+  [PASS] Found 'born_in'
+Query: 'Who am I married to?' -> Predicates: {'married_to'}
+  [PASS] Found 'married_to'
+Query: 'What job do I have?' -> Predicates: {'job_title', 'worked_at', 'works_at', 'owns'}
+  [PASS] Found 'job_title'
+Query: 'Where did I move to?' -> Predicates: {'moved_to'}
+  [PASS] Found 'moved_to'
+Query: 'Who is my friend?' -> Predicates: {'friends_with'}
+  [PASS] Found 'friends_with'
+Query: 'What do I own?' -> Predicates: {'owns'}
+  [PASS] Found 'owns'
+Query: 'What did I achieve?' -> Predicates: {'achieved'}
+  [PASS] Found 'achieved'
+Query: 'When did I join?' -> Predicates: {'joined'}
+  [PASS] Found 'joined'
+Query: 'When did I leave?' -> Predicates: {'left'}
+  [PASS] Found 'left'
+Query: 'Where am I from?' -> Predicates: {'from'}
+  [PASS] Found 'from'
+Query: 'Where is it located?' -> Predicates: {'located_in'}
+  [PASS] Found 'located_in'
+Query: 'Who is my partner?' -> Predicates: {'partner_of'}
+  [PASS] Found 'partner_of'
+
+--- Testing Predicate Extraction (LLM Fallback) ---
+Query: 'Where do I sleep at night?'
+  -> Predicates: {'lives_in'}
+  -> Predicates: {'lives_in'}
+  [PASS] LLM correctly identified 'lives_in'

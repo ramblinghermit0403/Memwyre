@@ -1,0 +1,172 @@
+conv-26-q0
+multi hop
+When did Caroline go to the LGBTQ support group?
+correct
+conv-26-q1
+multi hop
+When did Melanie paint a sunrise?
+incorrect
+conv-26-q3
+single hop
+What did Caroline research?
+incorrect
+conv-26-q4
+single hop
+What is Caroline's identity?
+incorrect
+conv-26-q5
+multi hop
+When did Melanie run a charity race?
+correct
+conv-26-q6
+multi hop
+When is Melanie planning on going camping?
+incorrect
+conv-26-q7
+single hop
+What is Caroline's relationship status?
+incorrect
+conv-26-q8
+multi hop
+When did Caroline give a speech at a school?
+incorrect
+conv-26-q9
+multi hop
+When did Caroline meet up with her friends, family, and mentors?
+incorrect
+conv-26-q10
+multi hop
+How long has Caroline had her current group of friends for?
+correct
+conv-26-q11
+single hop
+Where did Caroline move from 4 years ago?
+incorrect
+conv-26-q12
+multi hop
+How long ago was Caroline's 18th birthday?
+correct
+conv-26-q13
+single hop
+What career path has Caroline decided to persue?
+incorrect
+conv-26-q15
+single hop
+What activities does Melanie partake in?
+incorrect
+conv-26-q16
+multi hop
+When did Melanie sign up for a pottery class?
+incorrect
+conv-26-q17
+multi hop
+When is Caroline going to the transgender conference?
+correct
+conv-26-q18
+single hop
+Where has Melanie camped?
+incorrect
+conv-26-q19
+single hop
+What do Melanie's kids like?
+incorrect
+conv-26-q20
+multi hop
+When did Melanie go to the museum?
+correct
+conv-26-q21
+multi hop
+When did Caroline have a picnic?
+incorrect
+conv-26-q23
+single hop
+What books has Melanie read?
+incorrect
+conv-26-q24
+single hop
+What does Melanie do to destress?
+incorrect
+conv-26-q25
+multi hop
+When did Caroline go to the LGBTQ conference?
+correct
+conv-26-q26
+multi hop
+When did Melanie read the book "nothing is impossible"?
+incorrect
+conv-26-q28
+multi hop
+When did Caroline go to the adoption meeting?
+correct
+conv-26-q29
+multi hop
+When did Melanie go to the pottery workshop?
+incorrect
+conv-26-q31
+multi hop
+When did Melanie go camping in June?
+incorrect
+conv-26-q32
+single hop
+What LGBTQ+ events has Caroline participated in?
+incorrect
+conv-26-q33
+multi hop
+When did Caroline go to a pride parade during the summer?
+incorrect
+conv-26-q34
+single hop
+What events has Caroline participated in to help children?
+incorrect
+conv-26-q35
+multi hop
+When did Melanie go camping in July?
+incorrect
+conv-26-q36
+multi hop
+When did Caroline join a mentorship program?
+correct
+conv-26-q37
+single hop
+What did Melanie paint recently?
+incorrect
+conv-26-q38
+single hop
+What activities has Melanie done with her family?
+incorrect
+conv-26-q39
+single hop
+In what ways is Caroline participating in the LGBTQ community?
+correct
+conv-26-q40
+single hop
+How many times has Melanie gone to the beach in 2023?
+incorrect
+conv-26-q41
+multi hop
+When did Caroline join a new activist group?
+correct
+conv-26-q43
+single hop
+What kind of art does Caroline make?
+incorrect
+conv-26-q44
+multi hop
+When is Melanie's daughter's birthday?
+incorrect
+conv-26-q45
+multi hop
+When did Caroline attend a pride parade in August?
+incorrect
+conv-26-q47
+single hop
+Who supports Caroline when she has a negative experience?
+incorrect
+conv-26-q48
+single hop
+What types of pottery have Melanie and her kids made?
+incorrect
+conv-26-q49
+multi hop
+When did Caroline and Melanie go to a pride fesetival together?
+incorrect

@@ -1,9 +1,14 @@
-from typing import List, Optional
+import json
+import asyncio
+from datetime import datetime
+from typing import List, Optional, Dict, Any
 from langchain_openai import ChatOpenAI
 from langchain_aws import ChatBedrock
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 import google.generativeai as genai
 from app.core.config import settings
+from app.core.aws_config import AWS_CONFIG
 
 class LLMService:
     def __init__(self):
@@ -56,7 +61,8 @@ class LLMService:
                 model_id = "apac.amazon.nova-pro-v1:0" 
                 llm = ChatBedrock(
                     model_id=model_id,
-                    model_kwargs={"temperature": 0.7}
+                    model_kwargs={"temperature": 0.7},
+                    config=AWS_CONFIG
                 )
                 messages = [
                     SystemMessage(content=system_prompt),
@@ -130,7 +136,7 @@ Existing Tags Context:
         used_bedrock = False
         try:
              # Default to Nova Pro
-             llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0})
+             llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0}, config=AWS_CONFIG)
              messages = [
                  SystemMessage(content=system_instruction),
                  HumanMessage(content=user_message)
@@ -231,7 +237,7 @@ Rules:
             # 1. Try Bedrock (Nova Pro) First - Always attempt if available
             try:
                  # We assume availability of AWS credentials
-                 llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0})
+                 llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0}, config=AWS_CONFIG)
                  messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
                  res = await llm.ainvoke(messages)
                  text = res.content
@@ -274,6 +280,114 @@ Rules:
             print(f"Chunk enrichment failed: {e}")
             return {}
 
+    async def extract_facts_from_text(self, text: str, api_key: Optional[str] = None, reference_date: Optional[datetime] = None) -> List[dict]:
+        """
+        Extract Atomic Facts (Subject-Predicate-Object) from text.
+        """
+        if len(text) < 20: 
+            return []
+            
+        target_key = api_key or self.openai_api_key
+        
+        # Default to today if not provided
+        # Default to today if not provided
+        if not reference_date:
+            reference_date = datetime.now()
+            
+        # Use Local/User Timezone for "Day" context (e.g. 2023-05-08) instead of UTC (which might be prev day)
+        # This matches the user's intuitive understanding of "Today/Yesterday"
+        date_str = reference_date.astimezone().strftime('%Y-%m-%d')
+        
+        system_prompt = f"""You are a Knowledge Graph Extractor.
+Extract atomic facts from the text as Subject-Predicate-Object triples, preserving temporal and spatial context.
+
+Context:
+Memory Creation Date: {date_str}
+
+Output JSON format:
+[
+  {{
+    "subject": "Melanie",
+    "predicate": "painted",
+    "object": "a sunrise",
+    "location": "on the beach",
+    "valid_from": "2023-05-07T10:00:00",
+    "confidence": 0.95
+  }}
+]
+
+Rules:
+1. **Atomic**: Break complex sentences into simple triples.
+2. **Explicit Subjects**: Do NOT canonicalize to "User" unless strictly necessary. Extract the explicit name of the subject.
+3. **Temporal Priority**: 
+   - IF the text mentions a specific date (e.g. "on 2024-12-25"), use THAT as the "valid_from".
+   - IF the text mentions a relative date (e.g. "yesterday"), calculate it relative to the **Memory Creation Date** ({date_str}).
+   - IF NO date is mentioned, use the **Memory Creation Date** as the default "valid_from".
+4. **Spatial/Location**: If a location is mentioned ("on the beach", "in New York"), extract it into the "location" field. Do NOT include it in the 'object' if it is extracted here.
+5. **Filter**: Only extract meaningful knowledge.
+6. **Format**: Output ONLY valid JSON.
+"""
+        user_message = f"Text to Analyze:\n{text[:2000]}"
+        
+        try:
+            # 1. Try Bedrock (Nova Pro)
+            used_bedrock = False
+            try:
+                llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0}, config=AWS_CONFIG)
+                messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
+                res = await llm.ainvoke(messages)
+                text_response = res.content
+                used_bedrock = True
+            except Exception as e:
+                print(f"Bedrock Fact Extraction Failed: {e}")
+                pass
+                
+            if not used_bedrock:
+                # Fallback
+                if target_key and target_key.startswith("sk-"):
+                    llm = ChatOpenAI(api_key=target_key, model="gpt-3.5-turbo", temperature=0)
+                    messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
+                    res = await llm.ainvoke(messages)
+                    text_response = res.content
+                elif target_key: # Gemini
+                    genai.configure(api_key=target_key)
+                    model = genai.GenerativeModel('gemini-2.5-flash', generation_config={"response_mime_type": "application/json"})
+                    res = model.generate_content(f"{system_prompt}\n\n{user_message}")
+                    text_response = res.text
+                else:
+                    return []
+
+            import json
+            import re
+            
+            # Clean
+            text_response = text_response.replace("```json", "").replace("```", "").strip()
+            
+            # DEBUG: Date Resolution Tracking
+            print(f"[DEBUG DATE] Ref Date Passed: {reference_date} | Prompt Date Str: {date_str}")
+            print(f"[DEBUG DATE] LLM Raw Response: {text_response[:200]}...") # Peek start
+
+            try:
+                data = json.loads(text_response)
+                if isinstance(data, list):
+                    return data
+                return []
+            except json.JSONDecodeError as e:
+                print(f"JSON Parse Error in Fact Extraction. Raw response: {text_response[:500]}... Error: {e}")
+                try:
+                    # Robust extraction: Find the first '[' and the last ']'
+                    match = re.search(r'\[.*\]', text_response, re.DOTALL)
+                    if match:
+                        potential_json = match.group()
+                        return json.loads(potential_json)
+                except Exception as inner_e:
+                    print(f"Regex Fallback Failed: {inner_e}")
+                return []
+            
+        except Exception as e:
+            print(f"Fact extraction failed: {e}")
+            return []
+
     async def generate_chat_title(self, conversation_context: str, api_key: Optional[str] = None) -> str:
         """
         Generate a concise (3-6 words) title for a chat session.
@@ -292,10 +406,10 @@ Rules:
         
         try:
             used_bedrock = False
-            # 1. Try Bedrock
+             # 1. Try Bedrock
             if not target_key or (len(target_key) < 10):
                 try:
-                     llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0.7})
+                     llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0.7}, config=AWS_CONFIG)
                      messages = [SystemMessage(content=system_prompt), HumanMessage(content=conversation_context)]
                      res = await llm.ainvoke(messages)
                      return res.content.strip()
