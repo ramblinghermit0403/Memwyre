@@ -261,6 +261,7 @@ dependencies = [
     { name = "rank-bm25" },
     { name = "redis" },
     { name = "sqlalchemy" },
+    { name = "tenacity" },
     { name = "uvicorn" },
 ]
 
@@ -301,6 +302,7 @@ requires-dist = [
     { name = "rank-bm25", specifier = ">=0.2.2" },
     { name = "redis", specifier = ">=6.4.0" },
     { name = "sqlalchemy", specifier = ">=2.0.45" },
+    { name = "tenacity", specifier = ">=8.5.0" },
     { name = "uvicorn", specifier = ">=0.40.0" },
 ]
 

@@ -15,8 +15,7 @@ class ContextBuilder:
         results = await vector_store.query(
             query, 
             n_results=5, 
-            where={"user_id": user_id},
-            apply_bm25=settings.ENABLE_BM25_FILTER
+            where={"user_id": user_id}
         )
         
         snippets = []

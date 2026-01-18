@@ -40,5 +40,6 @@ dependencies = [
     "rank-bm25>=0.2.2",
     "redis>=6.4.0",
     "sqlalchemy>=2.0.45",
+    "tenacity>=8.5.0",
     "uvicorn>=0.40.0",
 ]

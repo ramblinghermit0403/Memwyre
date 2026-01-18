@@ -1,35 +1,40 @@
-# detailed System Design - Brain Vault
+# System Design - Brain Vault (Current Architecture)
 
 ## 1. High-Level Architecture (Component View)
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph Client_Side [Client Side]
-        Browser[WebApp (Vue.js)]
-        Extension[Chrome Extension]
+        Browser["WebApp (Vue.js)"]
+        Extension["Chrome Extension"]
     end
 
     subgraph Load_Balancer [Ingress]
-        Nginx[Reverse Proxy / LB]
+        Nginx["Reverse Proxy / LB"]
     end
 
     subgraph Backend_Core [Backend API (FastAPI)]
-        Auth_Mod[Auth & Users]
-        Mem_Mod[Memory Management]
-        Doc_Mod[Document Processing]
-        LLM_Mod[LLM Orchestration]
-        WS_Mod[Real-time Notification]
+        Auth_Mod["Auth & Users"]
+        Mem_Mod["Memory Management"]
+        Ret_Mod["Retrieval Service"]
+        LLM_Mod["LLM Service"]
     end
 
-    subgraph Background_Workers [Async Workers]
-        Dedupe_Worker[Deduplication Job]
-        Vector_Ingest[Vector Ingestion]
+    subgraph Background_Workers [Celery Workers]
+        Ingest_Worker["Ingestion Worker"]
+        Dedupe_Worker["Deduplication Worker"]
     end
 
     subgraph Data_Persistence [Data Layer]
-        Postgres[(Relational DB - Users/Metadata)]
-        Chroma[(Vector DB - Embeddings)]
-        FileSystem[File Storage (MinIO/Local)]
+        Postgres[("PostgreSQL - Users, Facts, Chunks")]
+        Pinecone[("Pinecone - Vector Index")]
+        Redis[("Redis - Celery Broker")]
+    end
+    
+    subgraph External_Services [AI Providers]
+        Bedrock["AWS Bedrock (Nova Pro / Titan v2)"]
+        OpenAI["OpenAI (GPT-4o)"]
+        Gemini["Google Gemini"]
     end
 
     Browser -->|HTTPS| Nginx
@@ -39,163 +44,145 @@ graph TB
     Auth_Mod --> Postgres
     
     Mem_Mod --> Postgres
-    Mem_Mod --> Chroma
-    Mem_Mod --> WS_Mod
+    Mem_Mod --> Ingest_Worker
     
-    Doc_Mod --> FileSystem
-    Doc_Mod --> Vector_Ingest
+    Ret_Mod --> Pinecone
+    Ret_Mod --> Postgres
+    Ret_Mod --> External_Services
     
-    Vector_Ingest --> Chroma
-    Dedupe_Worker --> Postgres
-    Dedupe_Worker --> Chroma
-    Dedupe_Worker --> WS_Mod
-    
-    WS_Mod -->|Websocket| Browser
+    Ingest_Worker --> External_Services
+    Ingest_Worker --> Pinecone
+    Ingest_Worker --> Postgres
 ```
 
-## 2. Core Workflows (Sequence Diagrams)
+## 2. Core Workflows
 
-### 2.1 Memory Creation & Ingestion Flow
+### 2.1 Advanced Ingestion Pipeline
+The ingestion process is asynchronous and heavily enriched using LLMs.
+
 ```mermaid
 sequenceDiagram
     participant User
-    participant API as API (Memory Router)
-    participant DB as SQL Database
-    participant Vector as Vector Store
-    participant WS as Websocket Manager
+    participant API
+    participant Worker as Celery Worker
+    participant LLM as Bedrock/LLM
+    participant Vector as Pinecone
+    participant DB as PostgreSQL
 
-    User->>API: POST /memory (Content, Tags)
-    API->>DB: Save Memory (Pending)
-    DB-->>API: Memory ID
-    API->>Vector: Generate Embedding & Upsert
-    Vector-->>API: Success
-    API->>DB: Update Status (Active)
-    API->>WS: Broadcast "MemoryAdded" event
-    WS-->>User: Update UI (Real-time)
-    API-->>User: 201 Created
+    User->>API: POST /memory (Content)
+    API->>DB: Save Memory (Raw)
+    API->>Worker: Dispatch Ingest Task
+    API-->>User: 202 Accepted
+    
+    Note over Worker: Background Processing
+    Worker->>LLM: Metadata Extraction (Title, Tags)
+    Worker->>Worker: Semantic Chunking (Titan v2 Embeddings)
+    
+    loop Parallel Enrichment
+        Worker->>LLM: Enrich Chunk (Summary, Q&A, Entities)
+        Worker->>LLM: Extract Atomic Facts (Subject-Predicate-Object)
+    end
+    
+    Worker->>Vector: Batch Upsert (Enriched Chunks + Facts)
+    Worker->>DB: Save Chunks & Facts (Linked to Memory)
+    Worker->>DB: Update Memory Status (Active)
 ```
 
-### 2.2 LLM Interaction with RAG
+### 2.2 Parallelized Retrieval (RAG)
+Retrieval combines exact Fact lookups with fuzzy Semantic Search in parallel for low latency.
+
 ```mermaid
 sequenceDiagram
     participant User
-    participant API as API (LLM Router)
-    participant Vector as Vector Store
-    participant Provider as External LLM (OpenAI/Anthropic)
+    participant API
+    participant RetSvc as RetrievalService
+    participant Vector as Pinecone
+    participant DB as PostgreSQL
+    participant LLM as GenAI
+
+    User->>API: Chat Query
+    API->>RetSvc: search_memories(Query)
     
-    User->>API: POST /llm/chat (Query)
-    API->>Vector: Query(Query Text, Top-K)
-    Vector-->>API: Relevant Memories/Docs
-    API->>API: Construct Context Window
-    API->>Provider: Stream Chat Completion(Prompt + Context)
-    loop Stream
-        Provider-->>API: Token Chunk
-        API-->>User: Token Chunk (SSE/Stream)
+    par State Search (Facts)
+        RetSvc->>Vector: Vector Search (Facts)
+        RetSvc->>DB: SQL Filter (Valid Facts)
+    and Semantic Search (Memories)
+        RetSvc->>Vector: Vector Search (Chunks)
+        RetSvc->>RetSvc: MMR Re-ranking (Lambda=0.7)
     end
+    
+    RetSvc->>RetSvc: Merge Results (State + Semantic)
+    RetSvc-->>API: Top-K Context
+    
+    API->>LLM: Generate Answer(Prompt + Context)
+    LLM-->>User: Response
 ```
 
-### 2.3 Background Deduplication
-```mermaid
-sequenceDiagram
-    participant Job as Dedupe Job
-    participant DB as SQL Database
-    participant Vector as Vector Store
-    participant WS as Websocket Manager
-    
-    loop Every 60s
-        Job->>DB: Fetch New Memories
-        loop For Each Memory
-            Job->>Vector: Search Similar (Threshold < 0.3)
-            Vector-->>Job: Candidates
-            alt Candidates Found
-                Job->>DB: Create Cluster Proposal
-                Job->>WS: Send "NewCluster" Notification
-            end
-        end
-    end
-```
-
-## 3. Database Schema (ER Diagram)
+## 3. Database Schema (Key Entities)
 
 ```mermaid
 erDiagram
-    Users ||--o{ AIClient : "has keys"
     Users ||--o{ Memories : "owns"
-    Users ||--o{ Documents : "owns"
-    Users ||--o{ MemoryClusters : "receives"
+    Users ||--o{ Facts : "owns"
+    
+    Memories ||--o{ Chunks : "contains"
+    Memories ||--o{ Facts : "source"
+    Chunks ||--o{ Facts : "exact_source"
 
     Users {
-        int id PK
+        string id PK
         string email
-        string hashed_password
-        boolean is_active
-    }
-
-    AIClient {
-        int id PK
-        int user_id FK
-        string provider "openai, anthropic"
-        string encrypted_api_key
     }
 
     Memories {
         int id PK
         int user_id FK
         text content
-        json tags
+        datetime created_at
+        string status
+    }
+
+    Chunks {
+        int id PK
+        int memory_id FK
+        text content_text
+        json metadata
         string embedding_id
-        string status "pending, active, archived"
     }
 
-    Documents {
+    Facts {
         int id PK
         int user_id FK
-        string filename
-        string file_path
-        string mime_type
-    }
-
-    MemoryClusters {
-        int id PK
-        int user_id FK
-        json memory_ids
-        string representative_text
+        string subject
+        string predicate
+        string object
+        datetime valid_from
+        datetime valid_until
+        boolean is_superseded
     }
 ```
 
-## 4. Application Structure (JSON)
+## 4. Technology Stack (Current)
 
 ```json
 {
   "system": "Brain Vault",
   "layers": [
     {
-      "name": "Frontend",
-      "tech": ["Vue 3", "Vite", "TailwindCSS"],
-      "modules": {
-        "Views": ["Dashboard", "Editor", "Login", "Settings"],
-        "Components": ["UnifiedList", "MarkdownEditor", "Sidebar"],
-        "State": "Pinia"
-      }
+      "name": "Backend",
+      "tech": ["FastAPI", "Python 3.12+", "Celery", "SQLAlchemy (Async)"],
+      "deployment": "Uvicorn"
     },
     {
-      "name": "Backend API",
-      "tech": ["FastAPI", "Python 3.10", "Pydantic"],
-      "routers": [
-        { "path": "/auth", "desc": "OAuth2 / JWT Handling" },
-        { "path": "/memory", "desc": "CRUD, Tagging" },
-        { "path": "/retrieval", "desc": "Vector Semantic Search" },
-        { "path": "/user/llm-keys", "desc": "Secure Key Management" },
-        { "path": "/ws", "desc": "Websocket Endpoint" }
-      ]
+      "name": "AI / ML",
+      "embeddings": "Amazon Titan Text v2 (via Boto3)",
+      "inference": ["AWS Bedrock (Nova Pro)", "OpenAI (GPT-4o)", "Gemini 1.5 Pro"],
+      "vector_db": "Pinecone (Serverless)"
     },
     {
-      "name": "Services",
-      "components": [
-        { "name": "VectorStore", "impl": "ChromaDB", "desc": "Embedding management" },
-        { "name": "DedupeService", "impl": "Async/Background", "desc": "Similarity clustering" },
-        { "name": "EncryptionService", "impl": "Fernet", "desc": "At-rest encryption" }
-      ]
+      "name": "Data",
+      "primary_db": "PostgreSQL",
+      "queue": "Redis"
     }
   ]
 }

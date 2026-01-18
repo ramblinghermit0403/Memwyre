@@ -30,17 +30,65 @@ class RetrievalService:
         elif view == "semantic":
             return await self._search_semantic(query, user_id, db, top_k)
         else:
-            # Auto: Run Semantic + small State check
-            # For now, let's just do Semantic mixed with State
-            state_results = await self._search_state(query, user_id, db, top_k=3)
-            semantic_results = await self._search_semantic(query, user_id, db, top_k=top_k)
+            # Auto: Unified Search (Single Vector Call)
+            str_user_id = str(user_id)
             
-            # Meritocratic Merge? Or State on top?
-            # Proposition 5: "State beats similarity"
-            # So we prepend State results.
+            # Fetch candidates for both Facts and Memories in one go
+            unified_results = await self._search_unified(query, str_user_id, top_k=top_k)
+            
+            import asyncio
+            # Pass pre-fetched candidates to ranking methods
+            # _search_state needs int user_id for SQL, _search_semantic needs int or str?
+            # Let's look at signatures. _search_state(user_id: int). _search_semantic(user_id: int).
+            # So pass user_id (int) to both.
+            state_task = self._search_state(query, user_id, db, top_k=3, pre_fetched=unified_results["facts"])
+            semantic_task = self._search_semantic(query, user_id, db, top_k=top_k, pre_fetched=unified_results["memories"])
+            
+            results = await asyncio.gather(state_task, semantic_task)
+            state_results, semantic_results = results
+            
             return state_results + semantic_results
 
-    async def _search_state(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5) -> List[Dict[str, Any]]:
+    async def _search_unified(self, query: str, user_id: str, top_k: int) -> Dict[str, Any]:
+        """
+        Single Vector Search for both Facts and Memories.
+        Returns: {"facts": vector_results, "memories": vector_results}
+        """
+        # Fetch 10x to allow for MMR and filtering
+        fetch_k = top_k * 10
+        
+        results = await vector_store.query(
+            query,
+            n_results=fetch_k,
+            where={
+                "user_id": user_id,
+                # Filter for chunks (memories) OR facts
+                # "type": {"$in": ["fact", "memory", "chunk"]} # Pinecone metadatas are flat, logic depends on store wrapper
+                # Assuming vector_store handles filtering or we filter post-fetch if store is limited
+            },
+            include_values=True 
+        )
+        
+        # Split results by type
+        facts_res = {"ids": [[]], "distances": [[]], "metadatas": [[]], "embeddings": [[]], "documents": [[]]}
+        mems_res = {"ids": [[]], "distances": [[]], "metadatas": [[]], "embeddings": [[]], "documents": [[]]}
+        
+        if results and results.get("ids") and results["ids"][0]:
+            for i, metadata in enumerate(results["metadatas"][0]):
+                type_val = metadata.get("type", "memory")
+                
+                # Helper to append to the correct dict structure
+                target = facts_res if type_val == "fact" else mems_res
+                
+                target["ids"][0].append(results["ids"][0][i])
+                if results["distances"]: target["distances"][0].append(results["distances"][0][i])
+                if results["embeddings"]: target["embeddings"][0].append(results["embeddings"][0][i])
+                if results["documents"]: target["documents"][0].append(results["documents"][0][i])
+                target["metadatas"][0].append(metadata)
+                
+        return {"facts": facts_res, "memories": mems_res}
+
+    async def _search_state(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None) -> List[Dict[str, Any]]:
         """
         Search for current truths (Facts) using Hybrid Strategy:
         1. Semantic Search (Vector Store) -> Finds "parade" from "procession"
@@ -56,12 +104,15 @@ class RetrievalService:
 
         try:
              # 1. Semantic Search (Vector Store) - Primary Matcher
-             # Fetch more candidates to allow for filtering
-             vector_results = await vector_store.query(
-                 query_texts=query, # Fixed typo from query_text
-                 n_results=top_k * 4, 
-                 where={"user_id": str(user_id), "type": "fact"} 
-             )
+             if pre_fetched:
+                 vector_results = pre_fetched
+             else:
+                 # Fetch more candidates to allow for filtering
+                 vector_results = await vector_store.query(
+                     query_texts=query, 
+                     n_results=top_k * 4, 
+                     where={"user_id": str(user_id), "type": "fact"} 
+                 )
              
              if vector_results and vector_results.get("ids"):
                  for i, rid in enumerate(vector_results["ids"][0]):
@@ -159,13 +210,13 @@ class RetrievalService:
         facts_to_supersede = []
         
         for f, score in ranked_facts[:top_k * 2]:
-            date_str = ""
+            text = f"{f.subject} {f.predicate} {f.object}"
+            norm_text = text.lower().strip()
+            
             if f.valid_from:
                 local_dt = f.valid_from.astimezone()
-                date_str = f"[{local_dt.strftime('%Y-%m-%d')}] "
-            
-            text = f"{date_str}{f.subject} {f.predicate} {f.object}"
-            norm_text = f"{f.subject} {f.predicate} {f.object}".lower().strip()
+                date_str = local_dt.strftime('%Y-%m-%d')
+                text += f" (This event took place on {date_str})"
             
             # Fuzzy Deduplication Check
             is_duplicate = False
@@ -252,108 +303,125 @@ class RetrievalService:
             })
         return results
 
-    async def _search_semantic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5) -> List[Dict[str, Any]]:
-        # 1. MMR Fetch: Get more candidates than needed (4x)
+    async def _search_semantic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None) -> List[Dict[str, Any]]:
+        # 1. Fetch Candidates (or use pre-fetched)
         fetch_k = top_k * 10
         
-        # 2. Vector Search (with embeddings for MMR)
-        results = await vector_store.query(
-            query, 
-            n_results=fetch_k, 
-            where={"user_id": user_id},
-            include_values=True # Required for MMR
-        )
+        if pre_fetched:
+            results = pre_fetched
+        else:
+            # 2. Vector Search (with embeddings for MMR)
+            results = await vector_store.query(
+                query, 
+                n_results=fetch_k, 
+                where={"user_id": user_id},
+                include_values=True # Required for MMR
+            )
         
-        if not results["ids"] or not results["ids"][0]:
+        if not results.get("ids") or not results["ids"][0]:
             return []
             
         # Extract candidates
+        # Flattening the list of lists since pinecone query returns [results_for_query_1, ...]
         candidate_ids = results["ids"][0]
         candidate_embeddings = results["embeddings"][0]
         candidate_metadatas = results["metadatas"][0]
-        candidate_distances = results["distances"][0] if results["distances"] else [0.0] * len(candidate_ids)
-        candidate_docs = results["documents"][0]
+        # Distances from vector DB (Cosine Distance? Or Similarity?)
+        # Pinecone usually returns Cosine Similarity if configured with 'cosine'
+        # But let's assume 'distances' field exists and represents relevance.
+        # If not, we might need to re-compute query-doc similarity if query embedding isn't available.
+        candidate_distances = results["distances"][0] if results.get("distances") else [0.0] * len(candidate_ids)
+        candidate_docs = results["documents"][0] if results.get("documents") else [""] * len(candidate_ids)
         
-        # MMR Logic
+        # 3. Vectorized MMR Implementation
         import numpy as np
-        
-        def cosine_similarity(a, b):
-            return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
-        selected_indices = []
-        candidate_indices = list(range(len(candidate_ids)))
+        if not candidate_embeddings:
+            # Fallback if no embeddings
+            return []
+
+        # Convert to numpy
+        # Shape: (N, D)
+        embeddings_np = np.array(candidate_embeddings)
+        N, D = embeddings_np.shape
         
-        lambda_mult = 0.3 # 0.3 = Favor Diversity (Suppress Duplicates)
+        # Normalize embeddings for cosine similarity
+        norms = np.linalg.norm(embeddings_np, axis=1, keepdims=True)
+        embeddings_norm = embeddings_np / (norms + 1e-10) # Avoid div/0
+        
+        # Calculate Severity Matrix (Sim between all candidates)
+        # Shape: (N, N)
+        similarity_matrix = np.dot(embeddings_norm, embeddings_norm.T)
+        
+        # Relevance Scores
+        # If candidate_distances are Cosine Similarity, use them directly.
+        # Ensure they are numpy array
+        relevance_scores = np.array(candidate_distances)
+        
+        # Selection Loop
+        selected_indices = []
+        candidate_indices = list(range(N))
+        
+        lambda_mult = 0.7 
         
         seen_texts = set()
         
-        # Greedy Selection loop
-        for _ in range(min(top_k, len(candidate_ids))):
-            best_score = -float("inf")
-            best_idx = -1
+        # Pre-filter duplicates (Soft Dedupe)
+        # We can mask out duplicates by setting their relevance to -inf
+        mask_valid = np.ones(N, dtype=bool)
+        
+        for i in range(N):
+            text = candidate_docs[i].strip() if candidate_docs[i] else ""
+            # Simple hash check or short snippet check
+            # For speed, strictly check if we've seen this exact text
+            if text in seen_texts:
+                 mask_valid[i] = False
+            else:
+                 seen_texts.add(text)
+        
+        # Main MMR Loop
+        for _ in range(min(top_k, N)):
+            if len(selected_indices) >= top_k:
+                break
+                
+            # Current unselected valid candidates
+            # We want to find i that maximizes MMR
             
-            for i in candidate_indices:
-                if i in selected_indices:
-                    continue
-                
-                # Hard Dedupe: Check Text Similarity
-                text_content = candidate_docs[i].strip() if candidate_docs[i] else ""
-                
-                # Fuzzy Match Check (sim > 0.9)
-                is_duplicate = False
-                for seen in seen_texts:
-                    # Quick length check optimization
-                    if abs(len(text_content) - len(seen)) > len(text_content) * 0.2:
-                        continue
-                        
-                    # Calculate similarity (Jaccard or simple word overlap for speed?)
-                    # Let's use simple token overlap for speed
-                    s1 = set(text_content.lower().split())
-                    s2 = set(seen.lower().split())
-                    if not s1 or not s2: continue
-                    overlap = len(s1.intersection(s2)) / len(s1.union(s2))
-                    
-                    if overlap > 0.85: # 85% word overlap = duplicate
-                        # print(f"Skipping duplicate: {text_content[:30]}... (Overlap: {overlap:.2f})")
-                        is_duplicate = True
-                        break
-                
-                if is_duplicate:
-                    continue
-
-                # Relevance (Sim(Di, Q))
-                relevance = candidate_distances[i] 
-                
-                # Diversity (max Sim(Di, Dk) for all k in selected)
-                max_sim_to_selected = 0.0
-                if selected_indices:
-                    vec_i = np.array(candidate_embeddings[i])
-                    sims = []
-                    for j in selected_indices:
-                        vec_j = np.array(candidate_embeddings[j])
-                        sims.append(cosine_similarity(vec_i, vec_j))
-                    max_sim_to_selected = max(sims) if sims else 0.0
-                
-                mmr_score = (lambda_mult * relevance) - ((1 - lambda_mult) * max_sim_to_selected)
-                
-                if mmr_score > best_score:
-                    best_score = mmr_score
-                    best_idx = i
+            # Mask of currently unselected AND valid items
+            candidate_mask = mask_valid.copy()
+            candidate_mask[selected_indices] = False
             
-            if best_idx != -1:
-                selected_indices.append(best_idx)
-                # Add to seen
-                best_text = candidate_docs[best_idx].strip() if candidate_docs[best_idx] else ""
-                seen_texts.add(best_text)
-
-        # Filter candidates to selected ones
+            if not np.any(candidate_mask):
+                break
+                
+            # Compute Max Sim to Selected for all unselected items
+            # Shape: (N,) - but we only care about masked ones
+            max_sim_to_selected = np.zeros(N)
+            
+            if selected_indices:
+                # similarity_matrix[:, selected_indices] -> Shape (N, len(selected))
+                # Max across the selected dimension
+                sim_to_sel = similarity_matrix[:, selected_indices]
+                max_sim_to_selected = np.max(sim_to_sel, axis=1)
+                
+            # MMR Score = lambda * Rel - (1-lambda) * MaxSim
+            # We compute for ALL, but only pick from masked
+            mmr_scores = (lambda_mult * relevance_scores) - ((1 - lambda_mult) * max_sim_to_selected)
+            
+            # Apply mask (set invalid/selected to -inf)
+            mmr_scores[~candidate_mask] = -float('inf')
+            
+            best_idx = np.argmax(mmr_scores)
+            
+            if mmr_scores[best_idx] == -float('inf'):
+                break # No more valid candidates
+                
+            selected_indices.append(best_idx)
+            
+        # 4. Fetch Rich Metadata & Format
         top_ids = [candidate_ids[i] for i in selected_indices]
-        # Re-map metadatas/docs for the next steps
         
-        # 3. Fetch Rich Metadata from DB (Chunks)
-        # Use top_ids (which are now MMR selected)
-        
-        # Async fetch with Eager Loading for Recency Calculation
+        # Async fetch with Eager Loading (Same as before)
         query_stmt = (
             select(Chunk)
             .options(selectinload(Chunk.memory), selectinload(Chunk.document))
@@ -365,64 +433,55 @@ class RetrievalService:
         
         formatted_results = []
         
-        for i, idx_in_original in enumerate(selected_indices):
-            emb_id = candidate_ids[idx_in_original]
-            distance = candidate_distances[idx_in_original] # This is relevance score
-            base_score = distance # Already cosine similarity
+        for i in selected_indices:
+            emb_id = candidate_ids[i]
+            base_score = float(relevance_scores[i])
             
             chunk = chunk_map.get(emb_id)
             
             if chunk:
-                # 3. Apply Re-ranking modifiers
+                # Re-ranking logic
                 feedback_mod = 1 + (chunk.feedback_score or 0.0)
                 trust_mod = chunk.trust_score or 0.5
                 
                 # Recency Logic
                 recency_mod = 1.0
                 created_at = None
-                if chunk.memory:
-                    created_at = chunk.memory.created_at
-                elif chunk.document:
-                    created_at = chunk.document.created_at
+                if chunk.memory: created_at = chunk.memory.created_at
+                elif chunk.document: created_at = chunk.document.created_at
                 
                 if created_at:
-                    # ensure timezone awareness
                     if created_at.tzinfo is None:
                         created_at = created_at.replace(tzinfo=timezone.utc)
-                    
                     now = datetime.now(timezone.utc)
                     days_diff = (now - created_at).days
-                    # Boost: +10% for today/yesterday, decays to ~0% after a month
-                    # Formula: 1 + (0.1 / max(1, days_diff))
                     recency_mod = 1 + (0.1 / max(1, days_diff))
                 
                 final_score = base_score * feedback_mod * (0.5 + trust_mod) * recency_mod
                 
-                # Enrich response
-                # Fetch meta from original results using index
-                meta = candidate_metadatas[idx_in_original]
+                meta = candidate_metadatas[i]
                 meta["summary"] = chunk.summary
                 meta["generated_qas"] = chunk.generated_qas
                 meta["trust_score"] = chunk.trust_score
-                meta["memory_id"] = chunk.id # Add DB ID for reference
+                meta["memory_id"] = chunk.id
                 meta["recency_boost"] = round(recency_mod, 2)
                 
-                # Prepend Date if available
-                # date_prefix = ""
-                # if created_at:
-                #      date_prefix = f"[{created_at.strftime('%Y-%m-%d')}] "
+                display_text = chunk.text
+                if created_at:
+                    display_date = created_at.strftime('%Y-%m-%d')
+                    display_text += f"\n(This session took place on {display_date})"
 
                 formatted_results.append({
-                    "text": chunk.text, # Return DB text which is reliable
+                    "text": display_text, 
                     "score": final_score,
                     "metadata": meta,
-                    "chunk": chunk # Return actual chunk object if needed
+                    "chunk": chunk
                 })
             else:
-                # Fallback if DB sync issue
-                meta = candidate_metadatas[idx_in_original]
+                # Fallback
+                meta = candidate_metadatas[i]
                 formatted_results.append({
-                    "text": candidate_docs[idx_in_original],
+                    "text": candidate_docs[i],
                     "score": base_score,
                     "metadata": meta,
                     "chunk": None

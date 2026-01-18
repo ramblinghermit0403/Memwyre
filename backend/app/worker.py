@@ -76,7 +76,7 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
                 title=title,
                 doc_type="memory",
                 metadata={
-                    "user_id": user_id, 
+                    "user_id": str(user_id), 
                     "memory_id": memory_id, 
                     "tags": str(tags) if tags else "", 
                     "source": source,

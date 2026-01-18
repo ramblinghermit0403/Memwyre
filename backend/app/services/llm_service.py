@@ -9,6 +9,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 import google.generativeai as genai
 from app.core.config import settings
 from app.core.aws_config import AWS_CONFIG
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 class LLMService:
     def __init__(self):
@@ -203,6 +204,7 @@ Existing Tags Context:
                         pass
                 return {}
 
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
     async def generate_chunk_enrichment(self, content: str, api_key: Optional[str] = None) -> dict:
         """
         Generate summary, Q&A, and entities for a text chunk.
@@ -280,6 +282,7 @@ Rules:
             print(f"Chunk enrichment failed: {e}")
             return {}
 
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
     async def extract_facts_from_text(self, text: str, api_key: Optional[str] = None, reference_date: Optional[datetime] = None) -> List[dict]:
         """
         Extract Atomic Facts (Subject-Predicate-Object) from text.

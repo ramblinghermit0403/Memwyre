@@ -88,18 +88,23 @@ class IngestionService:
         # Execute Enrichment concurrently
         enrichment_results = []
         if enrichment_tasks:
-            try:
-                enrichment_results = await asyncio.gather(*enrichment_tasks, return_exceptions=True)
-            except Exception as e:
-                print(f"Enrichment batch failed: {e}")
-                # Fallback to empty results
-                enrichment_results = [None] * len(chunks)
+            # return_exceptions=True prevents one failure from killing others immediately,
+            # but we want to inspect them and potentially fail the batch.
+            enrichment_results = await asyncio.gather(*enrichment_tasks, return_exceptions=True)
         else:
             enrichment_results = [None] * len(chunks)
 
         embedding_ids = []
         chunk_texts = []
         metadatas = []
+        
+        # Check for failures before processing
+        for res in enrichment_results:
+            if isinstance(res, Exception):
+                # If ANY chunk failed enrichment, fail the whole batch to trigger Celery retry.
+                # This prevents "Ghost Chunks" (chunks with no metadata).
+                print(f"Enrichment failed: {res}. Raising exception to trigger retry.")
+                raise res
         enriched_chunk_texts = [] # Text to be embedded
         
         # Assemble Results
