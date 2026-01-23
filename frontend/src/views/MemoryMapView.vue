@@ -16,7 +16,7 @@
     <div ref="container" class="w-full h-full">
       <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 z-20 backdrop-blur-sm">
         <div class="flex flex-col items-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white mb-4"></div>
+          <LoadingLogo size="xl" class="mb-4" />
           <p class="text-gray-500 dark:text-gray-400 animate-pulse">Mapping your brain...</p>
         </div>
       </div>
@@ -52,6 +52,7 @@ import api from '../services/api';
 import { useRouter } from 'vue-router';
 import { useThemeStore } from '../stores/theme';
 import NavBar from '../components/NavBar.vue';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const container = ref(null);
 const svg = ref(null);

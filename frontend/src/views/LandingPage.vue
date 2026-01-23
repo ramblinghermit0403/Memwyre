@@ -1,54 +1,24 @@
 <template>
-  <div class="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-300 font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
-    <!-- Brand Reveal Intro -->
-    <div v-if="showIntro" class="fixed inset-0 z-[100] flex items-center justify-center bg-black transition-opacity duration-1000" :class="{ 'opacity-0': fadeOut }">
-        <div class="relative flex flex-col items-center">
-            <!-- Glow Effect -->
-            <div class="absolute inset-0 bg-white/20 blur-[100px] rounded-full scale-0 transition-transform duration-[2000ms] ease-out" :class="{ 'scale-150': startGlow }"></div>
-            
-            <!-- Logo Wordmark -->
-            <div class="relative z-10 text-center">
-                <h1 class="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 opacity-0 translate-y-4 transition-all duration-1000 ease-out" :class="{ 'opacity-100 translate-y-0': showLogo }">
-                    MEMWYRE
-                </h1>
-                <p class="mt-4 text-xl md:text-2xl font-light tracking-[0.2em] text-gray-400 opacity-0 transition-opacity duration-1000 delay-500" :class="{ 'opacity-100': showTagline }">
-                    YOUR SECOND BRAIN,<br>
-                    <span class="text-white font-bold">SUPERCHARGED.</span>
-                </p>
-            </div>
-        </div>
+  <div class="relative min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-300 font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black overflow-x-hidden">
+
+    
+    <!-- Hero Video Background -->
+    <!-- Hero Video Background -->
+    <div class="absolute top-0 right-[-5%] w-full lg:w-[60%] h-[800px] z-0 pointer-events-none overflow-hidden">
+        <video 
+            src="/hero.mp4" 
+            autoplay 
+            muted 
+            playsinline
+            class="w-full h-full object-cover opacity-100 dark:opacity-100"
+        ></video>
+        <!-- Gradients for seamless blend -->
+        <div class="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-white dark:to-black"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-black"></div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white/90 dark:bg-black/90 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800">
-      <div class="max-w-7xl mx-auto px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
-          <router-link to="/" class="flex items-center group">
-            <img src="/image.svg" alt="MemWyre" class="w-8 h-8 rounded-lg mr-3 group-hover:scale-105 transition-transform duration-300" />
-            <span class="text-xl font-bold tracking-tight">MemWyre</span>
-          </router-link>
-          
-          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
-            <a href="#features" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Features</a>
-            <a href="#workflow" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Workflow</a>
-            <a href="#ecosystem" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Ecosystem</a>
-            <a href="#faq" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">FAQ</a>
-          </div>
-
-          <div class="flex items-center gap-4">
-            <router-link to="/login" class="text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white transition-colors">
-              Log in
-            </router-link>
-            <router-link to="/register" class="px-5 py-2.5 bg-black dark:bg-white text-white dark:text-black text-sm font-bold rounded-full hover:opacity-90 transition-opacity">
-              Get Started
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </nav>
-    
     <!-- Hero Section -->
-    <div class="pt-40 pb-20 lg:pt-52 lg:pb-32 px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="relative z-10 pt-32 pb-12 lg:pt-40 lg:pb-24 px-6 lg:px-8 max-w-7xl mx-auto">
       <div class="flex flex-col items-start text-left">
         <!-- Hero Content -->
         <div class="max-w-4xl">
@@ -72,11 +42,8 @@
       </div>
     </div>
 
-    <!-- Divider -->
-    <div class="w-full h-px bg-gray-100 dark:bg-gray-900"></div>
-
     <!-- Features Grid -->
-    <div id="features" class="py-32 px-6 lg:px-8 max-w-7xl mx-auto">
+    <div id="features" class="py-16 px-6 lg:px-8 max-w-7xl mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-16">
         <div class="group">
           <div class="w-12 h-12 flex items-center justify-center border border-gray-200 dark:border-gray-800 rounded-xl mb-6 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
@@ -111,7 +78,7 @@
     </div>
 
     <!-- Workflow Section -->
-     <div id="workflow" class="py-32 bg-gray-50 dark:bg-white/5 border-y border-gray-100 dark:border-gray-900">
+     <div id="workflow" class="py-16 border-y-0 border-transparent">
       <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="mb-20">
           <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Workflow</h2>
@@ -151,12 +118,17 @@
                             <span class="w-3 h-3 rounded-full bg-black dark:bg-white"></span>
                             <span class="text-gray-400">Ask MemWyre</span>
                         </div>
-                        <p class="text-gray-800 dark:text-gray-200">
-                            > How do I implement the new auth flow?<br><br>
-                            <span class="text-gray-400">Searching 3 documents...</span><br>
-                            <span class="text-blue-500">Found matches in "Auth Specs v2" and "API Docs".</span><br><br>
-                            Based on "Auth Specs v2", you should use the OAuth2 provider pattern. Here is the implementation snippet...
+                        <p class="text-gray-800 dark:text-gray-200 min-h-[50px]">
+                            {{ typedText }}<span class="cursor">&nbsp;</span>
                         </p>
+                        <transition name="fade">
+                            <div v-if="typedText.length >= 20" class="transition-opacity duration-1000 ease-in-out">
+                                <br>
+                                <span class="text-gray-400">Searching 3 documents...</span><br>
+                                <span class="text-blue-500">Found matches in "Auth Specs v2" and "API Docs".</span><br><br>
+                                Based on "Auth Specs v2", you should use the OAuth2 provider pattern. Here is the implementation snippet...
+                            </div>
+                        </transition>
                     </div>
                 </div>
             </div>
@@ -165,8 +137,8 @@
      </div>
 
     <!-- Ecosystem -->
-    <div id="ecosystem" class="py-32 px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="text-center max-w-3xl mx-auto mb-20">
+    <div id="ecosystem" class="py-16 px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="max-w-3xl mb-20">
              <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Ecosystem</h2>
              <p class="text-4xl lg:text-5xl font-extrabold tracking-tight mb-6">Built to extend.</p>
              <p class="text-xl text-gray-500 dark:text-gray-400">MemWyre isn't a silo. It powers your entire workflow through standard protocols.</p>
@@ -174,7 +146,13 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
              <div class="p-10 border border-gray-200 dark:border-gray-800 rounded-3xl hover:border-black dark:hover:border-white transition-colors duration-300">
-                 <div class="w-12 h-12 bg-black dark:bg-white text-white dark:text-black rounded-lg flex items-center justify-center mb-6 font-bold text-xl">M</div>
+                 <div class="w-12 h-12 bg-black dark:bg-white text-white dark:text-black rounded-lg flex items-center justify-center mb-6">
+                     <svg class="w-8 h-8" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 84.8528L85.8822 16.9706C95.2548 7.59798 110.451 7.59798 119.823 16.9706V16.9706C129.196 26.3431 129.196 41.5391 119.823 50.9117L68.5581 102.177" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+                        <path d="M69.2652 101.47L119.823 50.9117C129.196 41.5391 144.392 41.5391 153.765 50.9117L154.118 51.2652C163.491 60.6378 163.491 75.8338 154.118 85.2063L92.7248 146.6C89.6006 149.724 89.6006 154.789 92.7248 157.913L105.331 170.52" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+                        <path d="M102.853 33.9411L52.6482 84.1457C43.2756 93.5183 43.2756 108.714 52.6482 118.087V118.087C62.0208 127.459 77.2167 127.459 86.5893 118.087L136.794 67.8822" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+                     </svg>
+                 </div>
                  <h3 class="text-2xl font-bold mb-4">MCP Server</h3>
                  <p class="text-gray-500 dark:text-gray-400 mb-8">
                      Connect MemWyre directly to Claude Desktop or any MCP-compliant client. Give your AI assistant direct access to your second brain.
@@ -200,8 +178,10 @@
         </div>
     </div>
 
+
+
     <!-- FAQ Section -->
-    <div id="faq" class="py-32 px-6 lg:px-8 max-w-3xl mx-auto">
+    <div id="faq" class="py-16 px-6 lg:px-8 max-w-3xl mx-auto">
         <div class="text-center mb-16">
              <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">FAQ</h2>
              <p class="text-4xl font-extrabold tracking-tight">Common questions.</p>
@@ -223,45 +203,11 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="border-t border-gray-100 dark:border-gray-900 py-12 bg-gray-50 dark:bg-black">
-      <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-        <div class="flex items-center gap-2">
-            <img src="/image.svg" alt="MemWyre" class="w-6 h-6 rounded-lg" />
-            <span class="font-bold text-sm">MemWyre</span>
-        </div>
-        <p class="text-sm text-gray-400">© 2025 MemWyre. Crafted for clarity.</p>
-        <div class="flex gap-6">
-             <a href="#" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Twitter</a>
-             <a href="#" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">GitHub</a>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-
-// Intro Animation State
-const showIntro = ref(true);
-const fadeOut = ref(false);
-const startGlow = ref(false);
-const showLogo = ref(false);
-const showTagline = ref(false);
-
-onMounted(() => {
-    // Sequence
-    setTimeout(() => { startGlow.value = true; }, 500); // Glow emerges
-    setTimeout(() => { showLogo.value = true; }, 1000); // Logo fades in
-    setTimeout(() => { showTagline.value = true; }, 2000); // Tagline fades in
-    
-    // Hold then fade out
-    setTimeout(() => { fadeOut.value = true; }, 5000);
-    
-    // Remove from DOM
-    setTimeout(() => { showIntro.value = false; }, 6000);
-});
 
 const faqs = ref([
     {
@@ -289,10 +235,59 @@ const faqs = ref([
 const toggleFaq = (index) => {
     faqs.value[index].isOpen = !faqs.value[index].isOpen;
 };
+
+// --- Animations ---
+onMounted(() => {
+    // Start Typing Effect
+    typeWriter();
+});
+
+
+// 2. Typing Effect
+const typedText = ref('');
+const fullText = "> How do I implement the new auth flow?";
+const typingSpeed = 50;
+
+const typeWriter = () => {
+    let i = 0;
+    typedText.value = ''; // Reset
+    
+    const type = () => {
+        if (i < fullText.length) {
+            typedText.value += fullText.charAt(i);
+            i++;
+            setTimeout(type, typingSpeed);
+        } else {
+             // Optional: Loop animation after a delay
+             setTimeout(() => {
+                 typedText.value = '> ';
+                 i = 2; 
+                 type();
+             }, 5000);
+        }
+    };
+    
+    // Initial delay before starting
+    setTimeout(type, 1000); 
+};
+
 </script>
 
 <style scoped>
 html {
   scroll-behavior: smooth;
+}
+
+/* Typing Cursor */
+.cursor {
+    display: inline-block;
+    width: 8px;
+    background-color: currentColor;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 </style>

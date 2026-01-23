@@ -7,9 +7,27 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            name: 'landing',
-            component: () => import('../views/LandingPage.vue'),
-            meta: { requiresAuth: false }
+            component: () => import('../views/PublicLayout.vue'),
+            children: [
+                {
+                    path: '',
+                    name: 'landing',
+                    component: () => import('../views/LandingPage.vue'),
+                    meta: { requiresAuth: false }
+                },
+                {
+                    path: 'research',
+                    name: 'research',
+                    component: () => import('../views/ResearchView.vue'),
+                    meta: { requiresAuth: false }
+                },
+                {
+                    path: 'use-cases',
+                    name: 'use-cases',
+                    component: () => import('../views/UseCaseView.vue'),
+                    meta: { requiresAuth: false }
+                }
+            ]
         },
         {
             path: '/dashboard',

@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="p-4 border-b border-gray-200 dark:border-border flex items-center justify-between">
       <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Intelligence</h2>
-      <div v-if="loading" class="animate-spin h-4 w-4 border-2 border-primary-500 border-t-transparent rounded-full font-sans"></div>
+      <LoadingLogo v-if="loading" size="sm" />
     </div>
 
     <!-- Content -->
@@ -15,10 +15,9 @@
       </div>
 
       <!-- Loading State -->
-      <div v-if="loading" class="space-y-4">
-        <div class="h-20 bg-gray-100 dark:bg-surface-2 rounded animate-pulse"></div>
-        <div class="h-10 bg-gray-100 dark:bg-surface-2 rounded animate-pulse"></div>
-        <div class="h-10 bg-gray-100 dark:bg-surface-2 rounded animate-pulse"></div>
+      <div v-if="loading" class="flex flex-col items-center justify-center py-8">
+        <LoadingLogo size="md" />
+        <span class="text-xs text-gray-400 mt-2">Analyzing content...</span>
       </div>
 
       <!-- Active Content -->
@@ -64,6 +63,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const props = defineProps({
   activeChunk: {

@@ -41,13 +41,9 @@
       </div>
       
       <!-- Loading State -->
-      <div v-if="loading" class="flex items-center justify-center py-8">
-          <div class="flex space-x-1 animate-pulse">
-              <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-              <div class="w-2 h-2 bg-green-500 rounded-full animation-delay-200"></div>
-              <div class="w-2 h-2 bg-green-500 rounded-full animation-delay-400"></div>
-          </div>
-          <span class="ml-3 text-sm text-gray-400 font-medium">Thinking...</span>
+      <div v-if="loading" class="flex flex-col items-center justify-center py-8">
+          <LoadingLogo size="md" />
+          <span class="mt-3 text-sm text-gray-400 font-medium">Thinking...</span>
       </div>
 
       <!-- Response Area -->
@@ -82,6 +78,7 @@
 <script setup>
 import { ref } from 'vue';
 import api from '../services/api';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const props = defineProps({
   embedded: {

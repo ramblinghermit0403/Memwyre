@@ -7,7 +7,9 @@
       </button>
     </div>
     <div class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
-      <div v-if="loading" class="text-center py-4 text-gray-500 dark:text-gray-400">Loading...</div>
+      <div v-if="loading" class="flex justify-center py-8">
+        <LoadingLogo size="md" />
+      </div>
       <div v-else-if="memories.length === 0" class="text-center py-4 text-gray-500 dark:text-gray-400">No memories found.</div>
       <div v-else v-for="memory in memories" :key="memory.id" class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow duration-200">
         <div class="flex justify-between items-start">
@@ -58,6 +60,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import api from '../services/api';
 import ConfirmationModal from './ConfirmationModal.vue';
 import { useToast } from 'vue-toastification';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const memories = ref([]);
 const loading = ref(false);

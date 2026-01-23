@@ -19,10 +19,10 @@
 
         <!-- Content Area -->
         <div class="flex-1 overflow-y-auto overflow-x-hidden p-6 relative bg-gray-50 dark:bg-surface/50">
-      <div v-if="loading" class="animate-pulse flex flex-col items-center">
-         <div class="w-64 h-80 bg-gray-200 dark:bg-surface rounded-xl mb-4"></div>
-         <div class="text-gray-500">Curating your review...</div>
-      </div>
+       <div v-if="loading" class="flex flex-col items-center justify-center p-12">
+          <LoadingLogo size="xl" />
+          <div class="text-gray-500 mt-4">Curating your review...</div>
+       </div>
       
       <div v-else-if="memories.length === 0 || isCompleted" class="flex flex-col items-center justify-center h-full text-center max-w-md mx-auto">
          <div class="p-4 bg-green-100 dark:bg-green-900/30 rounded-full mb-6 text-green-600 dark:text-green-400">
@@ -77,8 +77,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-// No router needed
 import api from '../services/api';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const emit = defineEmits(['close']);
 const loading = ref(true);

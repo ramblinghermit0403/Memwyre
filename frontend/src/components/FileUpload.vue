@@ -30,10 +30,8 @@
 
            <!-- Uploading State -->
           <div v-else-if="uploading" class="flex flex-col items-center py-2">
-               <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-3 mx-4">
-                  <div class="bg-black dark:bg-white h-1.5 rounded-full animate-pulse w-2/3 mx-auto"></div>
-                </div>
-               <span class="text-xs text-black dark:text-white font-medium">Uploading...</span>
+               <LoadingLogo size="md" />
+               <span class="text-xs text-black dark:text-white font-medium mt-2">Uploading...</span>
           </div>
 
            <!-- Success State -->
@@ -54,6 +52,7 @@
 <script setup>
 import { ref } from 'vue';
 import api from '../services/api';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const emit = defineEmits(['upload-complete']);
 

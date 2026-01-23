@@ -102,6 +102,8 @@ async function handleFeedback(messageId, type) {
     toast.success("Feedback submitted");
 }
 
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
+
 
 </script>
 
@@ -217,9 +219,13 @@ async function handleFeedback(messageId, type) {
            </div>
            
            <!-- Thinking Indicator (Outside space-y for custom spacing) -->
-           <div v-if="chatStore.thinking" class="max-w-3xl mx-auto mt-2 flex justify-start gap-4 animate-pulse opacity-70">
-              <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0"></div>
-              <div class="bg-gray-100 dark:bg-surface-2 h-12 w-48 rounded-2xl rounded-tl-sm"></div>
+           <div v-if="chatStore.thinking" class="max-w-3xl mx-auto mt-2 flex justify-start gap-4 opacity-70">
+              <div class="w-8 h-8 rounded-full bg-white border border-gray-200 shrink-0 mt-1 shadow-sm flex items-center justify-center">
+                   <LoadingLogo size="sm" />
+              </div>
+              <div class="bg-gray-100 dark:bg-surface-2 px-6 py-4 rounded-2xl rounded-tl-sm shadow-sm text-sm text-gray-500 italic">
+                  Thinking...
+              </div>
            </div>
         </div>
 

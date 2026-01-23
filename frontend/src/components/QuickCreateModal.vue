@@ -89,10 +89,8 @@
 
             <!-- Loading State -->
              <div v-else-if="uploading" class="flex flex-col items-center w-full max-w-xs">
-                <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mb-3">
-                   <div class="bg-blue-600 h-1.5 rounded-full animate-pulse w-2/3"></div>
-                </div>
-                <span class="text-sm text-gray-600 dark:text-gray-300">Uploading...</span>
+                <LoadingLogo size="md" />
+                <span class="text-sm text-gray-600 dark:text-gray-300 mt-3">Uploading...</span>
             </div>
 
             <!-- Uploaded File Item (Inside Dropzone or Replacing it?) 
@@ -201,6 +199,7 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '../services/api';
 import { useToast } from 'vue-toastification';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const props = defineProps({
   isOpen: Boolean

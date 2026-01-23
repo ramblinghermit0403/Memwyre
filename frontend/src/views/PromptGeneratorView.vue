@@ -51,10 +51,10 @@
             <button 
               @click="generatePrompt" 
               :disabled="!query || loading"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white dark:text-black bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black dark:focus:ring-white disabled:opacity-50"
+              class="w-full flex items-center justify-center gap-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white dark:text-black bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black dark:focus:ring-white disabled:opacity-50"
             >
-              <span v-if="loading">Generating...</span>
-              <span v-else>Generate Prompt</span>
+              <LoadingLogo v-if="loading" size="sm" class="w-4 h-4" />
+              <span>{{ loading ? 'Generating...' : 'Generate Prompt' }}</span>
             </button>
           </div>
         </div>
@@ -109,6 +109,7 @@ import { ref } from 'vue';
 import api from '../services/api';
 import { useToast } from 'vue-toastification';
 import NavBar from '../components/NavBar.vue';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const query = ref('');
 const templateId = ref('standard');

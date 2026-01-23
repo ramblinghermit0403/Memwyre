@@ -21,7 +21,9 @@
 
     <!-- List -->
     <div v-else class="flex-1 overflow-y-auto custom-scrollbar">
-       <div v-if="loading" class="p-8 text-center text-gray-400">Loading...</div>
+       <div v-if="loading" class="p-8 flex justify-center text-gray-400">
+         <LoadingLogo size="md" />
+       </div>
        <ul v-else class="divide-y divide-gray-100 dark:divide-gray-700">
          <li v-for="doc in paginatedDocuments" :key="doc.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group">
            <div class="px-6 py-4 flex items-center justify-between cursor-pointer" @click="editDocument(doc)">
@@ -89,6 +91,7 @@ import { useRouter } from 'vue-router';
 import api from '../services/api';
 import ConfirmationModal from './ConfirmationModal.vue';
 import { useToast } from 'vue-toastification';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const router = useRouter();
 const toast = useToast();

@@ -43,12 +43,8 @@
         </div>
       </div>
       <div v-if="loading" class="flex justify-start">
-        <div class="bg-white dark:bg-surface px-4 py-2 rounded-lg rounded-bl-none border border-gray-200 dark:border-gray-700 shadow-sm">
-          <div class="flex space-x-1">
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
-          </div>
+        <div class="bg-white dark:bg-surface px-4 py-2 rounded-lg rounded-bl-none border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-center min-w-[60px]">
+           <LoadingLogo size="sm" />
         </div>
       </div>
       <div ref="messagesEnd"></div>
@@ -89,6 +85,7 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue';
 import api from '../services/api';
+import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const props = defineProps({
   isOpen: Boolean,
