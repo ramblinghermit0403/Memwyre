@@ -9,3 +9,4 @@ from .cluster import MemoryCluster
 from .feedback import FeedbackEvent as Feedback
 from .history import MemoryHistory as History
 from .fact import Fact
+from .usage import UserUsage

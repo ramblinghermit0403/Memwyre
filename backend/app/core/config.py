@@ -33,6 +33,7 @@ class Settings(BaseSettings):
 
     # Celery
     CELERY_BROKER_URL: str = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
     # LLM Keys
     OPENAI_API_KEY: Optional[str] = None
@@ -49,6 +50,7 @@ class Settings(BaseSettings):
 
     # Retrieval Config
     ENABLE_BM25_FILTER: bool = True
+    MAX_DAILY_TOKENS: int = 100_000
     
     # Dual Index Support
     PINECONE_SPARSE_HOST: Optional[str] = None # Host for the Sparse Index (DotProduct)

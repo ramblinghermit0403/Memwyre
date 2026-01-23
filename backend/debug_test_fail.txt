@@ -1,0 +1,2 @@
+Status: 500
+Body: {"detail":"Chat failed: 400: Input text too long (max 10000 chars)"}

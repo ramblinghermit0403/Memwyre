@@ -1,0 +1,2 @@
+Status: 500
+Body: {"detail":"Chat failed: 429: Daily LLM budget exceeded."}

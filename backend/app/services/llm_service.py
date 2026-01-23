@@ -10,13 +10,22 @@ import google.generativeai as genai
 from app.core.config import settings
 from app.core.aws_config import AWS_CONFIG
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from app.services.usage_service import usage_service
+import tiktoken
+
+def count_tokens(text: str, model: str = "gpt-3.5-turbo") -> int:
+    try:
+        encoding = tiktoken.encoding_for_model(model)
+        return len(encoding.encode(text))
+    except:
+        return len(text) // 4
 
 class LLMService:
     def __init__(self):
         self.api_key = getattr(settings, "GEMINI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None)
         self.openai_api_key = self.api_key # Backwards compatibility for now
         
-    async def generate_response(self, query: str, context: List[str], provider: str = "openai", api_key: Optional[str] = None) -> str:
+    async def generate_response(self, query: str, context: List[str], provider: str = "openai", api_key: Optional[str] = None, user_id: Optional[int] = None) -> str:
         if not api_key:
             return "Error: API Key is required."
             
@@ -40,6 +49,13 @@ class LLMService:
                     HumanMessage(content=query)
                 ]
                 response = await llm.ainvoke(messages)
+                
+                # Track Usage
+                if user_id:
+                     tokens_in = count_tokens(system_prompt + query)
+                     tokens_out = count_tokens(response.content)
+                     await usage_service.track_usage(user_id, "openai", "gpt-3.5-turbo", tokens_in, tokens_out)
+                     
                 return response.content
             except Exception as e:
                 return f"OpenAI Error: {str(e)}"
@@ -52,6 +68,14 @@ class LLMService:
                 
                 combined = f"{system_prompt}\n\nUser Question: {query}"
                 response = model.generate_content(combined)
+                
+                # Track Usage
+                if user_id:
+                     # Gemini doesn't always give token counts in simple response, assume estimate
+                     tokens_in = count_tokens(combined)
+                     tokens_out = count_tokens(response.text)
+                     await usage_service.track_usage(user_id, "gemini", "gemini-2.5-flash", tokens_in, tokens_out)
+
                 return response.text
             except Exception as e:
                 return f"Gemini Error: {str(e)}"
@@ -70,6 +94,13 @@ class LLMService:
                     HumanMessage(content=query)
                 ]
                 response = await llm.ainvoke(messages)
+                
+                # Track Usage
+                if user_id:
+                     tokens_in = count_tokens(system_prompt + query)
+                     tokens_out = count_tokens(response.content)
+                     await usage_service.track_usage(user_id, "bedrock", model_id, tokens_in, tokens_out)
+
                 return response.content
             except Exception as e:
                 return f"Bedrock Error: {str(e)}"

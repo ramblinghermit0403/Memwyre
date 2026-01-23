@@ -1,5 +1,5 @@
 from typing import Any, List, Optional
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.api import deps
@@ -13,6 +13,7 @@ import asyncio
 from pydantic import BaseModel
 
 router = APIRouter()
+from app.core.rate_limiter import limiter
 
 class InboxItem(BaseModel):
     id: str
@@ -61,7 +62,9 @@ async def get_inbox(
     return results
 
 @router.post("/{memory_id}/action")
+@limiter.limit("20/minute")
 async def inbox_action(
+    request: Request,
     memory_id: str,
     action_in: InboxAction,
     db: AsyncSession = Depends(deps.get_db),
@@ -231,7 +234,7 @@ async def update_inbox_item(
     return {"status": "success", "id": memory_id}
 
 from bs4 import BeautifulSoup
-import time
+
 from fastapi import Request
 
 class AgentDropMetadata(BaseModel):
@@ -246,17 +249,14 @@ class AgentDropPayload(BaseModel):
     job_id: Optional[str] = None
     metadata: Optional[AgentDropMetadata] = None
 
-# Simple in-memory rate limiter
-# Map of IP -> list of timestamps
-rate_limit_data = {}
-RATE_LIMIT_WINDOW = 60 # seconds
-RATE_LIMIT_MAX_REQUESTS = 10
+
 
 def strip_html(text: str) -> str:
     soup = BeautifulSoup(text, "html.parser")
     return soup.get_text()
 
 @router.post("/drop/{token}")
+@limiter.limit("60/minute")
 async def agent_drop(
     token: str,
     request: Request,
@@ -278,19 +278,7 @@ async def agent_drop(
     if len(body) > 50 * 1024:
         raise HTTPException(status_code=413, detail="Payload too large (max 50KB)")
 
-    # 2. Rate Limit
-    client_ip = request.client.host
-    now = time.time()
-    if client_ip not in rate_limit_data:
-        rate_limit_data[client_ip] = []
-    
-    # Filter timestamps in window
-    rate_limit_data[client_ip] = [t for t in rate_limit_data[client_ip] if now - t < RATE_LIMIT_WINDOW]
-    
-    if len(rate_limit_data[client_ip]) >= RATE_LIMIT_MAX_REQUESTS:
-        raise HTTPException(status_code=429, detail="Too many requests. Try again later.")
-    
-    rate_limit_data[client_ip].append(now)
+    # 2. Rate Limit (Handled by @limiter decorator)
 
     # 3. Validation & Sanitization
     clean_content = strip_html(payload.content)

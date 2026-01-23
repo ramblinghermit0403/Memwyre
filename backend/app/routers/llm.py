@@ -1,5 +1,5 @@
 from typing import List, Any, Optional
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -8,8 +8,11 @@ from app.api import deps
 from app.models.user import User
 from app.services.vector_store import vector_store
 from app.services.llm_service import llm_service
+from app.services.usage_service import usage_service
+from app.core.guardrails import guardrails
 
 router = APIRouter()
+from app.core.rate_limiter import limiter
 
 class ChatRequest(BaseModel):
     query: str
@@ -26,8 +29,10 @@ from app.models.memory import Memory
 from app.models.document import Document
 
 @router.post("/chat", response_model=ChatResponse)
+@limiter.limit("15/minute")
 async def chat_with_llm(
-    request: ChatRequest,
+    request: Request,
+    chat_request: ChatRequest,
     db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
@@ -35,18 +40,25 @@ async def chat_with_llm(
     Chat with LLM using retrieved context.
     """
     try:
+        # -1. Guard Rails
+        guardrails.validate_input(chat_request.query)
+
+        # 0. Check Budget
+        if not await usage_service.check_budget(current_user.id):
+             raise HTTPException(status_code=429, detail="Daily LLM budget exceeded.")
+
         # 1. Retrieve context
         where_clause = {"user_id": current_user.id}
-        if request.filter:
+        if chat_request.filter:
             # Ensure IDs are integers
-            if "document_id" in request.filter:
+            if "document_id" in chat_request.filter:
                 try:
-                    request.filter["document_id"] = int(request.filter["document_id"])
+                    chat_request.filter["document_id"] = int(chat_request.filter["document_id"])
                 except:
                     pass
             if "memory_id" in request.filter:
                 try:
-                    request.filter["memory_id"] = int(request.filter["memory_id"])
+                    chat_request.filter["memory_id"] = int(chat_request.filter["memory_id"])
                 except:
                     pass
             
@@ -54,10 +66,10 @@ async def chat_with_llm(
             # Pinecone uses $and for multiple conditions filter={"$and": [...]}
             # But specific "document_id" is simple scalar.
             # Only use $and if we have multiple keys.
-            if len(request.filter) > 0:
-                where_clause.update(request.filter)
+            if len(chat_request.filter) > 0:
+                where_clause.update(chat_request.filter)
             
-        results = await vector_store.query(request.query, n_results=request.top_k, where=where_clause)
+        results = await vector_store.query(chat_request.query, n_results=chat_request.top_k, where=where_clause)
         
         context = []
         if results["documents"] and results.get("distances"):
@@ -96,14 +108,17 @@ async def chat_with_llm(
 
         # 2. Generate response
         response = await llm_service.generate_response(
-            query=request.query,
+            query=chat_request.query,
             context=context,
-            provider=request.provider,
-            api_key=request.api_key
+            provider=chat_request.provider,
+            api_key=chat_request.api_key,
+            user_id=current_user.id
         )
         
         return ChatResponse(response=response, context=context)
 
+    except HTTPException as he:
+        raise he
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat failed: {str(e)}")
 
