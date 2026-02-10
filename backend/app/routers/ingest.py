@@ -27,14 +27,13 @@ async def ingest_url(
     """
     url_str = str(request.url)
     
-    # 1. Fetch Content (Async, non-blocking)
+    # 1. Fetch Content (We do this here to fail fast if URL is bad)
     try:
-        data = await web_ingestion.fetch_url(url_str)
-        
+        data = web_ingestion.fetch_url(url_str)
         if not data:
             raise HTTPException(status_code=400, detail="Could not extract content from URL")
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to fetch URL: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Failed to fetch user URL: {str(e)}")
 
     # 2. Check User Settings for Auto-Approve
     auto_approve = True
@@ -50,8 +49,7 @@ async def ingest_url(
                 pass
                 
     initial_status = "approved" if auto_approve else "pending"
-    # Content created from UI is auto-approved and should NOT show in inbox
-    show_in_inbox = False
+    show_in_inbox = True if initial_status == "pending" else False
     
     # 3. Create Memory Record
     memory = Memory(

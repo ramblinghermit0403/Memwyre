@@ -33,10 +33,7 @@
       "matches": [
         "https://chatgpt.com/*",
         "https://claude.ai/*",
-        "https://gemini.google.com/*",
-        "https://www.youtube.com/*",
-        "https://www.perplexity.ai/*",
-        "https://perplexity.ai/*"
+        "https://gemini.google.com/*"
       ],
       "js": [
         "content.js"

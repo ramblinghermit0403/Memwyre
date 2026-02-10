@@ -52,13 +52,10 @@ class ChatSessionResponse(BaseModel):
 class Source(BaseModel):
     title: str
     id: str | None = None
-    content: str | None = None
-    metadata: Any | None = None
-    chunk: Any | None = None
 
 class ChatMessageCreate(BaseModel):
     content: str
-    model: str = "apac.amazon.nova-pro-v1:0" # Default to Nova Pro
+    model: str = "gpt-3.5-turbo" # Default
     temperature: float = 0.7
     max_tokens: int = 2048
     
@@ -177,29 +174,7 @@ async def get_history(
         .where(ChatMessage.session_id == session_id)
         .order_by(ChatMessage.created_at.asc())
     )
-    messages = result.scalars().all()
-    
-    response = []
-    import json
-    for msg in messages:
-        sources = []
-        if msg.meta_info:
-            try:
-                meta = json.loads(msg.meta_info)
-                if isinstance(meta, dict):
-                    sources = meta.get("sources", [])
-            except:
-                pass
-                
-        response.append(ChatMessageResponse(
-            id=msg.id,
-            role=msg.role,
-            content=msg.content,
-            created_at=msg.created_at,
-            sources=sources
-        ))
-        
-    return response
+    return result.scalars().all()
 
 
 @router.delete("/sessions", status_code=204, response_class=Response)
