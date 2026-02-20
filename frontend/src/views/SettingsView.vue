@@ -118,25 +118,104 @@
                     </div>
                </div>
                
-               <!-- Add New Key (DISABLED) -->
-               <div class="border-t border-gray-100 dark:border-border pt-6">
-                    <h4 class="text-sm font-medium text-gray-900 dark:text-text-primary mb-4">Add New Connection</h4>
-                    
-                    <div class="rounded-md bg-yellow-50 dark:bg-yellow-900/20 p-4 border border-yellow-200 dark:border-yellow-700/30">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                </svg>
+                   <!-- API Keys Management -->
+                   <div class="mb-8">
+                       <div class="flex items-center justify-between mb-4">
+                           <h4 class="text-sm font-medium text-gray-900 dark:text-text-primary">Your API Keys</h4>
+                           <button 
+                                v-if="!showAddKeyForm"
+                                @click="showAddKeyForm = true"
+                                class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-black dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-200 transition-colors"
+                           >
+                               + Generate Key
+                           </button>
+                       </div>
+
+                       <!-- Key Generation Form -->
+                       <div v-if="showAddKeyForm" class="mb-6 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600 animate-fade-in">
+                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Key Name (e.g. "VS Code")</label>
+                            <div class="flex gap-2">
+                                <input 
+                                    v-model="newKeyName" 
+                                    @keyup.enter="generateKey"
+                                    type="text" 
+                                    placeholder="Enter a name..." 
+                                    class="block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white py-2 px-3"
+                                />
+                                <button 
+                                    @click="generateKey"
+                                    :disabled="generatingKey || !newKeyName"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    <LoadingLogo v-if="generatingKey" size="sm" class="w-4 h-4" :isWhite="true" />
+                                    <span v-else>Generate</span>
+                                </button>
+                                <button 
+                                    @click="showAddKeyForm = false"
+                                    class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                                >
+                                    Cancel
+                                </button>
                             </div>
-                            <div class="ml-3">
-                                <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">Feature Disabled</h3>
-                                <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
-                                    <p>User API Key management is currently disabled by the administrator. Please rely on system-configured keys.</p>
+                       </div>
+
+                       <!-- NEW KEY DISPLAY (Important!) -->
+                       <div v-if="justGeneratedKey" class="mb-6 bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800 animate-fade-in">
+                           <div class="flex items-start">
+                               <div class="flex-shrink-0">
+                                   <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                   </svg>
+                               </div>
+                               <div class="ml-3 w-full">
+                                   <h3 class="text-sm font-medium text-green-800 dark:text-green-200">API Key Generated!</h3>
+                                   <div class="mt-2 text-sm text-green-700 dark:text-green-300">
+                                       <p class="mb-2">Please copy this key now. You won't be able to see it again.</p>
+                                       <div class="flex items-center gap-2">
+                                           <code class="block w-full bg-white dark:bg-black/20 p-2 rounded border border-green-200 dark:border-green-800 font-mono text-xs break-all select-all">{{ justGeneratedKey }}</code>
+                                           <button @click="copyGeneratedKey" class="p-2 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200">
+                                               <svg v-if="!keyCopied" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+                                               <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                           </button>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+
+                       <!-- Empty State -->
+                       <div v-if="apiKeys.length === 0 && !showAddKeyForm" class="text-center py-6 bg-gray-50 dark:bg-gray-700/30 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600">
+                           <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                           <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-text-primary">No API Keys</h3>
+                           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Generate a key to connect MCP clients.</p>
+                           <div class="mt-4">
+                               <button @click="showAddKeyForm = true" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-black dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-200 transition-colors">Generate Key</button>
+                           </div>
+                       </div>
+
+                       <!-- List -->
+                       <div v-else class="space-y-3">
+                            <div v-for="key in apiKeys" :key="key.id" class="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm transition-all hover:shadow-md">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-gray-100 dark:bg-gray-600 rounded-md">
+                                        <svg class="w-5 h-5 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-medium text-gray-900 dark:text-text-primary">{{ key.name }}</span>
+                                            <span v-if="!key.is_active" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300">REVOKED</span>
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-text-secondary font-mono mt-0.5">
+                                            {{ key.prefix }} • Created {{ new Date(key.created_at).toLocaleDateString() }}
+                                        </div>
+                                    </div>
                                 </div>
+                                <button @click="revokeKeyConfirm(key.id)" class="text-gray-400 hover:text-red-600 dark:text-gray-500 dark:hover:text-red-400 p-2 transition-colors" title="Revoke Key">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </button>
                             </div>
-                        </div>
-                    </div>
+                       </div>
+                   </div>
 
                     <!-- Hidden Form -->
                     <div v-if="false">
@@ -180,7 +259,7 @@
                             {{ addingKey ? 'Connecting...' : 'Connect Provider' }}
                         </button>
                     </div>
-               </div>
+
                
                <div class="mt-10 pt-8 border-t border-gray-100 dark:border-border">
                   <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-text-primary mb-2">Browser Extension Auth</h3>
@@ -251,6 +330,7 @@ import { ref, onMounted } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useRouter } from 'vue-router';
 import api from '../services/api';
+import apiKeysService from '../services/apiKeys'; // Import Service
 import NavBar from '../components/NavBar.vue';
 import ThemeToggle from '../components/ThemeToggle.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
@@ -276,6 +356,56 @@ const tokenCopied = ref(false);
 const addingKey = ref(false);
 const deletingKey = ref(false);
 const exporting = ref(false);
+
+// API Keys Logic
+const apiKeys = ref([]);
+const showAddKeyForm = ref(false);
+const newKeyName = ref("");
+const generatingKey = ref(false);
+const justGeneratedKey = ref(null);
+const keyCopied = ref(false);
+
+const loadApiKeys = async () => {
+    try {
+        const res = await apiKeysService.listKeys();
+        apiKeys.value = res.data;
+    } catch (err) {
+        console.error("Failed to list keys", err);
+    }
+};
+
+const generateKey = async () => {
+    if (!newKeyName.value) return;
+    generatingKey.value = true;
+    try {
+        const res = await apiKeysService.createKey(newKeyName.value);
+        justGeneratedKey.value = res.data.key;
+        toast.success("API Key generated successfully");
+        newKeyName.value = "";
+        showAddKeyForm.value = false;
+        loadApiKeys();
+    } catch (err) {
+        toast.error("Failed to generate key");
+    } finally {
+        generatingKey.value = false;
+    }
+};
+
+const copyGeneratedKey = async () => {
+    if (justGeneratedKey.value) {
+        await navigator.clipboard.writeText(justGeneratedKey.value);
+        keyCopied.value = true;
+        toast.success("Key copied to clipboard");
+        setTimeout(() => keyCopied.value = false, 2000);
+    }
+};
+
+const revokeKeyConfirm = (id) => {
+    keyToDelete.value = id; // Reuse existing modal logic
+    showDeleteModal.value = true;
+};
+
+// ... existing logic ...
 
 const loadSettings = async () => {
   try {
@@ -334,9 +464,23 @@ const confirmDeleteKey = async () => {
     if (!keyToDelete.value) return;
     deletingKey.value = true;
     try {
-        await api.delete(`/user/llm-keys/${keyToDelete.value}`);
+        // HACK: Differentiate based on where it was called from. 
+        // Ideally we'd have separate modals or pass a type.
+        // Checking if ID exists in apiKeys list vs llm-keys list could work, 
+        // but IDs might collide if integers.
+        // For MVP, we'll try to delete from User Keys first, if not found then LLM keys?
+        // BETTER: Check if it's in `apiKeys` array
+        const isUserKey = apiKeys.value.some(k => k.id === keyToDelete.value);
+
+        if (isUserKey) {
+             await apiKeysService.revokeKey(keyToDelete.value);
+             loadApiKeys();
+        } else {
+             await api.delete(`/user/llm-keys/${keyToDelete.value}`);
+             loadKeys();
+        }
+        
         toast.success("Key removed");
-        loadKeys();
         showDeleteModal.value = false;
         keyToDelete.value = null;
     } catch (err) {
@@ -389,6 +533,7 @@ const restartTour = () => {
 // Initial load
 loadKeys();
 loadSettings();
+loadApiKeys();
 </script>
 
 <style scoped>

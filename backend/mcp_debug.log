@@ -1,0 +1,20 @@
+2026-02-18 09:13:33,249 - mcp_server - INFO - MCP save_memory called. Source: mcp. Text length: 1757
+2026-02-18 09:13:33,250 - mcp_server - ERROR - No user found during save_memory
+2026-02-20 13:33:31,931 - mcp_server - INFO - MCP save_memory called. Source: mcp. Text length: 174
+2026-02-20 13:33:31,935 - mcp_server - INFO - request_context type: <class 'mcp.shared.context.RequestContext'>, attrs: ['close_sse_stream', 'close_standalone_sse_stream', 'experimental', 'lifespan_context', 'meta', 'request', 'request_id', 'session']
+2026-02-20 13:33:31,936 - mcp_server - INFO - Extracted headers keys: ['host', 'connection', 'mcp-session-id', 'authorization', 'content-type', 'accept', 'accept-language', 'sec-fetch-mode', 'user-agent', 'accept-encoding', 'content-length']
+2026-02-20 13:33:31,937 - mcp_server - INFO - Found auth header: Bearer bv_sk_1634560...
+2026-02-20 13:33:32,674 - mcp_server - INFO - Memory saved successfully: mem_132
+2026-02-20 14:25:53,081 - mcp_server - INFO - MCP save_memory called. Source: mcp. Text length: 154
+2026-02-20 14:25:53,082 - mcp_server - INFO - request_context type: <class 'mcp.shared.context.RequestContext'>, attrs: ['close_sse_stream', 'close_standalone_sse_stream', 'experimental', 'lifespan_context', 'meta', 'request', 'request_id', 'session']
+2026-02-20 14:25:53,083 - mcp_server - INFO - Extracted headers keys: ['host', 'connection', 'mcp-session-id', 'authorization', 'content-type', 'accept', 'accept-language', 'sec-fetch-mode', 'user-agent', 'accept-encoding', 'content-length']
+2026-02-20 14:25:53,084 - mcp_server - INFO - Found auth header: Bearer bv_sk_1634560...
+2026-02-20 14:25:53,648 - mcp_server - INFO - Memory saved successfully: mem_133
+2026-02-20 14:39:28,625 - mcp_server - INFO - MCP save_memory called. Source: mcp. Text length: 119
+2026-02-20 14:39:28,627 - mcp_server - INFO - request_context type: <class 'mcp.shared.context.RequestContext'>, attrs: ['close_sse_stream', 'close_standalone_sse_stream', 'experimental', 'lifespan_context', 'meta', 'request', 'request_id', 'session']
+2026-02-20 14:39:28,628 - mcp_server - INFO - Extracted headers keys: ['host', 'connection', 'mcp-session-id', 'authorization', 'content-type', 'accept', 'accept-language', 'sec-fetch-mode', 'user-agent', 'accept-encoding', 'content-length']
+2026-02-20 14:39:28,628 - mcp_server - INFO - Found auth header: Bearer bv_sk_1634560...
+2026-02-20 14:39:29,021 - mcp_server - INFO - Memory saved successfully: mem_134
+2026-02-20 14:42:09,570 - mcp_server - INFO - request_context type: <class 'mcp.shared.context.RequestContext'>, attrs: ['close_sse_stream', 'close_standalone_sse_stream', 'experimental', 'lifespan_context', 'meta', 'request', 'request_id', 'session']
+2026-02-20 14:42:09,572 - mcp_server - INFO - Extracted headers keys: ['host', 'connection', 'mcp-session-id', 'authorization', 'content-type', 'accept', 'accept-language', 'sec-fetch-mode', 'user-agent', 'accept-encoding', 'content-length']
+2026-02-20 14:42:09,572 - mcp_server - INFO - Found auth header: Bearer bv_sk_1634560...

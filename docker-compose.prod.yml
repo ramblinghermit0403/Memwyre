@@ -1,0 +1,55 @@
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  backend:
+    image: ${ECR_IMAGE:-brain_vault-backend:latest}
+    restart: unless-stopped
+    command: >
+      uv run gunicorn app.main:app
+      --worker-class uvicorn.workers.UvicornWorker
+      --workers 2
+      --bind 0.0.0.0:8000
+      --timeout 120
+      --access-logfile -
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.prod
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  celery_worker:
+    image: ${ECR_IMAGE:-brain_vault-backend:latest}
+    restart: unless-stopped
+    command: uv run celery -A app.celery_app worker --loglevel=info --concurrency=4
+    env_file:
+      - .env.prod
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+
+volumes:
+  redis_data:

@@ -90,25 +90,51 @@ async def get_current_user(db, ctx: Context = None):
     
     # 1. Check Context for Headers (HTTP Mode)
     if ctx and hasattr(ctx, 'request_context'):
-        # Context structure depends on transport, safely navigation
-        # Assuming request_context might contain headers directly or in a 'headers' dict
-        # Common convention for FastMCP context structure:
-        # ctx.request_context.headers['Authorization']
         try:
-            headers = getattr(ctx.request_context, 'headers', {})
-            auth_header = headers.get('authorization') or headers.get('Authorization')
+            rc = ctx.request_context
+            logger.info(f"request_context type: {type(rc)}, attrs: {[a for a in dir(rc) if not a.startswith('_')]}")
             
-            if auth_header and auth_header.startswith("Bearer "):
-                 # Check if it's an API Key (starts with bv_sk_)
-                 token = auth_header.split(" ")[1]
-                 if token.startswith("bv_sk_"):
-                     api_key = token
+            # Try multiple ways to get headers (varies by transport)
+            headers = {}
+            if hasattr(rc, 'headers'):
+                headers = rc.headers
+            elif hasattr(rc, 'request') and hasattr(rc.request, 'headers'):
+                headers = rc.request.headers
+            elif isinstance(rc, dict):
+                headers = rc.get('headers', {})
             
-            # Also check custom header
+            # Convert to dict if it's a special headers object
+            if hasattr(headers, 'items'):
+                header_dict = dict(headers.items()) if not isinstance(headers, dict) else headers
+            else:
+                header_dict = {}
+            
+            logger.info(f"Extracted headers keys: {list(header_dict.keys())}")
+            
+            # Check Authorization Header (case-insensitive)
+            auth_header = None
+            for key, value in header_dict.items():
+                if key.lower() == 'authorization':
+                    auth_header = value
+                    break
+
+            if auth_header:
+                logger.info(f"Found auth header: {auth_header[:20]}...")
+                if auth_header.startswith("Bearer "):
+                    token = auth_header.split(" ")[1]
+                    if token.startswith("bv_sk_"):
+                        api_key = token
+                elif auth_header.startswith("bv_sk_"):
+                    api_key = auth_header
+            
+            # Check Custom Header (case-insensitive)
             if not api_key:
-                api_key = headers.get('x-brain-vault-key') or headers.get('X-Brain-Vault-Key')
-        except Exception:
-            pass
+                for key, value in header_dict.items():
+                    if key.lower() in ('x-brain-vault-key', 'x-api-key'):
+                        api_key = value
+                        break
+        except Exception as e:
+            logger.error(f"Error extracting headers from context: {e}", exc_info=True)
 
     # 2. Check Environment Variables (Stdio Mode / Single User)
     if not api_key:

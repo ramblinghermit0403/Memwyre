@@ -46,6 +46,7 @@ dependencies = [
     "tenacity>=8.5.0",
     "tiktoken>=0.5.2",
     "uvicorn>=0.40.0",
+    "gunicorn>=22.0.0",
     "youtube-transcript-api>=0.6.2,<1.0.0",
     "yt-dlp>=2024.0.0",
 ]

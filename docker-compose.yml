@@ -8,21 +8,22 @@ services:
       - ./backend:/app
       - /app/.venv
     environment:
-      - CELERY_BROKER_URL=redis://host.docker.internal:6379/0
-      - REDIS_URL=redis://host.docker.internal:6379/0
-      - DATABASE_URL=postgresql://postgres:Denmarks123$@host.docker.internal/brain-vault
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://host.docker.internal:6379/0}
+      - REDIS_URL=${REDIS_URL:-redis://host.docker.internal:6379/0}
+      - DATABASE_URL=${DATABASE_URL}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
     env_file:
       - ./backend/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000/api/v1}
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "5173:80"
     depends_on:
       - backend
 
@@ -33,9 +34,9 @@ services:
       - ./backend:/app
       - /app/.venv
     environment:
-      - CELERY_BROKER_URL=redis://host.docker.internal:6379/0
-      - REDIS_URL=redis://host.docker.internal:6379/0
-      - DATABASE_URL=postgresql://postgres:Denmarks123$@host.docker.internal/brain-vault
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://host.docker.internal:6379/0}
+      - REDIS_URL=${REDIS_URL:-redis://host.docker.internal:6379/0}
+      - DATABASE_URL=${DATABASE_URL}
     env_file:
       - ./backend/.env
     extra_hosts:

@@ -27,7 +27,7 @@
             <span class="bg-black text-white dark:bg-white dark:text-black px-1 lg:px-4 leading-normal">Supercharged.</span>
             </h1>
             <p class="text-xl lg:text-2xl text-gray-500 dark:text-gray-400 leading-relaxed mb-12 max-w-2xl">
-            Capture thoughts, ingest documents, and chat with your personal knowledge base. Secure, private, and minimal.
+            Central memory for your digital life. Sync your context across any tool. Secure storage for the AI age.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-start">
             <router-link to="/register" class="px-8 py-4 bg-black dark:bg-white text-white dark:text-black text-lg font-bold rounded-full hover:translate-y-[-2px] transition-transform duration-300 flex items-center justify-center gap-2">
@@ -47,11 +47,11 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-16">
         <div class="group">
           <div class="w-12 h-12 flex items-center justify-center border border-gray-200 dark:border-gray-800 rounded-xl mb-6 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors duration-300">
-             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
           </div>
-          <h3 class="text-2xl font-bold mb-3">Memory Map</h3>
+          <h3 class="text-2xl font-bold mb-3">Memory Inbox</h3>
           <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
-            Visualize connections between your thoughts. Our intelligent tagging system links related concepts automatically, revealing hidden patterns.
+            A unified holding area for all your incoming thoughts, links, and snippets. Capture instantly from any device and let AI organize it later.
           </p>
         </div>
 

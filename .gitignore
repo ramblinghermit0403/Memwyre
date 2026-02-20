@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 venv/
 .env
+.env.prod
+.env.ecr
 .pytest_cache/
 .venv
 
