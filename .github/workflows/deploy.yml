@@ -133,19 +133,21 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1
         env:
-          ECR_IMAGE: ${{ needs.build-and-push.outputs.image_uri }}
           ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           ECR_PASSWORD: ${{ steps.ecr-password.outputs.password }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: ECR_IMAGE,ECR_REGISTRY,ECR_PASSWORD
+          envs: ECR_REGISTRY,ECR_PASSWORD
           script: |
             set -e
 
             # Login to ECR (password obtained from GitHub runner)
             echo "$ECR_PASSWORD" | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+            # Construct image name
+            ECR_IMAGE="$ECR_REGISTRY/memwyre-backend:latest"
 
             # Pull latest image
             docker pull $ECR_IMAGE
