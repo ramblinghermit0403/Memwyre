@@ -159,8 +159,9 @@ jobs:
             # Write the ECR image to an env override
             echo "ECR_IMAGE=$ECR_IMAGE" > .env.ecr
 
-            # Stop existing containers
-            sudo docker compose -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
+            # Stop ALL running containers and free port 8000
+            sudo docker stop $(sudo docker ps -aq) 2>/dev/null || true
+            sudo docker rm $(sudo docker ps -aq) 2>/dev/null || true
 
             # Deploy with both env files
             sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr up -d --remove-orphans
