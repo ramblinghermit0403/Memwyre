@@ -90,11 +90,13 @@ jobs:
         working-directory: frontend
         run: |
           aws s3 sync dist/ s3://$S3_BUCKET/ --delete \
+            --acl public-read \
             --cache-control "public, max-age=31536000, immutable" \
             --exclude "index.html"
 
           # index.html should not be cached aggressively
           aws s3 cp dist/index.html s3://$S3_BUCKET/index.html \
+            --acl public-read \
             --cache-control "public, max-age=0, must-revalidate"
 
   # ─────────────────────────────────────────────
@@ -156,6 +158,9 @@ jobs:
 
             # Write the ECR image to an env override
             echo "ECR_IMAGE=$ECR_IMAGE" > .env.ecr
+
+            # Stop existing containers
+            sudo docker compose -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
 
             # Deploy with both env files
             sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr up -d --remove-orphans
