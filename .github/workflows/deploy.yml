@@ -144,13 +144,13 @@ jobs:
             set -e
 
             # Login to ECR (password obtained from GitHub runner)
-            echo "$ECR_PASSWORD" | docker login --username AWS --password-stdin $ECR_REGISTRY
+            echo "$ECR_PASSWORD" | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
 
             # Construct image name
             ECR_IMAGE="$ECR_REGISTRY/memwyre-backend:latest"
 
             # Pull latest image
-            docker pull $ECR_IMAGE
+            sudo docker pull $ECR_IMAGE
 
             cd /opt/memwyre
 
@@ -158,10 +158,10 @@ jobs:
             echo "ECR_IMAGE=$ECR_IMAGE" > .env.ecr
 
             # Deploy with both env files
-            docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr up -d --remove-orphans
+            sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr up -d --remove-orphans
 
             # Cleanup old images
-            docker image prune -af --filter "until=48h"
+            sudo docker image prune -af --filter "until=48h"
 
             # Health check
             sleep 10
