@@ -1,0 +1,39 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ECRAuth",
+            "Effect": "Allow",
+            "Action": "ecr:GetAuthorizationToken",
+            "Resource": "*"
+        },
+        {
+            "Sid": "ECRPushPull",
+            "Effect": "Allow",
+            "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "ecr:PutImage",
+                "ecr:InitiateLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:CompleteLayerUpload"
+            ],
+            "Resource": "arn:aws:ecr:ap-south-1:911167915656:repository/memwyre-backend"
+        },
+        {
+            "Sid": "S3Deploy",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::memwyre.tech",
+                "arn:aws:s3:::memwyre.tech/*"
+            ]
+        }
+    ]
+}
