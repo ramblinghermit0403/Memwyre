@@ -79,18 +79,15 @@ class IngestionService:
         if metadata:
             base_metadata.update(metadata)
         
-        # 2. Enrichment (Parallelized)
-        enrichment_tasks = []
-        if enrich:
-            for chunk_text in chunks:
-                enrichment_tasks.append(llm_service.generate_chunk_enrichment(chunk_text))
-        
-        # Execute Enrichment concurrently
+        # 2. Enrichment (Batched to prevent OOM)
+        ENRICHMENT_BATCH_SIZE = 3
         enrichment_results = []
-        if enrichment_tasks:
-            # return_exceptions=True prevents one failure from killing others immediately,
-            # but we want to inspect them and potentially fail the batch.
-            enrichment_results = await asyncio.gather(*enrichment_tasks, return_exceptions=True)
+        if enrich:
+            for batch_start in range(0, len(chunks), ENRICHMENT_BATCH_SIZE):
+                batch = chunks[batch_start:batch_start + ENRICHMENT_BATCH_SIZE]
+                batch_tasks = [llm_service.generate_chunk_enrichment(chunk_text) for chunk_text in batch]
+                batch_results = await asyncio.gather(*batch_tasks, return_exceptions=True)
+                enrichment_results.extend(batch_results)
         else:
             enrichment_results = [None] * len(chunks)
 
@@ -164,14 +161,17 @@ class IngestionService:
         if not sentences: return []
         if len(sentences) == 1: return sentences
         
-        # Optimized Parallel Embedding Generation
+        # Batched Embedding Generation (25 at a time to prevent OOM)
+        EMBED_BATCH_SIZE = 25
         try:
-            # Create concurrent tasks for each sentence
-            # Titan v2 requires single inputs, so we fire them all at once.
-            tasks = [self.bedrock_embeddings.aembed_query(s) for s in sentences]
-            embeddings = await asyncio.gather(*tasks)
+            embeddings = []
+            for batch_start in range(0, len(sentences), EMBED_BATCH_SIZE):
+                batch = sentences[batch_start:batch_start + EMBED_BATCH_SIZE]
+                batch_tasks = [self.bedrock_embeddings.aembed_query(s) for s in batch]
+                batch_results = await asyncio.gather(*batch_tasks)
+                embeddings.extend(batch_results)
         except Exception as e:
-            print(f"Bedrock Parallel Embedding failed: {e}")
+            print(f"Bedrock Batched Embedding failed: {e}")
             # Fallback to sync call if async fails for some reason
             try:
                 embeddings = self.bedrock_embeddings.embed_documents(sentences)

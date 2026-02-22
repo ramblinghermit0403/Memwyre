@@ -176,13 +176,16 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
             )
             
             if ids:
-                # 2. Add to Vector Store (Use Enriched Text)
+                # 2. Add to Vector Store in batches (prevent OOM)
+                VECTOR_BATCH_SIZE = 5
                 try:
-                    await vector_store.add_documents(
-                        ids=ids,
-                        documents=enriched_chunk_texts, 
-                        metadatas=metadatas
-                    )
+                    for batch_start in range(0, len(ids), VECTOR_BATCH_SIZE):
+                        batch_end = batch_start + VECTOR_BATCH_SIZE
+                        await vector_store.add_documents(
+                            ids=ids[batch_start:batch_end],
+                            documents=enriched_chunk_texts[batch_start:batch_end], 
+                            metadatas=metadatas[batch_start:batch_end]
+                        )
                 except Exception as e:
                     print(f"Worker Error Adding to Vector Store: {e}")
                     return
@@ -193,8 +196,8 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
                 
                 print(f"Worker: Starting parallel fact extraction for {len(documents_content)} chunks...")
                 
-                # Limit concurrency 
-                sem = asyncio.Semaphore(10) 
+                # Limit concurrency to prevent OOM
+                sem = asyncio.Semaphore(3)
 
                 async def _bounded_extraction(txt, ref_dt):
                     async with sem:
