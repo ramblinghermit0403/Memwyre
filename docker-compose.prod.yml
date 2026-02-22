@@ -21,6 +21,10 @@ services:
       --bind 0.0.0.0:8000
       --timeout 120
       --access-logfile -
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
     ports:
       - "8000:8000"
     env_file:
@@ -41,7 +45,11 @@ services:
   celery_worker:
     image: ${ECR_IMAGE:-brain_vault-backend:latest}
     restart: unless-stopped
-    command: uv run celery -A app.celery_app worker --loglevel=info --concurrency=4
+    command: uv run celery -A app.celery_app worker --loglevel=info --concurrency=2 --max-memory-per-child=200000
+    deploy:
+      resources:
+        limits:
+          memory: 768M
     env_file:
       - .env.prod
     environment:
