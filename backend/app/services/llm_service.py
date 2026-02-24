@@ -40,6 +40,11 @@ class LLMService:
             "Use ONLY the following Context to answer the user's question. "
             "If the answer is not explicitly supported by the Context, state that you do not have enough information. "
             "Do not hallucinate or use outside knowledge unless it is general definitions to help explain the context.\n\n"
+            "YOU MUST format your entire response exactly like this:\n"
+            "<think>\n"
+            "[Insert your step-by-step reasoning here]\n"
+            "</think>\n"
+            "[Insert your final user-facing answer here]\n\n"
             f"Context:\n{context_str}"
         )
         

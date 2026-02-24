@@ -118,6 +118,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      # Get the runner's public IP and whitelist it in the EC2 security group
+      - name: Get runner IP
+        id: runner-ip
+        run: echo "ip=$(curl -s https://checkip.amazonaws.com)" >> $GITHUB_OUTPUT
+
+      - name: Whitelist runner IP in security group
+        run: |
+          aws ec2 authorize-security-group-ingress \
+            --group-id ${{ secrets.EC2_SG_ID }} \
+            --protocol tcp \
+            --port 22 \
+            --cidr ${{ steps.runner-ip.outputs.ip }}/32 \
+            --tag-specifications 'ResourceType=security-group-rule,Tags=[{Key=Name,Value=github-actions-temp}]'
+
       - name: Copy compose file to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -163,7 +177,13 @@ jobs:
             sudo docker stop $(sudo docker ps -aq) 2>/dev/null || true
             sudo docker rm $(sudo docker ps -aq) 2>/dev/null || true
 
-            # Deploy with both env files
+            # Start Redis first and flush stale Celery tasks
+            sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr up -d redis
+            sleep 3
+            sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr exec -T redis redis-cli FLUSHALL
+            echo "Redis flushed — stale tasks cleared"
+
+            # Deploy all services
             sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr up -d --remove-orphans
 
             # Cleanup old images
@@ -173,4 +193,14 @@ jobs:
             sleep 10
             curl -sf http://localhost:8000/health || (echo "Health check failed!" && exit 1)
             echo "Deployment successful!"
+
+      # Always revoke the runner IP, even if deployment fails
+      - name: Revoke runner IP from security group
+        if: always()
+        run: |
+          aws ec2 revoke-security-group-ingress \
+            --group-id ${{ secrets.EC2_SG_ID }} \
+            --protocol tcp \
+            --port 22 \
+            --cidr ${{ steps.runner-ip.outputs.ip }}/32
 

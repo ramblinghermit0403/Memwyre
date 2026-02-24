@@ -71,7 +71,7 @@ async def get_all_tags(
 
 
 
-@router.post("/", response_model=MemorySchema)
+@router.post("/", response_model=MemorySchema, dependencies=[Depends(deps.require_subscription)])
 async def create_memory(
     memory_in: MemoryCreate,
     background_tasks: BackgroundTasks,
@@ -86,6 +86,9 @@ async def create_memory(
     
     # Define is_extension before usage
     is_extension = "extension" in (memory_in.tags or [])
+    
+    # Enforce Usage Limits
+    await deps.verify_usage_limits(doc_type="memory", content_len=len(memory_in.content), current_user=current_user, db=db)
 
     # Delegate to Shared Service
     memory = await memory_service.create_memory(
@@ -111,7 +114,7 @@ from app.models.document import Document
 class CheckDuplicateRequest(BaseModel):
     content: str
 
-@router.post("/check-duplicate", response_model=Any)
+@router.post("/check-duplicate", response_model=Any, dependencies=[Depends(deps.require_subscription)])
 async def check_duplicate(
     request: CheckDuplicateRequest,
     db: AsyncSession = Depends(deps.get_db),
@@ -186,7 +189,7 @@ async def read_memories(
             "user_id": mem.user_id,
             "created_at": mem.created_at,
             "updated_at": mem.updated_at,
-            "updated_at": mem.updated_at,
+            "source": mem.source_llm,
             "tags": mem.tags,
             "doc_type": "memory"
         })
@@ -201,8 +204,8 @@ async def read_memories(
             "content": doc.content if doc.content else f"Uploaded Document: {doc.source} ({doc.file_type})",
             "user_id": doc.user_id,
             "created_at": doc.created_at,
-            "created_at": doc.created_at,
             "updated_at": None,
+            "source": doc.source,
             "doc_type": doc_type,
             "tags": doc.tags
         })
@@ -243,7 +246,7 @@ async def get_daily_review(
         
     return results
 
-@router.put("/{memory_id}", response_model=MemorySchema)
+@router.put("/{memory_id}", response_model=MemorySchema, dependencies=[Depends(deps.require_subscription)])
 async def update_memory(
     memory_id: str,
     memory_in: MemoryUpdate,
@@ -341,7 +344,7 @@ async def update_memory(
         "type": "memory"
     }
 
-@router.delete("/{memory_id}", response_model=Any)
+@router.delete("/{memory_id}", response_model=Any, dependencies=[Depends(deps.require_subscription)])
 async def delete_memory(
     memory_id: str,
     db: AsyncSession = Depends(deps.get_db),

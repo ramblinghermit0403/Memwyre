@@ -551,7 +551,10 @@ const saveDocument = async () => {
     fetchDocument(); // Refresh metadata
   } catch (error) {
     console.error('Error saving document:', error);
-    toast.error('Failed to save memory');
+    const status = error.response?.status;
+    if (status !== 403 && status !== 413) {
+        toast.error('Failed to save memory');
+    }
   } finally {
     saving.value = false;
   }
@@ -566,7 +569,10 @@ const approveDocument = async () => {
         router.push('/inbox');
     } catch (e) {
         console.error('Failed to approve', e);
-        toast.error('Failed to approve document');
+        const status = e.response?.status;
+        if (status !== 403 && status !== 413) {
+            toast.error('Failed to approve document');
+        }
     }
 };
 
@@ -590,7 +596,10 @@ const confirmDeleteDocument = async () => {
     router.push('/');
   } catch (error) {
     console.error('Error deleting document:', error);
-    toast.error('Failed to delete document'); // Simple feedback
+    const status = error.response?.status;
+    if (status !== 403 && status !== 413) {
+        toast.error('Failed to delete document'); // Simple feedback
+    }
   } finally {
     showDeleteModal.value = false;
   }

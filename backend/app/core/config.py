@@ -65,6 +65,21 @@ class Settings(BaseSettings):
     # Dual Index Support
     PINECONE_SPARSE_HOST: Optional[str] = None
 
+    # Dodo Payments
+    DODO_PAYMENTS_API_KEY: Optional[str] = None
+    DODO_WEBHOOK_SECRET: Optional[str] = None
+    DODO_PRODUCT_ID: Optional[str] = None
+    DODO_ENVIRONMENT: str = "test_mode"  # "test_mode" or "live_mode"
+
+    # Feature Gating
+    DEV_MODE: bool = False  # True = bypass all subscription checks
+    FREE_MEMORY_LIMIT: int = 10
+    FREE_DOCUMENT_LIMIT: int = 5
+    FREE_CHAT_LIMIT: int = 20
+    MAX_CHARS_PER_MEMORY: int = 25000
+    MAX_CHARS_PER_DOC_FREE: int = 100000
+    MAX_CHARS_PER_DOC_PRO: int = 500000
+
     model_config = SettingsConfigDict(
         env_file=os.path.join(BASE_DIR, ".env"),
         extra="ignore"

@@ -79,7 +79,10 @@ const fetchMemories = async () => {
     memories.value = response.data;
   } catch (error) {
     console.error('Error fetching memories:', error);
-    toast.error('Failed to fetch memories');
+    const status = error.response?.status;
+    if (status !== 403 && status !== 413) {
+        toast.error('Failed to fetch memories');
+    }
   } finally {
     loading.value = false;
   }
@@ -102,7 +105,10 @@ const handleDeleteConfirm = async () => {
     itemToDelete.value = null;
   } catch (error) {
     console.error('Error deleting memory:', error);
-    toast.error('Failed to delete item');
+    const status = error.response?.status;
+    if (status !== 403 && status !== 413) {
+        toast.error('Failed to delete item');
+    }
     showModal.value = false; // Close modal on error too? Or keep open? Usually close on success.
     // If we keep it open on error, user can try again.
     // But for now let's close or keep open? 

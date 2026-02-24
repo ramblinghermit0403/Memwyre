@@ -26,7 +26,17 @@
        </div>
        <ul v-else class="divide-y divide-gray-100 dark:divide-gray-700">
          <li v-for="doc in paginatedDocuments" :key="doc.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 group">
-           <div class="px-6 py-4 flex items-center justify-between cursor-pointer" @click="editDocument(doc)">
+           <div class="px-6 py-4 flex items-start cursor-pointer" @click="editDocument(doc)">
+             <div class="flex items-center gap-3 mr-4 mt-1">
+                 <div class="w-6 h-6 flex items-center justify-center shrink-0 text-gray-400 dark:text-gray-500 rounded overflow-hidden">
+                     <template v-if="getIconForSource(doc).type === 'svg'">
+                        <div v-html="getIconForSource(doc).content" class="w-full h-full"></div>
+                     </template>
+                     <template v-else-if="getIconForSource(doc).type === 'img'">
+                        <img :src="getIconForSource(doc).content" alt="Source Icon" class="w-full h-full object-cover rounded-sm" @error="handleImageError($event)" />
+                     </template>
+                 </div>
+             </div>
              <div class="flex-1 min-w-0 pr-4">
                 <h4 class="text-base font-medium text-gray-900 dark:text-white truncate group-hover:text-black dark:group-hover:text-white transition-colors">
                   {{ doc.title || 'Untitled Document' }}
@@ -34,22 +44,6 @@
                <p class="text-sm text-gray-500 dark:text-gray-400 truncate mt-0.5 line-clamp-1">
                  {{ doc.content ? doc.content.substring(0, 120) : (doc.source || 'No content preview') }}
                </p>
-               <!-- Duplication Alert -->
-               <div v-if="doc.tags && doc.tags.includes('similar-content')" class="mt-2 flex items-center gap-1.5 text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded w-fit">
-                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                   <span class="text-xs font-semibold">Potential Duplicate</span>
-               </div>
-             </div>
-             <div class="flex items-center gap-3">
-                 <!-- Type Badge (optional, visually small) -->
-                <!--
-                <span :class="{'bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300': doc.type === 'memory', 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300': doc.type !== 'memory'}" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">
-                    {{ doc.type === 'memory' ? 'MEM' : 'DOC' }}
-                </span>
-                -->
-                <button class="text-gray-300 group-hover:text-black dark:text-gray-600 dark:group-hover:text-white p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                </button>
              </div>
            </div>
          </li>
@@ -98,6 +92,7 @@ import api from '../services/api';
 import ConfirmationModal from './ConfirmationModal.vue';
 import { useToast } from 'vue-toastification';
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
+import { getIconForSource } from '../utils/iconResolver';
 
 const router = useRouter();
 const toast = useToast();
@@ -140,7 +135,10 @@ const fetchDocuments = async () => {
     documents.value = response.data;
   } catch (error) {
     console.error('Error fetching documents:', error);
-    toast.error('Failed to fetch documents');
+    const status = error.response?.status;
+    if (status !== 403 && status !== 413) {
+        toast.error('Failed to fetch documents');
+    }
   } finally {
     loading.value = false;
   }
@@ -166,7 +164,10 @@ const handleDeleteConfirm = async () => {
     itemToDelete.value = null;
   } catch (error) {
     console.error('Error deleting document:', error);
-    toast.error('Failed to delete item');
+    const status = error.response?.status;
+    if (status !== 403 && status !== 413) {
+        toast.error('Failed to delete item');
+    }
   } finally {
     deleting.value = false;
   }
@@ -180,6 +181,11 @@ const handleDeleteCancel = () => {
 const formatDate = (dateString) => {
   if (!dateString) return '';
   return new Date(dateString).toLocaleDateString() + ' ' + new Date(dateString).toLocaleTimeString();
+};
+
+const handleImageError = (e) => {
+    // Fallback if favicon fails to load (e.g., 404 from Google Favicon generated URL)
+    e.target.style.display = 'none';
 };
 
 onMounted(fetchDocuments);

@@ -31,3 +31,7 @@ class Memory(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     user = relationship("User", backref="memories")
+
+    @property
+    def source(self):
+        return self.source_llm

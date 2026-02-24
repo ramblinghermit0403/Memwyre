@@ -1,5 +1,6 @@
 import axios from 'axios';
 import router from '../router';
+import Swal from 'sweetalert2';
 // Delay store import or use inside interceptor
 // import { useAuthStore } from '../stores/auth'; // Removed top-level import
 
@@ -41,6 +42,42 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+
+        // Handle 403 Subscription Required OR Free Tier Limit Reached
+        if (error.response && error.response.status === 403) {
+            const detailMsg = error.response.data?.detail || '';
+            const isLimitError = detailMsg.toLowerCase().includes('limit') || detailMsg.toLowerCase().includes('subscription') || detailMsg.toLowerCase().includes('pro');
+
+            if (isLimitError) {
+                const detailMsg = error.response.data?.detail || 'Active subscription required. Please upgrade to Pro.';
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Upgrade Required',
+                    text: detailMsg,
+                    confirmButtonColor: '#3b82f6',
+                    confirmButtonText: 'View Upgrade Options'
+                }).then(() => {
+                    router.push('/billing');
+                });
+
+                return Promise.reject(error);
+            }
+        }
+
+        // Handle 413 Payload Too Large (For size limits)
+        if (error.response && error.response.status === 413) {
+            const detailMsg = error.response.data?.detail || 'This file exceeds your current plan limits.';
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Limit Exceeded',
+                text: detailMsg,
+                confirmButtonColor: '#3b82f6'
+            });
+
+            return Promise.reject(error);
+        }
 
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             if (isRefreshing) {

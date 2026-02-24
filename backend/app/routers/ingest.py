@@ -15,7 +15,7 @@ class UrlIngestRequest(BaseModel):
     url: HttpUrl
     tags: list[str] = []
 
-@router.post("/url")
+@router.post("/url", dependencies=[Depends(deps.require_subscription)])
 async def ingest_url(
     request: UrlIngestRequest,
     db: AsyncSession = Depends(deps.get_db),
@@ -36,28 +36,22 @@ async def ingest_url(
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to fetch URL: {str(e)}")
 
-    # 2. Check User Settings for Auto-Approve
+    # Content created directly from the UI is explicitly requested by the user,
+    # so we should auto-approve it regardless of background scanning settings.
     auto_approve = True
-    if current_user.settings:
-        if isinstance(current_user.settings, dict):
-            auto_approve = current_user.settings.get("auto_approve", True)
-        elif isinstance(current_user.settings, str):
-            import json
-            try:
-                s = json.loads(current_user.settings)
-                auto_approve = s.get("auto_approve", True)
-            except:
-                pass
                 
     initial_status = "approved" if auto_approve else "pending"
-    # Content created from UI is auto-approved and should NOT show in inbox
-    show_in_inbox = False
+    # Content created from UI should natively bypass inbox
+    show_in_inbox = not auto_approve
+    
+    # Enforce Usage Limits
+    await deps.verify_usage_limits(doc_type="memory", content_len=len(data["content"]), current_user=current_user, db=db)
     
     # 3. Create Memory Record
     memory = Memory(
         title=data["title"],
         content=data["content"],
-        source_llm="web", # or 'url-ingest'
+        source_llm=url_str, # Save the URL to display its Favicon later
         user_id=current_user.id,
         tags=request.tags,
         embedding_id=str(uuid.uuid4()), # Placeholder

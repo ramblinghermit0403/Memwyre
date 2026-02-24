@@ -217,9 +217,9 @@ async def save_memory(text: str, ctx: Context, source: str = "mcp", tags: Option
             return f"Error saving memory: {str(e)}"
 
 @mcp.tool()
-async def search_brain_vault(query: str, ctx: Context, purpose: str = "general") -> str:
+async def search_memwyre(query: str, ctx: Context, purpose: str = "general") -> str:
     """
-    The PRIMARY tool for searching the user's "Second Brain". Use this to retrieve relevant context, notes, code snippets, or past conversations from the MemWyre Vault.
+    The PRIMARY tool for searching the user's "MemWyre". Use this to retrieve relevant context, notes, code snippets, or past conversations from the MemWyre Vault.
     ALWAYS use this before answering questions that might require personal context.
     Args:
         query: The semantic search query (e.g., "python fastapi project structure", "notes on meeting with Bob", or "auth system specs").
@@ -240,7 +240,7 @@ async def search_brain_vault(query: str, ctx: Context, purpose: str = "general")
 @mcp.tool()
 async def get_inbox(ctx: Context) -> str:
     """
-    Get list of pending memories in the Inbox.
+    Get list of pending memories in the MemWyre Inbox.
     """
     async with AsyncSessionLocal() as db:
         try:
@@ -270,7 +270,7 @@ async def get_inbox(ctx: Context) -> str:
 @mcp.tool()
 async def get_document(doc_id: int, ctx: Context) -> str:
     """
-    Retrieve the full content of a specific document by ID.
+    Retrieve the full content of a specific document by ID from MemWyre.
     Args:
         doc_id: The ID of the document.
     """
@@ -299,7 +299,7 @@ async def get_document(doc_id: int, ctx: Context) -> str:
 @mcp.tool()
 async def generate_prompt(query: str, ctx: Context, template: str = "standard") -> str:
     """
-    Generate a prompt with retrieved context from the vault.
+    Generate a prompt with retrieved context from MemWyre.
     Args:
         query: The user's question or request.
         template: The template to use ("standard", "code", "summary").
@@ -353,7 +353,7 @@ QUESTION:
 @mcp.tool()
 async def update_memory(memory_id: str, content: str, ctx: Context) -> str:
     """
-    Update the content of an existing memory.
+    Update the content of an existing memory in MemWyre.
     Args:
         memory_id: The ID of the memory (must start with 'mem_').
         content: The new content.
@@ -417,7 +417,7 @@ async def update_memory(memory_id: str, content: str, ctx: Context) -> str:
 @mcp.tool()
 async def delete_memory(memory_id: str, ctx: Context) -> str:
     """
-    Delete a memory or document by ID.
+    Delete a memory or document by ID from MemWyre.
     Args:
         memory_id: The ID of the item (e.g., 'mem_1' or 'doc_5').
     """
@@ -485,7 +485,7 @@ async def delete_memory(memory_id: str, ctx: Context) -> str:
 @mcp.tool()
 async def list_memories(ctx: Context, limit: int = 10, offset: int = 0) -> str:
     """
-    List recent memories and documents in the vault.
+    List recent memories and documents in MemWyre.
     Args:
         limit: Number of items to return (default 10).
         offset: Pagination offset (default 0).
@@ -524,13 +524,13 @@ async def list_memories(ctx: Context, limit: int = 10, offset: int = 0) -> str:
 
 # --- RESOURCES ---
 @mcp.resource("brain://inbox")
-async def get_inbox_resource(ctx: Context) -> str:
+async def get_inbox_resource() -> str:
     """
     Read the current contents of the Inbox directly as a resource.
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, None)
             if not user:
                 return "Error: No user found."
                 
@@ -545,7 +545,7 @@ async def get_inbox_resource(ctx: Context) -> str:
             if not memories:
                 return "Inbox is empty."
                 
-            results = ["# Brain Vault Inbox"]
+            results = ["# MemWyre Inbox"]
             for mem in memories:
                 results.append(f"- [ID: mem_{mem.id}] ({mem.source_llm}): {mem.content[:100]}...")
                 
@@ -557,21 +557,21 @@ async def get_inbox_resource(ctx: Context) -> str:
 @mcp.prompt()
 def daily_briefing() -> str:
     """
-    Generate a briefing prompt based on recent memories.
+    Generate a briefing prompt based on recent memories from MemWyre.
     """
-    return "Please review my recent memories from the Brain Vault and provide a summary of what I've been working on and any outstanding tasks in my Inbox."
+    return "Please review my recent memories from MemWyre and provide a summary of what I've been working on and any outstanding tasks in my Inbox."
 
 @mcp.prompt()
 def project_context(project_name: str) -> str:
     """
-    Generate a prompt to focus on a specific project.
+    Generate a prompt to focus on a specific project using MemWyre.
     """
-    return f"Please search the Brain Vault for all information related to '{project_name}'. Summarize the key points, technical decisions, and current status."
+    return f"Please search MemWyre for all information related to '{project_name}'. Summarize the key points, technical decisions, and current status."
 
 @mcp.tool()
 async def search_by_date(start_date: str, ctx: Context, end_date: Optional[str] = None) -> str:
     """
-    Find memories created within a specific date range.
+    Find memories in MemWyre created within a specific date range.
     Args:
         start_date: Start date in YYYY-MM-DD format.
         end_date: End date in YYYY-MM-DD format (optional, defaults to end of start_date).
@@ -616,7 +616,7 @@ async def search_by_date(start_date: str, ctx: Context, end_date: Optional[str] 
 @mcp.tool()
 async def get_all_tags(ctx: Context) -> str:
     """
-    Get a list of all tags currently used in the Brain Vault. 
+    Get a list of all tags currently used in MemWyre. 
     Use this to understand the taxonomy of the user's knowledge.
     """
     async with AsyncSessionLocal() as db:

@@ -379,13 +379,11 @@ Instructions:
 
 **Response Format:**
 - Output your answer PURELY in Markdown.
-- Think step by step, then provide your answer.
-
-Reasoning:
-[Your step-by-step reasoning process here]
-
-Answer:
-[Your final answer here]
+- YOU MUST format your entire response exactly like this:
+<think>
+[Insert your step-by-step reasoning here]
+</think>
+[Insert your final user-facing answer here]
 
 ---
 ADDITIONAL AGENT INSTRUCTIONS:

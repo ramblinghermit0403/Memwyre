@@ -19,7 +19,7 @@ import json
 from datetime import datetime, timedelta
 from app.services.llm_service import llm_service
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(deps.require_subscription)])
 
 @router.post("/save_memory", response_model=LLMMemoryResponse)
 async def save_memory(
@@ -57,6 +57,9 @@ async def save_memory(
     show_in_inbox = True 
     if not is_external and status == "approved":
         show_in_inbox = False # Skip inbox for manual approvals
+        
+    # Enforce Usage Limits
+    await deps.verify_usage_limits(doc_type="memory", content_len=len(memory_in.content), current_user=current_user, db=db)
         
     # 3. Create Memory
     memory = Memory(

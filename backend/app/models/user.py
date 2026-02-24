@@ -17,3 +17,4 @@ class User(Base):
     
     chat_sessions = relationship("app.models.chat.ChatSession", back_populates="user", cascade="all, delete-orphan")
     api_keys = relationship("app.models.api_key.ApiKey", back_populates="user", cascade="all, delete-orphan")
+    subscription = relationship("Subscription", back_populates="user", uselist=False)

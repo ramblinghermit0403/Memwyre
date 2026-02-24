@@ -492,7 +492,11 @@ const ingest = async () => {
 
     } catch (error) {
         console.error(error);
-        toast.error('Operation failed: ' + (error.response?.data?.detail || error.message));
+        // Skip toast if it's a limits error handled globally by api.js
+        const status = error.response?.status;
+        if (status !== 403 && status !== 413) {
+            toast.error('Operation failed: ' + (error.response?.data?.detail || error.message));
+        }
     } finally {
         uploading.value = false;
     }

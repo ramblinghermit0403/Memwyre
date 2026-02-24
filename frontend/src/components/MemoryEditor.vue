@@ -130,7 +130,10 @@ const saveMemory = async () => {
     toast.success('Memory saved successfully');
   } catch (error) {
     console.error('Error saving memory:', error);
-    toast.error('Failed to save memory');
+    const status = error.response?.status;
+    if (status !== 403 && status !== 413) {
+        toast.error('Failed to save memory');
+    }
   } finally {
     loading.value = false;
   }

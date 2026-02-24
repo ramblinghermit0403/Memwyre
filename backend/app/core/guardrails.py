@@ -4,10 +4,14 @@ from fastapi import HTTPException
 # Basic Guardrails
 class GuardRails:
     def __init__(self):
-        # Allow listing risky terms to block
-        self.blocked_terms = [
-            # "ignore all previous instructions", # Prompt injection common phrase
-            # "system prompt",
+        # Compiled regex patterns for fast matching against common injection techniques
+        self.injection_patterns = [
+            re.compile(r"ignore\s+(all\s+)?previous\s+(instructions|directives|prompts)", re.IGNORECASE),
+            re.compile(r"disregard\s+(all\s+)?previous", re.IGNORECASE),
+            re.compile(r"you\s+are\s+now\s+(a\s+)?(dan|developer|unrestricted|god)", re.IGNORECASE),
+            re.compile(r"(reveal|print|show|output)\s+(your\s+)?(system\s+prompt|initial\s+instructions|core\s+directives)", re.IGNORECASE),
+            re.compile(r"forget\s+(everything|all\s+rules|your\s+instructions)", re.IGNORECASE),
+            re.compile(r"do\s+anything\s+now", re.IGNORECASE)
         ]
         
     def validate_input(self, text: str):
@@ -17,11 +21,10 @@ class GuardRails:
         if len(text) > 10000:
              raise HTTPException(status_code=400, detail="Input text too long (max 10000 chars)")
              
-        # Check for injection patterns (Basic)
-        lower_text = text.lower()
-        for term in self.blocked_terms:
-            if term in lower_text:
-                raise HTTPException(status_code=400, detail="Input contains blocked terms.")
+        # Check against injection regex patterns
+        for pattern in self.injection_patterns:
+            if pattern.search(text):
+                raise HTTPException(status_code=400, detail="Input violates safety policy (Injection detected).")
                 
         return True
 

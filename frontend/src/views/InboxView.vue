@@ -9,9 +9,6 @@
            <div class="w-1/3 flex flex-col bg-white dark:bg-surface rounded-xl shadow-sm border border-gray-200 dark:border-border overflow-hidden">
                <div class="p-4 border-b border-gray-200 dark:border-border flex justify-between items-center bg-gray-50/50 dark:bg-surface-2">
                    <h2 class="text-base font-semibold text-gray-900 dark:text-text-primary">Incoming Items</h2>
-                   <div class="flex gap-2 text-gray-400">
-                       <svg class="w-4 h-4 cursor-pointer hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" /></svg>
-                   </div>
                </div>
                
                <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
@@ -29,17 +26,27 @@
                                 : 'bg-white border-gray-200 dark:bg-surface-2 dark:border-border hover:border-black dark:hover:border-white']"
                    >
                        <h3 class="font-medium text-gray-900 dark:text-text-primary mb-1 line-clamp-2">{{ item.details }}</h3>
-                       <div class="flex justify-between items-end mt-2">
-                           <div class="flex flex-col gap-1">
-                               <span class="text-xs text-gray-500 dark:text-text-secondary">
-                                   {{ item.source === 'agent_drop' ? 'External AI' : (item.source || 'Unknown Source') }}
-                               </span>
-                               <span v-if="item.source === 'agent_drop'" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium w-fit bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600">
-                                   Unverified
-                               </span>
-                               <span :class="['inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium w-fit', item.status === 'approved' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200']">
-                                   {{ item.status === 'approved' ? 'Approved' : 'Pending' }}
-                               </span>
+                       <div class="flex justify-between items-end mt-3">
+                           <div class="flex flex-col gap-2">
+                               <div class="flex items-center gap-2">
+                                   <div class="w-5 h-5 flex items-center justify-center shrink-0 text-gray-400 dark:text-gray-500 rounded overflow-hidden">
+                                       <template v-if="getIconForSource(item).type === 'svg'">
+                                           <div v-html="getIconForSource(item).content" class="w-full h-full"></div>
+                                       </template>
+                                       <template v-else-if="getIconForSource(item).type === 'img'">
+                                           <img :src="getIconForSource(item).content" alt="Source" class="w-full h-full object-cover rounded-sm" @error="handleImageError($event)" />
+                                       </template>
+                                   </div>
+                                   <span class="text-xs text-gray-600 dark:text-text-secondary truncate max-w-[140px]">
+                                       {{ item.source === 'agent_drop' ? 'External AI' : (item.source || 'Unknown Source') }}
+                                   </span>
+                               </div>
+                                   <span v-if="item.source === 'agent_drop'" class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium w-fit bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600">
+                                       Unverified
+                                   </span>
+                                   <span :class="['inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium w-fit', item.status === 'approved' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200']">
+                                        {{ item.status === 'approved' ? 'Approved' : 'Pending' }}
+                                   </span>
                            </div>
                            <span class="text-[10px] text-gray-400">{{ formatTimeAgo(item.created_at) }}</span>
                        </div>
@@ -176,6 +183,7 @@ import api from '../services/api';
 import NavBar from '../components/NavBar.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useToast } from 'vue-toastification';
+import { getIconForSource } from '../utils/iconResolver';
 
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
@@ -279,6 +287,10 @@ const formatTimeAgo = (dateString) => {
     if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
     if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
     return `${Math.floor(diff / 86400)}d ago`;
+};
+
+const handleImageError = (e) => {
+    e.target.style.display = 'none';
 };
 
 const startEditing = (item) => {

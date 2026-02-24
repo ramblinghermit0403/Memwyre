@@ -95,8 +95,6 @@ class YouTubeService:
         video_id = self.get_video_id(url)
         if not video_id:
             raise ValueError("Invalid YouTube URL")
-
-    def extract_transcript(self, url: str) -> Optional[str]:
         """
         Extracts the transcript. Returns None if failed (instead of raising),
         so we can fallback to description.
@@ -188,8 +186,8 @@ class YouTubeService:
                         
                     # Fetch content
                     try:
-                        import requests
-                        r = requests.get(sub_url)
+                        import httpx
+                        r = httpx.get(sub_url, timeout=10.0)
                         if 'json3' in sub_url or sub_url.endswith('json3'):
                             import json
                             data = r.json()
@@ -204,11 +202,29 @@ class YouTubeService:
                                         text_parts.append(t)
                             return " ".join(text_parts)
                         else:
-                            # Raw text/XML/VTT? Return as is or try simple tag strip
-                            # If it's VTT/SRV3/XML, it's messy.
-                            # Just returning None to trigger Description fallback is safer than returning garbage XML.
-                            print("Subtitles found but not JSON3. Skipping robust parse.")
-                            pass
+                            # Fallback generic tag/time stripper (e.g., for .vtt or .srv1 or .xml)
+                            import re
+                            text = r.text
+                            # 1. Remove XML/HTML tags (e.g. <i>, </i>, <c>)
+                            text = re.sub(r'<[^>]+>', '', text)
+                            # 2. Remove timestamps (e.g., 00:00:00.000, 00:00:00,000)
+                            text = re.sub(r'\d{2}:\d{2}:\d{2}[\.,]\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}[\.,]\d{3}', '', text)
+                            # 3. Clean up VTT headers
+                            text = text.replace("WEBVTT\n", "").replace("Kind: captions\n", "").replace("Language: en\n", "")
+                            # 4. Remove empty lines and normalize whitespace
+                            lines = [line.strip() for line in text.split('\n') if line.strip() and not line.strip().isdigit()]
+                            
+                            # Join the cleaned lines
+                            cleaned_transcript = " ".join(lines)
+                            # Remove excessive whitespace
+                            cleaned_transcript = re.sub(r'\s+', ' ', cleaned_transcript).strip()
+                            
+                            if cleaned_transcript:
+                                return cleaned_transcript
+                            else:
+                                print("Regex fallback returned empty string.")
+                                return None
+                                
                     except Exception as inner_e:
                         print(f"yt-dlp sub fetch error: {inner_e}")
                         

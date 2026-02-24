@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest
+from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing
 from app.db.base import Base
 from app.db.session import engine
 import app.models # Register models
@@ -66,6 +66,7 @@ if settings.cors_origin_list == ["*"]:
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
+        expose_headers=["X-Requires-Subscription"],
     )
 else:
     app.add_middleware(
@@ -74,6 +75,7 @@ else:
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
+        expose_headers=["X-Requires-Subscription"],
     )
 
 # Rate Limiter
@@ -99,6 +101,7 @@ app.include_router(chat_api.router, prefix=f"{settings.API_V1_STR}/chat", tags=[
 from app.routers import user_api_keys
 app.include_router(user_api_keys.router, prefix=f"{settings.API_V1_STR}/user", tags=["api-keys"])
 app.include_router(ws.router, prefix="/ws", tags=["websocket"])
+app.include_router(billing.router, prefix=f"{settings.API_V1_STR}/billing", tags=["billing"])
 
 # Mount MCP Server (Streamable HTTP) - MUST be LAST since mount("/") is a catch-all
 # This allows remote connections (e.g. Cursor, Claude Desktop) via /mcp

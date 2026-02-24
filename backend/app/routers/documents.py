@@ -63,7 +63,7 @@ def extract_text_from_file(file_path: str, file_type: str) -> str:
 
     return text
 
-@router.post("/upload", response_model=Any)
+@router.post("/upload", response_model=Any, dependencies=[Depends(deps.require_subscription)])
 async def upload_document(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
@@ -100,6 +100,9 @@ async def upload_document(
         if os.path.exists(file_path):
             os.remove(file_path)
         raise HTTPException(status_code=400, detail="Could not extract text from file (empty)")
+        
+    # Enforce Usage Limits before Database insertion
+    await deps.verify_usage_limits(doc_type="document", content_len=len(text), current_user=current_user, db=db)
         
     # Cleanup file immediately after extraction? 
     # Or keep it? The original code didn't remove it explicitly unless error/cleanup.
@@ -149,7 +152,7 @@ class YouTubeUpload(BaseModel):
     url: str
     tags: List[str] = []
 
-@router.post("/upload-youtube", response_model=Any)
+@router.post("/upload-youtube", response_model=Any, dependencies=[Depends(deps.require_subscription)])
 async def upload_youtube(
     request: YouTubeUpload,
     background_tasks: BackgroundTasks,
@@ -159,17 +162,17 @@ async def upload_youtube(
     """
     Ingest a YouTube video transcript.
     """
-    # Try to extract transcript
+    # Run blocking operations in background threads to avoid freezing the FastAPI event loop
     try:
-        transcript = youtube_service.extract_transcript(request.url)
+        transcript = await asyncio.to_thread(youtube_service.extract_transcript, request.url)
     except Exception as e:
         print(f"Warning: Transcript extraction threw error: {e}")
         transcript = None
         
-    # Fetch real title and description
-    video_id = youtube_service.get_video_id(request.url)
-    title = youtube_service.get_video_title(request.url)
-    description = youtube_service.get_video_description(request.url)
+    # Fetch real title and description without blocking event loop
+    video_id = await asyncio.to_thread(youtube_service.get_video_id, request.url)
+    title = await asyncio.to_thread(youtube_service.get_video_title, request.url)
+    description = await asyncio.to_thread(youtube_service.get_video_description, request.url)
     
     final_content = ""
     # Merge Default Tags with Request Tags
@@ -182,6 +185,8 @@ async def upload_youtube(
     if transcript and transcript.strip():
         # Happy path
         final_content = transcript
+        # Verify limits based on the transcript length
+        await deps.verify_usage_limits(doc_type="memory", content_len=len(final_content), current_user=current_user, db=db)
     else:
         # Fallback path
         print(f"Fallback: Using description for {video_id}")
@@ -263,7 +268,7 @@ async def get_documents(
     
     return result_list
 
-@router.delete("/{doc_id}", response_model=Any)
+@router.delete("/{doc_id}", response_model=Any, dependencies=[Depends(deps.require_subscription)])
 async def delete_document(
     doc_id: int,
     db: AsyncSession = Depends(deps.get_db),

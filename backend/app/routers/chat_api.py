@@ -10,8 +10,8 @@ from app.api import deps
 from app.models.user import User
 from app.models.chat import ChatSession, ChatMessage, MessageRole
 from app.services.agent_service import agent_service
-from app.services.llm_service import llm_service
 from app.db.session import AsyncSessionLocal
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -126,6 +126,32 @@ async def send_message(
     # 2. Process with Agent (This automatically saves User and AI message to DB via SQLChatMessageHistory)
     # Note: AgentService handles db saves internally for messages.
     
+    # Verify Usage Limit (for Free Tier)
+    if not settings.DEV_MODE:
+        from sqlalchemy import func
+        from app.models.subscription import Subscription
+        
+        # Check subscription
+        sub_result = await db.execute(select(Subscription).where(Subscription.user_id == current_user.id))
+        sub = sub_result.scalars().first()
+        is_pro = sub and sub.status == "active"
+        
+        if not is_pro:
+            # Count user's total messages across all sessions
+            count_result = await db.execute(
+                select(func.count(ChatMessage.id))
+                .join(ChatSession)
+                .where(ChatSession.user_id == current_user.id, ChatMessage.role == "user")
+            )
+            msg_count = count_result.scalar() or 0
+            
+            if msg_count >= settings.FREE_CHAT_LIMIT:
+                raise HTTPException(
+                    status_code=403,
+                    detail=f"Free tier limit reached: {settings.FREE_CHAT_LIMIT} messages max. Please upgrade to Pro.",
+                    headers={"X-Requires-Subscription": "true"}
+                )
+
     # Process with Agent
     response = await agent_service.process_message(
         session_id=session_id,

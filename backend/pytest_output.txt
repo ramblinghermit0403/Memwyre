@@ -1,0 +1,50 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.12.3, pytest-8.4.1, pluggy-1.6.0
+codspeed: 4.0.0 (disabled, mode: walltime, callgraph: not supported, timer_resolution: 100.0ns)
+benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: C:\Users\himan\OneDrive\Documents\brain_vault\backend
+configfile: pyproject.toml
+plugins: anyio-4.9.0, langsmith-0.3.45, asyncio-0.26.0, benchmark-5.1.0, codspeed-4.0.0, recording-0.13.4, socket-0.7.0, syrupy-4.9.1
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 1 item / 1 error
+
+=================================== ERRORS ====================================
+_________________ ERROR collecting tests/test_protections.py __________________
+ImportError while importing test module 'C:\Users\himan\OneDrive\Documents\brain_vault\backend\tests\test_protections.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_protections.py:12: in <module>
+    from app.main import app
+app\main.py:6: in <module>
+    from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing
+app\routers\documents.py:11: in <module>
+    import aiofiles
+E   ModuleNotFoundError: No module named 'aiofiles'
+============================== warnings summary ===============================
+app\db\base.py:3
+  C:\Users\himan\OneDrive\Documents\brain_vault\backend\app\db\base.py:3: MovedIn20Warning: The ``declarative_base()`` function is now available as sqlalchemy.orm.declarative_base(). (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+    Base = declarative_base()
+
+app\services\vector_store.py:6
+  C:\\Users\\himan\\OneDrive\\Documents\\brain_vault\\backend\\app\\services\\vector_store.py:6: UserWarning: \u26a0\ufe0f  Using default SECRET_KEY \u2014 set a strong SECRET_KEY in .env for production!\n    from app.core.config import settings
+
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:323
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:323
+..\..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:323
+  C:\Users\himan\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_config.py:323: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: Type google._upb._message.MessageMapContainer uses PyType_Spec with a metaclass that has custom tp_new. This is deprecated and will no longer be allowed in Python 3.14.
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: Type google._upb._message.ScalarMapContainer uses PyType_Spec with a metaclass that has custom tp_new. This is deprecated and will no longer be allowed in Python 3.14.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR tests/test_protections.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+======================== 7 warnings, 1 error in 12.95s ========================

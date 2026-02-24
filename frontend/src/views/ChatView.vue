@@ -78,6 +78,34 @@ async function handleSend() {
 
 const showDeleteModal = ref(false);
 
+const expandedThoughts = ref(new Set());
+function toggleThought(msgId) {
+    const newSet = new Set(expandedThoughts.value);
+    if (newSet.has(msgId)) {
+        newSet.delete(msgId);
+    } else {
+        newSet.add(msgId);
+    }
+    expandedThoughts.value = newSet;
+}
+
+function getThinking(content) {
+    if (!content) return null;
+    
+    // Check for XML <think> tags (DeepSeek/Nova)
+    const xmlMatch = content.match(/<think>([\s\S]*?)<\/think>/i);
+    if (xmlMatch) return xmlMatch[1].trim();
+    
+    return null;
+}
+
+function getAnswer(content) {
+    if (!content) return '';
+    
+    // Remove XML <think> tags if present to isolate the answer
+    return content.replace(/<think>([\s\S]*?)<\/think>/ig, '').trim();
+}
+
 function handleClearHistory() {
   showDeleteModal.value = true;
 }
@@ -190,7 +218,19 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
                     </div>
                     <div class="max-w-[85%]">
                         <div class="bg-gray-100 dark:bg-surface-2 dark:text-gray-100 px-6 py-4 rounded-2xl rounded-tl-sm shadow-sm text-sm md:text-base leading-relaxed text-gray-800">
-                          <div class="prose prose-sm max-w-none dark:prose-invert" v-html="renderMarkdown(msg.content)"></div>
+                          <!-- Thinking Dropdown -->
+                          <div v-if="getThinking(msg.content)" class="mb-4">
+                              <button @click="toggleThought(msg.id)" class="flex items-center gap-2 text-xs md:text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors bg-gray-200/50 hover:bg-gray-200 dark:bg-surface/50 dark:hover:bg-surface px-3 py-1.5 rounded-lg group w-max border border-gray-200 dark:border-gray-700/50">
+                                  <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="{ 'rotate-90': expandedThoughts.has(msg.id) }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                  <span class="font-medium tracking-wide">Reasoning Process</span>
+                              </button>
+                              
+                              <div v-show="expandedThoughts.has(msg.id)" class="mt-2 pl-4 border-l-[3px] border-gray-300 dark:border-gray-600 text-sm text-gray-600 dark:text-gray-400 bg-gradient-to-r from-gray-50 to-transparent dark:from-surface/30 px-3 py-2 rounded-r-lg">
+                                 <div class="prose prose-sm max-w-none dark:prose-invert prose-p:mb-2 last:prose-p:mb-0 italic opacity-80" v-html="renderMarkdown(getThinking(msg.content))"></div>
+                              </div>
+                          </div>
+
+                          <div class="prose prose-sm max-w-none dark:prose-invert" v-html="renderMarkdown(getAnswer(msg.content))"></div>
                        </div>
                        <!-- Sources/Actions -->
                        <!-- Sources/Actions -->
