@@ -132,7 +132,7 @@ async def verify_usage_limits(
             if count and count >= settings.FREE_MEMORY_LIMIT:
                 raise HTTPException(
                     status_code=403, 
-                    detail="Free tier limit reached: 10 Memories max. Please upgrade to Pro.",
+                    detail="The free tier is currently disabled. Please upgrade to Pro inside the Billing page.",
                     headers={"X-Requires-Subscription": "true"}
                 )
         else: # Document
@@ -141,7 +141,7 @@ async def verify_usage_limits(
             if count and count >= settings.FREE_DOCUMENT_LIMIT:
                 raise HTTPException(
                     status_code=403, 
-                    detail="Free tier limit reached: 5 Documents max. Please upgrade to Pro.",
+                    detail="The free tier is currently disabled. Please upgrade to Pro inside the Billing page.",
                     headers={"X-Requires-Subscription": "true"}
                 )
     

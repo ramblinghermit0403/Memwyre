@@ -186,23 +186,10 @@
                  <p class="text-4xl font-extrabold tracking-tight">Simple, transparent plans.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <!-- Free Plan -->
-                <div class="p-8 border border-gray-200 dark:border-gray-800 rounded-3xl bg-white dark:bg-black flex flex-col h-full">
-                    <h3 class="text-2xl font-bold mb-2">Free</h3>
-                    <div class="text-4xl font-extrabold mb-6">$0<span class="text-lg text-gray-500 font-normal">/mo</span></div>
-                    <p class="text-gray-500 dark:text-gray-400 mb-8 flex-grow">Perfect for trying out MemWyre and organizing a few initial thoughts.</p>
-                    <ul class="space-y-4 mb-8 text-left">
-                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm">Up to 5 concurrent chats</span></li>
-                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm">Basic memory ingestion</span></li>
-                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm">Standard support</span></li>
-                    </ul>
-                    <router-link to="/register" class="w-full py-4 text-center border border-gray-200 dark:border-gray-800 text-black dark:text-white font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">Get Started</router-link>
-                </div>
-
+            <div class="max-w-xl mx-auto">
                 <!-- Pro Plan -->
                 <div class="p-8 border-2 border-black dark:border-white rounded-3xl bg-white dark:bg-black flex flex-col h-full relative">
-                    <div class="absolute top-0 right-8 transform -translate-y-1/2 bg-black dark:bg-white text-white dark:text-black px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase">Most Popular</div>
+                    <div class="absolute top-0 right-8 transform -translate-y-1/2 bg-black dark:bg-white text-white dark:text-black px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase">MemWyre Pro</div>
                     <h3 class="text-2xl font-bold mb-2">Unlimited</h3>
                     <div class="text-4xl font-extrabold mb-6">$10<span class="text-lg text-gray-500 font-normal">/mo</span></div>
                     <p class="text-gray-500 dark:text-gray-400 mb-8 flex-grow">For power users who need their complete second brain synchronized.</p>
@@ -260,7 +247,7 @@ const faqs = ref([
     },
     {
         question: "Are there plan limits?",
-        answer: "Our Free plan supports up to 5 concurrent chats and basic memory ingestion. To unlock unlimited chats and full feature access, upgrade to the Unlimited tier.",
+        answer: "Currently, MemWyre operates solely on the Unlimited Pro plan. This tier gives you full feature access to unlimited chats, memories, and documents, along with priority support to power your complete second brain.",
         isOpen: false
     },
      {

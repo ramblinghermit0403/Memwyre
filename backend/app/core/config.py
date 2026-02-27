@@ -73,11 +73,11 @@ class Settings(BaseSettings):
 
     # Feature Gating
     DEV_MODE: bool = False  # True = bypass all subscription checks
-    FREE_MEMORY_LIMIT: int = 10
-    FREE_DOCUMENT_LIMIT: int = 5
-    FREE_CHAT_LIMIT: int = 20
+    FREE_MEMORY_LIMIT: int = 0
+    FREE_DOCUMENT_LIMIT: int = 0
+    FREE_CHAT_LIMIT: int = 0
     MAX_CHARS_PER_MEMORY: int = 25000
-    MAX_CHARS_PER_DOC_FREE: int = 100000
+    MAX_CHARS_PER_DOC_FREE: int = 0
     MAX_CHARS_PER_DOC_PRO: int = 500000
 
     model_config = SettingsConfigDict(
