@@ -11,7 +11,7 @@
     "contextMenus"
   ],
   "host_permissions": [
-    "http://localhost:8000/*",
+    "https://api.memwyre.com/*",
     "https://*.memwyre.com/*"
   ],
   "background": {
@@ -45,7 +45,7 @@
     },
     {
       "matches": [
-        "http://localhost:5173/*",
+        "https://app.memwyre.com/*",
         "https://*.memwyre.com/*"
       ],
       "js": [
@@ -55,8 +55,8 @@
   ],
   "externally_connectable": {
     "matches": [
-      "http://localhost:5173/*",
-      "http://localhost:8000/*",
+      "https://app.memwyre.com/*",
+      "https://api.memwyre.com/*",
       "https://*.memwyre.com/*"
     ]
   },
