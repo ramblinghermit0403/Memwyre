@@ -13,8 +13,8 @@
             <a href="/#features" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Features</a>
             <a href="/#workflow" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Workflow</a>
             <a href="/#ecosystem" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Ecosystem</a>
+            <a href="/#pricing" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Pricing</a>
             <router-link to="/use-cases" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Use Cases</router-link>
-            <router-link to="/research" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Research</router-link>
             <a href="/#faq" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">FAQ</a>
           </div>
 

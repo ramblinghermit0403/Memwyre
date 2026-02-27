@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, func, JSON
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 
@@ -10,6 +10,7 @@ class ApiKey(Base):
     name = Column(String, nullable=False) # e.g. "Laptop", "Claude"
     key_hash = Column(String, unique=True, index=True, nullable=False)
     prefix = Column(String, nullable=False) # Store first few chars for display (e.g. "bv_sk_a1b2...")
+    scopes = Column(JSON, default=["mcp:read", "mcp:write"]) # Granular permissions
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     last_used_at = Column(DateTime(timezone=True), nullable=True)
     is_active = Column(Boolean, default=True)

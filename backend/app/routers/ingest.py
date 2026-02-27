@@ -15,7 +15,7 @@ class UrlIngestRequest(BaseModel):
     url: HttpUrl
     tags: list[str] = []
 
-@router.post("/url", dependencies=[Depends(deps.require_subscription)])
+@router.post("/url")
 async def ingest_url(
     request: UrlIngestRequest,
     db: AsyncSession = Depends(deps.get_db),

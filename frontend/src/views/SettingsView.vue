@@ -25,13 +25,6 @@
                   >
                       Integrations
                   </button>
-                  <button 
-                    @click="activeTab = 'data'"
-                    :class="activeTab === 'data' ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
-                    class="whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm transition-colors"
-                  >
-                      Data & Export
-                  </button>
               </nav>
           </div>
       </div>
@@ -122,13 +115,22 @@
                    <div class="mb-8">
                        <div class="flex items-center justify-between mb-4">
                            <h4 class="text-sm font-medium text-gray-900 dark:text-text-primary">Your API Keys</h4>
-                           <button 
-                                v-if="!showAddKeyForm"
-                                @click="showAddKeyForm = true"
-                                class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-black dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-200 transition-colors"
-                           >
-                               + Generate Key
-                           </button>
+                           <div class="flex items-center gap-2">
+                               <button 
+                                    @click="handleConnectClientClick"
+                                    class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm"
+                               >
+                                   <svg class="w-4 h-4 mr-1.5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                                   Connect MCP Client
+                               </button>
+                               <button 
+                                    v-if="!showAddKeyForm"
+                                    @click="showAddKeyForm = true"
+                                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-black dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-200 transition-colors shadow-sm"
+                               >
+                                   + Generate Key
+                               </button>
+                           </div>
                        </div>
 
                        <!-- Key Generation Form -->
@@ -181,16 +183,33 @@
                                    </div>
                                </div>
                            </div>
+                           
+                           <McpConnectionGuide 
+                                v-if="showGuideForKey === justGeneratedKey" 
+                                :apiKey="justGeneratedKey" 
+                                @close="showGuideForKey = null"
+                           />
                        </div>
 
                        <!-- Empty State -->
-                       <div v-if="apiKeys.length === 0 && !showAddKeyForm" class="text-center py-6 bg-gray-50 dark:bg-gray-700/30 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600">
-                           <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
-                           <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-text-primary">No API Keys</h3>
-                           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Generate a key to connect MCP clients.</p>
-                           <div class="mt-4">
-                               <button @click="showAddKeyForm = true" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-black dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-200 transition-colors">Generate Key</button>
+                       <div v-if="apiKeys.length === 0 && !showAddKeyForm" class="text-center py-8 bg-gray-50 dark:bg-gray-700/30 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600">
+                           <svg class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                           <h3 class="text-sm font-medium text-gray-900 dark:text-text-primary">No API Keys Found</h3>
+                           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-sm mx-auto mb-5">Generate an API key to connect Memwyre to external AI clients like Claude Desktop or Cursor.</p>
+                           <div class="flex justify-center gap-3">
+                               <button @click="showAddKeyForm = true" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-200 transition-colors shadow-sm">
+                                   <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                                   Generate First Key
+                               </button>
                            </div>
+                       </div>
+
+                       <!-- Global Connection Guide (used when handleConnectClientClick is called) -->
+                       <div v-if="showGlobalGuide" class="mb-6 animate-fade-in">
+                            <McpConnectionGuide 
+                                apiKey="<YOUR_API_KEY>" 
+                                @close="showGlobalGuide = false"
+                           />
                        </div>
 
                        <!-- List -->
@@ -205,8 +224,9 @@
                                             <span class="font-medium text-gray-900 dark:text-text-primary">{{ key.name }}</span>
                                             <span v-if="!key.is_active" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300">REVOKED</span>
                                         </div>
-                                        <div class="text-xs text-gray-500 dark:text-text-secondary font-mono mt-0.5">
-                                            {{ key.prefix }} • Created {{ new Date(key.created_at).toLocaleDateString() }}
+                                        <div class="text-xs text-gray-500 dark:text-text-secondary font-mono mt-0.5 flex items-center gap-2">
+                                            <span>{{ key.prefix }} • Created {{ new Date(key.created_at).toLocaleDateString() }}</span>
+                                            <button @click="showGuideForKey = showGuideForKey === ('<existing_key>') ? null : ('<existing_key>')" class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline font-sans ml-2">Setup Guide</button>
                                         </div>
                                     </div>
                                 </div>
@@ -214,6 +234,13 @@
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                 </button>
                             </div>
+                            
+                            <McpConnectionGuide 
+                                v-if="showGuideForKey === '<existing_key>'" 
+                                apiKey="<YOUR_API_KEY>" 
+                                @close="showGuideForKey = null" 
+                                class="mt-4"
+                            />
                        </div>
                    </div>
 
@@ -277,39 +304,6 @@
                   </div>
                </div>
           </div>
-
-          <!-- Data Tab -->
-          <div v-show="activeTab === 'data'" class="bg-white dark:bg-surface shadow rounded-lg px-8 py-8 border border-gray-100 dark:border-border animate-fade-in">
-              <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-text-primary mb-2">Export Data</h3>
-              <p class="text-sm text-gray-500 dark:text-text-secondary mb-6">Download your entire knowledge base in your preferred format.</p>
-              
-              <div class="flex space-x-4">
-                <button 
-                  @click="exportData('json')" 
-                  :disabled="exporting"
-                  class="inline-flex items-center px-4 py-3 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <LoadingLogo v-if="exporting" size="md" class="mr-3" />
-                  <svg v-else class="w-8 h-8 mr-3 text-gray-400 group-hover:text-black dark:group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                  <div class="text-left">
-                      <div class="text-xs text-gray-500 uppercase font-semibold">Format</div>
-                      <div class="text-base font-bold">{{ exporting ? 'Exporting...' : 'JSON' }}</div>
-                  </div>
-                </button>
-                <button 
-                  @click="exportData('md')" 
-                  :disabled="exporting"
-                  class="inline-flex items-center px-4 py-3 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                   <LoadingLogo v-if="exporting" size="md" class="mr-3" />
-                   <svg v-else class="w-8 h-8 mr-3 text-gray-400 group-hover:text-black dark:group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                  <div class="text-left">
-                      <div class="text-xs text-gray-500 uppercase font-semibold">Format</div>
-                      <div class="text-base font-bold">{{ exporting ? 'Exporting...' : 'Markdown' }}</div>
-                  </div>
-                </button>
-              </div>
-          </div>
       </div>
     </main>
     
@@ -334,6 +328,7 @@ import apiKeysService from '../services/apiKeys'; // Import Service
 import NavBar from '../components/NavBar.vue';
 import ThemeToggle from '../components/ThemeToggle.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
+import McpConnectionGuide from '../components/McpConnectionGuide.vue';
 import { useToast } from 'vue-toastification';
 
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
@@ -355,7 +350,6 @@ const tokenCopied = ref(false);
 // Loading States
 const addingKey = ref(false);
 const deletingKey = ref(false);
-const exporting = ref(false);
 
 // API Keys Logic
 const apiKeys = ref([]);
@@ -364,6 +358,23 @@ const newKeyName = ref("");
 const generatingKey = ref(false);
 const justGeneratedKey = ref(null);
 const keyCopied = ref(false);
+const showGuideForKey = ref(null);
+const showGlobalGuide = ref(false);
+
+const handleConnectClientClick = () => {
+    if (apiKeys.value.length === 0) {
+        // Prompt them to create a key first
+        showAddKeyForm.value = true;
+        toast.info("Please generate an API key first to connect your client.");
+    } else {
+        // Show the generic global guide
+        showGlobalGuide.value = true;
+        // Scroll into view
+        setTimeout(() => {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }, 100);
+    }
+};
 
 const loadApiKeys = async () => {
     try {
@@ -380,6 +391,7 @@ const generateKey = async () => {
     try {
         const res = await apiKeysService.createKey(newKeyName.value);
         justGeneratedKey.value = res.data.key;
+        showGuideForKey.value = res.data.key;
         toast.success("API Key generated successfully");
         newKeyName.value = "";
         showAddKeyForm.value = false;
@@ -488,24 +500,6 @@ const confirmDeleteKey = async () => {
     } finally {
         deletingKey.value = false;
     }
-};
-
-const exportData = async (format) => {
-  exporting.value = true;
-  try {
-    const response = await api.get(`/export/${format}`, { responseType: 'blob' });
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `brain_vault_export.${format}`);
-    document.body.appendChild(link);
-    link.click();
-    toast.success(`Exported as ${format.toUpperCase()}`);
-  } catch (error) {
-    toast.error('Export failed');
-  } finally {
-    exporting.value = false;
-  }
 };
 
 const copyToken = async () => {

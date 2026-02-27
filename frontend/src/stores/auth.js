@@ -6,6 +6,7 @@ export const useAuthStore = defineStore('auth', {
     state: () => {
         const token = localStorage.getItem('token');
         const refreshToken = localStorage.getItem('refreshToken');
+        const hasCompletedOnboarding = localStorage.getItem('hasCompletedOnboarding') === 'true';
         let user = null;
 
         const decodeUser = (t) => {
@@ -31,6 +32,7 @@ export const useAuthStore = defineStore('auth', {
             token: token || null,
             refreshToken: refreshToken || null,
             isAuthenticated: !!token,
+            hasCompletedOnboarding,
         };
     },
     actions: {
@@ -109,8 +111,14 @@ export const useAuthStore = defineStore('auth', {
             this.token = null;
             this.refreshToken = null;
             this.isAuthenticated = false;
+            this.hasCompletedOnboarding = false;
             localStorage.removeItem('token');
             localStorage.removeItem('refreshToken');
+            localStorage.removeItem('hasCompletedOnboarding');
         },
+        completeOnboarding() {
+            this.hasCompletedOnboarding = true;
+            localStorage.setItem('hasCompletedOnboarding', 'true');
+        }
     },
 });

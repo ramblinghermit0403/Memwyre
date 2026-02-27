@@ -178,7 +178,8 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useInboxStore } from '../stores/inbox';
-import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+import { useRouter, useRoute } from 'vue-router';
 import api from '../services/api';
 import NavBar from '../components/NavBar.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
@@ -188,7 +189,9 @@ import { getIconForSource } from '../utils/iconResolver';
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const store = useInboxStore();
+const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 const toast = useToast();
 const selectedItem = ref(null);
 // Script addition for similarityData

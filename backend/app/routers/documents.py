@@ -63,7 +63,7 @@ def extract_text_from_file(file_path: str, file_type: str) -> str:
 
     return text
 
-@router.post("/upload", response_model=Any, dependencies=[Depends(deps.require_subscription)])
+@router.post("/upload", response_model=Any)
 async def upload_document(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
@@ -152,7 +152,7 @@ class YouTubeUpload(BaseModel):
     url: str
     tags: List[str] = []
 
-@router.post("/upload-youtube", response_model=Any, dependencies=[Depends(deps.require_subscription)])
+@router.post("/upload-youtube", response_model=Any)
 async def upload_youtube(
     request: YouTubeUpload,
     background_tasks: BackgroundTasks,
@@ -268,7 +268,7 @@ async def get_documents(
     
     return result_list
 
-@router.delete("/{doc_id}", response_model=Any, dependencies=[Depends(deps.require_subscription)])
+@router.delete("/{doc_id}", response_model=Any)
 async def delete_document(
     doc_id: int,
     db: AsyncSession = Depends(deps.get_db),

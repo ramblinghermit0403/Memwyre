@@ -313,7 +313,7 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
         <div v-else class="flex-1 flex flex-col items-center justify-center p-4 z-10">
            <div class="max-w-3xl w-full">
               <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-8 text-left">
-                 Welcome, <span class="text-black dark:text-white">{{ authStore.user?.email?.split('@')[0] || 'Traveler' }}</span>
+                 Welcome, <span class="text-black dark:text-white">{{ authStore.user?.name || authStore.user?.email?.split('@')[0] || 'Traveler' }}</span>
               </h1>
               
               <div class="bg-white dark:bg-surface rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-2">

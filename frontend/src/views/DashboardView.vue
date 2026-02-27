@@ -59,11 +59,29 @@ inboxStore.fetchInbox();
 inboxStore.connectWebSocket();
 
 onMounted(() => {
-    const tourCompleted = localStorage.getItem('tour_completed');
-    if (!tourCompleted) {
-        const driver = createTour();
-        driver.drive();
-        localStorage.setItem('tour_completed', 'true');
+    checkAndTriggerTour();
+});
+
+const checkAndTriggerTour = () => {
+    // Only trigger if onboarding is actively completed, ensuring the modal is gone
+    if (authStore.hasCompletedOnboarding) {
+        const tourCompleted = localStorage.getItem('tour_completed');
+        if (!tourCompleted) {
+            // Slight delay ensures the DOM is fully rendered behind the modal fade
+            setTimeout(() => {
+                const driver = createTour();
+                driver.drive();
+                localStorage.setItem('tour_completed', 'true');
+            }, 300);
+        }
+    }
+};
+
+// If the user finishes onboarding while ON the dashboard, trigger it reactively
+import { watch } from 'vue';
+watch(() => authStore.hasCompletedOnboarding, (newVal) => {
+    if (newVal) {
+        checkAndTriggerTour();
     }
 });
 </script>

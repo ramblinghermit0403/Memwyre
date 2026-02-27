@@ -458,12 +458,19 @@ Rules:
         )
         
         try:
+            import re
+            
+            def clean_title(text: str) -> str:
+                # Remove <think> blocks
+                text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+                return text.strip()
+
              # 1. Try Bedrock First (Unconditionally)
             try:
                  llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0.7}, config=AWS_CONFIG)
                  messages = [SystemMessage(content=system_prompt), HumanMessage(content=conversation_context)]
                  res = await llm.ainvoke(messages)
-                 return res.content.strip()
+                 return clean_title(res.content)
             except Exception as e:
                  print(f"Bedrock title gen failed: {e}")
                  # Continue to fallbacks
@@ -476,13 +483,13 @@ Rules:
                 llm = ChatOpenAI(api_key=target_key, model="gpt-3.5-turbo", temperature=0.7)
                 messages = [SystemMessage(content=system_prompt), HumanMessage(content=conversation_context)]
                 res = await llm.ainvoke(messages)
-                return res.content.strip()
+                return clean_title(res.content)
             # Gemini
             else:
                 if target_key: genai.configure(api_key=target_key)
                 model = genai.GenerativeModel('gemini-1.5-flash')
                 res = model.generate_content(f"{system_prompt}\n\nConversation:\n{conversation_context}")
-                return res.text.strip()
+                return clean_title(res.text)
         except Exception as e:
             print(f"Title generation failed: {e}")
             return "New Chat"

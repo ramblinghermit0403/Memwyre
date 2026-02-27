@@ -12,6 +12,7 @@ from app.models.chat import ChatSession, ChatMessage, MessageRole
 from app.services.agent_service import agent_service
 from app.db.session import AsyncSessionLocal
 from app.core.config import settings
+from app.services.llm_service import llm_service
 
 router = APIRouter()
 

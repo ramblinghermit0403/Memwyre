@@ -1,11 +1,11 @@
-from typing import Any, List
+from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.api import deps
 from app.models.user import User
 from app.models.api_key import ApiKey
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from datetime import datetime
 import secrets
 import hashlib
@@ -14,14 +14,23 @@ router = APIRouter()
 
 class ApiKeyCreate(BaseModel):
     name: str
+    scopes: Optional[List[str]] = ["mcp:read", "mcp:write"] # Default full access for backward compatibility
 
 class ApiKeyResponse(BaseModel):
     id: int
     name: str
     prefix: str
+    scopes: List[str]
     created_at: datetime
     last_used_at: datetime | None
     is_active: bool
+    
+    @field_validator('scopes', mode='before')
+    @classmethod
+    def set_default_scopes(cls, v):
+        if v is None:
+            return ["mcp:read", "mcp:write"]
+        return v
     
     class Config:
         from_attributes = True
@@ -53,6 +62,7 @@ async def create_api_key(
         name=key_in.name,
         key_hash=hashed,
         prefix=raw_key[:10] + "...",
+        scopes=key_in.scopes,
         is_active=True
     )
     

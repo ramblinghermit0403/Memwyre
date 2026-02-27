@@ -71,7 +71,7 @@ async def get_all_tags(
 
 
 
-@router.post("/", response_model=MemorySchema, dependencies=[Depends(deps.require_subscription)])
+@router.post("/", response_model=MemorySchema)
 async def create_memory(
     memory_in: MemoryCreate,
     background_tasks: BackgroundTasks,
@@ -114,7 +114,7 @@ from app.models.document import Document
 class CheckDuplicateRequest(BaseModel):
     content: str
 
-@router.post("/check-duplicate", response_model=Any, dependencies=[Depends(deps.require_subscription)])
+@router.post("/check-duplicate", response_model=Any)
 async def check_duplicate(
     request: CheckDuplicateRequest,
     db: AsyncSession = Depends(deps.get_db),
@@ -246,7 +246,7 @@ async def get_daily_review(
         
     return results
 
-@router.put("/{memory_id}", response_model=MemorySchema, dependencies=[Depends(deps.require_subscription)])
+@router.put("/{memory_id}", response_model=MemorySchema)
 async def update_memory(
     memory_id: str,
     memory_in: MemoryUpdate,
@@ -344,7 +344,7 @@ async def update_memory(
         "type": "memory"
     }
 
-@router.delete("/{memory_id}", response_model=Any, dependencies=[Depends(deps.require_subscription)])
+@router.delete("/{memory_id}", response_model=Any)
 async def delete_memory(
     memory_id: str,
     db: AsyncSession = Depends(deps.get_db),

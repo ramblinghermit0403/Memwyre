@@ -80,11 +80,12 @@ def hash_key(key: str) -> str:
     return hashlib.sha256(key.encode()).hexdigest()
 
 # Helper to get current user async
-async def get_current_user(db, ctx: Context = None):
+async def get_current_user(db, ctx: Context = None, required_scope: str = None):
     """
     Get the current user based on:
     1. HTTP Headers (Multi-Tenant via Context)
     2. Environment Variables (Single-Tenant fallback)
+    Also validates required scopes if provided.
     """
     api_key = None
     
@@ -148,10 +149,11 @@ async def get_current_user(db, ctx: Context = None):
             result = await db.execute(select(ApiKey).filter(ApiKey.key_hash == hashed, ApiKey.is_active == True))
             key_record = result.scalars().first()
             if key_record:
-                # Update last used (fire and forget / async)
-                # To avoid blocking, we could skip this or spawn a task. For now, skip to keep simple.
-                # key_record.last_used_at = func.now() 
-                # await db.commit() 
+                
+                # Check scopes, default to allowing read/write if scopes aren't set (legacy keys)
+                scopes = key_record.scopes or ["mcp:read", "mcp:write"]
+                if required_scope and required_scope not in scopes:
+                    raise Exception(f"Permission denied: Missing required scope '{required_scope}'")
                 
                 result_user = await db.execute(select(User).filter(User.id == key_record.user_id))
                 return result_user.scalars().first()
@@ -162,6 +164,8 @@ async def get_current_user(db, ctx: Context = None):
                 # Verify JWT
                 payload = jwt.decode(api_key, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
                 user_id: str = payload.get("sub")
+                
+                # For JWT, assume full user access within MCP for now, or decode scopes if added to JWT later
                 if user_id:
                     result = await db.execute(select(User).filter(User.id == int(user_id)))
                     return result.scalars().first()
@@ -172,6 +176,7 @@ async def get_current_user(db, ctx: Context = None):
     # 4. Fallback Legacy Auth (Env Vars for ID/Email)
     # Only if NO API KEY was provided/found (to prevent accidental bypass)
     if not api_key:
+        # Fallback assume full access for local dev
         user_email = os.environ.get("BRAIN_VAULT_USER_EMAIL")
         if user_email:
             result = await db.execute(select(User).filter(User.email == user_email))
@@ -197,7 +202,7 @@ async def save_memory(text: str, ctx: Context, source: str = "mcp", tags: Option
     async with AsyncSessionLocal() as db:
         try:
             logger.info(f"MCP save_memory called. Source: {source}. Text length: {len(text)}")
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:write")
             if not user:
                 logger.error("No user found during save_memory")
                 return "Error: No user found."
@@ -227,7 +232,7 @@ async def search_memwyre(query: str, ctx: Context, purpose: str = "general") -> 
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:read")
             if not user:
                 return "Error: No user found."
                 
@@ -244,7 +249,7 @@ async def get_inbox(ctx: Context) -> str:
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:read")
             if not user:
                 return "Error: No user found."
                 
@@ -276,7 +281,7 @@ async def get_document(doc_id: int, ctx: Context) -> str:
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:read")
             if not user:
                 return "Error: No user found."
                 
@@ -306,7 +311,7 @@ async def generate_prompt(query: str, ctx: Context, template: str = "standard") 
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:read")
             if not user:
                 return "Error: No user found."
             
@@ -363,7 +368,7 @@ async def update_memory(memory_id: str, content: str, ctx: Context) -> str:
 
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:write")
             if not user:
                 return "Error: No user found."
 
@@ -423,7 +428,7 @@ async def delete_memory(memory_id: str, ctx: Context) -> str:
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:write")
             if not user:
                 return "Error: No user found."
 
@@ -492,7 +497,7 @@ async def list_memories(ctx: Context, limit: int = 10, offset: int = 0) -> str:
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:read")
             if not user:
                 return "Error: No user found."
                 
@@ -530,7 +535,7 @@ async def get_inbox_resource() -> str:
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, None)
+            user = await get_current_user(db, None, required_scope="mcp:read")
             if not user:
                 return "Error: No user found."
                 
@@ -578,7 +583,7 @@ async def search_by_date(start_date: str, ctx: Context, end_date: Optional[str] 
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:read")
             if not user:
                 return "Error: No user found."
                 
@@ -621,7 +626,7 @@ async def get_all_tags(ctx: Context) -> str:
     """
     async with AsyncSessionLocal() as db:
         try:
-            user = await get_current_user(db, ctx)
+            user = await get_current_user(db, ctx, required_scope="mcp:read")
             if not user:
                 return "Error: No user found."
             

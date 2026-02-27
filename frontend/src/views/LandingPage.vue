@@ -90,22 +90,22 @@
                 <div class="flex gap-6">
                     <span class="text-4xl font-light text-gray-200 dark:text-gray-700">01</span>
                     <div>
-                        <h3 class="text-2xl font-bold mb-2">Ingest</h3>
-                        <p class="text-gray-500 dark:text-gray-400">Drag & drop PDFs, paste URLs, or sync from your browser. We handle the parsing.</p>
+                        <h3 class="text-2xl font-bold mb-2">Ingestion via Browser/MCP</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Capture the web as you browse or connect directly from your IDE using our Model Context Protocol.</p>
                     </div>
                 </div>
                  <div class="flex gap-6">
                     <span class="text-4xl font-light text-gray-200 dark:text-gray-700">02</span>
                     <div>
-                        <h3 class="text-2xl font-bold mb-2">Connect</h3>
-                        <p class="text-gray-500 dark:text-gray-400">AI automatically tags and links your content, creating a navigable graph of knowledge.</p>
+                        <h3 class="text-2xl font-bold mb-2">Context Organization</h3>
+                        <p class="text-gray-500 dark:text-gray-400">AI automatically parses, tags, and stores your documents, notes, and links, building your central brain.</p>
                     </div>
                 </div>
                  <div class="flex gap-6">
                     <span class="text-4xl font-light text-gray-200 dark:text-gray-700">03</span>
                     <div>
-                        <h3 class="text-2xl font-bold mb-2">Retrieve</h3>
-                        <p class="text-gray-500 dark:text-gray-400">Ask questions naturally. Get synthesized answers with direct citations to your sources.</p>
+                        <h3 class="text-2xl font-bold mb-2">Seamless AI Chat</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Retrieve context naturally through our UI or via your own local LLMs configured with your MemWyre MCP.</p>
                     </div>
                 </div>
             </div>
@@ -178,7 +178,45 @@
         </div>
     </div>
 
+    <!-- Pricing Section -->
+    <div id="pricing" class="py-16 border-y-0 border-transparent bg-gray-50 dark:bg-gray-900/30">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16">
+                 <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Pricing</h2>
+                 <p class="text-4xl font-extrabold tracking-tight">Simple, transparent plans.</p>
+            </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Free Plan -->
+                <div class="p-8 border border-gray-200 dark:border-gray-800 rounded-3xl bg-white dark:bg-black flex flex-col h-full">
+                    <h3 class="text-2xl font-bold mb-2">Free</h3>
+                    <div class="text-4xl font-extrabold mb-6">$0<span class="text-lg text-gray-500 font-normal">/mo</span></div>
+                    <p class="text-gray-500 dark:text-gray-400 mb-8 flex-grow">Perfect for trying out MemWyre and organizing a few initial thoughts.</p>
+                    <ul class="space-y-4 mb-8 text-left">
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm">Up to 5 concurrent chats</span></li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm">Basic memory ingestion</span></li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm">Standard support</span></li>
+                    </ul>
+                    <router-link to="/register" class="w-full py-4 text-center border border-gray-200 dark:border-gray-800 text-black dark:text-white font-bold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">Get Started</router-link>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="p-8 border-2 border-black dark:border-white rounded-3xl bg-white dark:bg-black flex flex-col h-full relative">
+                    <div class="absolute top-0 right-8 transform -translate-y-1/2 bg-black dark:bg-white text-white dark:text-black px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase">Most Popular</div>
+                    <h3 class="text-2xl font-bold mb-2">Unlimited</h3>
+                    <div class="text-4xl font-extrabold mb-6">$10<span class="text-lg text-gray-500 font-normal">/mo</span></div>
+                    <p class="text-gray-500 dark:text-gray-400 mb-8 flex-grow">For power users who need their complete second brain synchronized.</p>
+                    <ul class="space-y-4 mb-8 text-left">
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-black dark:text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">Unlimited concurrent chats</span></li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-black dark:text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">Full database synchronization</span></li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-black dark:text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">Access to premium models</span></li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-black dark:text-white shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">Priority support</span></li>
+                    </ul>
+                    <router-link to="/register" class="w-full py-4 text-center bg-black dark:bg-white text-white dark:text-black font-bold rounded-xl hover:opacity-90 transition-opacity">Upgrade Now</router-link>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- FAQ Section -->
     <div id="faq" class="py-16 px-6 lg:px-8 max-w-3xl mx-auto">
@@ -211,23 +249,23 @@ import { ref, onMounted } from 'vue';
 
 const faqs = ref([
     {
-        question: "What exactly is a 'Second Brain'?",
-        answer: "A Second Brain is a personal system for recording, organizing, and retrieving the information that matters to you. MemWyre automates this process using AI to link and surface relevant info when you need it.",
+        question: "Is my data secure?",
+        answer: "Yes. Your memory vault is fully private. We use industry-standard encryption, and your ingested documents, links, and snippets are only accessible via your securely authenticated API keys and web sessions.",
         isOpen: false
     },
     {
-        question: "What kind of content can I add?",
-        answer: "MemWyre supports a wide range of formats. You can upload PDF documents, text files, markdown notes, and even ingest content directly from YouTube videos and web pages.",
+        question: "Which AI models do you support?",
+        answer: "MemWyre supports a wide variety of state-of-the-art models for extraction and conversational RAG. Paid plans gain access to premium models to provide higher accuracy responses.",
         isOpen: false
     },
     {
-        question: "How does the AI Chat work?",
-        answer: "We use Retrieval-Augmented Generation (RAG). When you ask a question, MemWyre searches your documents for relevant context and feeds it to the AI, ensuring the answer is grounded in your actual data.",
+        question: "Are there plan limits?",
+        answer: "Our Free plan supports up to 5 concurrent chats and basic memory ingestion. To unlock unlimited chats and full feature access, upgrade to the Unlimited tier.",
         isOpen: false
     },
      {
-        question: "Can I use MemWyre offline?",
-        answer: "The local version of MemWyre can run entirely on your machine. However, certain AI features may require an internet connection depending on your configuration (e.g., using OpenAI vs local LLMs).",
+        question: "How does the MCP integration work?",
+        answer: "The Model Context Protocol (MCP) server securely connects your local AI IDEs (like Cursor/VS Code) and Claude Desktop directly to your MemWyre brain, allowing the assistant to pull from your proprietary context in real-time.",
         isOpen: false
     }
 ]);
