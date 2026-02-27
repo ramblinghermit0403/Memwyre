@@ -1,6 +1,7 @@
 // Background script for Brain Vault Extension
 
-const API_BASE_URL = 'http://localhost:8000/api/v1';
+// Default to production, but allow easy switch for local dev
+const API_BASE_URL = 'https://server.memwyre.tech/api/v1'; // Change to 'http://localhost:8000/api/v1' for local dev
 
 // --- Auth Helper ---
 

@@ -34,7 +34,7 @@
           </h3>
           <ul class="list-disc pl-5 space-y-2 mb-4">
             <li>The extension uses these permissions to extract text, chat history, and context from specific AI platforms (such as ChatGPT, Claude, Gemini, Perplexity) when you explicitly initiate an action.</li>
-            <li><strong>Usage:</strong> This data is strictly used to create a memory or search context in your MemWyre unified knowledge base. It is securely transmitted to the MemWyre API (<code>api.memwyre.com</code>).</li>
+            <li><strong>Usage:</strong> This data is strictly used to create a memory or search context in your MemWyre unified knowledge base. It is securely transmitted to the MemWyre API (<code>server.memwyre.tech</code>).</li>
           </ul>
 
           <h3 class="text-lg font-semibold text-gray-900 mb-3 mt-6 flex items-center">
@@ -61,7 +61,7 @@
 
         <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Contact Information</h2>
         <p class="mb-6 leading-relaxed">
-          If you have any questions regarding this Privacy Policy or the MemWyre Extension, you may contact us through standard support channels on our platform at <a href="https://app.memwyre.com" class="text-indigo-600 hover:text-indigo-800 underline">app.memwyre.com</a>.
+          If you have any questions regarding this Privacy Policy or the MemWyre Extension, you may contact us through standard support channels on our platform at <a href="https://memwyre.tech" class="text-indigo-600 hover:text-indigo-800 underline">memwyre.tech</a>.
         </p>
       </div>
       

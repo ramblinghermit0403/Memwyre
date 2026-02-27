@@ -10,7 +10,7 @@ The MemWyre Extension requires specific permissions to function. We only collect
 
 1. **Active Tab / Scripting (`activeTab`, `scripting`)**
    - The extension uses these permissions to extract text, chat history, and context from specific AI platforms (such as ChatGPT, Claude, Gemini, Perplexity) when you explicitly initiate an action.
-   - **Usage:** This data is strictly used to create a memory or search context in your MemWyre unified knowledge base. It is securely transmitted to the MemWyre API (`api.memwyre.com`).
+   - **Usage:** This data is strictly used to create a memory or search context in your MemWyre unified knowledge base. It is securely transmitted to the MemWyre API (`server.memwyre.tech`).
 
 2. **Storage (`storage`)**
    - We use local extension storage to securely store your authentication token (Access Token).
@@ -25,4 +25,4 @@ You maintain full control over the data processed by the Extension:
 - You can revoke access by uninstalling the Extension at any time, which also clears the locally stored authentication token.
 
 ## Contact Information
-If you have any questions regarding this Privacy Policy or the MemWyre Extension, you may contact us through standard support channels on our platform at `app.memwyre.com`.
+If you have any questions regarding this Privacy Policy or the MemWyre Extension, you may contact us through standard support channels on our platform at `memwyre.tech`.

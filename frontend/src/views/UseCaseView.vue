@@ -10,35 +10,59 @@
                     <span class="text-gray-400">Memwyre Remembers.</span>
                 </h1>
                 <p class="text-xl text-gray-500 dark:text-gray-400 leading-relaxed max-w-lg">
-                    Memwyre captures everything your team does with AI—research, code, decisions—and turns it into persistent, shareable knowledge.
+                    Memwyre captures everything you do with AI—research, code, decisions—and turns it into persistent, accessible knowledge tailored to your workflow.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
                     <router-link to="/register" class="px-8 py-4 bg-black dark:bg-white text-white dark:text-black text-lg font-bold rounded-full hover:opacity-90 transition-opacity text-center">
                         See How It Works
                     </router-link>
-                    <a href="mailto:sales@memwyre.com" class="px-8 py-4 border border-gray-200 dark:border-gray-800 text-black dark:text-white text-lg font-bold rounded-full hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-center">
+                    <a href="mailto:sales@memwyre.tech" class="px-8 py-4 border border-gray-200 dark:border-gray-800 text-black dark:text-white text-lg font-bold rounded-full hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-center">
                         Talk to Us
                     </a>
                 </div>
             </div>
             
             <!-- Visual Diagram -->
-            <div class="relative p-1 bg-gradient-to-br from-gray-200 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-800">
-                <div class="bg-white dark:bg-black p-8 rounded-[22px] flex flex-col items-center justify-center space-y-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-900 rounded-full flex items-center justify-center font-bold">User</div>
-                        <div class="h-0.5 w-8 bg-gray-300 dark:bg-gray-700"></div>
-                        <div class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm">AI Tools</div>
+            <div class="relative min-h-[400px] w-full max-w-lg mx-auto rounded-3xl bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 flex items-center justify-center p-8 overflow-hidden group shadow-2xl">
+                <!-- Ambient Glow -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/20 dark:bg-blue-500/30 rounded-full blur-[80px] opacity-60 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                
+                <!-- Central Node: Memwyre Brain -->
+                <div class="relative z-10 w-32 h-32 rounded-3xl bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-gray-200 dark:border-gray-700 shadow-2xl flex flex-col items-center justify-center transform group-hover:scale-105 transition-all duration-500">
+                    <svg class="w-10 h-10 text-black dark:text-white mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span class="text-sm font-bold tracking-tight text-black dark:text-white">Brain</span>
+                </div>
+
+                <!-- Floating Elements -->
+                <div class="absolute top-8 left-8 p-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl flex items-center gap-3 animate-float-1">
+                    <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                     </div>
-                    <div class="h-8 w-0.5 bg-gray-300 dark:bg-gray-700"></div>
-                    <div class="w-full p-6 bg-black text-white dark:bg-white dark:text-black rounded-xl text-center font-bold text-xl shadow-xl">
-                        Memwyre Inbox
+                    <div class="text-sm font-bold shadow-sm">You</div>
+                </div>
+
+                <div class="absolute top-12 right-6 p-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl flex items-center gap-3 animate-float-2">
+                    <div class="w-8 h-8 rounded-full bg-purple-50 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                     </div>
-                    <div class="h-8 w-0.5 bg-gray-300 dark:bg-gray-700"></div>
-                    <div class="flex gap-4 w-full">
-                        <div class="flex-1 p-4 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-center text-sm font-medium">Teams</div>
-                        <div class="flex-1 p-4 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl text-center text-sm font-medium">Future Sessions</div>
+                    <div class="text-sm font-bold shadow-sm">AI Tools</div>
+                </div>
+
+                <div class="absolute bottom-16 left-6 p-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl flex items-center gap-3 animate-float-3">
+                    <div class="w-8 h-8 rounded-full bg-green-50 dark:bg-green-900/50 flex items-center justify-center text-green-600 dark:text-green-400">
+                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                     </div>
+                    <div class="text-sm font-bold shadow-sm">IDE / Web</div>
+                </div>
+
+                <div class="absolute bottom-8 right-8 p-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl flex flex-col items-start gap-1 animate-float-2">
+                    <div class="flex items-center gap-2 mb-1">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <div class="text-xs text-gray-500 font-bold uppercase tracking-wider">Context</div>
+                    </div>
+                    <div class="text-sm font-bold shadow-sm">Future Sessions</div>
                 </div>
             </div>
         </div>
@@ -53,210 +77,215 @@
             </blockquote>
              
              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-                 <div class="p-6 border-l-4 border-black dark:border-white">
-                     <div class="font-bold text-lg mb-2">Ephemeral Interactions</div>
-                     <p class="text-gray-500 dark:text-gray-400">Employees use AI across dozens of tools, but sessions vanish when tabs close.</p>
+                 <div class="p-6 border-l-4 border-black dark:border-white bg-white dark:bg-black shadow-sm rounded-r-xl">
+                     <div class="font-bold text-lg mb-2 text-black dark:text-white">Ephemeral Interactions</div>
+                     <p class="text-gray-500 dark:text-gray-400 leading-relaxed">You use AI across dozens of tools, but those valuable sessions vanish the moment tabs close.</p>
                  </div>
-                 <div class="p-6 border-l-4 border-gray-300 dark:border-gray-700">
-                     <div class="font-bold text-lg mb-2">Locked Insights</div>
-                     <p class="text-gray-500 dark:text-gray-400">Valuable context lives inside chat logs, prompts, and half-written docs.</p>
+                 <div class="p-6 border-l-4 border-gray-300 dark:border-gray-700 bg-white/50 dark:bg-black/50 rounded-r-xl">
+                     <div class="font-bold text-lg mb-2 text-black dark:text-white">Locked Insights</div>
+                     <p class="text-gray-500 dark:text-gray-400 leading-relaxed">Crucial context, code snippets, and structured parameters live trapped inside isolated chat logs.</p>
                  </div>
-                 <div class="p-6 border-l-4 border-gray-300 dark:border-gray-700">
-                     <div class="font-bold text-lg mb-2">Context Reset</div>
-                     <p class="text-gray-500 dark:text-gray-400">After a few days, the reasoning is gone. You start from zero.</p>
+                 <div class="p-6 border-l-4 border-gray-300 dark:border-gray-700 bg-white/50 dark:bg-black/50 rounded-r-xl">
+                     <div class="font-bold text-lg mb-2 text-black dark:text-white">Context Reset</div>
+                     <p class="text-gray-500 dark:text-gray-400 leading-relaxed">After a weekend away, the reasoning behind prior complex AI outputs is gone. You start from zero.</p>
                  </div>
-                 <div class="p-6 border-l-4 border-black dark:border-white">
-                     <div class="font-bold text-lg mb-2">Redundant Work</div>
-                     <p class="text-gray-500 dark:text-gray-400">Teams repeat the same research again and again, unaware it was already solved.</p>
+                 <div class="p-6 border-l-4 border-black dark:border-white bg-white dark:bg-black shadow-sm rounded-r-xl">
+                     <div class="font-bold text-lg mb-2 text-black dark:text-white">Redundant Work</div>
+                     <p class="text-gray-500 dark:text-gray-400 leading-relaxed">You repeat the same research and re-prompt the same patterns again and again, wasting time.</p>
                  </div>
              </div>
         </div>
     </div>
 
-    <!-- 3. THE USE CASE -->
+    <!-- 3. DETAILED USE CASES (Grid) -->
     <div class="py-32 max-w-7xl mx-auto px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row gap-16">
-            <div class="md:w-1/3">
-                 <h2 class="text-4xl font-black mb-6">Enterprise Research &<br>Knowledge Continuity</h2>
-                 <p class="text-gray-500 dark:text-gray-400 text-lg">
-                     For Strategy teams, engineers, consultants, and analysts doing market research, system design, or compliance analysis.
-                 </p>
+        <div class="text-center mb-20">
+             <h2 class="text-4xl lg:text-5xl font-black mb-6">Designed for How You Work</h2>
+             <p class="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+                 Memwyre isn't just a note app. It's a cognitive bridging tool built for the specific ways different professionals leverage AI.
+             </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Use Case 1: Software Engineers -->
+            <div class="p-10 border border-gray-200 dark:border-gray-800 rounded-3xl bg-white dark:bg-black flex flex-col hover:border-black dark:hover:border-white transition-colors">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-14 h-14 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-black dark:text-white border border-gray-100 dark:border-gray-800 shadow-sm">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold">Software Engineers</h3>
+                </div>
+                <div class="space-y-6 flex-grow">
+                    <div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-2">The Problem</h4>
+                        <p class="text-gray-600 dark:text-gray-400">Losing the context of deep debugging sessions, complex architectural choices made with AI, and scattered, hard-won code snippets.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-green-500 mb-2">Memwyre Solution</h4>
+                        <p class="text-black dark:text-gray-200 font-medium">Connect your IDE directly via MCP.</p>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">Past bug fixes, API specs, and AI chats become instantly searchable context for your next coding session, right inside Cursor or VS Code.</p>
+                    </div>
+                </div>
             </div>
-            <div class="md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-8 bg-gray-50 dark:bg-gray-900 rounded-2xl">
-                    <div class="text-4xl mb-4">🔄</div>
-                    <h3 class="font-bold mb-2">Knowledge Resets</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Every session starts fresh, losing prior depth.</p>
+
+            <!-- Use Case 2: Researchers & Analysts -->
+            <div class="p-10 border border-gray-200 dark:border-gray-800 rounded-3xl bg-white dark:bg-black flex flex-col hover:border-black dark:hover:border-white transition-colors">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-14 h-14 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-black dark:text-white border border-gray-100 dark:border-gray-800 shadow-sm">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold">Researchers & Analysts</h3>
                 </div>
-                <div class="p-8 bg-gray-50 dark:bg-gray-900 rounded-2xl">
-                    <div class="text-4xl mb-4">🥶</div>
-                    <h3 class="font-bold mb-2">Cold Starts</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">New hires can't tap into the team's past AI work.</p>
-                </div>
-                <div class="p-8 bg-gray-50 dark:bg-gray-900 rounded-2xl">
-                    <div class="text-4xl mb-4">🧱</div>
-                    <h3 class="font-bold mb-2">Siloed Effort</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">One person's breakthrough doesn't help the team.</p>
+                <div class="space-y-6 flex-grow">
+                     <div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-2">The Problem</h4>
+                        <p class="text-gray-600 dark:text-gray-400">Drowning in open tabs, PDFs, and disjointed articles. Key insights and thematic connections are easily lost or siloed across tools.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-green-500 mb-2">Memwyre Solution</h4>
+                        <p class="text-black dark:text-gray-200 font-medium">Instantly capture and synthesize.</p>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">The Browser Extension grabs highlights while Unified Ingestion parses PDFs. Use conversational chat to synthesize findings across a massive, private body of research.</p>
+                    </div>
                 </div>
             </div>
+
+             <!-- Use Case 3: Product Managers -->
+            <div class="p-10 border border-gray-200 dark:border-gray-800 rounded-3xl bg-white dark:bg-black flex flex-col hover:border-black dark:hover:border-white transition-colors">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-14 h-14 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-black dark:text-white border border-gray-100 dark:border-gray-800 shadow-sm">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold">Product Managers</h3>
+                </div>
+                <div class="space-y-6 flex-grow">
+                     <div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-2">The Problem</h4>
+                        <p class="text-gray-600 dark:text-gray-400">Competitor research, user feedback analysis, and feature brainstorming are scattered across various docs and ephemeral AI chat histories.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-green-500 mb-2">Memwyre Solution</h4>
+                        <p class="text-black dark:text-gray-200 font-medium">A unified signal inbox.</p>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">Gather market signals and parse user feedback documents centrally. Query your second brain to rapidly draft PRDs and business cases grounded in existing, tracked research.</p>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Use Case 4: Students & Learners -->
+            <div class="p-10 border border-gray-200 dark:border-gray-800 rounded-3xl bg-white dark:bg-black flex flex-col hover:border-black dark:hover:border-white transition-colors">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-14 h-14 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center text-black dark:text-white border border-gray-100 dark:border-gray-800 shadow-sm">
+                        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold">Students & Learners</h3>
+                </div>
+                <div class="space-y-6 flex-grow">
+                     <div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-2">The Problem</h4>
+                        <p class="text-gray-600 dark:text-gray-400">Forgetting the precise details of long YouTube tutorials, complex research papers, and online courses shortly after consuming them.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-green-500 mb-2">Memwyre Solution</h4>
+                        <p class="text-black dark:text-gray-200 font-medium">Active recall on demand.</p>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">Ingest YouTube video transcripts and course materials. Use conversational chat to actively test your knowledge or ask highly specific follow-up questions months later.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- 4. HOW MEMWYRE FITS (Steps) -->
-    <div class="bg-black text-white py-32">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8">
-            <h2 class="text-3xl font-bold mb-16 text-center">Knowledge Flow</h2>
-            <div class="space-y-16 relative before:absolute before:left-8 before:top-0 before:bottom-0 before:w-0.5 before:bg-gray-800">
-                
-                <!-- Step 1 -->
-                <div class="relative pl-24">
-                    <div class="absolute left-4 top-0 w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold z-10">1</div>
-                    <h3 class="text-2xl font-bold mb-2">Work With AI As Usual</h3>
-                    <p class="text-gray-400 mb-4">Employees use ChatGPT, Copilot, internal LLMs, or custom agents.</p>
-                    <div class="text-sm border border-gray-700 inline-block px-3 py-1 rounded text-gray-300">Nothing new to learn. No workflow changes.</div>
-                </div>
-
-                <!-- Step 2 -->
-                 <div class="relative pl-24">
-                    <div class="absolute left-4 top-0 w-8 h-8 rounded-full bg-gray-800 text-white border border-gray-600 flex items-center justify-center font-bold z-10">2</div>
-                    <h3 class="text-2xl font-bold mb-2">Memwyre Captures the Signal</h3>
-                    <p class="text-gray-400 mb-4">Usually lost questions, reasoning paths, and conclusions automatically flow into a <strong>personal knowledge inbox</strong>.</p>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="relative pl-24">
-                    <div class="absolute left-4 top-0 w-8 h-8 rounded-full bg-gray-800 text-white border border-gray-600 flex items-center justify-center font-bold z-10">3</div>
-                    <h3 class="text-2xl font-bold mb-2">Knowledge Becomes Durable</h3>
-                    <p class="text-gray-400 mb-4">Links related work across sessions. Preserves timelines and decisions.</p>
-                    <div class="text-sm text-gray-500 italic">"What your team learns today is still usable next quarter."</div>
-                </div>
-
-                 <!-- Step 4 -->
-                <div class="relative pl-24">
-                    <div class="absolute left-4 top-0 w-8 h-8 rounded-full bg-gray-800 text-white border border-gray-600 flex items-center justify-center font-bold z-10">4</div>
-                    <h3 class="text-2xl font-bold mb-2">Cold Start Is Eliminated</h3>
-                    <p class="text-gray-400">Restores context upon return. Surfaces prior conclusions. Shows what’s unresolved.</p>
-                </div>
-
-                 <!-- Step 5 -->
-                <div class="relative pl-24">
-                    <div class="absolute left-4 top-0 w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold z-10">5</div>
-                    <h3 class="text-2xl font-bold mb-2">Knowledge Is Shared (Safely)</h3>
-                    <p class="text-gray-400">Share research internally. Build on each other’s work. Avoid duplicating effort.</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- 5. BEFORE vs AFTER -->
-    <div class="py-32 px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2">
-            <div class="p-12 bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
-                <h3 class="text-xl font-bold uppercase tracking-widest text-gray-400 mb-8">Before Memwyre</h3>
-                <ul class="space-y-6 text-lg text-gray-500 dark:text-gray-400">
-                    <li class="flex items-center gap-3"><span class="text-red-400">×</span> AI usage is ephemeral</li>
-                    <li class="flex items-center gap-3"><span class="text-red-400">×</span> Knowledge is siloed</li>
-                    <li class="flex items-center gap-3"><span class="text-red-400">×</span> Context is lost</li>
-                    <li class="flex items-center gap-3"><span class="text-red-400">×</span> Rework is constant</li>
-                </ul>
+    <div class="bg-black text-white py-32 border-y border-gray-900">
+        <div class="px-6 lg:px-8 max-w-6xl mx-auto">
+             <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold">The Memwyre Impact</h2>
             </div>
-            <div class="p-12 bg-gray-50 dark:bg-black">
-                <h3 class="text-xl font-bold uppercase tracking-widest text-black dark:text-white mb-8">After Memwyre</h3>
-                 <ul class="space-y-6 text-lg font-medium">
-                    <li class="flex items-center gap-3"><span class="text-green-400">✓</span> AI work compounds</li>
-                    <li class="flex items-center gap-3"><span class="text-green-400">✓</span> Knowledge is reusable</li>
-                    <li class="flex items-center gap-3"><span class="text-green-400">✓</span> Context persists</li>
-                    <li class="flex items-center gap-3"><span class="text-green-400">✓</span> Teams move faster</li>
-                </ul>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-1 rounded-3xl overflow-hidden bg-gray-900 border border-gray-800">
+                <div class="p-12 bg-black flex flex-col h-full">
+                    <h3 class="text-xl font-bold uppercase tracking-widest text-gray-500 mb-8 flex items-center gap-3">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Without Memwyre
+                    </h3>
+                    <ul class="space-y-8 text-lg text-gray-400 flex-grow">
+                        <li class="flex items-start gap-4">
+                            <span class="text-gray-600 mt-1">01</span>
+                            <span>AI usage is <strong>ephemeral</strong>. The moment you close the tab, the context and reasoning are lost forever.</span>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="text-gray-600 mt-1">02</span>
+                            <span>Knowledge is <strong>siloed</strong>. Your code snippets live in one app, your PDFs in another, and chat logs in a third.</span>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="text-gray-600 mt-1">03</span>
+                            <span><strong>Redundant effort</strong>. You repeat the same prompt chains and rewrite the same boilerplate because previous answers are inaccessible.</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="p-12 bg-gray-900/50 flex flex-col h-full">
+                    <h3 class="text-xl font-bold uppercase tracking-widest text-white mb-8 flex items-center gap-3">
+                         <svg class="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        With Memwyre
+                    </h3>
+                     <ul class="space-y-8 text-lg text-gray-200 flex-grow">
+                         <li class="flex items-start gap-4">
+                            <span class="text-green-500/50 mt-1">01</span>
+                            <span>AI work <strong>compounds</strong>. Every interaction, ingested document, and captured link builds a smarter personal baseline.</span>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="text-green-500/50 mt-1">02</span>
+                            <span>Knowledge is <strong>unified</strong>. Everything is searchable, related, and available instantly via chat or MCP integration.</span>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="text-green-500/50 mt-1">03</span>
+                            <span><strong>Zero cold starts</strong>. Context persists. You resume complex workflows exactly where you left them, saving hours of ramp-up time.</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 6. BUSINESS IMPACT -->
-    <div class="py-20 bg-gray-50 dark:bg-white/5 border-y border-gray-200 dark:border-gray-900">
+    <!-- 6. BUSINESS IMPACT / BOTTOM LINE -->
+    <div class="py-20 bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-gray-900">
          <div class="max-w-5xl mx-auto px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold mb-12">Why This Matters To Enterprises</h2>
+            <h2 class="text-3xl font-bold mb-12">The Bottom Line</h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
                 <div>
                      <div class="text-2xl font-bold mb-2">Faster</div>
-                     <div class="text-sm text-gray-500">Onboarding</div>
+                     <div class="text-sm text-gray-500">Context Switching</div>
                 </div>
                 <div>
                      <div class="text-2xl font-bold mb-2">Fewer</div>
-                     <div class="text-sm text-gray-500">Repeated Analyses</div>
+                     <div class="text-sm text-gray-500">Repeated Prompts</div>
                 </div>
                 <div>
                      <div class="text-2xl font-bold mb-2">Stronger</div>
-                     <div class="text-sm text-gray-500">Decision Trails</div>
+                     <div class="text-sm text-gray-500">Knowledge Retrieval</div>
                 </div>
                 <div>
                      <div class="text-2xl font-bold mb-2">Lasting</div>
-                     <div class="text-sm text-gray-500">Institutional Memory</div>
+                     <div class="text-sm text-gray-500">Personal Memory</div>
                 </div>
             </div>
-            <div class="inline-block p-6 border-2 border-black dark:border-white rounded-xl text-xl font-bold">
-                Memwyre turns AI spend from an operating cost into a knowledge asset.
+            <div class="inline-block p-6 border border-gray-300 dark:border-gray-700 rounded-2xl bg-white dark:bg-black shadow-sm text-lg font-medium text-gray-700 dark:text-gray-300 max-w-2xl">
+                Memwyre turns your disjointed AI tool usage into an organized, compounding knowledge asset.
             </div>
          </div>
     </div>
 
-    <!-- 7. WHO THIS IS FOR -->
-    <div class="py-32 max-w-7xl mx-auto px-6 lg:px-8">
-        <h2 class="text-3xl font-bold mb-16 text-center">Who This Is For</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="p-6 border border-gray-100 dark:border-gray-800 rounded-xl">
-                <h3 class="font-bold mb-2">Strategy & Research</h3>
-                <p class="text-sm text-gray-500">Preserve and reuse AI-assisted insights.</p>
-            </div>
-             <div class="p-6 border border-gray-100 dark:border-gray-800 rounded-xl">
-                <h3 class="font-bold mb-2">Engineering Teams</h3>
-                <p class="text-sm text-gray-500">Keep architectural and debugging context alive.</p>
-            </div>
-             <div class="p-6 border border-gray-100 dark:border-gray-800 rounded-xl">
-                <h3 class="font-bold mb-2">Consultants</h3>
-                <p class="text-sm text-gray-500">Compound firm-wide intelligence.</p>
-            </div>
-             <div class="p-6 border border-gray-100 dark:border-gray-800 rounded-xl">
-                <h3 class="font-bold mb-2">Leadership</h3>
-                <p class="text-sm text-gray-500">Know what the organization actually knows.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- 8. DIFFERENTIATION -->
-     <div class="bg-gray-100 dark:bg-gray-900 py-32">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                 <div class="space-y-6">
-                     <h3 class="text-xl font-bold text-gray-400 uppercase tracking-widest">Memwyre is NOT</h3>
-                     <ul class="space-y-4 text-gray-500 text-lg">
-                         <li>• Chat history</li>
-                         <li>• A vector database</li>
-                         <li>• A note-taking tool</li>
-                     </ul>
-                 </div>
-                 <div class="space-y-6">
-                     <h3 class="text-xl font-bold text-black dark:text-white uppercase tracking-widest">Memwyre IS</h3>
-                      <ul class="space-y-4 text-black dark:text-white font-medium text-lg">
-                         <li>• A persistent knowledge buffer</li>
-                         <li>• A memory layer between humans and AI</li>
-                         <li>• A system of record for AI-assisted thinking</li>
-                     </ul>
-                 </div>
-            </div>
-        </div>
-     </div>
-
      <!-- 9. CLOSING CTA -->
-    <div class="py-32 text-center px-6 lg:px-8">
-         <h2 class="text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">Your team already uses AI.</h2>
-         <p class="text-2xl text-gray-500 dark:text-gray-400 mb-12">Make sure it actually remembers.</p>
+    <div class="py-32 text-center px-6 lg:px-8 bg-white dark:bg-black">
+         <h2 class="text-4xl lg:text-5xl font-extrabold tracking-tight mb-4 text-black dark:text-white">You already use AI.</h2>
+         <p class="text-2xl text-gray-500 dark:text-gray-400 mb-12">Make sure it actually remembers you.</p>
          
          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <router-link to="/register" class="px-10 py-5 bg-black dark:bg-white text-white dark:text-black text-xl font-bold rounded-full hover:scale-105 transition-transform">
-                Get a Demo
+            <router-link to="/register" class="px-10 py-5 bg-black dark:bg-white text-white dark:text-black text-xl font-bold rounded-full hover:scale-105 transition-transform shadow-xl">
+                Start Building Your Brain
             </router-link>
-            <a href="mailto:sales@memwyre.com" class="px-10 py-5 border border-gray-200 dark:border-gray-800 text-black dark:text-white text-xl font-bold rounded-full hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+            <a href="mailto:sales@memwyre.tech" class="px-10 py-5 border border-gray-200 dark:border-gray-800 text-black dark:text-white text-xl font-bold rounded-full hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
                 Contact Sales
             </a>
         </div>
@@ -264,3 +293,13 @@
 
   </div>
 </template>
+
+<style scoped>
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+.animate-float-1 { animation: float 4s ease-in-out infinite; }
+.animate-float-2 { animation: float 5s ease-in-out infinite reverse; }
+.animate-float-3 { animation: float 6s ease-in-out infinite; }
+</style>
