@@ -375,10 +375,14 @@ export function createInjectButton(getInputArea) {
                 showFloatingFeedback(btn, 'Context Injected!', 'success');
             } else {
                 btn.textContent = '⚠️';
-                showFloatingFeedback(btn, 'No relevant memories found', 'info');
-
                 if (response?.error?.includes('Not authenticated')) {
                     showFloatingFeedback(btn, 'Please Login to Memwyre', 'error');
+                } else if (response?.error?.includes('free tier is currently disabled')) {
+                    showFloatingFeedback(btn, 'Free tier disabled. Upgrade to Pro.', 'error');
+                } else if (response?.error) {
+                    showFloatingFeedback(btn, 'Error: ' + response.error, 'error');
+                } else {
+                    showFloatingFeedback(btn, 'No relevant memories found', 'info');
                 }
             }
 
