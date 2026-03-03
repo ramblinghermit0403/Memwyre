@@ -26,7 +26,7 @@
           :class="[
             'max-w-xs px-4 py-2 rounded-lg text-sm',
             msg.role === 'user' 
-              ? 'bg-black dark:bg-white text-white dark:text-black rounded-br-none' 
+              ? 'bg-[#D97757] text-white rounded-br-none' 
               : 'bg-white dark:bg-surface text-gray-900 dark:text-gray-200 border border-gray-200 dark:border-gray-700 rounded-bl-none shadow-sm'
           ]"
         >
@@ -54,7 +54,7 @@
     <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-surface space-y-3">
       <!-- Provider Selection -->
       <div>
-        <select v-model="selectedProvider" class="block w-full text-xs border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+        <select v-model="selectedProvider" class="block w-full text-xs border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-[#D97757] focus:border-[#D97757] bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
           <option value="gemini">Google Gemini</option>
           <option value="openai">OpenAI (GPT-3.5)</option>
         </select>
@@ -65,13 +65,13 @@
           v-model="query" 
           type="text" 
           placeholder="Ask about this document..." 
-          class="flex-1 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          class="flex-1 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-[#D97757] focus:border-[#D97757] sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           :disabled="loading"
         />
         <button 
           type="submit" 
           :disabled="!query || loading"
-          class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white dark:text-black bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black dark:focus:ring-white disabled:opacity-50"
+          class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] disabled:opacity-50"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

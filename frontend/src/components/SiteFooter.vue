@@ -6,9 +6,12 @@
             <span class="font-bold text-sm">MemWyre</span>
         </div>
         <p class="text-sm text-gray-400">© 2025 MemWyre. Crafted for clarity.</p>
-        <div class="flex gap-6">
-             <a href="#" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Twitter</a>
-             <a href="#" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">GitHub</a>
+        <div class="flex flex-wrap gap-4 md:gap-6 justify-center mt-4 md:mt-0">
+             <a href="mailto:shivharehimansh@gmail.com" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Support</a>
+             <router-link to="/privacy-policy" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Privacy Policy</router-link>
+             <router-link to="/terms" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Terms of Service</router-link>
+             <a href="https://x.com/MemWyre" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Twitter</a>
+             <a href="https://github.com/humes-ai/memwyre-monorepo" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">GitHub</a>
         </div>
       </div>
     </footer>

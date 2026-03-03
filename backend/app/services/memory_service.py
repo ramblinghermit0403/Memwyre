@@ -46,11 +46,13 @@ class MemoryService:
         initial_status = "approved" if auto_approve else "pending"
         
         # Logic for inbox visibility
-        # Rule: Only external sources (extension, agent_drop, mcp) should go to inbox
-        # Memories created from within the app (web-app, user) should NEVER go to inbox
+        # Rule: Only external sources should go to inbox
+        # Memories created from within the app (web-app, user, user-upload) should NEVER go to inbox
+        # Everything else (extension, mcp, agent_drop, API key names like 'Claude Desktop') is external
         tags_list = tags or []
         is_extension = "extension" in tags_list
-        is_external_source = source in ["extension", "agent_drop", "mcp", "browser_extension"]
+        internal_sources = {"user", "user-upload", "web-app"}
+        is_external_source = source.lower() not in internal_sources
         
         # Only show in inbox if from external source OR if pending and from external
         show_in_inbox = is_external_source or is_extension

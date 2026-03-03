@@ -55,7 +55,7 @@
              </div>
              <h3 class="text-lg font-medium text-gray-900 dark:text-white">Write a Memory</h3>
              <p class="text-sm text-gray-500 max-w-xs mx-auto">Create a new memory directly in the editor with full formatting support.</p>
-             <button @click="navigateToEditor" class="mt-4 px-6 py-2 bg-black text-white dark:bg-white dark:text-black rounded-lg hover:opacity-80 transition-colors font-medium">
+             <button @click="navigateToEditor" class="mt-4 px-6 py-2 bg-[#D97757] text-white rounded-lg hover:bg-[#C4654A] transition-colors font-medium">
                  Open Editor
              </button>
         </div>
@@ -151,7 +151,7 @@
                      <input 
                         v-model="urlInput" 
                         type="url" 
-                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white dark:bg-zinc-800 dark:text-white sm:text-sm" 
+                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#D97757] dark:bg-zinc-800 dark:text-white sm:text-sm" 
                         placeholder="https://www.youtube.com/watch?v=..."
                         @keyup.enter="ingest"
                         @input="handleYouTubeUrlChange"
@@ -203,7 +203,7 @@
                      <input 
                         v-model="urlInput" 
                         type="url" 
-                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white dark:bg-zinc-800 dark:text-white sm:text-sm" 
+                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#D97757] dark:bg-zinc-800 dark:text-white sm:text-sm" 
                         placeholder="https://example.com/article"
                         @keyup.enter="ingest"
                         @input="handleWebpageUrlChange"
@@ -258,7 +258,7 @@
             v-if="activeTab === 'documents' || activeTab === 'webpage' || activeTab === 'youtube'"
             @click="ingest" 
             :disabled="(activeTab === 'documents' ? !selectedFile : !urlInput) || uploading"
-            class="px-5 py-2 text-sm font-medium bg-black text-white dark:bg-white dark:text-black hover:opacity-80 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center gap-2"
+            class="px-5 py-2 text-sm font-medium bg-[#D97757] text-white hover:bg-[#C4654A] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center gap-2"
           >
               <svg v-if="uploading" class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

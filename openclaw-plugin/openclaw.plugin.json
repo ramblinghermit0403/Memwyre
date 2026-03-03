@@ -1,0 +1,24 @@
+{
+    "id": "openclaw-plugin",
+    "name": "@memwyre/openclaw-plugin",
+    "version": "1.0.0",
+    "description": "MemWyre plugin for OpenClaw. Provides persistent memory and context retrieval tools.",
+    "commands": {
+        "restart": true
+    },
+    "configSchema": {
+        "type": "object",
+        "properties": {
+            "apiKey": {
+                "type": "string",
+                "description": "Your MemWyre API Key (starts with bv_sk_)"
+            },
+            "hostUrl": {
+                "type": "string",
+                "description": "MemWyre server URL",
+                "default": "https://server.memwyre.tech"
+            }
+        },
+        "required": []
+    }
+}

@@ -40,26 +40,16 @@ const DEFAULT_WEB_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentCo
 export function getIconForSource(item) {
     if (!item) return { type: 'svg', content: DEFAULT_DOC_ICON };
 
-    // 1. Check Tags for Known Integrations / MCP tools
-    if (item.tags && Array.isArray(item.tags)) {
-        const lowerTags = item.tags.map(t => typeof t === 'string' ? t.toLowerCase() : '');
-        for (const [key, iconObj] of Object.entries(KNOWN_CLIENT_ICONS)) {
-            if (lowerTags.includes(key)) {
-                return iconObj;
-            }
-        }
-    }
-
-    // 2. Check the source property
+    // 1. Check the source property FIRST (most reliable indicator)
     if (item.source) {
         const sourceStr = item.source.toLowerCase();
 
-        // 2a. YouTube check
+        // 1a. YouTube check
         if (sourceStr.includes('youtube.com') || sourceStr.includes('youtu.be')) {
             return KNOWN_CLIENT_ICONS.youtube;
         }
 
-        // 2b. Known specific chatbot agents and apps
+        // 1b. Known specific chatbot agents and apps
         if (sourceStr.includes('chatgpt') || sourceStr.includes('chat gpt') || sourceStr.includes('chat.openai.com')) {
             return KNOWN_CLIENT_ICONS.chatgpt;
         }
@@ -72,37 +62,53 @@ export function getIconForSource(item) {
         if (sourceStr.includes('claude') || sourceStr.includes('anthropic')) {
             return KNOWN_CLIENT_ICONS.claude;
         }
+        if (sourceStr.includes('cursor')) {
+            return KNOWN_CLIENT_ICONS.cursor;
+        }
+        if (sourceStr.includes('openclaw')) {
+            return KNOWN_CLIENT_ICONS.openclaw;
+        }
+        if (sourceStr.includes('codex')) {
+            return KNOWN_CLIENT_ICONS.codex;
+        }
         if (sourceStr.includes('antigravity') || sourceStr === 'mcp') {
             return KNOWN_CLIENT_ICONS.antigravity;
         }
 
-        // 2b. Agent Drop Fallback (if no tag matched)
+        // 1c. Agent Drop Fallback
         if (sourceStr === 'agent_drop') {
-            return { type: 'svg', content: DEFAULT_DOC_ICON }; // Fallback for agent un-tagged
+            return { type: 'svg', content: DEFAULT_DOC_ICON };
         }
 
-        // 2c. Try parsing as a URL for a favicon
+        // 1d. Try parsing as a URL for a favicon
         try {
-            // Need a fully qualified URL to parse properly
             let urlString = item.source;
             if (!urlString.startsWith('http://') && !urlString.startsWith('https://')) {
-                // Heuristic: If it looks like a domain context from the extension
                 if (urlString.includes('.') && !urlString.includes(' ')) {
                     urlString = 'https://' + urlString;
                 } else {
-                    return { type: 'svg', content: DEFAULT_DOC_ICON };
+                    // Not a URL, fall through to tag check
                 }
             }
 
-            const url = new URL(urlString);
-            const domain = url.hostname;
-            // Generate Google Favicon URL with high resolution (sz=64)
-            const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-            return { type: 'img', content: faviconUrl };
-
+            if (urlString.startsWith('http')) {
+                const url = new URL(urlString);
+                const domain = url.hostname;
+                const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+                return { type: 'img', content: faviconUrl };
+            }
         } catch (e) {
-            // Not a valid URL, fallback
-            return { type: 'svg', content: DEFAULT_DOC_ICON };
+            // Not a valid URL, fall through to tag check
+        }
+    }
+
+    // 2. Fallback: Check Tags for Known Integrations / MCP tools
+    if (item.tags && Array.isArray(item.tags)) {
+        const lowerTags = item.tags.map(t => typeof t === 'string' ? t.toLowerCase() : '');
+        for (const [key, iconObj] of Object.entries(KNOWN_CLIENT_ICONS)) {
+            if (lowerTags.includes(key)) {
+                return iconObj;
+            }
         }
     }
 

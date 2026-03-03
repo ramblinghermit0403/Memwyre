@@ -13,8 +13,8 @@
             <a href="/#features" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Features</a>
             <a href="/#workflow" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Workflow</a>
             <a href="/#ecosystem" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Ecosystem</a>
+            <a href="/#use-cases" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Use Cases</a>
             <a href="/#pricing" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Pricing</a>
-            <router-link to="/use-cases" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Use Cases</router-link>
             <a href="/#faq" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">FAQ</a>
           </div>
 
@@ -22,7 +22,7 @@
             <router-link to="/login" class="text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white transition-colors">
               Log in
             </router-link>
-            <router-link to="/register" class="px-5 py-2.5 bg-black dark:bg-white text-white dark:text-black text-sm font-bold rounded-full hover:opacity-90 transition-opacity">
+            <router-link to="/register" class="px-5 py-2.5 bg-[#D97757] text-white text-sm font-bold rounded-full hover:bg-[#C4654A] transition-colors">
               Get Started
             </router-link>
           </div>

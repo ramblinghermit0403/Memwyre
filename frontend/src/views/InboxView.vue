@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col bg-gray-50 dark:bg-app transition-colors duration-300 font-sans overflow-hidden">
+  <div class="h-screen flex flex-col transition-colors duration-300 font-sans overflow-hidden">
     <NavBar />
 
     <main class="flex-1 overflow-hidden">
@@ -23,7 +23,7 @@
                      :class="['p-4 rounded-lg border cursor-pointer transition-all hover:shadow-sm', 
                               selectedItem?.id === item.id 
                                 ? 'bg-gray-100 border-gray-300 dark:bg-surface-2 dark:border-gray-500' 
-                                : 'bg-white border-gray-200 dark:bg-surface-2 dark:border-border hover:border-black dark:hover:border-white']"
+                                : 'bg-white border-gray-200 dark:bg-surface-2 dark:border-border hover:border-[#D97757]']"
                    >
                        <h3 class="font-medium text-gray-900 dark:text-text-primary mb-1 line-clamp-2">{{ item.details }}</h3>
                        <div class="flex justify-between items-end mt-3">
@@ -92,7 +92,7 @@
                                      v-model="newTagInput"
                                      @keydown.enter="addNewTag"
                                      placeholder="+ Add tag" 
-                                     class="text-xs px-2 py-1 rounded-full border border-gray-200 dark:border-gray-600 bg-transparent text-gray-600 dark:text-gray-300 focus:outline-none focus:border-black dark:focus:border-white focus:ring-1 focus:ring-black dark:focus:ring-white w-24 transition-all"
+                                     class="text-xs px-2 py-1 rounded-full border border-gray-200 dark:border-gray-600 bg-transparent text-gray-600 dark:text-gray-300 focus:outline-none focus:border-[#D97757] focus:ring-1 focus:ring-[#D97757] w-24 transition-all"
                                    />
                                </div>
                            </div>
@@ -143,7 +143,7 @@
                        <button 
                          @click="approveItem(selectedItem)"
                          :disabled="selectedItem.status === 'approved' || approving || dismissing"
-                          :class="['px-4 py-2 text-white text-sm font-medium rounded-lg shadow-sm flex items-center gap-2 min-w-[100px] justify-center', selectedItem.status === 'approved' ? 'bg-green-600 cursor-default' : 'bg-black dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black dark:focus:ring-white disabled:opacity-70']"
+                          :class="['px-4 py-2 text-white text-sm font-medium rounded-lg shadow-sm flex items-center gap-2 min-w-[100px] justify-center', selectedItem.status === 'approved' ? 'bg-green-600 cursor-default' : 'bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] disabled:opacity-70']"
                        >
                          <LoadingLogo v-if="approving" size="sm" class="w-4 h-4" :isWhite="selectedItem.status !== 'approved'" />
                          {{ approving ? 'Approving...' : (selectedItem.status === 'approved' ? 'Approved' : 'Approve') }}

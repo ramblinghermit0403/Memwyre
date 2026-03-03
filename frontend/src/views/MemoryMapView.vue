@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col bg-gray-50 dark:bg-app transition-colors duration-300 font-sans overflow-hidden">
+  <div class="h-screen flex flex-col transition-colors duration-300 font-sans overflow-hidden">
     <NavBar />
 
     <div class="flex-1 w-full h-full relative cursor-move overflow-hidden">

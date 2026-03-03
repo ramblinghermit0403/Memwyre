@@ -42,52 +42,52 @@
 
 :root {
   /* Light Theme Default */
-  --bg-app: #FFFFFF;
-  --bg-surface: #F7FAFC;
-  --bg-surface-2: #EDF2F7;
+  --bg-app: #FAF6F0;
+  --bg-surface: #FFFFFF;
+  --bg-surface-2: #F0EBE3;
   --bg-elevated: #FFFFFF;
 
-  --primary: #0B6E4F;
-  --primary-600: #08563E;
-  --accent: #000000;
-  --accent-600: #1a1a1a;
+  --primary: #D97757;
+  --primary-600: #C4654A;
+  --accent: #D97757;
+  --accent-600: #C4654A;
 
   --success: #059669;
   --warning: #D97706;
   --danger: #DC2626;
-  --info: #000000;
+  --info: #D97757;
 
-  --text-primary: #0F1724;
+  --text-primary: #2D2B2A;
   --text-secondary: #475569;
   --text-muted: #94A3B8;
 
-  --border: rgba(15, 23, 36, 0.08);
-  --divider-strong: rgba(15, 23, 36, 0.12);
+  --border: rgba(45, 43, 42, 0.08);
+  --divider-strong: rgba(45, 43, 42, 0.12);
   --backdrop: rgba(2, 6, 23, 0.4);
 
   --input-bg: #FFFFFF;
-  --input-border: rgba(15, 23, 36, 0.08);
+  --input-border: rgba(45, 43, 42, 0.08);
   --placeholder: #94A3B8;
 }
 
 .dark {
   /* Dark Theme */
-  --bg-app: #030303;
-  --bg-surface: #0a0a0a;
-  --bg-surface-2: #171717;
-  --bg-elevated: #262626;
+  --bg-app: #1A1918;
+  --bg-surface: #2D2B2A;
+  --bg-surface-2: #3A3836;
+  --bg-elevated: #3A3836;
 
-  --primary: #ffffff;
-  --primary-600: #e5e5e5;
-  --accent: #FFFFFF;
-  --accent-600: #e5e5e5;
+  --primary: #D97757;
+  --primary-600: #E8956E;
+  --accent: #D97757;
+  --accent-600: #E8956E;
 
   --success: #34D399;
   --warning: #FBBF24;
   --danger: #F87171;
-  --info: #FFFFFF;
+  --info: #D97757;
 
-  --text-primary: #ffffff;
+  --text-primary: #FAF6F0;
   --text-secondary: #a3a3a3;
   --text-muted: #737373;
 
@@ -95,7 +95,7 @@
   --divider-strong: rgba(255, 255, 255, 0.15);
   --backdrop: rgba(0, 0, 0, 0.7);
 
-  --input-bg: #0a0a0a;
+  --input-bg: #2D2B2A;
   --input-border: rgba(255, 255, 255, 0.1);
   --placeholder: #525252;
 }

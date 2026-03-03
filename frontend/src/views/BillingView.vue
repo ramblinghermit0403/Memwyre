@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col bg-gray-50 dark:bg-app transition-colors duration-300 font-sans overflow-hidden">
+  <div class="h-screen flex flex-col transition-colors duration-300 font-sans overflow-hidden">
     <NavBar />
 
     <main class="flex-1 overflow-y-auto w-full max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
@@ -29,7 +29,7 @@
 
       <!-- Loading -->
       <div v-if="billing.loading" class="flex items-center justify-center py-20">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-black dark:border-white"></div>
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D97757]"></div>
       </div>
 
       <div v-else>
@@ -40,7 +40,7 @@
               <h2 class="text-lg font-semibold text-gray-900 dark:text-text-primary">Current Plan</h2>
               <div class="flex items-center gap-3 mt-2">
                 <span
-                  :class="billing.isPro ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'"
+                  :class="billing.isPro ? 'bg-[#D97757] text-white' : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'"
                   class="px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wider"
                 >
                   {{ billing.plan || 'Free' }}
@@ -74,7 +74,7 @@
         <!-- Upgrade CTA (shown when on free plan) -->
         <div v-if="!billing.isPro" class="relative overflow-hidden bg-white dark:bg-surface shadow rounded-xl border border-gray-100 dark:border-border p-8 mb-8 animate-fade-in">
           <!-- Gradient accent -->
-          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-black via-gray-600 to-black dark:from-white dark:via-gray-400 dark:to-white"></div>
+          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#D97757] via-[#E8956E] to-[#D97757]"></div>
 
           <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
@@ -83,7 +83,7 @@
 
               <ul class="mt-4 space-y-2">
                 <li v-for="feature in proFeatures" :key="feature" class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                  <svg class="w-4 h-4 text-black dark:text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                  <svg class="w-4 h-4 text-[#D97757] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                   {{ feature }}
                 </li>
               </ul>
@@ -97,7 +97,7 @@
               <button
                 @click="handleUpgrade"
                 :disabled="checkingOut"
-                class="w-full md:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-sm font-bold rounded-lg text-white bg-black dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-200 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full md:w-auto inline-flex items-center justify-center px-8 py-3 border border-transparent text-sm font-bold rounded-lg text-white bg-[#D97757] hover:bg-[#C4654A] transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg v-if="checkingOut" class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" /><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" /></svg>
                 {{ checkingOut ? 'Redirecting...' : 'Upgrade Now' }}

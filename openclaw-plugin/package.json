@@ -1,0 +1,27 @@
+{
+    "name": "@memwyre/openclaw-plugin",
+    "version": "1.1.0",
+    "description": "OpenClaw plugin for MemWyre persistent memory.",
+    "type": "module",
+    "files": [
+        "index.ts",
+        "openclaw.plugin.json",
+        "banner.png"
+    ],
+    "keywords": [
+        "openclaw",
+        "plugin",
+        "memwyre",
+        "memory"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "@sinclair/typebox": "^0.34.0"
+    },
+    "openclaw": {
+        "extensions": [
+            "./index.ts"
+        ]
+    }
+}

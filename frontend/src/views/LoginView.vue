@@ -33,7 +33,7 @@
              </div>
 
              <div class="pt-2">
-                 <button type="submit" :disabled="loading" class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white dark:text-zinc-900 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 dark:focus:ring-offset-zinc-900 disabled:opacity-50 transition-colors duration-200">
+                 <button type="submit" :disabled="loading" class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] disabled:opacity-50 transition-colors duration-200">
                     <LoadingLogo v-if="loading" size="sm" class="mr-2 h-4 w-4" />
                     {{ loading ? 'Authenticating...' : 'Continue' }}
                  </button>
@@ -89,7 +89,7 @@
           
 
           <div class="pt-4">
-              <button @click="continueAsUser" class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white dark:text-zinc-900 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 dark:focus:ring-offset-zinc-900 transition-colors duration-200">
+              <button @click="continueAsUser" class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] transition-colors duration-200">
                    Continue as {{ lastKnownUser.name.split(' ')[0] }}
               </button>
           </div>

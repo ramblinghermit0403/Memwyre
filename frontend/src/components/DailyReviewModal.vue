@@ -38,7 +38,7 @@
              </div>
              <h3 class="text-xl font-bold text-gray-900 dark:text-white">All Caught Up!</h3>
              <p class="text-gray-500 dark:text-gray-400 max-w-xs mx-auto">You've reviewed all queued memories for today. Great job keeping your knowledge fresh.</p>
-             <button @click="close" class="mt-2 px-6 py-2 bg-black text-white dark:bg-white dark:text-black rounded-lg hover:opacity-80 transition-colors font-medium">
+             <button @click="close" class="mt-2 px-6 py-2 bg-[#D97757] text-white rounded-lg hover:bg-[#C4654A] transition-colors font-medium">
                  Return to Dashboard
              </button>
         </div>
@@ -86,7 +86,7 @@
           
           <button 
             @click="next" 
-            class="px-6 py-2 text-sm font-medium bg-black text-white dark:bg-white dark:text-black hover:opacity-80 rounded-lg transition-colors shadow-sm flex items-center gap-2"
+            class="px-6 py-2 text-sm font-medium bg-[#D97757] text-white hover:opacity-80 rounded-lg transition-colors shadow-sm flex items-center gap-2"
           >
               {{ isLast ? 'Finish Review' : 'Next Memory' }}
               <svg v-if="!isLast" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

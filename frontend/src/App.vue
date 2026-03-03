@@ -10,7 +10,7 @@ const authStore = useAuthStore()
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
+  <div class="min-h-screen text-[#2D2B2A] dark:text-[#FAF6F0] relative">
     <RouterView />
     <OnboardingOverlay v-if="authStore.isAuthenticated && !authStore.hasCompletedOnboarding" />
   </div>

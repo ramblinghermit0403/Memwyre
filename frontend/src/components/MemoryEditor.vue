@@ -8,7 +8,7 @@
         
         <!-- View Mode Actions -->
         <div v-if="isViewMode" class="flex gap-2">
-            <button @click="isViewMode = false" class="text-sm px-3 py-1.5 bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-900 dark:hover:bg-gray-200 transition-colors font-medium shadow-sm">
+            <button @click="isViewMode = false" class="text-sm px-3 py-1.5 bg-[#D97757] text-white rounded-md hover:bg-[#C4654A] transition-colors font-medium shadow-sm">
                 Edit
             </button>
         </div>
@@ -37,24 +37,24 @@
     <form v-else @submit.prevent="saveMemory" class="flex-1 flex flex-col min-h-0 space-y-4 overflow-hidden">
       <div>
         <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-        <input type="text" id="title" v-model="form.title" required class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Memory Title" />
+        <input type="text" id="title" v-model="form.title" required class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-[#D97757] focus:border-[#D97757] sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Memory Title" />
       </div>
       
       <div class="flex-1 flex flex-col min-h-0">
         <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Content</label>
-        <textarea id="content" v-model="form.content" required class="flex-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none p-4" placeholder="Write your memory here..."></textarea>
+        <textarea id="content" v-model="form.content" required class="flex-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-[#D97757] focus:border-[#D97757] sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none p-4" placeholder="Write your memory here..."></textarea>
       </div>
 
       <div>
         <label for="tags" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tags (comma separated)</label>
-        <input type="text" id="tags" v-model="form.tags" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="AI, Project, Important" />
+        <input type="text" id="tags" v-model="form.tags" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-[#D97757] focus:border-[#D97757] sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="AI, Project, Important" />
       </div>
       
       <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100 dark:border-gray-700 shrink-0">
         <button type="button" @click="cancel" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           {{ isEditing && !isViewMode ? 'Cancel Edit' : 'Cancel' }}
         </button>
-        <button type="submit" :disabled="loading" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white dark:text-black bg-black dark:bg-white hover:bg-gray-900 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black dark:focus:ring-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+        <button type="submit" :disabled="loading" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
           <LoadingLogo v-if="loading" size="sm" class="w-4 h-4" />
           {{ loading ? 'Saving...' : 'Save Memory' }}
         </button>

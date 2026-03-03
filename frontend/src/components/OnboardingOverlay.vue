@@ -28,7 +28,7 @@
                 <div v-for="step in 3" :key="step" class="flex items-center gap-3">
                     <div :class="[
                         'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold border transition-colors',
-                        currentStep > step ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-gray-900 dark:border-gray-100 shadow-sm' :
+                        currentStep > step ? 'bg-[#D97757] text-white border-[#D97757] shadow-sm' :
                         currentStep === step ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ring-2 ring-gray-100 dark:ring-gray-800 ring-offset-1' :
                         'bg-transparent text-gray-400 border-gray-200 dark:border-gray-700'
                     ]">
@@ -108,7 +108,7 @@
               <template v-if="currentStep === 1">
                 <button 
                   type="button" 
-                  class="inline-flex w-full justify-center rounded-lg bg-gray-900 dark:bg-gray-100 px-5 py-2.5 text-sm font-semibold text-white dark:text-gray-900 shadow-sm hover:bg-gray-800 dark:hover:bg-white sm:ml-3 sm:w-auto disabled:opacity-50 transition-colors" 
+                  class="inline-flex w-full justify-center rounded-lg bg-[#D97757] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#C4654A] sm:ml-3 sm:w-auto disabled:opacity-50 transition-colors" 
                   @click="nextStep"
                   :disabled="!selectedField"
                 >
@@ -120,7 +120,7 @@
               <template v-else-if="currentStep === 2">
                 <button 
                   type="button" 
-                  class="inline-flex w-full justify-center rounded-lg bg-gray-900 dark:bg-gray-100 px-5 py-2.5 text-sm font-semibold text-white dark:text-gray-900 shadow-sm hover:bg-gray-800 dark:hover:bg-white sm:ml-3 sm:w-auto transition-colors" 
+                  class="inline-flex w-full justify-center rounded-lg bg-[#D97757] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#C4654A] sm:ml-3 sm:w-auto transition-colors" 
                   @click="nextStep"
                 >
                   I've installed it
@@ -138,7 +138,7 @@
               <template v-else-if="currentStep === 3">
                  <button 
                   type="button" 
-                  class="inline-flex items-center gap-2 w-full justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto transition-colors" 
+                  class="inline-flex items-center gap-2 w-full justify-center rounded-lg bg-[#D97757] px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-[#C4654A] sm:ml-3 sm:w-auto transition-colors" 
                   @click="startTour"
                 >
                   Start Tour

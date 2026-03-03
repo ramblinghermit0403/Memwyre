@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col bg-gray-50 dark:bg-app transition-colors duration-300 font-sans overflow-hidden">
+  <div class="h-screen flex flex-col transition-colors duration-300 font-sans overflow-hidden">
 
     <!-- Editor Header (Title & Actions) -->
     <header class="h-16 shrink-0 border-b border-gray-200 dark:border-border flex items-center justify-between px-6 bg-white dark:bg-surface relative z-10">
@@ -48,7 +48,7 @@
             <button 
               v-if="isViewMode"
               @click="isViewMode = false"
-              class="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-medium rounded-md transition-colors hover:bg-gray-900 dark:hover:bg-gray-200"
+              class="px-4 py-2 bg-[#D97757] text-white text-sm font-medium rounded-md transition-colors hover:bg-[#C4654A]"
             >
               Edit
             </button>
@@ -56,7 +56,7 @@
               v-if="!isViewMode"
               @click="saveDocument"
               :disabled="saving"
-              class="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-medium rounded-md transition-colors hover:bg-gray-900 dark:hover:bg-gray-200"
+              class="px-4 py-2 bg-[#D97757] text-white text-sm font-medium rounded-md transition-colors hover:bg-[#C4654A]"
             >
               Save Changes
             </button>
@@ -104,7 +104,7 @@
     </div>
 
     <!-- Main Content Area with Absolute Centering and Fixed Sidebar -->
-    <div class="flex-1 overflow-hidden bg-gray-50 dark:bg-app relative flex flex-col">
+    <div class="flex-1 overflow-hidden relative flex flex-col">
         <!-- New Left Enrichment Sidebar -->
         <aside v-if="isViewMode" class="w-72 fixed left-0 top-16 bottom-0 overflow-y-auto border-r border-gray-100 dark:border-border bg-white dark:bg-surface hidden lg:block z-20 shadow-[min(0px)_0px_0px_0px_rgba(0,0,0,0.1)]">
              <EnrichmentSidebar :active-chunk="activeChunk" :loading="chunksLoading" />
@@ -192,7 +192,7 @@
                               @keydown.down.prevent="navigateSuggestions(1)"
                               @keydown.up.prevent="navigateSuggestions(-1)"
                               @keydown.enter.prevent="selectActiveSuggestion"
-                              class="w-full bg-gray-50 dark:bg-app border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-xs focus:ring-1 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none h-28 leading-relaxed"
+                              class="w-full bg-gray-50 dark:border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-xs focus:ring-1 focus:ring-[#D97757] focus:border-[#D97757] outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none h-28 leading-relaxed"
                               placeholder="Enter tags separated by commas..."
                             ></textarea>
                             

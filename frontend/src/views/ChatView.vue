@@ -136,7 +136,7 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
 </script>
 
 <template>
-  <div class="h-screen flex flex-col bg-gray-50 dark:bg-app text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300">
+  <div class="h-screen flex flex-col text-[#2D2B2A] dark:text-[#FAF6F0] font-sans transition-colors duration-300">
     <NavBar />
 
     <div class="flex-1 flex overflow-hidden relative">
@@ -154,7 +154,7 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
           </div>
           
           <div class="p-4">
-            <button @click="createNewChat" class="w-full py-2.5 px-4 bg-white dark:bg-surface border border-gray-200 dark:border-border rounded-lg text-gray-600 dark:text-gray-300 font-medium hover:border-black hover:text-black dark:hover:border-white dark:hover:text-white transition-colors flex items-center justify-center gap-2 shadow-sm">
+            <button @click="createNewChat" class="w-full py-2.5 px-4 bg-white dark:bg-surface border border-gray-200 dark:border-border rounded-lg text-gray-600 dark:text-gray-300 font-medium hover:border-[#D97757] hover:text-[#D97757] transition-colors flex items-center justify-center gap-2 shadow-sm">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
               New Chat
             </button>
@@ -203,7 +203,7 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
                  <!-- USER -->
                  <div v-if="msg.role === 'user'" class="flex justify-end gap-3">
                     <div class="max-w-[85%]">
-                       <div class="bg-black dark:bg-white text-white dark:text-black px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm md:shadow-md text-sm md:text-base leading-relaxed">
+                       <div class="bg-[#D97757] text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm md:shadow-md text-sm md:text-base leading-relaxed">
                           <p class="whitespace-pre-wrap">{{ msg.content }}</p>
                        </div>
                        <div class="text-right mt-1 text-[10px] text-gray-400 font-medium tracking-wide mr-1">{{ formatDate(msg.created_at).split(',')[1] || 'Now' }}</div>
@@ -297,7 +297,7 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
                        <button 
                          @click="handleSend"
                          :disabled="!inputContent.trim() || chatStore.thinking"
-                         class="p-2 bg-black dark:bg-white text-white dark:text-black rounded-full hover:bg-gray-900 dark:hover:bg-gray-200 disabled:opacity-50 transition-transform active:scale-95 shadow-md flex items-center justify-center w-8 h-8"
+                         class="p-2 bg-[#D97757] text-white rounded-full hover:bg-[#C4654A] disabled:opacity-50 transition-transform active:scale-95 shadow-md flex items-center justify-center w-8 h-8"
                        >
                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
                        </button>
@@ -341,7 +341,7 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
                        <button 
                          @click="handleSend"
                          :disabled="!inputContent.trim() || chatStore.thinking"
-                         class="p-2 bg-black dark:bg-white text-white dark:text-black rounded-full hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 transition-transform active:scale-95 shadow-md flex items-center justify-center w-10 h-10"
+                         class="p-2 bg-[#D97757] text-white rounded-full hover:bg-[#C4654A] disabled:opacity-50 transition-transform active:scale-95 shadow-md flex items-center justify-center w-10 h-10"
                        >
                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
                        </button>
@@ -370,14 +370,14 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
                      <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Model Temperature</label>
                      <span class="text-xs font-mono bg-gray-100 dark:bg-surface-2 px-2 py-0.5 rounded text-gray-600">{{ modelTemperature }}</span>
                   </div>
-                  <input type="range" min="0" max="1" step="0.1" v-model="modelTemperature" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white">
+                  <input type="range" min="0" max="1" step="0.1" v-model="modelTemperature" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#D97757]">
                   <p class="text-xs text-gray-400 mt-2">Higher values make usage more creative.</p>
                </div>
 
                <!-- Max Tokens -->
                <div>
                   <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Max Tokens</label>
-                  <input type="number" v-model="maxTokens" class="w-full px-3 py-2 border border-gray-200 dark:border-border rounded-lg text-sm bg-gray-50 dark:bg-surface-2 focus:ring-1 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white">
+                  <input type="number" v-model="maxTokens" class="w-full px-3 py-2 border border-gray-200 dark:border-border rounded-lg text-sm bg-gray-50 dark:bg-surface-2 focus:ring-1 focus:ring-[#D97757] focus:border-[#D97757]">
                   <p class="text-xs text-gray-400 mt-1">{{ maxTokens }} tokens</p>
                </div>
                
@@ -396,7 +396,7 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
                         <button 
                            v-if="source.id" 
                            @click="router.push({name: 'editor', params: {id: source.id}})" 
-                           class="shrink-0 text-xs bg-white dark:bg-app border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-surface transition-colors"
+                           class="shrink-0 text-xs bg-white dark:border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-surface transition-colors"
                         >
                            Open ↗
                         </button>
