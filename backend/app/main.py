@@ -105,15 +105,6 @@ app.include_router(billing.router, prefix=f"{settings.API_V1_STR}/billing", tags
 app.include_router(admin_bypass.router, prefix=f"{settings.API_V1_STR}/admin/bypass", tags=["admin-bypass"])
 app.include_router(bypass.router, prefix=f"{settings.API_V1_STR}/bypass", tags=["bypass"])
 
-# Mount MCP Server (Streamable HTTP) - MUST be LAST since mount("/") is a catch-all
-# This allows remote connections (e.g. Cursor, Claude Desktop) via /mcp
-if _mcp_server:
-    # streamable_http_app() creates its own /mcp sub-route, so mount at root
-    # Final endpoint: http://host:8000/mcp
-    app.mount("/", _mcp_server.streamable_http_app())
-    print("Mounted MCP Streamable HTTP Server at /mcp")
-
-
 @app.get("/")
 async def root():
     return {"message": "Welcome to MemWyre API", "status": "running"}
@@ -121,4 +112,12 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
+# Mount MCP Server (Streamable HTTP) - MUST be LAST since mount("/") is a catch-all
+# This allows remote connections (e.g. Cursor, Claude Desktop) via /mcp
+if _mcp_server:
+    # streamable_http_app() creates its own /mcp sub-route, so mount at root
+    # Final endpoint: http://host:8000/mcp
+    app.mount("/", _mcp_server.streamable_http_app())
+    print("Mounted MCP Streamable HTTP Server at /mcp")
 
