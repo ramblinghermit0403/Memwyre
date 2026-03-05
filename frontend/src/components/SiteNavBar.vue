@@ -22,7 +22,7 @@
             <router-link to="/login" class="text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white transition-colors">
               Log in
             </router-link>
-            <router-link to="/register" class="px-5 py-2.5 bg-[#D97757] text-white text-sm font-bold rounded-full hover:bg-[#C4654A] transition-colors">
+            <router-link to="/signup" class="px-5 py-2.5 bg-[#D97757] text-white text-sm font-bold rounded-full hover:bg-[#C4654A] transition-colors">
               Get Started
             </router-link>
           </div>

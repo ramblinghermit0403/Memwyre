@@ -23,17 +23,19 @@
                  <div>
                     <div class="flex items-center justify-between mb-1.5">
                         <label for="password" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Password</label>
-                        <a href="#" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+                        <router-link to="/forgot-password" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
                             Forgot password?
-                        </a>
+                        </router-link>
                     </div>
                     <input id="password" name="password" type="password" autocomplete="current-password" required v-model="password" class="appearance-none block w-full px-3.5 py-2.5 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-lg placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 focus:border-transparent sm:text-sm transition-shadow duration-200" placeholder="••••••••" />
                     <div v-if="password.length > 0 && password.length < 8" class="mt-2 text-sm text-red-500 font-medium">Password must be at least 8 characters.</div>
                  </div>
              </div>
 
+             <div id="turnstile-container" class="flex justify-center mt-4"></div>
+
              <div class="pt-2">
-                 <button type="submit" :disabled="loading" class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] disabled:opacity-50 transition-colors duration-200">
+                 <button type="submit" :disabled="loading || !turnstileToken" class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] disabled:opacity-50 transition-colors duration-200">
                     <LoadingLogo v-if="loading" size="sm" class="mr-2 h-4 w-4" />
                     {{ loading ? 'Authenticating...' : 'Continue' }}
                  </button>
@@ -67,7 +69,7 @@
           <div class="text-center pt-2">
              <p class="text-sm text-zinc-600 dark:text-zinc-400">
                  Don't have an account? 
-                 <router-link to="/register" class="font-medium text-zinc-900 dark:text-zinc-100 hover:underline underline-offset-4 decoration-zinc-300 dark:decoration-zinc-600 transition-colors">
+                 <router-link to="/signup" class="font-medium text-zinc-900 dark:text-zinc-100 hover:underline underline-offset-4 decoration-zinc-300 dark:decoration-zinc-600 transition-colors">
                  Sign up
                  </router-link>
              </p>
@@ -106,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useRouter, useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
@@ -117,6 +119,9 @@ const email = ref('');
 const password = ref('');
 const loading = ref(false);
 const error = ref('');
+const turnstileToken = ref('');
+const turnstileId = ref(null);
+
 const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
@@ -145,7 +150,7 @@ const handleLogin = async () => {
   loading.value = true;
   error.value = '';
   try {
-    await authStore.login(email.value, password.value);
+    await authStore.login(email.value, password.value, turnstileToken.value);
     localStorage.setItem('lastProvider', 'email'); 
     toast.success(`Welcome back, ${authStore.user.name}!`);
     broadcastToken(authStore.token, authStore.refreshToken, authStore.user);
@@ -160,6 +165,10 @@ const handleLogin = async () => {
         error.value = 'Invalid email or password. Please try again.';
     }
     console.error("Login Error Details:", err);
+    if (window.turnstile && turnstileId.value !== null) {
+       window.turnstile.reset(turnstileId.value);
+       turnstileToken.value = '';
+    }
   } finally {
     loading.value = false;
   }
@@ -225,6 +234,32 @@ onMounted(() => {
         }
     } catch(e) {}
 
+    // Initialize Turnstile
+    window.onTurnstileSuccess = (token) => {
+        turnstileToken.value = token;
+    };
+    
+    const loadTurnstile = () => {
+        if (window.turnstile) {
+            turnstileId.value = window.turnstile.render('#turnstile-container', {
+                sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
+                callback: window.onTurnstileSuccess
+            });
+        }
+    };
+    
+    if (!document.getElementById('turnstile-script')) {
+        const script = document.createElement('script');
+        script.id = 'turnstile-script';
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+        script.async = true;
+        script.defer = true;
+        script.onload = loadTurnstile;
+        document.head.appendChild(script);
+    } else {
+        setTimeout(loadTurnstile, 200);
+    }
+
     // Initialize Google One Tap
     if (window.google) {
         const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -244,6 +279,12 @@ onMounted(() => {
              }
         });
     }
+});
+
+onUnmounted(() => {
+  if (window.turnstile && turnstileId.value !== null) {
+      window.turnstile.remove(turnstileId.value);
+  }
 });
 
 const continueAsUser = () => {

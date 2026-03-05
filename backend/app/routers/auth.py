@@ -11,6 +11,37 @@ from app.core.config import settings
 from app.api import deps
 from app.schemas.user import UserCreate, User as UserSchema, UserLogin
 from app.models.user import User
+from app.services.bypass import check_and_apply_domain_whitelist
+
+
+import httpx
+import secrets
+from datetime import datetime, timezone
+from fastapi import Request
+from pydantic import BaseModel
+from sqlalchemy.orm import selectinload
+
+from app.models.token import VerificationToken
+from app.services.email import send_verification_email, send_password_reset_email, send_otp_email
+
+async def verify_turnstile(token: str) -> bool:
+    if settings.DEV_MODE:
+        return True
+    if not settings.TURNSTILE_SECRET_KEY:
+        return True
+    if not token:
+        return False
+        
+    async with httpx.AsyncClient() as client:
+        res = await client.post(
+            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+            data={
+                "secret": settings.TURNSTILE_SECRET_KEY,
+                "response": token
+            }
+        )
+        data = res.json()
+        return data.get("success", False)
 
 router = APIRouter()
 
@@ -28,6 +59,9 @@ async def register(
     result = await db.execute(select(User).where(func.lower(User.email) == user_in.email))
     user = result.scalars().first()
     
+    if not await verify_turnstile(user_in.turnstile_token):
+        raise HTTPException(status_code=400, detail="Invalid Turnstile token (Bot protection)")
+
     if user:
         raise HTTPException(
             status_code=400,
@@ -44,13 +78,44 @@ async def register(
     db.add(user)
     await db.commit()
     await db.refresh(user)
+    
+    # Auto-upgrade if domain is whitelisted
+    bypassed = await check_and_apply_domain_whitelist(user, db)
+    
+    if bypassed:
+        user.is_verified = True
+        db.add(user)
+        await db.commit()
+    else:
+        # Create verification token & send email
+        import secrets
+        token_str = secrets.token_urlsafe(32)
+        v_token = VerificationToken(
+            token=token_str,
+            user_id=user.id,
+            token_type="email_verify",
+            expires_at=datetime.now(timezone.utc) + timedelta(hours=24)
+        )
+        db.add(v_token)
+        await db.commit()
+        
+        verify_url = f"{settings.FRONTEND_URL}/verify-email?token={token_str}"
+        import asyncio
+        asyncio.create_task(send_verification_email(user.email, verify_url))
+        
     return user
 
 @router.post("/login")
 async def login(
+    request: Request,
     db: AsyncSession = Depends(deps.get_db),
     form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
+    form = await request.form()
+    turnstile_token = form.get("turnstile_token")
+    
+    if not await verify_turnstile(turnstile_token):
+        raise HTTPException(status_code=400, detail="Invalid Turnstile token (Bot protection)")
     """
     OAuth2 compatible token login, get an access token for future requests
     """
@@ -71,7 +136,7 @@ async def login(
     
     return {
         "access_token": security.create_access_token(
-            user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name}
+            user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name, "is_verified": user.is_verified}
         ),
         "refresh_token": security.create_refresh_token(
             user.id, expires_delta=refresh_token_expires
@@ -81,7 +146,7 @@ async def login(
 
 @router.get("/verify", response_model=UserSchema)
 def verify_token(
-    current_user: User = Depends(deps.get_current_user)
+    current_user: User = Depends(deps.get_current_authenticated_user)
 ) -> Any:
     """
     Verify current token validity.
@@ -127,7 +192,7 @@ async def refresh_token(
     
     return {
         "access_token": security.create_access_token(
-            user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name}
+            user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name, "is_verified": user.is_verified}
         ),
         "token_type": "bearer",
         "refresh_token": request.refresh_token # Return same or a new one
@@ -251,12 +316,15 @@ async def oauth_callback(
             await db.commit()
             await db.refresh(user)
             
+            # Auto-upgrade if domain is whitelisted
+            await check_and_apply_domain_whitelist(user, db)
+            
         # Generate Tokens
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         refresh_token_expires = timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
         
         access_token = security.create_access_token(
-            user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name}
+            user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name, "is_verified": user.is_verified}
         )
         refresh_token = security.create_refresh_token(
             user.id, expires_delta=refresh_token_expires
@@ -321,13 +389,16 @@ async def google_one_tap_login(
             await db.commit()
             await db.refresh(user)
             
+            # Auto-upgrade if domain is whitelisted
+            await check_and_apply_domain_whitelist(user, db)
+            
         # Generate Tokens
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         refresh_token_expires = timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
         
         return {
             "access_token": security.create_access_token(
-                user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name}
+                user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name, "is_verified": user.is_verified}
             ),
             "refresh_token": security.create_refresh_token(
                 user.id, expires_delta=refresh_token_expires
@@ -340,3 +411,141 @@ async def google_one_tap_login(
     except Exception as e:
         print(f"Google One Tap Error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
+
+
+class VerifyEmailRequest(BaseModel):
+    token: str
+
+@router.post("/verify-email")
+async def verify_email_endpoint(request: VerifyEmailRequest, db: AsyncSession = Depends(deps.get_db)):
+    result = await db.execute(
+        select(VerificationToken).where(
+            VerificationToken.token == request.token,
+            VerificationToken.token_type == "email_verify"
+        )
+    )
+    v_token = result.scalars().first()
+    
+    if not v_token:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+        
+    result = await db.execute(select(User).where(User.id == v_token.user_id))
+    user = result.scalars().first()
+    if not user:
+        raise HTTPException(status_code=400, detail="User not found")
+        
+    if v_token.expires_at < datetime.now(timezone.utc):
+        raise HTTPException(status_code=400, detail="Token has expired")
+        
+    user.is_verified = True
+    db.add(user)
+    await db.delete(v_token) # optional: delete or keep for audit
+    await db.commit()
+    
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    refresh_token_expires = timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+    
+    return {
+        "access_token": security.create_access_token(
+            user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name, "is_verified": user.is_verified}
+        ),
+        "refresh_token": security.create_refresh_token(
+            user.id, expires_delta=refresh_token_expires
+        ),
+        "token_type": "bearer",
+        "message": "Email verified successfully"
+    }
+
+@router.post("/resend-verification")
+async def resend_verification(
+    current_user: User = Depends(deps.get_current_authenticated_user),
+    db: AsyncSession = Depends(deps.get_db)
+):
+    if current_user.is_verified:
+        raise HTTPException(status_code=400, detail="Email is already verified")
+        
+    await db.execute(
+        VerificationToken.__table__.delete().where(
+            VerificationToken.user_id == current_user.id,
+            VerificationToken.token_type == "email_verify"
+        )
+    )
+    
+    import secrets
+    token_str = secrets.token_urlsafe(32)
+    v_token = VerificationToken(
+        token=token_str,
+        user_id=current_user.id,
+        token_type="email_verify",
+        expires_at=datetime.now(timezone.utc) + timedelta(hours=24)
+    )
+    db.add(v_token)
+    await db.commit()
+    
+    verify_url = f"{settings.FRONTEND_URL}/verify-email?token={token_str}"
+    import asyncio
+    asyncio.create_task(send_verification_email(current_user.email, verify_url))
+    
+    return {"message": "Verification email resent successfully."}
+
+class ForgotPasswordRequest(BaseModel):
+    email: str
+    turnstile_token: str | None = None
+
+@router.post("/forgot-password")
+async def forgot_password_endpoint(request: ForgotPasswordRequest, db: AsyncSession = Depends(deps.get_db)):
+    if not await verify_turnstile(request.turnstile_token):
+        raise HTTPException(status_code=400, detail="Invalid Turnstile token (Bot protection)")
+
+    result = await db.execute(select(User).where(func.lower(User.email) == request.email.lower()))
+    user = result.scalars().first()
+    
+    if not user:
+        # Don't leak user existence
+        return {"message": "If an account exists, a reset link has been sent."}
+        
+    token_str = secrets.token_urlsafe(32)
+    v_token = VerificationToken(
+        token=token_str,
+        user_id=user.id,
+        token_type="password_reset",
+        expires_at=datetime.now(timezone.utc) + timedelta(hours=1)
+    )
+    db.add(v_token)
+    await db.commit()
+    
+    reset_url = f"{settings.FRONTEND_URL}/reset-password?token={token_str}"
+    import asyncio
+    asyncio.create_task(send_password_reset_email(user.email, reset_url))
+    
+    return {"message": "If an account exists, a reset link has been sent."}
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
+@router.post("/reset-password")
+async def reset_password_endpoint(request: ResetPasswordRequest, db: AsyncSession = Depends(deps.get_db)):
+    result = await db.execute(
+        select(VerificationToken).where(
+            VerificationToken.token == request.token,
+            VerificationToken.token_type == "password_reset"
+        )
+    )
+    v_token = result.scalars().first()
+    
+    if not v_token:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+        
+    if v_token.expires_at < datetime.now(timezone.utc):
+        raise HTTPException(status_code=400, detail="Token has expired")
+        
+    result = await db.execute(select(User).where(User.id == v_token.user_id))
+    user = result.scalars().first()
+    
+    user.hashed_password = security.get_password_hash(request.new_password)
+    db.add(user)
+    await db.delete(v_token)
+    await db.commit()
+    
+    return {"message": "Password has been reset successfully. You can now log in."}

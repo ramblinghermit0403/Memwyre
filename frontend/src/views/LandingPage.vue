@@ -27,7 +27,7 @@
             Central memory for your digital life. Sync your context across any tool. Secure storage for the AI age.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-start">
-            <router-link to="/register" class="px-8 py-4 bg-primary text-white text-lg font-bold rounded-full hover:bg-primary-600 hover:translate-y-[-2px] transition-all duration-300 flex items-center justify-center gap-2">
+            <router-link to="/signup" class="px-8 py-4 bg-primary text-white text-lg font-bold rounded-full hover:bg-primary-600 hover:translate-y-[-2px] transition-all duration-300 flex items-center justify-center gap-2">
                 Start Building
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </router-link>
@@ -588,7 +588,7 @@
                         <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#D97757] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">OpenClaw agent plugin access</span></li>
                         <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#D97757] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">Priority support</span></li>
                     </ul>
-                    <router-link to="/register" class="w-full py-4 text-center bg-primary text-white font-bold rounded-xl hover:bg-primary-600 transition-colors">Get Started</router-link>
+                    <router-link to="/signup" class="w-full py-4 text-center bg-primary text-white font-bold rounded-xl hover:bg-primary-600 transition-colors">Get Started</router-link>
                 </div>
             </div>
         </div>
@@ -617,6 +617,12 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="py-12 text-center border-t border-primary/10 bg-surface text-text-secondary">
+        <p class="mb-2">Need help? Contact our team at <a href="mailto:support@memwyre.tech" class="text-primary hover:text-primary-600 font-medium transition-colors">support@memwyre.tech</a></p>
+        <p class="text-sm text-text-muted">&copy; 2026 MemWyre. All rights reserved.</p>
+    </footer>
+
   </div>
 </template>
 
@@ -631,7 +637,7 @@ const faqs = ref([
     },
     {
         question: "Which AI models do you support?",
-        answer: "MemWyre supports a wide variety of state-of-the-art models for extraction and conversational RAG. Paid plans gain access to premium models to provide higher accuracy responses.",
+        answer: "MemWyre supports flagship AWS models to provide state-of-the-art, highly accurate responses for data extraction and conversational RAG.",
         isOpen: false
     },
     {

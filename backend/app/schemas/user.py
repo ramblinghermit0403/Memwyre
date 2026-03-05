@@ -8,6 +8,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    turnstile_token: Optional[str] = None
 
 class UserLogin(UserBase):
     password: str
@@ -19,6 +20,7 @@ class UserUpdate(BaseModel):
 class UserInDBBase(UserBase):
     id: int
     is_active: bool
+    is_verified: bool = False
     created_at: datetime
 
     class Config:

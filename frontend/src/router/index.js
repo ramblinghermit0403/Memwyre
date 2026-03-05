@@ -52,9 +52,24 @@ const router = createRouter({
             component: () => import('../views/LoginView.vue')
         },
         {
-            path: '/register',
+            path: '/signup',
             name: 'register',
             component: () => import('../views/RegisterView.vue')
+        },
+        {
+            path: '/verify-email',
+            name: 'verify-email',
+            component: () => import('../views/VerifyEmailView.vue')
+        },
+        {
+            path: '/forgot-password',
+            name: 'forgot-password',
+            component: () => import('../views/ForgotPasswordView.vue')
+        },
+        {
+            path: '/reset-password',
+            name: 'reset-password',
+            component: () => import('../views/ResetPasswordView.vue')
         },
         {
             path: '/settings',
@@ -96,6 +111,17 @@ const router = createRouter({
             name: 'billing',
             component: () => import('../views/BillingView.vue'),
             meta: { requiresAuth: true }
+        },
+        {
+            path: '/admin/bypass',
+            name: 'admin-bypass',
+            component: () => import('../views/AdminBypassView.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
+            path: '/redeem',
+            name: 'redeem',
+            component: () => import('../views/RedeemView.vue')
         }
     ]
 });
@@ -109,6 +135,16 @@ router.beforeEach((to, from, next) => {
             path: '/login',
             query: { redirect: to.fullPath }
         });
+    }
+    // If accessing restricted routes and not verified, redirect to settings
+    else if (
+        to.meta.requiresAuth &&
+        authStore.isAuthenticated &&
+        authStore.user &&
+        !authStore.user.is_verified &&
+        !['settings', 'dashboard'].includes(to.name)
+    ) {
+        next('/settings');
     }
     // If accessing landing page (root) and already authenticated, redirect to dashboard
     else if (to.path === '/' && authStore.isAuthenticated) {

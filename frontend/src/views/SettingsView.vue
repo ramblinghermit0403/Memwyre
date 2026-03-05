@@ -70,14 +70,27 @@
                     
                     <hr class="border-gray-100 dark:border-border" />
                     
-                    <!-- Account Info (Static for now as mostly mockup) -->
+                    <!-- Account Info -->
                     <div>
                        <h4 class="text-sm font-medium text-gray-900 dark:text-text-primary mb-4">Account</h4>
                        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                            <div class="sm:col-span-4">
-                               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email address</label>
-                               <div class="mt-1">
-                                   <input type="email" disabled :value="authStore.user?.email || 'user@example.com'" class="bg-gray-50 dark:bg-gray-700 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md py-2 px-3 text-gray-500 dark:text-gray-400 cursor-not-allowed">
+                               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email address</label>
+                               <div class="flex items-center gap-3">
+                                   <input type="email" disabled :value="authStore.user?.email || 'user@example.com'" class="bg-gray-50 dark:bg-gray-700 block w-full sm:max-w-md sm:text-sm border-gray-300 dark:border-gray-600 rounded-md py-2 px-3 text-gray-500 dark:text-gray-400 cursor-not-allowed">
+                                   <span v-if="authStore.user?.is_verified" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                       Verified
+                                   </span>
+                                   <span v-else class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                       Unverified
+                                   </span>
+                               </div>
+                               <div v-if="authStore.user && !authStore.user.is_verified" class="mt-3">
+                                   <p class="text-sm text-red-600 dark:text-red-400 mb-2">You must verify your email address to access core features.</p>
+                                   <button @click="resendVerification" :disabled="resendingEmail" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer">
+                                       <svg v-if="resendingEmail" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                       {{ resendingEmail ? 'Sending...' : 'Resend Verification Email' }}
+                                   </button>
                                </div>
                            </div>
                        </div>
@@ -346,6 +359,21 @@ const newKey = ref({
   permissions: { read: true, write: false, auto_save: false }
 });
 const tokenCopied = ref(false);
+
+const resendingEmail = ref(false);
+
+const resendVerification = async () => {
+    if (resendingEmail.value) return;
+    resendingEmail.value = true;
+    try {
+        await api.post('/auth/resend-verification');
+        toast.success("Verification email sent! Please check your inbox.");
+    } catch (err) {
+        toast.error(err.response?.data?.detail || "Failed to resend email.");
+    } finally {
+        resendingEmail.value = false;
+    }
+};
 
 // Loading States
 const addingKey = ref(false);

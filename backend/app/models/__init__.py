@@ -11,3 +11,5 @@ from .history import MemoryHistory as History
 from .fact import Fact
 from .usage import UserUsage
 from .subscription import Subscription
+from .invite import InviteToken
+from .token import VerificationToken

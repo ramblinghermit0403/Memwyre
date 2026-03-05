@@ -25,7 +25,28 @@ class Settings(BaseSettings):
         if self.CORS_ORIGINS == "*":
             return ["*"]
         return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+
+    # Auth Overrides
+    ADMIN_EMAILS: str = ""
+    WHITELISTED_DOMAINS: str = ""
+
+    @property
+    def admin_email_list(self) -> List[str]:
+        return [e.strip().lower() for e in self.ADMIN_EMAILS.split(",") if e.strip()]
+
+    @property
+    def whitelisted_domain_list(self) -> List[str]:
+        return [d.strip().lower() for d in self.WHITELISTED_DOMAINS.split(",") if d.strip()]
     
+    # AWS Services
+    AWS_ACCESS_KEY_ID: Optional[str] = None
+    AWS_SECRET_ACCESS_KEY: Optional[str] = None
+    AWS_REGION: str = "us-east-1"
+    AWS_SES_SENDER_EMAIL: Optional[str] = None
+
+    # Cloudflare Turnstile
+    TURNSTILE_SECRET_KEY: Optional[str] = None
+
     # Database
     # Default to sqlite if not set in .env
     DATABASE_URL: Optional[str] = None

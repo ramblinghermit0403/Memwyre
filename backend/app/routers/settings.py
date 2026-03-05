@@ -11,7 +11,7 @@ router = APIRouter()
 async def update_settings(
     settings: Dict[str, Any] = Body(...),
     db: AsyncSession = Depends(deps.get_db),
-    current_user: User = Depends(deps.get_current_user)
+    current_user: User = Depends(deps.get_current_authenticated_user)
 ) -> Any:
     """
     Update user settings (e.g. auto_approve, theme, etc.)
@@ -43,7 +43,7 @@ async def update_settings(
 @router.get("/settings", response_model=Dict[str, Any])
 @router.get("/settings", response_model=Dict[str, Any])
 async def get_settings(
-    current_user: User = Depends(deps.get_current_user)
+    current_user: User = Depends(deps.get_current_authenticated_user)
 ) -> Any:
     """
     Get user settings.

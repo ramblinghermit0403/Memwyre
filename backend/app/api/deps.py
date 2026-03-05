@@ -18,7 +18,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         finally:
             await db.close()
 
-async def get_current_user(
+async def get_current_authenticated_user(
     db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme)
 ) -> User:
     credentials_exception = HTTPException(
@@ -69,6 +69,17 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
+
+async def get_current_user(
+    current_user: User = Depends(get_current_authenticated_user),
+) -> User:
+    if not current_user.is_verified:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Please verify your email address to access this feature.",
+        )
+    return current_user
 
 
 async def require_subscription(

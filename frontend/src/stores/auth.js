@@ -15,7 +15,8 @@ export const useAuthStore = defineStore('auth', {
                 return {
                     id: decoded.sub,
                     email: decoded.email || decoded.sub,
-                    name: decoded.name || (decoded.email || decoded.sub || '').split('@')[0]
+                    name: decoded.name || (decoded.email || decoded.sub || '').split('@')[0],
+                    is_verified: decoded.is_verified || false
                 };
             } catch (e) {
                 return null;
@@ -36,10 +37,13 @@ export const useAuthStore = defineStore('auth', {
         };
     },
     actions: {
-        async login(email, password) {
+        async login(email, password, turnstileToken) {
             try {
-                const response = await api.post('/auth/login',
-                    new URLSearchParams({ username: email, password }),
+                const params = new URLSearchParams({ username: email, password });
+                if (turnstileToken) {
+                    params.append('turnstile_token', turnstileToken);
+                }
+                const response = await api.post('/auth/login', params,
                     { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
                 );
 
@@ -67,7 +71,8 @@ export const useAuthStore = defineStore('auth', {
                 this.user = {
                     id: decoded.sub,
                     email: decoded.email || decoded.sub,
-                    name: decoded.name || (decoded.email || decoded.sub || '').split('@')[0]
+                    name: decoded.name || (decoded.email || decoded.sub || '').split('@')[0],
+                    is_verified: decoded.is_verified || false
                 };
                 localStorage.setItem('lastKnownUser', JSON.stringify(this.user));
             } catch (e) { console.error("Token decode failed", e); }
@@ -97,9 +102,9 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async register(email, password, name) {
+        async register(email, password, name, turnstileToken) {
             try {
-                await api.post('/auth/register', { email, password, name });
+                await api.post('/auth/register', { email, password, name, turnstile_token: turnstileToken });
                 return true;
             } catch (error) {
                 console.error('Registration failed:', error);
