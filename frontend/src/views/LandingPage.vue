@@ -167,11 +167,9 @@
                  <p class="text-text-secondary mb-8">
                      Capture the web as you browse. Save articles, documentation, or code snippets instantly without breaking your flow.
                  </p>
-                  <div class="flex items-center gap-2 text-sm font-bold">
-                      <span>Available for Chrome & Edge</span>
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold">
+                      <span>✨ Coming Soon</span>
                   </div>
-                  <p class="text-xs text-primary/70 font-medium mt-3">✨ YouTube video ingestion — coming soon</p>
              </div>
 
              <div class="p-10 border border-primary/15 dark:border-primary/20 rounded-3xl hover:border-primary transition-colors duration-300">
