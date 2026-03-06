@@ -7,7 +7,7 @@
         </div>
         <p class="text-sm text-gray-400">© 2026 MemWyre. Crafted for clarity.</p>
         <div class="flex flex-wrap gap-4 md:gap-6 justify-center mt-4 md:mt-0">
-             <a href="mailto:shivharehimansh@gmail.com" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Support</a>
+             <a href="mailto:support@memwyre.tech" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">support@memwyre.tech</a>
              <router-link to="/privacy-policy" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Privacy Policy</router-link>
              <router-link to="/terms" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Terms of Service</router-link>
              <a href="https://x.com/MemWyre" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors">Twitter</a>
