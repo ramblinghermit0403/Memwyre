@@ -116,16 +116,8 @@ async def health_check():
 # Mount MCP Server (Streamable HTTP) - MUST be LAST since mount("/") is a catch-all
 # This allows remote connections (e.g. Cursor, Claude Desktop) via /mcp
 if _mcp_server:
-    from mcp.server.transport_security import TransportSecuritySettings
-
-    # Allow the production domain through MCP's DNS rebinding protection
-    # Without this, Host: server.memwyre.tech gets rejected with 421
-    transport_security = TransportSecuritySettings(
-        allowed_hosts=["server.memwyre.tech", "localhost", "127.0.0.1"],
-    )
-
     # streamable_http_app() creates its own /mcp sub-route, so mount at root
     # Final endpoint: http://host:8000/mcp
-    app.mount("/", _mcp_server.streamable_http_app(transport_security=transport_security))
+    app.mount("/", _mcp_server.streamable_http_app())
     print("Mounted MCP Streamable HTTP Server at /mcp")
 

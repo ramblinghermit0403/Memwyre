@@ -66,8 +66,16 @@ logger = logging.getLogger("mcp_server")
 logger.addHandler(file_handler)
 logger.setLevel(logging.INFO)
 
-# Initialize FastMCP Server
-mcp = FastMCP("MemWyre")
+# Initialize FastMCP Server with DNS rebinding protection configured
+# to allow the production domain (otherwise 421 "Invalid Host header")
+from mcp.server.transport_security import TransportSecuritySettings
+
+mcp = FastMCP(
+    "MemWyre",
+    transport_security=TransportSecuritySettings(
+        allowed_hosts=["server.memwyre.tech", "localhost", "127.0.0.1"],
+    ),
+)
 
 # Import Context and ApiKey
 from mcp.server.fastmcp import Context
