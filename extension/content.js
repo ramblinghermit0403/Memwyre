@@ -531,47 +531,8 @@ const ADAPTERS = {
             shortsVideo: ['ytd-reel-video-renderer'],
             shortsTitle: ['#overlay .metadata h2', '.yt-reel-metadatam-renderer h2']
         },
-        async injectSaveButtons() {
-            // Regular videos
-            const videoMenu = queryWithFallback(this.selectors.videoMenu);
-            if (videoMenu && !videoMenu.querySelector('.brain-vault-save-btn')) {
-                const titleEl = queryWithFallback(this.selectors.videoTitle);
-                const title = titleEl ? titleEl.innerText : 'YouTube Video';
-                const btn = createSaveButton(() => title, this.name);
-                btn.style.width = '36px';
-                btn.style.height = '36px';
-                btn.style.marginLeft = '8px';
-                requestAnimationFrame(() => videoMenu.prepend(btn));
-            }
-
-            // Shorts
-            const shortsOverlays = queryAllWithFallback(this.selectors.shortsActions);
-            for (const actionContainer of shortsOverlays) {
-                if (actionContainer.offsetParent === null) continue;
-                if (actionContainer.querySelector('.brain-vault-save-btn')) continue;
-
-                let title = 'YouTube Short';
-                const activeShort = actionContainer.closest(this.selectors.shortsVideo[0]);
-                if (activeShort) {
-                    const titleEl = activeShort.querySelector(this.selectors.shortsTitle[0]);
-                    if (titleEl) title = titleEl.innerText.trim();
-                }
-
-                const btn = createSaveButton(() => title, this.name);
-                btn.style.cssText = `
-                    width: 48px; height: 48px; margin-bottom: 16px; border-radius: 50%;
-                    background-color: rgba(255,255,255,0.15); backdrop-filter: blur(4px);
-                    color: white; border: none; z-index: 9999; pointer-events: auto;
-                `;
-                const img = btn.querySelector('img');
-                if (img) {
-                    img.style.width = '24px';
-                    img.style.height = '24px';
-                    img.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))';
-                }
-                requestAnimationFrame(() => actionContainer.prepend(btn));
-            }
-        },
+        // YouTube extraction hidden — coming soon with client-side transcript support
+        async injectSaveButtons() { /* Hidden: YouTube extraction coming soon */ },
         async injectContextButton() { /* No-op for YouTube */ }
     },
 

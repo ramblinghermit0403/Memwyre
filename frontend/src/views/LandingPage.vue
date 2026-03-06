@@ -68,7 +68,7 @@
           </div>
           <h3 class="text-2xl font-bold mb-3">Unified Ingestion</h3>
           <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
-            Bring everything together. Import PDFs, scrape web pages, add YouTube videos, and sync your notes into one central vault.
+            Bring everything together. Import PDFs, scrape web pages, and sync your notes into one central vault. YouTube ingestion coming soon.
           </p>
         </div>
       </div>
@@ -167,10 +167,11 @@
                  <p class="text-text-secondary mb-8">
                      Capture the web as you browse. Save articles, documentation, or code snippets instantly without breaking your flow.
                  </p>
-                 <div class="flex items-center gap-2 text-sm font-bold">
-                     <span>Available for Chrome & Edge</span>
-                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                 </div>
+                  <div class="flex items-center gap-2 text-sm font-bold">
+                      <span>Available for Chrome & Edge</span>
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                  </div>
+                  <p class="text-xs text-primary/70 font-medium mt-3">✨ YouTube video ingestion — coming soon</p>
              </div>
 
              <div class="p-10 border border-primary/15 dark:border-primary/20 rounded-3xl hover:border-primary transition-colors duration-300">
@@ -448,12 +449,12 @@
                 <div class="space-y-6 flex-grow">
                      <div>
                         <h4 class="text-sm font-bold uppercase tracking-widest text-primary mb-2">The Problem</h4>
-                        <p class="text-text-secondary">Forgetting the precise details of long YouTube tutorials, complex research papers, and online courses shortly after consuming them.</p>
+                        <p class="text-text-secondary">Forgetting the precise details of long tutorials, complex research papers, and online courses shortly after consuming them.</p>
                     </div>
                     <div>
                         <h4 class="text-sm font-bold uppercase tracking-widest text-primary/70 mb-2">Memwyre Solution</h4>
                         <p class="text-text-primary font-medium">Active recall on demand.</p>
-                        <p class="text-text-secondary mt-1">Ingest YouTube video transcripts and course materials. Use conversational chat to actively test your knowledge or ask highly specific follow-up questions months later.</p>
+                        <p class="text-text-secondary mt-1">Ingest course materials and research papers. Use conversational chat to actively test your knowledge or ask highly specific follow-up questions months later. YouTube transcript ingestion coming soon.</p>
                     </div>
                 </div>
             </div>
@@ -582,7 +583,7 @@
                     <ul class="space-y-4 mb-8 text-left">
                         <li class="flex items-center gap-3"><svg class="w-5 h-5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">1M+ token storage</span></li>
                         <li class="flex items-center gap-3"><svg class="w-5 h-5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">100K daily AI token budget</span></li>
-                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#D97757] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">PDF, YouTube & web page ingestion</span></li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#D97757] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">PDF & web page ingestion <span class="text-xs text-primary/60">(YouTube coming soon)</span></span></li>
                         <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#D97757] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">MCP Server for IDE integration</span></li>
                         <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#D97757] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">Browser Extension (Chrome & Edge)</span></li>
                         <li class="flex items-center gap-3"><svg class="w-5 h-5 text-[#D97757] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">OpenClaw agent plugin access</span></li>

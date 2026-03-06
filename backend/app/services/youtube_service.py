@@ -1,14 +1,38 @@
 from typing import Optional
 from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api.proxies import GenericProxyConfig
 from urllib.parse import urlparse, parse_qs
 import httpx
 from bs4 import BeautifulSoup
 import re
 
+from app.core.config import settings
+
 class YouTubeService:
+    def __init__(self):
+        """Initialize with optional proxy support for cloud deployments."""
+        self._ytt_api = None
+
+    @property
+    def ytt_api(self) -> YouTubeTranscriptApi:
+        """Lazily initialize YouTubeTranscriptApi with proxy if configured."""
+        if self._ytt_api is None:
+            proxy_url = settings.YOUTUBE_PROXY_URL
+            if proxy_url:
+                print(f"YouTube Proxy configured: {proxy_url[:20]}...")
+                self._ytt_api = YouTubeTranscriptApi(
+                    proxy_config=GenericProxyConfig(
+                        http_url=proxy_url,
+                        https_url=proxy_url,
+                    )
+                )
+            else:
+                self._ytt_api = YouTubeTranscriptApi()
+        return self._ytt_api
+
     def get_video_id(self, url: str) -> Optional[str]:
         """
-        Extracts the video ID from a YouTube API.
+        Extracts the video ID from a YouTube URL.
         Supports:
         - https://www.youtube.com/watch?v=VIDEO_ID
         - https://youtu.be/VIDEO_ID
@@ -16,11 +40,10 @@ class YouTubeService:
         - https://www.youtube.com/embed/VIDEO_ID
         """
         # Regex is more robust for these variations
-        # Matches 11-char ID after v=, embed/, shorts/, or youtu.be/
         patterns = [
             r'(?:v=|\/)([\w-]{11})(?:\?|&|$)',
             r'(?:embed\/|shorts\/|youtu\.be\/)([\w-]{11})',
-            r'^([\w-]{11})$' # Raw ID
+            r'^([\w-]{11})$'  # Raw ID
         ]
         
         for p in patterns:
@@ -89,39 +112,35 @@ class YouTubeService:
 
     def extract_transcript(self, url: str) -> Optional[str]:
         """
-        Extracts the transcript. Returns None if failed (instead of raising),
-        so we can fallback to description.
-        """
-        video_id = self.get_video_id(url)
-        if not video_id:
-            raise ValueError("Invalid YouTube URL")
-        """
-        Extracts the transcript. Returns None if failed (instead of raising),
-        so we can fallback to description.
+        Extracts the transcript using youtube-transcript-api v1.x.
+        Returns None if failed (instead of raising), so we can fallback to description.
         """
         video_id = self.get_video_id(url)
         if not video_id:
             raise ValueError("Invalid YouTube URL")
 
-        # Method 1: youtube_transcript_api (Fast)
+        # Method 1: youtube_transcript_api v1.x (Fast)
         try:
-            transcript_list_obj = YouTubeTranscriptApi.list_transcripts(video_id)
+            transcript_list = self.ytt_api.list(video_id)
             final_transcript = None
             
+            # Try manually created transcript first
             try:
-                final_transcript = transcript_list_obj.find_manually_created_transcript(['en', 'en-US', 'en-GB'])
+                final_transcript = transcript_list.find_manually_created_transcript(['en', 'en-US', 'en-GB'])
             except:
                 pass
             
+            # Then try auto-generated
             if not final_transcript:
                 try:
-                    final_transcript = transcript_list_obj.find_generated_transcript(['en', 'en-US', 'en-GB'])
+                    final_transcript = transcript_list.find_generated_transcript(['en', 'en-US', 'en-GB'])
                 except:
                     pass
             
+            # Fallback: any available transcript, translate if possible
             if not final_transcript:
                 try:
-                    for t in transcript_list_obj:
+                    for t in transcript_list:
                         final_transcript = t
                         break
                     if final_transcript and final_transcript.is_translatable:
@@ -130,14 +149,15 @@ class YouTubeService:
                     pass
 
             if final_transcript:
-                transcript_data = final_transcript.fetch()
-                return " ".join([entry['text'] for entry in transcript_data]).strip()
+                fetched = final_transcript.fetch()
+                # v1.x returns FetchedTranscript with snippet objects
+                return " ".join([snippet.text for snippet in fetched]).strip()
 
         except Exception as e:
             print(f"Primary Transcript Method Failed for {video_id}: {e}")
-            pass # Fallthrough to Method 2
+            pass  # Fallthrough to Method 2
 
-        # Method 2: yt-dlp (Robust)
+        # Method 2: yt-dlp (Robust fallback)
         print("Fallback: Attempting yt-dlp extraction...")
         try:
             import yt_dlp
@@ -150,6 +170,11 @@ class YouTubeService:
                 'quiet': True,
                 'no_warnings': True,
             }
+
+            # Add proxy to yt-dlp if configured
+            proxy_url = settings.YOUTUBE_PROXY_URL
+            if proxy_url:
+                ydl_opts['proxy'] = proxy_url
             
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=False)
@@ -158,7 +183,7 @@ class YouTubeService:
                 subs = info.get('subtitles') or {}
                 auto_subs = info.get('automatic_captions') or {}
                 
-                # Merge logic
+                # Merge logic (manual subs override auto)
                 all_subs = {**auto_subs, **subs}
                 
                 # Find English
@@ -205,18 +230,16 @@ class YouTubeService:
                             # Fallback generic tag/time stripper (e.g., for .vtt or .srv1 or .xml)
                             import re
                             text = r.text
-                            # 1. Remove XML/HTML tags (e.g. <i>, </i>, <c>)
+                            # 1. Remove XML/HTML tags
                             text = re.sub(r'<[^>]+>', '', text)
-                            # 2. Remove timestamps (e.g., 00:00:00.000, 00:00:00,000)
+                            # 2. Remove timestamps
                             text = re.sub(r'\d{2}:\d{2}:\d{2}[\.,]\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}[\.,]\d{3}', '', text)
                             # 3. Clean up VTT headers
                             text = text.replace("WEBVTT\n", "").replace("Kind: captions\n", "").replace("Language: en\n", "")
                             # 4. Remove empty lines and normalize whitespace
                             lines = [line.strip() for line in text.split('\n') if line.strip() and not line.strip().isdigit()]
                             
-                            # Join the cleaned lines
                             cleaned_transcript = " ".join(lines)
-                            # Remove excessive whitespace
                             cleaned_transcript = re.sub(r'\s+', ' ', cleaned_transcript).strip()
                             
                             if cleaned_transcript:
@@ -229,7 +252,7 @@ class YouTubeService:
                         print(f"yt-dlp sub fetch error: {inner_e}")
                         
         except Exception as e:
-            print(f"yt-dlp Falback Failed: {e}")
+            print(f"yt-dlp Fallback Failed: {e}")
             
         print("Transcript extraction failed completely.")
         return None

@@ -247,12 +247,12 @@
                 <div class="space-y-6 flex-grow">
                      <div>
                         <h4 class="text-sm font-bold uppercase tracking-widest text-primary mb-2">The Problem</h4>
-                        <p class="text-text-secondary">Forgetting the precise details of long YouTube tutorials, complex research papers, and online courses shortly after consuming them.</p>
+                        <p class="text-text-secondary">Forgetting the precise details of long tutorials, complex research papers, and online courses shortly after consuming them.</p>
                     </div>
                     <div>
                         <h4 class="text-sm font-bold uppercase tracking-widest text-primary/70 mb-2">Memwyre Solution</h4>
                         <p class="text-text-primary font-medium">Active recall on demand.</p>
-                        <p class="text-text-secondary mt-1">Ingest YouTube video transcripts and course materials. Use conversational chat to actively test your knowledge or ask highly specific follow-up questions months later.</p>
+                        <p class="text-text-secondary mt-1">Ingest course materials and research papers. Use conversational chat to actively test your knowledge or ask highly specific follow-up questions months later. YouTube transcript ingestion coming soon.</p>
                     </div>
                 </div>
             </div>

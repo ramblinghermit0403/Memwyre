@@ -255,7 +255,7 @@
           </button>
           
           <button 
-            v-if="activeTab === 'documents' || activeTab === 'webpage' || activeTab === 'youtube'"
+            v-if="activeTab === 'documents' || activeTab === 'webpage'"
             @click="ingest" 
             :disabled="(activeTab === 'documents' ? !selectedFile : !urlInput) || uploading"
             class="px-5 py-2 text-sm font-medium bg-[#D97757] text-white hover:bg-[#C4654A] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center gap-2"
@@ -264,7 +264,7 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ uploading ? 'Processing...' : (uploadSuccess ? 'Done' : (['webpage', 'youtube'].includes(activeTab) ? 'Ingest' : 'Add Content')) }}
+              {{ uploading ? 'Processing...' : (uploadSuccess ? 'Done' : (activeTab === 'webpage' ? 'Ingest' : 'Add Content')) }}
           </button>
       </div>
 
@@ -297,7 +297,7 @@ const uploadSuccess = ref(false);
 const tabs = [
     { id: 'create', name: 'Create', icon: 'svg-plus' },
     { id: 'documents', name: 'Documents', icon: 'svg-doc' },
-    { id: 'youtube', name: 'YouTube', icon: 'svg-yt' },
+    // { id: 'youtube', name: 'YouTube', icon: 'svg-yt' },  // Hidden: YouTube extraction coming soon
     { id: 'webpage', name: 'Webpage', icon: 'svg-web' },
 ];
 

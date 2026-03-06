@@ -47,6 +47,9 @@ class Settings(BaseSettings):
     # Cloudflare Turnstile
     TURNSTILE_SECRET_KEY: Optional[str] = None
 
+    # YouTube Proxy (for bypassing IP bans on cloud servers)
+    YOUTUBE_PROXY_URL: Optional[str] = None
+
     # Database
     # Default to sqlite if not set in .env
     DATABASE_URL: Optional[str] = None

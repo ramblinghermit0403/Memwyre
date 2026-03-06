@@ -149,7 +149,7 @@ const proFeatures = [
   'Unlimited memories & documents',
   'AI-powered chat with your knowledge base',
   'Document uploads (PDF, DOCX, TXT)',
-  'URL & YouTube ingestion',
+  'URL & web page ingestion (YouTube coming soon)',
   'Data export (JSON & Markdown)',
   'MCP server integration',
 ];
