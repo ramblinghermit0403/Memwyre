@@ -37,12 +37,8 @@ async def lifespan(app: FastAPI):
     asyncio.create_task(dedupe_service.run_periodic_check(AsyncSessionLocal))
     asyncio.create_task(manager.start_redis_listener())
 
-    # Initialize MCP session manager (required for Streamable HTTP transport)
-    if _mcp_server:
-        async with _mcp_server.session_manager.run():
-            yield  # App is running
-    else:
-        yield  # App is running without MCP
+    # App is running
+    yield
 
     # --- Shutdown (if needed) ---
 
