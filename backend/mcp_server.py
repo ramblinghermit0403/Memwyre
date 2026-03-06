@@ -94,10 +94,35 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
     1. HTTP Headers (Multi-Tenant via Context)
     2. Environment Variables (Single-Tenant fallback)
     Also validates required scopes if provided.
-    Returns a tuple of (User, key_name) where key_name is the API key's name (e.g. 'Claude Desktop', 'Cursor').
+    Returns a tuple of (User, client_source) where client_source is determined from protocol or API key name.
     """
     api_key = None
-    
+    protocol_client_name = None
+
+    # 0. Check Protocol Client Info (MCP standard initialize params)
+    if ctx:
+        try:
+            if hasattr(ctx, 'session'):
+                session = ctx.session
+                # Attempt to extract from standard mcp python SDK internals
+                # Different versions of the SDK store it in different places
+                if hasattr(session, '_client_info') and hasattr(session._client_info, 'name'):
+                    protocol_client_name = session._client_info.name
+                elif hasattr(session, 'client_info') and hasattr(session.client_info, 'name'):
+                    protocol_client_name = session.client_info.name
+                elif hasattr(session, 'init_options') and hasattr(session.init_options, 'clientInfo'):
+                    protocol_client_name = session.init_options.clientInfo.name
+            
+                if protocol_client_name:
+                    logger.info(f"Detected MCP protocol client name: {protocol_client_name}")
+                else:
+                    logger.debug(f"Session attrs (could not find client info): {[a for a in dir(session) if not a.startswith('_')]}")
+        except Exception as e:
+            logger.error(f"Error extracting protocol client info: {e}")
+
+    # Explicit environment variable source override
+    env_client_name = os.environ.get("BRAIN_VAULT_CLIENT_NAME")
+
     # 1. Check Context for Headers (HTTP Mode)
     if ctx and hasattr(ctx, 'request_context'):
         try:
@@ -120,6 +145,11 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
                 header_dict = {}
             
             logger.info(f"Extracted headers keys: {list(header_dict.keys())}")
+            
+            # Check Custom Headers for explicit client name
+            for key, value in header_dict.items():
+                if key.lower() == 'x-mcp-client-name':
+                    protocol_client_name = protocol_client_name or value
             
             # Check Authorization Header (case-insensitive)
             auth_header = None
@@ -150,7 +180,10 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
     if not api_key:
         api_key = os.environ.get("BRAIN_VAULT_API_KEY")
 
+    key_record_name = None
+
     # 3. Authenticate
+    user = None
     if api_key:
         # A. Persistent API Key
         if api_key.startswith("bv_sk_"):
@@ -166,7 +199,7 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
                 
                 result_user = await db.execute(select(User).filter(User.id == key_record.user_id))
                 user = result_user.scalars().first()
-                return (user, key_record.name) if user else (None, None)
+                key_record_name = key_record.name
         
         # B. OAuth2 Access Token (JWT)
         else:
@@ -179,28 +212,28 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
                 if user_id:
                     result = await db.execute(select(User).filter(User.id == int(user_id)))
                     user = result.scalars().first()
-                    return (user, None) if user else (None, None)
             except JWTError:
                 # Invalid or expired token
                 pass
 
     # 4. Fallback Legacy Auth (Env Vars for ID/Email)
     # Only if NO API KEY was provided/found (to prevent accidental bypass)
-    if not api_key:
+    if not user and not api_key:
         # Fallback assume full access for local dev
         user_email = os.environ.get("BRAIN_VAULT_USER_EMAIL")
         if user_email:
             result = await db.execute(select(User).filter(User.email == user_email))
             user = result.scalars().first()
-            return (user, None) if user else (None, None)
             
         user_id = os.environ.get("BRAIN_VAULT_USER_ID")
-        if user_id:
+        if not user and user_id:
             result = await db.execute(select(User).filter(User.id == int(user_id)))
             user = result.scalars().first()
-            return (user, None) if user else (None, None)
 
-    return (None, None)
+    # Determine priority for client_source
+    client_source = protocol_client_name or env_client_name or key_record_name
+    return (user, client_source)
+
 
 
 @mcp.tool()
@@ -220,13 +253,12 @@ async def save_memory(text: str, ctx: Context, source: str = "mcp", tags: Option
                 logger.error("No user found during save_memory")
                 return "Error: No user found."
 
-            # Use the API key name as the source if the caller didn't specify a custom one
-            # This identifies WHICH MCP client created the memory (e.g. 'Claude Desktop', 'Cursor')
+            # Use the dynamically identified client source if the tool caller just used "mcp"
             effective_source = source
             if source == "mcp" and key_name:
                 effective_source = key_name
             
-            logger.info(f"Effective source: {effective_source} (key_name: {key_name})")
+            logger.info(f"Effective source: {effective_source} (identified source: {key_name})")
 
             memory = await memory_service.create_memory(
                 db=db,
