@@ -91,7 +91,7 @@
 
             <div class="flex flex-col items-center gap-3">
               <div class="text-center">
-                <span class="text-4xl font-bold text-gray-900 dark:text-text-primary">$5</span>
+                <span class="text-4xl font-bold text-gray-900 dark:text-text-primary">$12</span>
                 <span class="text-gray-500 dark:text-text-secondary">/month</span>
               </div>
               <button
@@ -146,12 +146,13 @@ const cancelling = ref(false);
 const queryStatus = computed(() => route.query.status);
 
 const proFeatures = [
-  'Unlimited memories & documents',
-  'AI-powered chat with your knowledge base',
-  'Document uploads (PDF, DOCX, TXT)',
-  'URL & web page ingestion (YouTube coming soon)',
-  'Data export (JSON & Markdown)',
-  'MCP server integration',
+  '1M+ token storage',
+  '100K daily AI token budget',
+  'PDF & web page ingestion (YouTube coming soon)',
+  'MCP Server for IDE integration',
+  'Browser Extension (Chrome & Edge)',
+  'OpenClaw agent plugin access',
+  'Priority support',
 ];
 
 const formatDate = (isoString) => {

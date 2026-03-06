@@ -50,7 +50,8 @@
       ],
       "js": [
         "auth_relay.js"
-      ]
+      ],
+      "run_at": "document_start"
     }
   ],
   "externally_connectable": {

@@ -2,6 +2,36 @@ import { defineStore } from 'pinia';
 import api from '../services/api';
 import { jwtDecode } from "jwt-decode";
 
+// --- Extension Token Relay ---
+// Broadcasts auth state to the MemWyre browser extension via postMessage.
+// auth_relay.js (content script) catches these and relays to the background script.
+function broadcastToExtension(type, token, refreshToken, user) {
+    const payload = { type };
+    if (type === 'MEMWYRE_AUTH_SUCCESS') {
+        payload.token = token;
+        payload.refreshToken = refreshToken;
+        payload.user = user ? JSON.parse(JSON.stringify(user)) : null;
+    }
+    // Retry with delays to handle race condition where content script hasn't loaded yet
+    [0, 500, 1500].forEach(delay => {
+        setTimeout(() => window.postMessage(payload, '*'), delay);
+    });
+}
+
+// Global: when auth_relay.js loads late, it announces RELAY_READY.
+// We respond by re-broadcasting the current auth state.
+let _relayListenerAttached = false;
+function attachRelayListener(store) {
+    if (_relayListenerAttached) return;
+    _relayListenerAttached = true;
+    window.addEventListener('message', (event) => {
+        if (event.source !== window) return;
+        if (event.data?.type === 'MEMWYRE_RELAY_READY' && store.token) {
+            broadcastToExtension('MEMWYRE_AUTH_SUCCESS', store.token, store.refreshToken, store.user);
+        }
+    });
+}
+
 export const useAuthStore = defineStore('auth', {
     state: () => {
         const token = localStorage.getItem('token');
@@ -76,6 +106,10 @@ export const useAuthStore = defineStore('auth', {
                 };
                 localStorage.setItem('lastKnownUser', JSON.stringify(this.user));
             } catch (e) { console.error("Token decode failed", e); }
+
+            // Broadcast to extension
+            broadcastToExtension('MEMWYRE_AUTH_SUCCESS', accessToken, refreshToken, this.user);
+            attachRelayListener(this);
         },
 
         async refresh() {
@@ -120,6 +154,9 @@ export const useAuthStore = defineStore('auth', {
             localStorage.removeItem('token');
             localStorage.removeItem('refreshToken');
             localStorage.removeItem('hasCompletedOnboarding');
+
+            // Notify extension to clear its tokens too
+            broadcastToExtension('MEMWYRE_AUTH_LOGOUT');
         },
         completeOnboarding() {
             this.hasCompletedOnboarding = true;

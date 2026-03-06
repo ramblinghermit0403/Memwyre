@@ -14,4 +14,13 @@ window.addEventListener("message", (event) => {
             user: event.data.user
         });
     }
+
+    if (event.data.type && (event.data.type === "MEMWYRE_AUTH_LOGOUT")) {
+        console.log("MemWyre Extension: Logout received from web app");
+        chrome.runtime.sendMessage({ action: "logout" });
+    }
 });
+
+// Announce readiness — solves the OAuth race condition where the web app
+// broadcasts tokens before this content script has loaded
+window.postMessage({ type: "MEMWYRE_RELAY_READY" }, "*");

@@ -134,17 +134,6 @@ const loginWithProvider = (provider) => {
     window.location.href = `${apiUrl}/auth/oauth/${provider}/login`;
 };
 
-const broadcastToken = (accessToken, refreshToken, user) => {
-    // Broadcast to Extension Relay Script
-    const plainUser = user ? JSON.parse(JSON.stringify(user)) : null;
-    
-    window.postMessage({
-        type: "MEMWYRE_AUTH_SUCCESS",
-        token: accessToken,
-        refreshToken: refreshToken,
-        user: plainUser
-    }, "*");
-};
 
 const handleLogin = async () => {
   loading.value = true;
@@ -153,7 +142,6 @@ const handleLogin = async () => {
     await authStore.login(email.value, password.value, turnstileToken.value);
     localStorage.setItem('lastProvider', 'email'); 
     toast.success(`Welcome back, ${authStore.user.name}!`);
-    broadcastToken(authStore.token, authStore.refreshToken, authStore.user);
     const redirectPath = route.query.redirect || '/dashboard';
     router.push(redirectPath);
   } catch (err) {
@@ -193,7 +181,6 @@ const handleGoogleOneTapResponse = async (response) => {
         authStore.setTokens(data.access_token, data.refresh_token);
         localStorage.setItem('lastProvider', 'google');
         toast.success(`Welcome back, ${authStore.user.name}!`);
-        broadcastToken(data.access_token, data.refresh_token, authStore.user);
         
         const redirectPath = route.query.redirect || '/dashboard';
         router.push(redirectPath);
@@ -211,7 +198,6 @@ onMounted(() => {
     if (accessToken) {
         authStore.setTokens(accessToken, refreshToken);
         toast.success(`Welcome back, ${authStore.user.name}!`);
-        broadcastToken(accessToken, refreshToken, authStore.user);
         
         // Remove tokens from URL
         const query = { ...route.query };

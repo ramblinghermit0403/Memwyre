@@ -177,6 +177,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true; // Async response
     }
 
+    if (request.action === 'logout') {
+        chrome.storage.local.remove(['token', 'refreshToken', 'user']).then(() => {
+            console.log('Extension logged out via web app.');
+            sendResponse({ success: true });
+        });
+        return true;
+    }
+
     // Handlers that require async response
     const handleAsync = async () => {
         try {

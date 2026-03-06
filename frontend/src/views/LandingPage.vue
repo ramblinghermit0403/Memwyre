@@ -576,7 +576,7 @@
                 <div class="p-8 border-2 border-primary rounded-3xl bg-surface flex flex-col h-full relative">
                     <div class="absolute top-0 right-8 transform -translate-y-1/2 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase">MemWyre Pro</div>
                     <h3 class="text-2xl font-bold mb-2">Unlimited</h3>
-                    <div class="text-4xl font-extrabold mb-6">$10<span class="text-lg text-text-muted font-normal">/mo</span></div>
+                    <div class="text-4xl font-extrabold mb-6">$12<span class="text-lg text-text-muted font-normal">/mo</span></div>
                     <p class="text-text-secondary mb-8 flex-grow">Everything you need to build and maintain your complete second brain.</p>
                     <ul class="space-y-4 mb-8 text-left">
                         <li class="flex items-center gap-3"><svg class="w-5 h-5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="text-sm font-medium">1M+ token storage</span></li>
