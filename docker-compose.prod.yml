@@ -17,7 +17,7 @@ services:
     command: >
       uv run gunicorn app.main:app
       --worker-class uvicorn.workers.UvicornWorker
-      --workers 1
+      --workers 2
       --bind 0.0.0.0:8000
       --timeout 120
       --access-logfile -
@@ -27,6 +27,28 @@ services:
           memory: 1024M
     ports:
       - "8000:8000"
+    env_file:
+      - .env.prod
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/0
+
+  mcp_server:
+    image: ${ECR_IMAGE:-brain_vault-backend:latest}
+    restart: unless-stopped
+    command: >
+      uv run gunicorn mcp_server_app:app
+      --worker-class uvicorn.workers.UvicornWorker
+      --workers 1
+      --bind 0.0.0.0:8001
+      --timeout 120
+      --access-logfile -
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    ports:
+      - "8001:8001"
     env_file:
       - .env.prod
     environment:

@@ -113,11 +113,7 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
-# Mount MCP Server (Streamable HTTP) - MUST be LAST since mount("/") is a catch-all
-# This allows remote connections (e.g. Cursor, Claude Desktop) via /mcp
-if _mcp_server:
-    # streamable_http_app() creates its own /mcp sub-route, so mount at root
-    # Final endpoint: http://host:8000/mcp
-    app.mount("/", _mcp_server.streamable_http_app())
-    print("Mounted MCP Streamable HTTP Server at /mcp")
+# MCP Server is now mounted in a dedicated service via mcp_server_app.py
+# to avoid Gunicorn multi-worker session state issues.
+
 
