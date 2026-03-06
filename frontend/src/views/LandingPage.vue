@@ -616,11 +616,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="py-12 text-center border-t border-primary/10 bg-surface text-text-secondary">
-        <p class="mb-2">Need help? Contact our team at <a href="mailto:support@memwyre.tech" class="text-primary hover:text-primary-600 font-medium transition-colors">support@memwyre.tech</a></p>
-        <p class="text-sm text-text-muted">&copy; 2026 MemWyre. All rights reserved.</p>
-    </footer>
 
   </div>
 </template>
