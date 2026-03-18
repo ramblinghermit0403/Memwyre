@@ -484,7 +484,7 @@ const fetchDocument = async () => {
     }
 
     if (!found) {
-        router.push('/');
+        router.push('/dashboard');
     } else {
         // Fetch Chunks for Enrichment Sidebar
         fetchChunks(resolvedId.value);
@@ -617,7 +617,7 @@ const showDeleteModal = ref(false);
 
 const deleteDocument = async () => {
   if (documentId.value === 'new') {
-    router.push('/');
+    router.push('/dashboard');
     return;
   }
   showDeleteModal.value = true;
@@ -630,7 +630,7 @@ const confirmDeleteDocument = async () => {
     // Usually API takes the ID passed.
     await api.delete(`/memory/${targetId}`);
     toast.success('Document deleted');
-    router.push('/');
+    router.push('/dashboard');
   } catch (error) {
     console.error('Error deleting document:', error);
     const status = error.response?.status;

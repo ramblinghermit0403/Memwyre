@@ -31,7 +31,7 @@
           </router-link>
 
           <router-link to="/chat" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
-            Documents
+            Ask
           </router-link>
 
           <router-link to="/settings" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">

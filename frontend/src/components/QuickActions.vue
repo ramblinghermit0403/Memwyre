@@ -1,5 +1,8 @@
 <template>
-  <div class="fixed bottom-6 right-10 sm:right-16 lg:right-28 z-50 flex flex-col items-end">
+  <div
+    v-if="!isCompactViewport"
+    class="fixed bottom-6 right-10 sm:right-16 lg:right-28 z-50 flex flex-col items-end"
+  >
     <!-- Actions Menu -->
     <transition
       enter-active-class="transition duration-200 ease-out"
@@ -35,11 +38,19 @@
 </template>
 
 <script setup>
-import { ref, h } from 'vue';
+import { ref, h, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const isOpen = ref(false);
+const isCompactViewport = ref(false);
+
+const updateViewportMode = () => {
+  isCompactViewport.value = window.innerWidth < 1280 || window.innerHeight < 760;
+  if (isCompactViewport.value) {
+    isOpen.value = false;
+  }
+};
 
 // Icon Components
 const PlusIcon = () => h('svg', { class: 'w-5 h-5', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
@@ -109,4 +120,13 @@ const handleAction = (action) => {
   action.handler();
   isOpen.value = false;
 };
+
+onMounted(() => {
+  updateViewportMode();
+  window.addEventListener('resize', updateViewportMode);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateViewportMode);
+});
 </script>

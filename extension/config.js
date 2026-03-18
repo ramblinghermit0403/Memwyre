@@ -1,7 +1,7 @@
 // config.js
 
 // Change this to 'prod' before publishing to the Chrome Web Store
-const ENV = 'dev'; // Options: 'dev', 'prod'
+const ENV = 'prod'; // Options: 'dev', 'prod'
 
 const CONFIG = {
     dev: {
