@@ -152,10 +152,6 @@ router.beforeEach((to, from, next) => {
     ) {
         next('/settings');
     }
-    // If accessing landing page (root) and already authenticated, redirect to dashboard
-    else if (to.path === '/' && authStore.isAuthenticated) {
-        next('/dashboard');
-    }
     else {
         next();
     }
