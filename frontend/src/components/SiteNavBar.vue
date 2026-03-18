@@ -1,29 +1,26 @@
 <template>
-    <nav class="fixed w-full z-50 bg-white/90 dark:bg-black/90 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800">
-      <div class="max-w-7xl mx-auto px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
+    <nav class="fixed w-full z-50 bg-white/95 dark:bg-[#191919]/95 backdrop-blur-md border-b border-black/5 dark:border-white/10">
+      <div class="max-w-7xl mx-auto px-8 lg:px-12">
+        <div class="flex justify-between items-center h-16">
           <router-link to="/" class="flex items-center group">
-            <img src="/image.svg" alt="MemWyre" class="w-8 h-8 rounded-lg mr-3 group-hover:scale-105 transition-transform duration-300" />
-            <span class="text-xl font-bold tracking-tight text-black dark:text-white">MemWyre</span>
+            <img src="/image.svg" alt="MemWyre" class="w-7 h-7 rounded-lg mr-2.5 group-hover:scale-105 transition-transform duration-300" />
+            <span class="text-[15px] font-bold tracking-tight text-[#191919] dark:text-white">MemWyre</span>
           </router-link>
           
-          <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
-            <!-- Use explicit routes for anchors if we are not on home -->
-            <!-- For simplicity, assuming Hash mode or simply linking to /#id -->
-            <a href="/#features" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Features</a>
-            <a href="/#workflow" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Workflow</a>
-            <a href="/#ecosystem" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Ecosystem</a>
-            <a href="/#use-cases" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Use Cases</a>
-            <a href="/#pricing" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">Pricing</a>
-            <a href="/#faq" class="text-gray-500 hover:text-black dark:hover:text-white transition-colors">FAQ</a>
+          <div class="hidden md:flex items-center gap-1">
+            <a href="/#features" class="px-3 py-1.5 text-sm text-[#191919]/70 hover:text-[#191919] dark:text-white/60 dark:hover:text-white transition-colors rounded-md hover:bg-black/[0.04] dark:hover:bg-white/[0.06]">Features</a>
+            <a href="/#workflow" class="px-3 py-1.5 text-sm text-[#191919]/70 hover:text-[#191919] dark:text-white/60 dark:hover:text-white transition-colors rounded-md hover:bg-black/[0.04] dark:hover:bg-white/[0.06]">Workflow</a>
+            <a href="/#ecosystem" class="px-3 py-1.5 text-sm text-[#191919]/70 hover:text-[#191919] dark:text-white/60 dark:hover:text-white transition-colors rounded-md hover:bg-black/[0.04] dark:hover:bg-white/[0.06]">Ecosystem</a>
+            <a href="/#use-cases" class="px-3 py-1.5 text-sm text-[#191919]/70 hover:text-[#191919] dark:text-white/60 dark:hover:text-white transition-colors rounded-md hover:bg-black/[0.04] dark:hover:bg-white/[0.06]">Use Cases</a>
+            <a href="/#pricing" class="px-3 py-1.5 text-sm text-[#191919]/70 hover:text-[#191919] dark:text-white/60 dark:hover:text-white transition-colors rounded-md hover:bg-black/[0.04] dark:hover:bg-white/[0.06]">Pricing</a>
           </div>
 
-          <div class="flex items-center gap-4">
-            <router-link to="/login" class="text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white transition-colors">
+          <div class="flex items-center gap-3">
+            <router-link to="/login" class="text-sm text-[#191919]/70 hover:text-[#191919] dark:text-white/60 dark:hover:text-white transition-colors">
               Log in
             </router-link>
-            <router-link to="/signup" class="px-5 py-2.5 bg-[#D97757] text-white text-sm font-bold rounded-full hover:bg-[#C4654A] transition-colors">
-              Get Started
+            <router-link to="/signup" class="px-4 py-2 bg-[#D97757] text-white text-sm font-semibold rounded-lg hover:bg-[#C4654A] transition-colors">
+              Get MemWyre free
             </router-link>
           </div>
         </div>

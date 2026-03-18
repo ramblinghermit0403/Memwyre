@@ -13,6 +13,7 @@ from app.db.base import Base
 # Import models to register them
 from app.models.fact import Fact
 from app.models.memory import Memory
+from app.models.project import Project
 # ... other models if needed
 
 # this is the Alembic Config object, which provides
@@ -97,3 +98,4 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+

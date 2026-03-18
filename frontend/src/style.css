@@ -3,7 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: 'Inter', sans-serif;
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
 
   /* App Backgrounds */
   --color-app: var(--bg-app);
@@ -41,10 +42,13 @@
 }
 
 :root {
-  /* Light Theme Default */
+  /* Light Theme Default — Notion AI inspired */
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-body);
+
   --bg-app: #FAF6F0;
   --bg-surface: #FFFFFF;
-  --bg-surface-2: #F0EBE3;
+  --bg-surface-2: #F7F6F3;
   --bg-elevated: #FFFFFF;
 
   --primary: #D97757;
@@ -57,17 +61,17 @@
   --danger: #DC2626;
   --info: #D97757;
 
-  --text-primary: #2D2B2A;
-  --text-secondary: #475569;
-  --text-muted: #94A3B8;
+  --text-primary: #191919;
+  --text-secondary: #37352F99;
+  --text-muted: #37352F66;
 
-  --border: rgba(45, 43, 42, 0.08);
-  --divider-strong: rgba(45, 43, 42, 0.12);
-  --backdrop: rgba(2, 6, 23, 0.4);
+  --border: rgba(25, 25, 25, 0.06);
+  --divider-strong: rgba(25, 25, 25, 0.09);
+  --backdrop: rgba(0, 0, 0, 0.4);
 
   --input-bg: #FFFFFF;
-  --input-border: rgba(45, 43, 42, 0.08);
-  --placeholder: #94A3B8;
+  --input-border: rgba(25, 25, 25, 0.08);
+  --placeholder: #37352F66;
 }
 
 .dark {
@@ -105,6 +109,16 @@
 body {
   background-color: var(--bg-app);
   color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+/* Typography helpers */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-balance {
+  text-wrap: balance;
 }
 
 /* Scrollbar styling */
@@ -148,5 +162,5 @@ body {
 
 
 .font-zalando {
-  font-family: 'Zalando Sans Expanded', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-body);
 }

@@ -54,10 +54,10 @@
             </div>
 
             <!-- Content Card -->
-            <div class="prose dark:prose-invert max-w-none">
+            <div class="max-w-none">
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ currentMemory.title }}</h2>
-                <div class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
-                    {{ currentMemory.content }}
+                <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-b from-gray-50/60 to-white dark:from-surface-2/40 dark:to-surface p-6">
+                  <MarkdownPreview :content="currentMemory.content || ''" />
                 </div>
             </div>
 
@@ -106,6 +106,7 @@
 import { ref, computed, onMounted } from 'vue';
 import api from '../services/api';
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
+import MarkdownPreview from './common/MarkdownPreview.vue';
 
 const emit = defineEmits(['close']);
 const loading = ref(true);

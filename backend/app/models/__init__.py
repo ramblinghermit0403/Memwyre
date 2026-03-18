@@ -13,3 +13,6 @@ from .usage import UserUsage
 from .subscription import Subscription
 from .invite import InviteToken
 from .token import VerificationToken
+
+from .project import Project
+

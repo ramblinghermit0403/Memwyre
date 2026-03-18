@@ -1,7 +1,8 @@
 // Background script for Brain Vault Extension
 
 // Default to production, but allow easy switch for local dev
-const API_BASE_URL = 'https://server.memwyre.tech/api/v1'; // Change to 'http://localhost:8000/api/v1' for local dev
+importScripts('config.js');
+const API_BASE_URL = CONFIG[ENV].API_BASE_URL;
 
 // --- Auth Helper ---
 
@@ -97,12 +98,17 @@ async function generatePrompt(data) {
 }
 
 async function saveMemory(data) {
+    const userTags = Array.isArray(data.tags) ? data.tags : [];
+    const allTags = [...new Set(['extension', ...userTags])];
+
     return await fetchWithAuth('/memory/', {
         method: 'POST',
         body: JSON.stringify({
             title: data.title,
             content: data.content,
-            tags: ['extension']
+            tags: allTags,
+            source_llm: data.source || 'user',
+            interaction_type: data.interaction_type || 'conversation'
         })
     });
 }

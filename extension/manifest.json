@@ -11,8 +11,10 @@
     "contextMenus"
   ],
   "host_permissions": [
+    "http://localhost:8000/*",
+    "http://localhost:5173/*",
     "https://server.memwyre.tech/*",
-    "https://*.memwyre.tech/*"
+    "https://memwyre.tech/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -40,15 +42,19 @@
         "https://perplexity.ai/*"
       ],
       "js": [
+        "config.js",
         "content.js"
       ]
     },
     {
       "matches": [
-        "https://memwyre.tech/*",
-        "https://*.memwyre.tech/*"
+        "http://localhost:8000/*",
+        "http://localhost:5173/*",
+        "https://server.memwyre.tech/*",
+        "https://memwyre.tech/*"
       ],
       "js": [
+        "config.js",
         "auth_relay.js"
       ],
       "run_at": "document_start"
@@ -56,9 +62,10 @@
   ],
   "externally_connectable": {
     "matches": [
-      "https://memwyre.tech/*",
+      "http://localhost:8000/*",
+      "http://localhost:5173/*",
       "https://server.memwyre.tech/*",
-      "https://*.memwyre.tech/*"
+      "https://memwyre.tech/*"
     ]
   },
   "web_accessible_resources": [

@@ -88,7 +88,7 @@
                 </div>
                 <!-- 7 o'clock — OUT (far) -->
                 <div class="absolute bottom-[1%] left-[14%] flex flex-col items-center gap-1 z-10 animate-float-1" style="animation-delay: 0.7s;">
-                    <img src="@/assets/openai.svg" alt="ChatGPT" class="w-14 h-14" />
+                    <img src="@/assets/openai.svg" alt="ChatGPT" class="w-14 h-14 dark:invert" />
                     <div class="text-sm font-bold">ChatGPT</div>
                 </div>
                 <!-- 9 o'clock — IN (close) -->
@@ -110,7 +110,7 @@
         <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
              <h2 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-8">The Disconnect</h2>
              <blockquote class="text-4xl md:text-5xl font-bold leading-tight mb-16">
-                “AI is everywhere in our workflow — <span class="bg-primary text-white px-2">but none of it sticks.</span>”
+                â€œAI is everywhere in our workflow â€” <span class="bg-primary text-white px-2">but none of it sticks.</span>â€
             </blockquote>
              
              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">

@@ -1,0 +1,75 @@
+﻿[36mvite v7.2.4 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mÔ£ô[39m 25 modules transformed.
+node.exe : [31mÔ£ù[39m Build failed 
+in 4.78s
+At line:1 char:1
++ & "C:\nvm4w\nodejs/node.exe" "C:\nvm4
+w\nodejs/node_modules/npm/bin/np ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpeci 
+   fied: ([31mÔ£ù[39m Build failed   
+  in 4.78s:String) [], RemoteExcepti   
+ on
+    + FullyQualifiedErrorId : NativeCo 
+   mmandError
+ 
+[31merror during build:
+[31m[vite:vue] [vue/compiler-sfc] 
+Identifier 'lastKnownUser' has already 
+been declared. (71:6)
+
+C:/Users/himan/OneDrive/Documents/brain
+_vault/frontend/src/views/LoginView.vue
+178|  };
+179|  
+180|  const lastKnownUser = ref(null);
+   |        ^
+181|  const lastProvider = ref(null);
+182|  [31m
+file: [36mC:/Users/himan/OneDrive/Docu
+ments/brain_vault/frontend/src/views/Lo
+ginView.vue:71:6[31m
+    at constructor (C:\Users\himan\OneD
+rive\Documents\brain_vault\frontend\nod
+e_modules\@babel\parser\lib\index.js:36
+7:19)
+    at Parser.raise (C:\Users\himan\One
+Drive\Documents\brain_vault\frontend\no
+de_modules\@babel\parser\lib\index.js:6
+624:19)
+    at 
+ScopeHandler.checkRedeclarationInScope 
+(C:\Users\himan\OneDrive\Documents\brai
+n_vault\frontend\node_modules\@babel\pa
+rser\lib\index.js:1646:19)
+    at ScopeHandler.declareName (C:\Use
+rs\himan\OneDrive\Documents\brain_vault
+\frontend\node_modules\@babel\parser\li
+b\index.js:1612:12)
+    at 
+Parser.declareNameFromIdentifier (C:\Us
+ers\himan\OneDrive\Documents\brain_vaul
+t\frontend\node_modules\@babel\parser\l
+ib\index.js:7594:16)
+    at Parser.checkIdentifier (C:\Users
+\himan\OneDrive\Documents\brain_vault\f
+rontend\node_modules\@babel\parser\lib\
+index.js:7590:12)
+    at Parser.checkLVal (C:\Users\himan
+\OneDrive\Documents\brain_vault\fronten
+d\node_modules\@babel\parser\lib\index.
+js:7527:12)
+    at Parser.parseVarId (C:\Users\hima
+n\OneDrive\Documents\brain_vault\fronte
+nd\node_modules\@babel\parser\lib\index
+.js:13488:10)
+    at Parser.parseVar (C:\Users\himan\
+OneDrive\Documents\brain_vault\frontend
+\node_modules\@babel\parser\lib\index.j
+s:13459:12)
+    at Parser.parseVarStatement (C:\Use
+rs\himan\OneDrive\Documents\brain_vault
+\frontend\node_modules\@babel\parser\li
+b\index.js:13306:10)[39m

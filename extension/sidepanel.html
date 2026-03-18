@@ -37,75 +37,87 @@
         <!-- Segmented Control Tabs -->
         <div class="tabs-container" id="tabs-container">
             <div class="tabs-segmented">
-                <button class="tab-segment active" data-tab="memories">
-                    <i class="fas fa-layer-group"></i> Memories
+                <button class="tab-segment active" data-tab="inbox" title="Inbox">
+                    <i class="fas fa-inbox"></i> Inbox
                 </button>
-                <button class="tab-segment" data-tab="search">
-                    <i class="fas fa-search"></i> Retrieve
+                <button class="tab-segment" data-tab="timeline" title="Timeline">
+                    <i class="fas fa-stream"></i> Timeline
                 </button>
-                <button class="tab-segment" data-tab="save">
+                <button class="tab-segment" data-tab="search" title="Search">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <button class="tab-segment" data-tab="save" title="Save">
                     <i class="fas fa-plus"></i> Save
                 </button>
             </div>
         </div>
 
         <main class="content">
-            <!-- Retrieve/Search Tab -->
-            <div id="view-search" class="view">
-                <div class="input-group">
-                    <label class="input-label"><i class="fas fa-search"></i> Search</label>
-                    <div class="search-bar">
-                        <input type="text" id="search-query" placeholder="Search memories...">
-                        <button id="search-btn" class="icon-btn-search">
-                            <i id="search-icon" class="fas fa-arrow-right"></i>
-                            <i id="loading-icon" class="fas fa-spinner fa-spin hidden"></i>
-                        </button>
+            <!-- Inbox Tab -->
+            <div id="view-inbox" class="view active">
+                <div class="section-header-modern pr-2">
+                    <div class="header-text">
+                        <h3><i class="fas fa-inbox text-gray-500"></i> Recent Inbox</h3>
+                        <p>Pending items waiting for review.</p>
                     </div>
+                    <button id="refresh-inbox" class="text-link-btn-refresh">Refresh</button>
+                </div>
+                <div id="inbox-container" class="modern-list">
+                    <div class="status-msg"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Timeline Tab -->
+            <div id="view-timeline" class="view">
+                <div class="section-header-modern pr-2">
+                    <div class="header-text">
+                        <h3><i class="fas fa-stream text-gray-500"></i> Recent AI Work</h3>
+                        <p>Interaction timeline across tools.</p>
+                    </div>
+                    <div class="header-actions">
+                        <select id="timeline-source" class="select-input-mini">
+                            <option value="">All Sources</option>
+                            <option value="chatgpt">ChatGPT</option>
+                            <option value="claude">Claude</option>
+                            <option value="gemini">Gemini</option>
+                        </select>
+                        <button id="refresh-timeline" class="text-link-btn-refresh">Refresh</button>
+                    </div>
+                </div>
+                <div id="timeline-container" class="timeline-list">
+                    <div class="status-msg"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Search Tab -->
+            <div id="view-search" class="view">
+                <div class="search-bar">
+                    <input type="text" id="search-query" placeholder="Ask MemWyre...">
+                    <button id="search-btn" class="icon-btn-search">
+                        <i class="fas fa-search" id="search-icon"></i>
+                        <i class="fas fa-spinner fa-spin hidden" id="loading-icon"></i>
+                    </button>
                 </div>
                 <div class="filter-row">
                     <div class="filter-group">
-                        <label class="input-label small-label"><i class="fas fa-filter"></i> Filter</label>
                         <select id="search-filter" class="select-input small">
-                            <option value="all" selected>All</option>
-                            <option value="memories">Memories</option>
-                            <option value="facts">Facts</option>
+                            <option value="all">All Results</option>
+                            <option value="facts">Facts Only</option>
+                            <option value="memories">Memories Only</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label class="input-label small-label"><i class="fas fa-list-ol"></i> Results</label>
                         <select id="search-k" class="select-input small">
-                            <option value="3">3</option>
-                            <option value="5" selected>5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                            <option value="20">20</option>
+                            <option value="5">Top 5</option>
+                            <option value="10">Top 10</option>
+                            <option value="20">Top 20</option>
                         </select>
                     </div>
                 </div>
-                <div id="search-results" class="results-list hidden"></div>
-            </div>
-
-            <!-- Memories Tab -->
-            <div id="view-memories" class="view active">
-                <div class="filter-row" style="margin-top: 0; margin-bottom: 12px;">
-                    <div class="filter-group" style="flex: 2;">
-                        <label class="input-label small-label"><i class="fas fa-eye"></i> Show</label>
-                        <select id="memories-filter" class="select-input small">
-                            <option value="all" selected>All</option>
-                            <option value="memories">Memories</option>
-                            <option value="documents">Documents</option>
-                        </select>
-                    </div>
-                    <div class="filter-group" style="flex: 1; display: flex; align-items: flex-end;">
-                        <button id="refresh-memories" class="icon-btn-refresh" title="Refresh">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="memories-container" class="results-list">
-                    <div class="status-msg"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
-                </div>
+                <style>
+                    .results-container { margin-top: 16px; }
+                </style>
+                <div id="search-results" class="results-container hidden mt-2"></div>
             </div>
 
             <!-- Save Tab -->
@@ -113,6 +125,10 @@
                 <div class="input-group">
                     <label class="input-label"><i class="fas fa-heading"></i> Title</label>
                     <input type="text" id="save-title" placeholder="Memory Title">
+                </div>
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-tags"></i> Tags</label>
+                    <input type="text" id="save-tags" placeholder="e.g. project, idea, todo (comma separated)">
                 </div>
                 <div class="input-group">
                     <label class="input-label"><i class="fas fa-align-left"></i> Content</label>
@@ -149,6 +165,8 @@
 
     <div id="toast-container"></div>
 
+    <script src="iconResolver.js"></script>
+    <script src="config.js"></script>
     <script src="sidepanel.js"></script>
 </body>
 

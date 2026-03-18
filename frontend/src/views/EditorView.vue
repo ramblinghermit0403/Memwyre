@@ -113,7 +113,14 @@
         <!-- Main Document Container - Absolutely Centered -->
         <div class="w-full h-full overflow-y-auto flex justify-center p-4 sm:p-8">
              <div class="w-full max-w-4xl bg-white dark:bg-surface shadow-sm border border-gray-100 dark:border-border rounded-xl min-h-[calc(100vh-8rem)] flex flex-col p-8 sm:p-12 relative h-fit mb-12">
+                <div
+                  v-if="isViewMode"
+                  class="max-w-none rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-b from-gray-50/60 to-white dark:from-surface-2/40 dark:to-surface p-6 md:p-8"
+                >
+                    <MarkdownPreview :content="content || ''" />
+                </div>
                 <vue-monaco-editor
+                  v-else
                   v-model:value="content"
                   theme="vs-light"
                   :options="editorOptions"
@@ -151,6 +158,13 @@
                                     {{ docMetadata.status || 'Active' }}
                                 </span>
                              </div>
+                        </div>
+                        <div class="grid grid-cols-[80px_1fr] items-center gap-2">
+                            <label class="text-[11px] text-gray-500 font-medium">Project</label>
+                            <select v-model="selectedProjectId" :disabled="isViewMode" class="text-xs border border-gray-200 dark:border-gray-700 rounded-md px-2 py-1.5 bg-white dark:bg-surface disabled:opacity-80">
+                                <option :value="null">Unassigned</option>
+                                <option v-for="project in projects" :key="project.id" :value="project.id">{{ project.name }}</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -227,7 +241,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, shallowRef } from 'vue';
+import { ref, computed, onMounted, onUnmounted, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor';
 import { useToast } from 'vue-toastification';
@@ -237,6 +251,7 @@ import NavBar from '../components/NavBar.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import EnrichmentSidebar from '../components/EnrichmentSidebar.vue';
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
+import MarkdownPreview from '../components/common/MarkdownPreview.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -258,8 +273,20 @@ const lastSaved = ref(null);
 const isViewMode = ref(route.params.id !== 'new');
 const documentId = computed(() => route.params.id);
 const docMetadata = ref({});
+const selectedProjectId = ref(null);
+const interactionType = ref(route.query.interaction_type || 'conversation');
+const sourceApp = ref(route.query.source_app || null);
+const projects = ref([]);
 const editorInstance = shallowRef(null);
 
+const fetchProjects = async () => {
+    try {
+        const response = await api.get('/projects/');
+        projects.value = response.data || [];
+    } catch (e) {
+        console.error('Failed to fetch projects', e);
+    }
+};
 const fetchTags = async () => {
     try {
         const response = await api.get('/memory/tags');
@@ -421,8 +448,10 @@ const fetchDocument = async () => {
                 created_at: doc.created_at,
                 source_llm: doc.source_llm,
                 status: doc.status,
-                tags: doc.tags
+                tags: doc.tags,
+                project_id: doc.project_id
             };
+            selectedProjectId.value = doc.project_id || null;
             isInboxItem.value = false;
             found = true;
         }
@@ -442,8 +471,10 @@ const fetchDocument = async () => {
                     created_at: doc.created_at,
                     source_llm: doc.source_llm,
                     status: 'pending',
-                    tags: doc.tags
+                    tags: doc.tags,
+                    project_id: doc.project_id
                 };
+                selectedProjectId.value = doc.project_id || null;
                 isInboxItem.value = true;
                 found = true;
             }
@@ -526,7 +557,10 @@ const saveDocument = async () => {
       const response = await api.post('/memory/', {
         title: title.value,
         content: content.value,
-        tags: tagsList
+        tags: tagsList,
+        project_id: selectedProjectId.value ? Number(selectedProjectId.value) : null,
+        interaction_type: interactionType.value,
+        source_app: sourceApp.value
       });
       router.replace(`/editor/mem_${response.data.id}`);
     } else {
@@ -541,7 +575,10 @@ const saveDocument = async () => {
           await api.put(`/memory/${targetId}`, {
               title: title.value,
               content: content.value,
-              tags: tagsList
+              tags: tagsList,
+              project_id: selectedProjectId.value ? Number(selectedProjectId.value) : null,
+              interaction_type: interactionType.value,
+              source_app: sourceApp.value
           });
       }
     }
@@ -624,10 +661,56 @@ const goBack = () => {
 onMounted(() => {
   fetchDocument();
   fetchTags();
+  fetchProjects();
+
+  if (documentId.value === 'new' && !title.value?.trim()) {
+    if (interactionType.value === 'prompt') title.value = 'New Prompt';
+    else if (interactionType.value === 'conversation') title.value = 'New Conversation';
+    else if (interactionType.value === 'web_snippet') title.value = 'Web Context Snippet';
+  }
 });
+
+watch(
+  () => route.params.id,
+  async (newId) => {
+    resolvedId.value = null;
+    isInboxItem.value = false;
+    isViewMode.value = newId !== 'new';
+
+    if (newId === 'new') {
+      title.value = '';
+      content.value = '';
+      tags.value = '';
+      selectedProjectId.value = null;
+      docMetadata.value = {};
+      return;
+    }
+
+    await fetchDocument();
+  }
+);
 
 onUnmounted(() => {
   // cleanup
 });
 
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

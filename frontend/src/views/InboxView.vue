@@ -34,7 +34,12 @@
                                            <div v-html="getIconForSource(item).content" class="w-full h-full"></div>
                                        </template>
                                        <template v-else-if="getIconForSource(item).type === 'img'">
-                                           <img :src="getIconForSource(item).content" alt="Source" class="w-full h-full object-cover rounded-sm" @error="handleImageError($event)" />
+                                           <img
+                                             :src="getIconForSource(item).content"
+                                             alt="Source"
+                                             :class="['w-full h-full object-cover rounded-sm', isOpenAIIcon(getIconForSource(item).content) ? 'dark:invert' : '']"
+                                             @error="handleImageError($event)"
+                                           />
                                        </template>
                                    </div>
                                    <span class="text-xs text-gray-600 dark:text-text-secondary truncate max-w-[140px]">
@@ -117,8 +122,8 @@
 
                    <!-- Content Body -->
                    <div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
-                       <div class="prose dark:prose-invert max-w-none">
-                           <p class="whitespace-pre-wrap text-gray-700 dark:text-gray-300">{{ selectedItem.content }}</p>
+                       <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-b from-gray-50/60 to-white dark:from-surface-2/40 dark:to-surface p-6">
+                         <MarkdownPreview :content="selectedItem.content || ''" />
                        </div>
                    </div>
 
@@ -185,6 +190,7 @@ import NavBar from '../components/NavBar.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import { useToast } from 'vue-toastification';
 import { getIconForSource } from '../utils/iconResolver';
+import MarkdownPreview from '../components/common/MarkdownPreview.vue';
 
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
@@ -295,6 +301,8 @@ const formatTimeAgo = (dateString) => {
 const handleImageError = (e) => {
     e.target.style.display = 'none';
 };
+
+const isOpenAIIcon = (iconContent) => typeof iconContent === 'string' && iconContent.includes('openai.svg');
 
 const startEditing = (item) => {
     router.push(`/editor/${item.id}`);

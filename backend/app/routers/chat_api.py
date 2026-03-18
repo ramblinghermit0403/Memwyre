@@ -1,10 +1,11 @@
-from typing import Any, List
+from typing import Any, List, Dict
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import delete
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timezone
+import uuid
 
 from app.api import deps
 from app.models.user import User
@@ -13,6 +14,7 @@ from app.services.agent_service import agent_service
 from app.db.session import AsyncSessionLocal
 from app.core.config import settings
 from app.services.llm_service import llm_service
+from app.services.websocket import manager
 
 router = APIRouter()
 
@@ -61,7 +63,8 @@ class ChatMessageCreate(BaseModel):
     content: str
     model: str = "apac.amazon.nova-pro-v1:0" # Default to Nova Pro
     temperature: float = 0.7
-    max_tokens: int = 2048
+    max_tokens: int = 2800
+    client_turn_id: str | None = None
     
 class ChatMessageResponse(BaseModel):
     id: int
@@ -118,11 +121,35 @@ async def send_message(
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """Send a message to the agent."""
+    client_turn_id = message_in.client_turn_id or f"turn-{uuid.uuid4()}"
+    effective_temperature = min(max(float(message_in.temperature), 0.0), 1.0)
+    effective_max_tokens = int(min(max(int(message_in.max_tokens), 128), 8192))
+
+    async def emit_turn_event(step: str, status: str, meta: Dict[str, Any] | None = None):
+        try:
+            await manager.send_personal_message(
+                {
+                    "type": "chat_turn_event",
+                    "session_id": session_id,
+                    "client_turn_id": client_turn_id,
+                    "step": step,
+                    "status": status,
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "meta": meta or {}
+                },
+                str(current_user.id)
+            )
+        except Exception:
+            # Progress events should never break primary message flow.
+            pass
+
     # 1. Verify Session Ownership
     result = await db.execute(select(ChatSession).where(ChatSession.id == session_id, ChatSession.user_id == current_user.id))
     session = result.scalars().first()
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+
+    await emit_turn_event("request_received", "completed")
         
     # 2. Process with Agent (This automatically saves User and AI message to DB via SQLChatMessageHistory)
     # Note: AgentService handles db saves internally for messages.
@@ -154,18 +181,25 @@ async def send_message(
                 )
 
     # Process with Agent
-    response = await agent_service.process_message(
-        session_id=session_id,
-        user_id=current_user.id,
-        message=message_in.content,
-        model=message_in.model,
-        temperature=message_in.temperature,
-        max_tokens=message_in.max_tokens
-    )
+    try:
+        response = await agent_service.process_message(
+            session_id=session_id,
+            user_id=current_user.id,
+            message=message_in.content,
+            model=message_in.model,
+            temperature=effective_temperature,
+            max_tokens=effective_max_tokens,
+            progress_callback=emit_turn_event
+        )
+    except Exception as e:
+        await emit_turn_event("turn_failed", "failed", {"error": str(e)})
+        raise
     
     response_text = response.get("output", "")
     sources = response.get("sources", [])
     message_id = response.get("message_id", 0)
+    turn_status = response.get("turn_status", "completed")
+    turn_error = response.get("error")
     
     # Update Session Timestamp
     session.updated_at = datetime.utcnow()
@@ -175,6 +209,11 @@ async def send_message(
     if session.title == "New Chat":
         context = f"User: {message_in.content}\nAI: {response_text}"
         background_tasks.add_task(update_chat_title_task, session_id, context)
+
+    if turn_status == "failed":
+        await emit_turn_event("turn_failed", "failed", {"error": turn_error or "Agent failed to complete the turn."})
+    else:
+        await emit_turn_event("turn_completed", "completed")
     
     return ChatMessageResponse(
         id=message_id, 

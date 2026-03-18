@@ -2,18 +2,26 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 
+
 class MemoryBase(BaseModel):
     title: str
     content: str
     tags: Optional[List[str]] = None
+    project_id: Optional[int] = None
+    interaction_type: Optional[str] = "conversation"
+    source_app: Optional[str] = None
+
 
 class MemoryCreate(MemoryBase):
     created_at: Optional[datetime] = None
 
+
 class MemoryUpdate(MemoryBase):
     pass
 
+
 from typing import Union
+
 
 class MemoryInDBBase(MemoryBase):
     id: Union[int, str]
@@ -25,9 +33,11 @@ class MemoryInDBBase(MemoryBase):
     status: str = "approved"
     task_type: Optional[str] = None
     source: Optional[str] = "manually_created"
+    project_name: Optional[str] = None
 
     class Config:
         from_attributes = True
+
 
 class Memory(MemoryInDBBase):
     pass

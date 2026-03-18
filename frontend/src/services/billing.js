@@ -9,7 +9,7 @@ const billingService = {
     },
 
     /**
-     * Create checkout session → returns { checkout_url, session_id }
+     * Create checkout session â†’ returns { checkout_url, session_id }
      */
     createCheckout() {
         return api.post('/billing/checkout');

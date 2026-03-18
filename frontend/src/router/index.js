@@ -47,6 +47,12 @@ const router = createRouter({
             meta: { requiresAuth: true }
         },
         {
+            path: '/projects',
+            name: 'projects',
+            component: () => import('../views/ProjectsView.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
             path: '/login',
             name: 'login',
             component: () => import('../views/LoginView.vue')
@@ -156,3 +162,5 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
+
+

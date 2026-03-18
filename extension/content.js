@@ -1,4 +1,4 @@
-﻿// Content script for Memwyre Extension
+// Content script for Memwyre Extension
 // Self-contained with all adapters bundled (no ES modules in content scripts)
 
 console.log('Memwyre Extension loaded');
@@ -338,7 +338,7 @@ function createInjectButton(getInputAreaFn) {
 const ADAPTERS = {
     chatgpt: {
         name: 'chatgpt',
-        match: (host) => host.includes('chatgpt'),
+        match: (host) => host === 'chatgpt.com' || host === 'www.chatgpt.com',
         selectors: {
             assistantMessage: [
                 'div[data-message-author-role="assistant"]',
@@ -381,6 +381,36 @@ const ADAPTERS = {
                 }
             }
         },
+        async injectUserPromptSaveButtons() {
+            // User turns: find the div.z-0 action bar that appears on hover
+            const userTurns = document.querySelectorAll('[data-message-author-role="user"]');
+            for (const turn of userTurns) {
+                // The text content of the prompt
+                const textEl = turn.querySelector('[data-message-id]') || turn;
+                // The action button bar beside the user message
+                const actionBar = turn.closest('[data-testid*="conversation-turn"]')?.querySelector('.flex.flex-wrap.items-center.gap-y-4') ||
+                    turn.parentElement?.querySelector('.flex.flex-wrap.items-center.gap-y-4');
+                if (!actionBar || actionBar.querySelector('.brain-vault-save-btn')) continue;
+
+                const btn = createSaveButton(() => turnText, this.name);
+                const turnText = turn.innerText || textEl?.innerText || '';
+                btn.onclick = async (e) => {
+                    e.stopPropagation();
+                    const text = turn.innerText;
+                    const resp = await chrome.runtime.sendMessage({ action: 'saveMemory', data: { title: 'ChatGPT Prompt', content: text, source: 'chatgpt', interaction_type: 'prompt', tags: ['prompt', 'chatgpt'] } });
+                    const originalIcon = btn.querySelector('img')?.cloneNode(true);
+                    if (resp?.success) {
+                        btn.replaceChildren(createCheckmark());
+                        showFloatingFeedback(btn, 'Prompt saved!', 'success');
+                    } else {
+                        btn.replaceChildren(createErrorIcon());
+                        showFloatingFeedback(btn, resp?.error || 'Error', 'error');
+                    }
+                    setTimeout(() => { if (btn.isConnected) btn.replaceChildren(originalIcon || createLogoImage({ width: '16px', height: '16px' })); }, 2000);
+                };
+                actionBar.prepend(btn);
+            }
+        },
         async injectContextButton() {
             const actionContainer = queryWithFallback(this.selectors.inputActions);
             if (!actionContainer || actionContainer.querySelector('.brain-vault-inject-btn')) return;
@@ -394,13 +424,13 @@ const ADAPTERS = {
             `;
             btn.onmouseover = () => { btn.style.backgroundColor = 'rgba(128,128,128,0.15)'; btn.style.opacity = '1'; };
             btn.onmouseout = () => { btn.style.backgroundColor = 'transparent'; btn.style.opacity = '0.9'; };
-            requestAnimationFrame(() => actionContainer.prepend(btn));
+            actionContainer.prepend(btn);
         }
     },
 
     claude: {
         name: 'claude',
-        match: (host) => host.includes('claude'),
+        match: (host) => host === 'claude.ai' || host === 'www.claude.ai',
         selectors: {
             assistantMessage: [
                 '.font-claude-message',
@@ -418,37 +448,103 @@ const ADAPTERS = {
             ]
         },
         async injectSaveButtons() {
-            const messages = queryAllWithFallback(this.selectors.assistantMessage);
-            for (const msg of messages) {
-                const parent = msg.parentElement;
-                let toolbar = parent?.querySelector(this.selectors.messageToolbar[0]);
-                if (!toolbar) toolbar = parent?.parentElement?.querySelector(this.selectors.messageToolbar[0]);
-                if (!toolbar) {
-                    const buttonParent = parent?.parentElement?.querySelector('div.flex button')?.parentElement;
-                    if (buttonParent) toolbar = buttonParent;
+            // Find all Copy buttons across both User and Assistant messages
+            const copyBtns = document.querySelectorAll('button[data-testid="action-bar-copy"], button[aria-label="Copy"]');
+            
+            for (const copyBtn of copyBtns) {
+                // Find the wrapper of the copy button
+                const wrapper = copyBtn.closest('.w-fit') || copyBtn;
+                // Find the action bar container
+                const toolbar = wrapper.parentElement;
+                if (!toolbar || toolbar.querySelector('.brain-vault-save-btn') || wrapper.previousElementSibling?.classList.contains('brain-vault-save-btn')) continue;
+
+                // Find the message container to get the text. Claude wraps messages in [data-testid="...-message"] typically.
+                const messageWrap = copyBtn.closest('[data-testid="user-message"], [data-testid="assistant-message"]') || 
+                                    copyBtn.closest('.group') || 
+                                    document.body;
+
+                const textEl = messageWrap.querySelector('.font-claude-message, .font-user-message, .prose') || messageWrap;
+                
+                const isUser = messageWrap.getAttribute('data-testid') === 'user-message' || !!messageWrap.querySelector('.font-user-message');
+                const sourceTitle = isUser ? 'Claude Prompt' : 'Claude Response';
+                const interactionType = isUser ? 'prompt' : 'conversation';
+                const tag = isUser ? 'prompt' : 'response';
+
+                const btn = createSaveButton(() => textEl?.innerText || '', this.name);
+                
+                btn.onclick = async (e) => {
+                    e.stopPropagation();
+                    const text = textEl?.innerText || '';
+                    const originalIcon = btn.querySelector('img')?.cloneNode(true);
+                    const resp = await chrome.runtime.sendMessage({ 
+                        action: 'saveMemory', 
+                        data: { 
+                            title: sourceTitle, 
+                            content: text, 
+                            source: 'claude', 
+                            interaction_type: interactionType, 
+                            tags: [tag, 'claude'] 
+                        } 
+                    });
+                    if (resp?.success) {
+                        btn.replaceChildren(createCheckmark());
+                        showFloatingFeedback(btn, 'Saved!', 'success');
+                    } else {
+                        btn.replaceChildren(createErrorIcon());
+                        showFloatingFeedback(btn, resp?.error || 'Error', 'error');
+                    }
+                    setTimeout(() => { if (btn.isConnected) btn.replaceChildren(originalIcon || createLogoImage({ width: '16px', height: '16px' })); }, 2000);
+                };
+
+                // Style the button to match Claude's ghost buttons
+                btn.className = 'brain-vault-save-btn w-fit';
+                btn.style.cssText = `
+                    display: inline-flex; align-items: center; justify-content: center;
+                    width: 32px; height: 32px; border-radius: 6px;
+                    background-color: transparent; border: none; cursor: pointer;
+                    color: currentColor; opacity: 0.7; transition: all 0.2s ease;
+                `;
+                btn.onmouseover = () => { btn.style.backgroundColor = 'rgba(128,128,128,0.1)'; btn.style.opacity = '1'; };
+                btn.onmouseout = () => { btn.style.backgroundColor = 'transparent'; btn.style.opacity = '0.7'; };
+                
+                // Insert depending on user vs agent
+                if (isUser) {
+                    toolbar.prepend(btn); // Leftmost
+                } else {
+                    toolbar.appendChild(btn); // Rightmost
                 }
-                if (!toolbar || toolbar.querySelector('.brain-vault-save-btn')) continue;
-                requestAnimationFrame(() => toolbar.appendChild(createSaveButton(() => msg.innerText, this.name)));
             }
         },
+        async injectUserPromptSaveButtons() { /* Handled comprehensively in injectSaveButtons */ },
         async injectContextButton() {
-            const inputArea = queryWithFallback(this.selectors.inputArea);
-            if (!inputArea) return;
-            const parent = inputArea.parentElement;
-            if (!parent || parent.querySelector('.brain-vault-inject-btn')) return;
-            if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
+            // Claude's input toolbar has the model dropdown [data-testid="model-selector-dropdown"]
+            const modelDropdowns = document.querySelectorAll('button[data-testid="model-selector-dropdown"]');
+            
+            for (const dropdown of modelDropdowns) {
+                // The immediate container of the dropdown or its parent wrapper
+                const dropdownWrapper = dropdown.closest('.transition-all.duration-200.ease-out') || dropdown.parentElement;
+                const container = dropdownWrapper.parentElement;
+                
+                if (!container || container.querySelector('.brain-vault-inject-btn')) continue;
 
-            const btn = createInjectButton(() => queryWithFallback(this.selectors.inputArea));
-            btn.style.position = 'absolute';
-            btn.style.right = '60px';
-            btn.style.bottom = '8px';
-            requestAnimationFrame(() => parent.appendChild(btn));
+                const btn = createInjectButton(() => queryWithFallback(this.selectors.inputArea));
+                
+                btn.className = 'brain-vault-inject-btn inline-flex items-center justify-center relative shrink-0 h-8 w-8 rounded-md active:scale-95 transition duration-300 ease-out hover:bg-bg-200 mr-1';
+                btn.style.cssText = `
+                    color: currentColor; opacity: 0.7; cursor: pointer; border: none; background: transparent;
+                `;
+                btn.onmouseover = () => { btn.style.backgroundColor = 'rgba(128,128,128,0.1)'; btn.style.opacity = '1'; };
+                btn.onmouseout = () => { btn.style.backgroundColor = 'transparent'; btn.style.opacity = '0.7'; };
+                
+                // Insert directly to the left of the model selector
+                container.insertBefore(btn, dropdownWrapper);
+            }
         }
     },
 
     gemini: {
         name: 'gemini',
-        match: (host) => host.includes('gemini') || host.includes('google'),
+        match: (host) => (host === 'gemini.google.com' || host === 'www.gemini.google.com') && window.location.pathname.startsWith('/app'),
         selectors: {
             modelResponseText: [
                 '.model-response-text',
@@ -490,10 +586,45 @@ const ADAPTERS = {
 
                 const btn = createSaveButton(() => textEl.innerText, this.name);
                 const spacer = toolbar.querySelector('.spacer');
-                requestAnimationFrame(() => {
-                    if (spacer) toolbar.insertBefore(btn, spacer);
-                    else toolbar.appendChild(btn);
-                });
+                if (spacer) toolbar.insertBefore(btn, spacer);
+                else toolbar.appendChild(btn);
+            }
+        },
+        async injectUserPromptSaveButtons() {
+            // Gemini: .query-content wraps the Copy/Edit buttons + the query bubble
+            // Prepend directly to it so our button appears as first child (leftmost)
+            const queryContainers = document.querySelectorAll('.query-content');
+            for (const container of queryContainers) {
+                if (container.querySelector('.brain-vault-save-btn')) continue;
+                // Only proceed if this container has action buttons (confirms it's a user query turn)
+                const copyBtn = container.querySelector('button[aria-label="Copy prompt"]');
+                if (!copyBtn) continue;
+
+                const textEl = container.querySelector('.query-text') || container;
+                const btn = createSaveButton(() => textEl.innerText || '', this.name);
+                btn.onclick = async (e) => {
+                    e.stopPropagation();
+                    const text = textEl.innerText;
+                    const originalIcon = btn.querySelector('img')?.cloneNode(true);
+                    const resp = await chrome.runtime.sendMessage({ action: 'saveMemory', data: { title: 'Gemini Prompt', content: text, source: 'gemini', interaction_type: 'prompt', tags: ['prompt', 'gemini'] } });
+                    if (resp?.success) {
+                        btn.replaceChildren(createCheckmark());
+                        showFloatingFeedback(btn, 'Prompt saved!', 'success');
+                    } else {
+                        btn.replaceChildren(createErrorIcon());
+                        showFloatingFeedback(btn, resp?.error || 'Error', 'error');
+                    }
+                    setTimeout(() => { if (btn.isConnected) btn.replaceChildren(originalIcon || createLogoImage({ width: '16px', height: '16px' })); }, 2000);
+                };
+                btn.style.cssText = `
+                    display: inline-flex; align-items: center; justify-content: center;
+                    width: 40px; height: 40px; border-radius: 50%; background-color: transparent;
+                    border: none; cursor: pointer; opacity: 0.8; transition: all 0.2s;
+                `;
+                btn.onmouseover = () => { btn.style.backgroundColor = 'rgba(128,128,128,0.15)'; btn.style.opacity = '1'; };
+                btn.onmouseout = () => { btn.style.backgroundColor = 'transparent'; btn.style.opacity = '0.8'; };
+                // Prepend to .query-content so it is the very first element (leftmost)
+                container.prepend(btn);
             }
         },
         async injectContextButton() {
@@ -508,7 +639,7 @@ const ADAPTERS = {
             `;
             btn.onmouseover = () => { btn.style.backgroundColor = 'rgba(128,128,128,0.1)'; btn.style.opacity = '1'; };
             btn.onmouseout = () => { btn.style.backgroundColor = 'transparent'; btn.style.opacity = '0.9'; };
-            requestAnimationFrame(() => actionContainer.prepend(btn));
+            actionContainer.prepend(btn);
         }
     },
 
@@ -538,7 +669,7 @@ const ADAPTERS = {
 
     perplexity: {
         name: 'perplexity',
-        match: (host) => host.includes('perplexity'),
+        match: (host) => host === 'perplexity.ai' || host === 'www.perplexity.ai',
         selectors: {
             // Input area - contenteditable div
             inputArea: [
@@ -615,13 +746,54 @@ const ADAPTERS = {
 
                 // Insert after the Rewrite button (rightmost in left division)
                 const rewriteBtn = toolbar.querySelector(this.selectors.rewriteButton[0]);
-                requestAnimationFrame(() => {
-                    if (rewriteBtn) {
-                        rewriteBtn.after(btn);
+                if (rewriteBtn) {
+                    rewriteBtn.after(btn);
+                } else {
+                    toolbar.appendChild(btn);
+                }
+            }
+        },
+        async injectUserPromptSaveButtons() {
+            // Perplexity: anchor on the Edit Query / Copy Query buttons which reliably exist
+            // The action group (.flex.shrink-0.items-center.gap-1) is opacity-0 by default and
+            // reveals on hover via Tailwind group-hover — our button inherits that correctly.
+            const editBtns = document.querySelectorAll('button[aria-label="Edit Query"], button[aria-label="Copy Query"]');
+            const seenGroups = new WeakSet();
+            for (const anchor of editBtns) {
+                // Walk up to find the flex action group that holds Edit + Copy
+                const actionGroup = anchor.closest('.flex.shrink-0.items-center') || anchor.parentElement;
+                if (!actionGroup || seenGroups.has(actionGroup)) continue;
+                if (actionGroup.querySelector('.brain-vault-save-btn')) continue;
+                seenGroups.add(actionGroup);
+
+                // Text: sibling of the action group inside the outer .flex.items-start wrapper
+                const outerWrap = actionGroup.closest('.flex.items-start');
+                const textEl = outerWrap?.querySelector('.whitespace-pre-line, span.min-w-0') || outerWrap;
+
+                const btn = createSaveButton(() => textEl?.innerText || '', this.name);
+                btn.onclick = async (e) => {
+                    e.stopPropagation();
+                    const text = textEl?.innerText || '';
+                    const originalIcon = btn.querySelector('img')?.cloneNode(true);
+                    const resp = await chrome.runtime.sendMessage({ action: 'saveMemory', data: { title: 'Perplexity Prompt', content: text, source: 'perplexity', interaction_type: 'prompt', tags: ['prompt', 'perplexity'] } });
+                    if (resp?.success) {
+                        btn.replaceChildren(createCheckmark());
+                        showFloatingFeedback(btn, 'Prompt saved!', 'success');
                     } else {
-                        toolbar.appendChild(btn);
+                        btn.replaceChildren(createErrorIcon());
+                        showFloatingFeedback(btn, resp?.error || 'Error', 'error');
                     }
-                });
+                    setTimeout(() => { if (btn.isConnected) btn.replaceChildren(originalIcon || createLogoImage({ width: '16px', height: '16px' })); }, 2000);
+                };
+                btn.style.cssText = `
+                    display: inline-flex; align-items: center; justify-content: center;
+                    width: 32px; height: 32px; border-radius: 9999px;
+                    background-color: transparent; border: none; cursor: pointer;
+                    transition: background-color 0.3s ease;
+                `;
+                btn.onmouseover = () => { btn.style.backgroundColor = 'rgba(128,128,128,0.1)'; };
+                btn.onmouseout = () => { btn.style.backgroundColor = 'transparent'; };
+                actionGroup.prepend(btn);
             }
         },
         async injectContextButton() {
@@ -649,13 +821,11 @@ const ADAPTERS = {
 
             // Insert before the model selector button
             const modelBtn = actionContainer.querySelector(this.selectors.modelSelector[0]);
-            requestAnimationFrame(() => {
-                if (modelBtn) {
-                    modelBtn.parentElement.insertBefore(btn, modelBtn.parentElement.firstChild);
-                } else {
-                    actionContainer.prepend(btn);
-                }
-            });
+            if (modelBtn) {
+                modelBtn.parentElement.insertBefore(btn, modelBtn.parentElement.firstChild);
+            } else {
+                actionContainer.prepend(btn);
+            }
         }
     }
 };
@@ -708,6 +878,7 @@ async function runInjections() {
     if (!adapter) return;
     try { await adapter.injectSaveButtons(); } catch (e) { console.warn('Memwyre: Save button injection failed', e); }
     try { await adapter.injectContextButton(); } catch (e) { console.warn('Memwyre: Context button injection failed', e); }
+    try { if (adapter.injectUserPromptSaveButtons) await adapter.injectUserPromptSaveButtons(); } catch (e) { console.warn('Memwyre: User prompt save button injection failed', e); }
 }
 
 let injectionScheduled = false;

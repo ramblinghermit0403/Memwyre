@@ -61,7 +61,7 @@
 
             <!-- Dev mode badge -->
             <div v-if="billing.isDevMode" class="px-3 py-1.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg text-xs font-bold uppercase tracking-wider">
-              🛠 Dev Mode Active
+              ðŸ›  Dev Mode Active
             </div>
           </div>
 

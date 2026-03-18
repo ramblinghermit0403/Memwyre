@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing, admin_bypass, bypass
+from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing, admin_bypass, bypass, projects, context
 from app.db.base import Base
 from app.db.session import engine
 import app.models # Register models
@@ -85,6 +85,8 @@ app.include_router(llm.router, prefix=f"{settings.API_V1_STR}/llm", tags=["llm"]
 app.include_router(documents.router, prefix=f"{settings.API_V1_STR}/documents", tags=["documents"])
 app.include_router(ingest.router, prefix=f"{settings.API_V1_STR}/ingest", tags=["ingest"])
 app.include_router(memory.router, prefix=f"{settings.API_V1_STR}/memory", tags=["memory"])
+app.include_router(projects.router, prefix=f"{settings.API_V1_STR}/projects", tags=["projects"])
+app.include_router(context.router, prefix=f"{settings.API_V1_STR}/context", tags=["context"])
 app.include_router(export.router, prefix=f"{settings.API_V1_STR}/export", tags=["export"])
 app.include_router(prompts.router, prefix=f"{settings.API_V1_STR}/prompts", tags=["prompts"])
 
@@ -111,5 +113,6 @@ async def health_check():
 
 # MCP Server is now mounted in a dedicated service via mcp_server_app.py
 # to avoid Gunicorn multi-worker session state issues.
+
 
 

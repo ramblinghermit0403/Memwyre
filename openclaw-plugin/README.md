@@ -31,18 +31,28 @@ Assuming you have OpenClaw installed, you can link or copy this directory into y
 You must configure the plugin in your OpenClaw settings (usually `~/.openclaw/config.json` or via OpenClaw's plugin management CLI) with your MemWyre API key.
 
 ```json
-{
-  "plugins": {
-    "@memwyre/openclaw-plugin": {
-      "apiKey": "bv_sk_your_api_key_here",
-      "hostUrl": "https://server.memwyre.tech"
+"plugins": {
+    "entries": {
+      "openclaw-plugin": {
+        "enabled": true,
+        "config": {
+          "apiKey": "bv_sk_your_api_key_here",
+          "hostUrl": "https://server.memwyre.tech"
+        }
+      }
     }
-  }
 }
 ```
 
 - **`apiKey`**: Generate this from the MemWyre web interface under Settings > API Keys.
 - **`hostUrl`**: The URL where your MemWyre backend is running. Defaults to `https://server.memwyre.tech`.
+
+## Important: Agent Tool Profile
+
+OpenClaw isolates tools based on agent capability profiles to prevent token overload. 
+To ensure the `save_memory` and `search_memwyre` tools are injected into your OpenClaw agent session, you **must set your agent tool profile to `full` or `coding`**. 
+
+If your profile is set to standard or bare minimum, OpenClaw will artificially disable these custom memory plugins!
 
 ## Tools Provided
 

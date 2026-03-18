@@ -33,7 +33,12 @@
                         <div v-html="getIconForSource(doc).content" class="w-full h-full"></div>
                      </template>
                      <template v-else-if="getIconForSource(doc).type === 'img'">
-                        <img :src="getIconForSource(doc).content" alt="Source Icon" class="w-full h-full object-cover rounded-sm" @error="handleImageError($event)" />
+                        <img
+                          :src="getIconForSource(doc).content"
+                          alt="Source Icon"
+                          :class="['w-full h-full object-cover rounded-sm', isOpenAIIcon(getIconForSource(doc).content) ? 'dark:invert' : '']"
+                          @error="handleImageError($event)"
+                        />
                      </template>
                  </div>
              </div>
@@ -187,6 +192,8 @@ const handleImageError = (e) => {
     // Fallback if favicon fails to load (e.g., 404 from Google Favicon generated URL)
     e.target.style.display = 'none';
 };
+
+const isOpenAIIcon = (iconContent) => typeof iconContent === 'string' && iconContent.includes('openai.svg');
 
 onMounted(fetchDocuments);
 

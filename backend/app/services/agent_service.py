@@ -1,6 +1,7 @@
 import logging
 import json
-from typing import List, Dict, Any, Optional
+import re
+from typing import List, Dict, Any, Optional, Callable, Awaitable
 from datetime import datetime
 
 # LangChain Imports
@@ -125,6 +126,75 @@ class AgentService:
         # Allow overriding provider via settings? for now default to configured.
         pass
 
+    def _normalize_markdown_block(self, text: str) -> str:
+        if not text:
+            return ""
+
+        lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
+        normalized_lines: List[str] = []
+        previous_heading: Optional[str] = None
+        previous_was_separator = False
+        blank_count = 0
+
+        for raw_line in lines:
+            line = raw_line.rstrip()
+
+            if not line.strip():
+                blank_count += 1
+                if blank_count <= 1 and normalized_lines and normalized_lines[-1] != "":
+                    normalized_lines.append("")
+                continue
+
+            blank_count = 0
+            heading_match = re.match(r"^\s{0,3}(#{1,6}\s+.+?)\s*$", line)
+            strong_heading_match = re.match(r"^\s*\*\*([^*].+?)\*\*\s*$", line)
+
+            heading_key = None
+            if heading_match:
+                heading_key = heading_match.group(1).strip().lower()
+            elif strong_heading_match:
+                heading_key = strong_heading_match.group(1).strip().lower()
+
+            if heading_key and heading_key == previous_heading:
+                continue
+            previous_heading = heading_key if heading_key else None
+
+            if re.match(r"^\s*([-*_]){3,}\s*$", line):
+                if previous_was_separator:
+                    continue
+                previous_was_separator = True
+                normalized_lines.append("---")
+                continue
+            previous_was_separator = False
+
+            normalized_lines.append(line)
+
+        text_out = "\n".join(normalized_lines).strip()
+        text_out = re.sub(r"(?im)^\s*(answer|final answer)\s*:\s*$", "", text_out)
+        text_out = re.sub(r"(?is)\s*(?:<\|/?\w+\|>|<end>|END_OF_RESPONSE)\s*$", "", text_out).strip()
+        text_out = re.sub(r"\n{3,}", "\n\n", text_out).strip()
+        return text_out
+
+    def _normalize_agent_output(self, text: str) -> str:
+        if not text:
+            return ""
+
+        normalized = text.replace("\r\n", "\n").replace("\r", "\n").strip()
+
+        think_match = re.search(r"(?is)<(think|thinking)>\s*(.*?)\s*</\1>", normalized)
+        reasoning_text = self._normalize_markdown_block(think_match.group(2)) if think_match else ""
+
+        answer_text = re.sub(r"(?is)<(think|thinking)>\s*.*?\s*</\1>", "", normalized)
+        answer_text = re.sub(r"(?is)<(think|thinking)>[\s\S]*$", "", answer_text)
+        answer_text = re.sub(r"(?is)</?(think|thinking)>", "", answer_text)
+        answer_text = self._normalize_markdown_block(answer_text)
+
+        if reasoning_text and answer_text:
+            return f"<think>\n{reasoning_text}\n</think>\n\n{answer_text}"
+        if reasoning_text:
+            return f"<think>\n{reasoning_text}\n</think>"
+        return answer_text
+
     def _build_memwyre_context(self, results: List[Dict[str, Any]]) -> str:
         """
         Format retrieved context using MemWyre standards (Time-Aware).
@@ -175,11 +245,22 @@ class AgentService:
         message: str, 
         model: str = "gpt-3.5-turbo",
         temperature: float = 0.7,
-        max_tokens: int = 2048
+        max_tokens: int = 2800,
+        progress_callback: Optional[Callable[[str, str, Optional[Dict[str, Any]]], Awaitable[None]]] = None
     ) -> Dict[str, Any]:
+        temperature = min(max(float(temperature), 0.0), 1.0)
+        max_tokens = int(min(max(int(max_tokens), 128), 8192))
         
         # 1. Setup Chat History
         chat_history = SQLChatMessageHistory(session_id=str(session_id), user_id=user_id)
+
+        async def emit_progress(step: str, status: str, meta: Optional[Dict[str, Any]] = None):
+            if not progress_callback:
+                return
+            try:
+                await progress_callback(step, status, meta or {})
+            except Exception as e:
+                logger.warning(f"Progress callback failed for step '{step}': {e}")
         
         # 2. Setup LLM based on requested model
         llm = None
@@ -229,10 +310,13 @@ class AgentService:
         try:
             llm = get_llm(model)
         except ValueError as e:
+            await emit_progress("llm_generation_completed", "failed", {"error": str(e), "model": model})
             return {
                 "output": f"Configuration Error: {str(e)} Please check your API keys in Settings.",
                 "sources": [],
-                "message_id": 0
+                "message_id": 0,
+                "turn_status": "failed",
+                "error": str(e)
             }
              
         # 3. Setup Tools
@@ -313,6 +397,8 @@ class AgentService:
         # 5.1 PRE-FETCH CONTEXT (Smart RAG)
         # Instead of waiting for tool use, we proactively fetch relevant context
         context_str = ""
+        results: List[Dict[str, Any]] = []
+        await emit_progress("memory_search_started", "started")
         try:
             async with AsyncSessionLocal() as db:
                 results = await retrieval_service.search_memories(
@@ -325,8 +411,10 @@ class AgentService:
                     # Use MemWyre Context Builder
                     formatted_ctx_str = self._build_memwyre_context(results)
                     context_str = formatted_ctx_str
+            await emit_progress("memory_search_completed", "completed", {"result_count": len(results)})
         except Exception as e:
             logger.error(f"Context pre-fetch failed: {e}")
+            await emit_progress("memory_search_completed", "failed", {"result_count": 0, "error": str(e)})
 
         # ---------------------------------------------------------
         # 5.2 SIDE-CAR FACT EXTRACTION (DEFERRED TO BACKGROUND)
@@ -375,21 +463,20 @@ Instructions:
 - If you find references like "last week" or "two weekends ago" while resolving temporal context, return them as "week before ${{questionDate || "the conversation date"}}" or "2 weekends before ${{questionDate || "the conversation date"}}".
 - Base your answer ONLY on the provided context.
 
-- Base your answer ONLY on the provided context.
+**Response Format (strict):**
+- Output ONLY Markdown.
+- Start with an optional reasoning block only if needed, using STRICT tags:
+  <think>
+  your reasoning
+  </think>
+- After reasoning, provide the final answer directly. Do not prefix with "Answer:".
+- Keep output concise and scannable: short paragraphs and optional brief bullets.
+- Do not repeat headings, separators, or boilerplate preambles.
 
-**Response Format:**
-- Output your answer PURELY in Markdown.
-- YOU MUST format your entire response exactly like this:
-<think>
-[Insert your step-by-step reasoning here]
-</think>
-[Insert your final user-facing answer here]
-
----
 ADDITIONAL AGENT INSTRUCTIONS:
-1. The above is your primary directive for ANSWERING questions based on the provided context.
+1. This is your primary directive for answering based on the provided context.
 2. Facts are extracted automatically by the system. You do NOT need to call tools to save facts.
-3. If the context is insufficient, you CAN call 'search_memory' to find more information, but PREFER using the 'Retrieved Context' provided above."""
+3. If context is insufficient, you CAN call 'search_memory', but prefer the provided Retrieved Context."""
 
         instruction_msg = SystemMessage(content=instruction)
         
@@ -397,6 +484,7 @@ ADDITIONAL AGENT INSTRUCTIONS:
         input_messages = [instruction_msg] + history_messages
         
         try:
+            await emit_progress("llm_generation_started", "started", {"model": model})
             # invoke returns a dict with keys like 'messages' (list of BaseMessage)
             result = await app.ainvoke({"messages": input_messages})
             
@@ -407,6 +495,8 @@ ADDITIONAL AGENT INSTRUCTIONS:
                 output = messages_out[-1].content
             else:
                 output = "No response generated."
+            output = self._normalize_agent_output(output)
+            await emit_progress("llm_generation_completed", "completed", {"model": model})
 
             # Extract Sources from tool executions in message history
             sources = []
@@ -426,7 +516,7 @@ ADDITIONAL AGENT INSTRUCTIONS:
             # Since we now inject context in System Prompt, the tool is often not called.
             # We must report these "implicit" sources to the UI.
             # Reuse 'results' from earlier scope (L327) if available
-            if 'results' in locals() and results:
+            if results:
                 from app.schemas.document import Chunk as ChunkSchema
                 for res in results:
                     meta = res["metadata"]
@@ -477,8 +567,11 @@ ADDITIONAL AGENT INSTRUCTIONS:
                     if not exists:
                         sources.append(source_obj)
 
+            await emit_progress("sources_attached", "completed", {"source_count": len(sources)})
+
             # Save AI Response and get ID
             ai_message_id = await chat_history.add_message(AIMessage(content=output), sources=sources)
+            await emit_progress("response_saved", "completed", {"message_id": ai_message_id})
             
             # ---------------------------------------------------------
             # DEFERRED FACT EXTRACTION: Dispatch to Celery worker
@@ -496,14 +589,19 @@ ADDITIONAL AGENT INSTRUCTIONS:
             return {
                 "output": output,
                 "sources": sources,
-                "message_id": ai_message_id
+                "message_id": ai_message_id,
+                "turn_status": "completed"
             }
             
         except Exception as e:
             logger.error(f"Agent failed: {e}")
+            await emit_progress("llm_generation_completed", "failed", {"model": model, "error": str(e)})
             return {
                 "output": "I'm sorry, I encountered an error while thinking.",
-                "sources": []
+                "sources": [],
+                "message_id": 0,
+                "turn_status": "failed",
+                "error": str(e)
             }
 
 agent_service = AgentService()

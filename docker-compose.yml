@@ -1,7 +1,7 @@
 services:
   backend:
     build: ./backend
-    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir app
+    command: sh -c "uv run alembic upgrade head && uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir app"
     ports:
       - "8000:8000"
     volumes:
@@ -29,7 +29,7 @@ services:
 
   celery_worker:
     build: ./backend
-    command: uv run celery -A app.celery_app worker --loglevel=info --concurrency=2
+    command: sh -c "uv run alembic upgrade head && uv run celery -A app.celery_app worker --loglevel=info --concurrency=2"
     volumes:
       - ./backend:/app
       - /app/.venv

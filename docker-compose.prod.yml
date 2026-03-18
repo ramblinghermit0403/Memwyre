@@ -15,12 +15,13 @@ services:
     image: ${ECR_IMAGE:-brain_vault-backend:latest}
     restart: unless-stopped
     command: >
+      sh -c "uv run alembic upgrade head &&
       uv run gunicorn app.main:app
       --worker-class uvicorn.workers.UvicornWorker
       --workers 2
       --bind 0.0.0.0:8000
       --timeout 120
-      --access-logfile -
+      --access-logfile -"
     deploy:
       resources:
         limits:
@@ -37,12 +38,13 @@ services:
     image: ${ECR_IMAGE:-brain_vault-backend:latest}
     restart: unless-stopped
     command: >
+      sh -c "uv run alembic upgrade head &&
       uv run gunicorn mcp_server_app:app
       --worker-class uvicorn.workers.UvicornWorker
       --workers 1
       --bind 0.0.0.0:8001
       --timeout 120
-      --access-logfile -
+      --access-logfile -"
     deploy:
       resources:
         limits:
@@ -67,7 +69,7 @@ services:
   celery_worker:
     image: ${ECR_IMAGE:-brain_vault-backend:latest}
     restart: unless-stopped
-    command: uv run celery -A app.celery_app worker --loglevel=info --concurrency=2 --max-memory-per-child=200000
+    command: sh -c "uv run alembic upgrade head && uv run celery -A app.celery_app worker --loglevel=info --concurrency=2 --max-memory-per-child=200000"
     deploy:
       resources:
         limits:

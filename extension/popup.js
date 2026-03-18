@@ -49,10 +49,8 @@ if (token) {
     showLogin();
 }
 
-// --- Auth Handlers ---
-
 saveTokenBtn.addEventListener('click', () => {
-    chrome.tabs.create({ url: 'https://memwyre.tech/login?source=extension' }); // Change to 'http://localhost:5173/...' for local dev
+    chrome.tabs.create({ url: `${CONFIG[ENV].WEB_APP_URL}/login?source=extension` });
 });
 
 logoutBtn.addEventListener('click', async () => {

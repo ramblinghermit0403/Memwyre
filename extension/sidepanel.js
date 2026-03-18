@@ -29,8 +29,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const searchResults = document.getElementById('search-results');
     const searchK = document.getElementById('search-k');
 
-    // Memories Elements
-    const refreshBtn = document.getElementById('refresh-memories');
+    // Inbox Elements
+    const inboxContainer = document.getElementById('inbox-container');
+    const refreshInboxBtn = document.getElementById('refresh-inbox');
+
+    // Timeline Elements
+    const timelineContainer = document.getElementById('timeline-container');
+    const refreshTimelineBtn = document.getElementById('refresh-timeline');
+    const timelineSource = document.getElementById('timeline-source');
 
     // Check Auth
     const { token } = await chrome.storage.local.get('token');
@@ -54,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Auth Handlers ---
 
     saveTokenBtn.addEventListener('click', () => {
-        chrome.tabs.create({ url: 'https://memwyre.tech/login?source=extension' }); // Change to 'http://localhost:5173/...' for local dev
+        chrome.tabs.create({ url: `${CONFIG[ENV].WEB_APP_URL}/login?source=extension` });
     });
 
     if (logoutBtn) {
@@ -114,19 +120,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             const targetView = document.getElementById(`view-${targetId}`);
             if (targetView) targetView.classList.add('active');
 
-            // If memories is the active tab, load content
-            if (targetId === 'memories') {
-                setTimeout(() => loadMemoriesAndDocuments(), 100);
+            // If inbox is the active tab, load content
+            if (targetId === 'inbox') {
+                setTimeout(() => loadInbox(), 100);
+            } else if (targetId === 'timeline') {
+                setTimeout(() => loadTimeline(), 100);
             }
         } else {
             // Default fallback if no tab is active
-            const memTab = document.querySelector('[data-tab="memories"]');
-            if (memTab) memTab.classList.add('active');
+            const defaultTab = document.querySelector('[data-tab="inbox"]');
+            if (defaultTab) defaultTab.classList.add('active');
 
-            const memView = document.getElementById('view-memories');
-            if (memView) memView.classList.add('active');
+            const defaultView = document.getElementById('view-inbox');
+            if (defaultView) defaultView.classList.add('active');
 
-            setTimeout(() => loadMemoriesAndDocuments(), 100);
+            setTimeout(() => loadInbox(), 100);
         }
     }
 
@@ -143,9 +151,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const viewId = `view-${tab.dataset.tab}`;
             document.getElementById(viewId).classList.add('active');
 
-            // Load data for Memories tab
-            if (tab.dataset.tab === 'memories') {
-                loadMemoriesAndDocuments();
+            // Load data for tabs
+            if (tab.dataset.tab === 'inbox') {
+                loadInbox();
+            } else if (tab.dataset.tab === 'timeline') {
+                loadTimeline();
             }
         });
     });
@@ -153,9 +163,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Feature Handlers ---
 
     // 1. Save Memory
+    const saveTags = document.getElementById('save-tags');
     saveBtn.addEventListener('click', async () => {
         const content = saveContent.value.trim();
         const title = saveTitle.value.trim() || 'Extension Clip';
+        
+        // Parse comma-separated tags
+        let tags = [];
+        if (saveTags && saveTags.value.trim()) {
+            tags = saveTags.value.split(',').map(t => t.trim()).filter(t => t);
+        }
 
         if (!content) return;
 
@@ -163,7 +180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         saveStatus.className = 'hidden';
 
         try {
-            const response = await sendMessage('saveMemory', { title, content });
+            const response = await sendMessage('saveMemory', { title, content, tags });
             if (response.success) {
                 saveContent.value = '';
                 saveTitle.value = '';
@@ -221,98 +238,181 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // 3. Load Memories and Documents with filter
-    const memoriesContainer = document.getElementById('memories-container');
-    const memoriesFilter = document.getElementById('memories-filter');
-    let allMemoriesData = { memories: [], documents: [] }; // Cache data
+    // 3. Load Inbox
+    if (refreshInboxBtn) refreshInboxBtn.addEventListener('click', loadInbox);
 
-    async function loadMemoriesAndDocuments() {
-        memoriesContainer.innerHTML = '<div class="status-msg">Loading...</div>';
-
+    async function loadInbox() {
+        inboxContainer.innerHTML = '<div class="status-msg"><i class="fas fa-spinner fa-spin"></i> Loading inbox...</div>';
         try {
-            const response = await sendMessage('getDocuments', {});
-            if (response.success) {
-                // Process Memories
-                allMemoriesData.memories = response.data
-                    .filter(d => d.doc_type === 'memory')
-                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                    .slice(0, 15)
-                    .map(d => ({
-                        content: d.content,
-                        metadata: { type: 'memory', created_at: d.created_at, title: d.title }
-                    }));
-
-                // Process Documents/Files
-                allMemoriesData.documents = response.data
-                    .filter(d => d.doc_type === 'file' || d.doc_type === 'document')
-                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                    .slice(0, 15)
-                    .map(d => ({
-                        content: d.content || d.title || 'No content',
-                        metadata: { type: 'document', created_at: d.created_at, title: d.title }
-                    }));
-
-                // Render based on filter
-                renderMemoriesWithFilter();
+            const { token: freshToken } = await chrome.storage.local.get('token');
+            if (!freshToken) { inboxContainer.innerHTML = '<div class="status-msg">Please log in to view your inbox.</div>'; return; }
+            const response = await fetch(`${CONFIG[ENV].API_BASE_URL}/inbox/`, {
+                headers: { 'Authorization': `Bearer ${freshToken}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                renderInbox(data || []);
             } else {
-                showToast(response.error, 'error');
+                inboxContainer.innerHTML = `<div class="status-msg">Failed to load inbox (${response.status}).</div>`;
             }
         } catch (err) {
-            showToast(err.message, 'error');
-            memoriesContainer.innerHTML = '<div class="status-msg">Error loading data.</div>';
+            inboxContainer.innerHTML = '<div class="status-msg">Error loading inbox.</div>';
         }
     }
 
-    function renderMemoriesWithFilter() {
-        const filter = memoriesFilter.value;
-        memoriesContainer.innerHTML = '';
+    function renderInbox(items) {
+        inboxContainer.innerHTML = '';
+        if (items.length === 0) {
+            inboxContainer.innerHTML = '<div class="status-msg">No pending items.</div>';
+            return;
+        }
 
-        let itemsToRender = [];
+        items.slice(0, 15).forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'list-item-modern';
 
-        if (filter === 'all') {
-            // Show memories section
-            if (allMemoriesData.memories.length > 0) {
-                const memHeader = document.createElement('div');
-                memHeader.className = 'section-header';
-                memHeader.innerHTML = '<span class="section-title">Memories</span>';
-                memoriesContainer.appendChild(memHeader);
-                renderResultItems(allMemoriesData.memories, memoriesContainer);
-            }
-            // Show documents section
-            if (allMemoriesData.documents.length > 0) {
-                const docHeader = document.createElement('div');
-                docHeader.className = 'section-header';
-                docHeader.style.marginTop = '16px';
-                docHeader.innerHTML = '<span class="section-title">Documents</span>';
-                memoriesContainer.appendChild(docHeader);
-                renderResultItems(allMemoriesData.documents, memoriesContainer);
-            }
-            if (allMemoriesData.memories.length === 0 && allMemoriesData.documents.length === 0) {
-                memoriesContainer.innerHTML = '<div class="status-msg">No items yet.</div>';
-            }
-        } else if (filter === 'memories') {
-            if (allMemoriesData.memories.length > 0) {
-                renderResultItems(allMemoriesData.memories, memoriesContainer);
+            let badgeClass = 'badge-default';
+            let sourceText = 'User';
+            if (item.source === 'agent_drop') { badgeClass = 'badge-agent'; sourceText = 'Agent'; }
+            if (item.source === 'browser_extension') { badgeClass = 'badge-extension'; sourceText = 'Extension'; }
+
+            const dateStr = new Date(item.created_at || Date.now()).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+
+            el.innerHTML = `
+                <span class="item-source-badge ${badgeClass}">${sourceText}</span>
+                <div class="item-title">${item.details || 'Inbox Item'}</div>
+                <div class="item-preview">${item.content || ''}</div>
+                <div class="item-meta">
+                    <span>${dateStr}</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            `;
+
+            el.addEventListener('click', () => {
+                chrome.tabs.create({ url: `${CONFIG[ENV].WEB_APP_URL}/inbox?selected=${item.id}` });
+            });
+
+            inboxContainer.appendChild(el);
+        });
+    }
+
+    // 4. Load Timeline
+    if (refreshTimelineBtn) refreshTimelineBtn.addEventListener('click', loadTimeline);
+    if (timelineSource) timelineSource.addEventListener('change', loadTimeline);
+
+    async function loadTimeline() {
+        timelineContainer.innerHTML = '<div class="status-msg"><i class="fas fa-spinner fa-spin"></i> Loading timeline...</div>';
+        try {
+            const { token: freshToken } = await chrome.storage.local.get('token');
+            if (!freshToken) { timelineContainer.innerHTML = '<div class="status-msg">Please log in to view your timeline.</div>'; return; }
+            let url = `${CONFIG[ENV].API_BASE_URL}/memory/?view=timeline&limit=50`;
+            const source = timelineSource.value;
+            if (source) url += `&source_app=${encodeURIComponent(source)}`;
+
+            const response = await fetch(url, {
+                headers: { 'Authorization': `Bearer ${freshToken}` }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                renderTimeline(data || []);
             } else {
-                memoriesContainer.innerHTML = '<div class="status-msg">No memories yet.</div>';
+                timelineContainer.innerHTML = `<div class="status-msg">Failed to load timeline (${response.status}).</div>`;
             }
-        } else if (filter === 'documents') {
-            if (allMemoriesData.documents.length > 0) {
-                renderResultItems(allMemoriesData.documents, memoriesContainer);
-            } else {
-                memoriesContainer.innerHTML = '<div class="status-msg">No documents yet.</div>';
-            }
+        } catch (err) {
+            timelineContainer.innerHTML = '<div class="status-msg">Error loading timeline.</div>';
         }
     }
 
-    // Filter change handler
-    if (memoriesFilter) {
-        memoriesFilter.addEventListener('change', renderMemoriesWithFilter);
-    }
 
-    // Refresh button
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', loadMemoriesAndDocuments);
+    function renderTimeline(items) {
+        timelineContainer.innerHTML = '';
+        const timelineItems = items.filter(x => String(x.id || '').startsWith('mem_'));
+
+        if (timelineItems.length === 0) {
+            timelineContainer.innerHTML = '<div class="status-msg">No AI interactions yet.</div>';
+            return;
+        }
+
+        // Group by day
+        const grouped = {};
+        timelineItems.forEach(item => {
+            const date = new Date(item.created_at || Date.now());
+            const key = date.toISOString().slice(0, 10);
+            if (!grouped[key]) grouped[key] = { date, items: [] };
+            grouped[key].items.push(item);
+        });
+
+        Object.keys(grouped).sort().reverse().forEach(key => {
+            const group = grouped[key];
+            const groupEl = document.createElement('div');
+            groupEl.className = 'timeline-day-group';
+
+            const todayKey = new Date().toISOString().slice(0, 10);
+            const yesterdayDate = new Date();
+            yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+            const yesterdayKey = yesterdayDate.toISOString().slice(0, 10);
+
+            let label = group.date.toLocaleDateString();
+            if (key === todayKey) label = 'Today';
+            if (key === yesterdayKey) label = 'Yesterday';
+
+            groupEl.innerHTML = `<div class="timeline-date-label">${label}</div>`;
+
+        group.items.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'timeline-item';
+
+                const timeStr = new Date(item.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const src = (item.source_app || item.source || '').toLowerCase();
+                const title = item.title || 'Untitled AI Interaction';
+                const displayType = item.interaction_type || 'conversation';
+
+                // Use the same icon engine as the web app
+                const iconData = window.getIconForSource({ source: item.source_app || item.source || '', tags: item.tags || [] });
+                let iconHtml;
+                if (iconData.type === 'img') {
+                    iconHtml = `<img src="${iconData.content}" alt="source" style="width:24px;height:24px;object-fit:contain;border-radius:4px;" onerror="this.style.display='none';" />`;
+                } else {
+                    iconHtml = iconData.content;
+                }
+
+                // Provider label (mirrors displaySource in Vue component)
+                let providerStr = 'AI Tool';
+                if (src.includes('chatgpt') || src.includes('openai')) providerStr = 'ChatGPT';
+                else if (src.includes('claude')) providerStr = 'Claude';
+                else if (src.includes('gemini')) providerStr = 'Gemini';
+                else if (src.includes('perplexity')) providerStr = 'Perplexity';
+                else if (src.includes('cursor')) providerStr = 'Cursor';
+                else if (src.includes('openclaw')) providerStr = 'OpenClaw';
+                else if (src.includes('codex')) providerStr = 'Codex';
+                else if (src.includes('antigravity') || src === 'mcp') providerStr = 'Antigravity';
+                else if (item.source_app) providerStr = item.source_app;
+
+                itemEl.innerHTML = `
+                    <div class="timeline-icon-box">${iconHtml}</div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-title">${title}</div>
+                            <div class="timeline-time">${timeStr}</div>
+                        </div>
+                        <div class="timeline-source-info">${providerStr} · ${displayType}</div>
+                        <div class="timeline-preview">${item.content || ''}</div>
+                    </div>
+                `;
+
+                // Click to copy context
+                itemEl.addEventListener('click', () => {
+                    navigator.clipboard.writeText(item.content || '').then(() => {
+                        showToast('Copied to clipboard', 'success');
+                    });
+                });
+
+                groupEl.appendChild(itemEl);
+            });
+
+            timelineContainer.appendChild(groupEl);
+        });
     }
 
     function renderResults(items, filter = 'all') {
@@ -444,11 +544,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
 
-        // Icon based on type
-        let icon = type === 'error' ? '❌' : 'ℹ️';
-        if (type === 'success') icon = '✅';
+        // Icon based on type using FontAwesome to prevent encoding issues
+        let iconHtml = '<i class="fas fa-info-circle" style="color:#3b82f6;"></i>';
+        if (type === 'success') iconHtml = '<i class="fas fa-check-circle" style="color:#10b981;"></i>';
+        if (type === 'error') iconHtml = '<i class="fas fa-exclamation-circle" style="color:#ef4444;"></i>';
 
-        toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+        toast.innerHTML = `<span>${iconHtml}</span><span>${message}</span>`;
 
         container.appendChild(toast);
 

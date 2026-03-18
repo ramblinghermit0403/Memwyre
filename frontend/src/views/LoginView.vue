@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center font-sans text-zinc-900 dark:text-zinc-100 bg-[#FDFCFB] dark:bg-[#1A1A1A] px-4 py-12 sm:px-6 lg:px-8">
+  <div class="min-h-screen flex items-center justify-center font-sans text-zinc-900 dark:text-zinc-100 bg-[#FDFCFB] dark:bg-[#1A1A1A] px-6 py-12 sm:px-8 lg:px-12">
     <div class="w-full max-w-[400px] space-y-8 animate-in fade-in duration-700">
       
       <!-- Standard Login Form -->
@@ -108,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useRouter, useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
@@ -121,6 +121,21 @@ const loading = ref(false);
 const error = ref('');
 const turnstileToken = ref('');
 const turnstileId = ref(null);
+const lastKnownUser = ref(null);
+const lastProvider = ref(null);
+
+window.onTurnstileSuccess = (token) => {
+    turnstileToken.value = token;
+};
+
+const loadTurnstile = () => {
+    if (window.turnstile && document.getElementById('turnstile-container')) {
+        turnstileId.value = window.turnstile.render('#turnstile-container', {
+            sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
+            callback: window.onTurnstileSuccess
+        });
+    }
+};
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -161,9 +176,6 @@ const handleLogin = async () => {
     loading.value = false;
   }
 };
-
-const lastKnownUser = ref(null);
-const lastProvider = ref(null);
 
 const handleGoogleOneTapResponse = async (response) => {
     try {
@@ -221,19 +233,6 @@ onMounted(() => {
     } catch(e) {}
 
     // Initialize Turnstile
-    window.onTurnstileSuccess = (token) => {
-        turnstileToken.value = token;
-    };
-    
-    const loadTurnstile = () => {
-        if (window.turnstile) {
-            turnstileId.value = window.turnstile.render('#turnstile-container', {
-                sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
-                callback: window.onTurnstileSuccess
-            });
-        }
-    };
-    
     if (!document.getElementById('turnstile-script')) {
         const script = document.createElement('script');
         script.id = 'turnstile-script';
@@ -282,11 +281,14 @@ const continueAsUser = () => {
     }
 };
 
-const switchAccount = () => {
+const switchAccount = async () => {
     lastKnownUser.value = null;
     lastProvider.value = null;
     localStorage.removeItem('lastKnownUser');
     localStorage.removeItem('lastProvider');
+    
+    await nextTick();
+    setTimeout(loadTurnstile, 100);
 };
 </script>
 
