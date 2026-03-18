@@ -42,3 +42,9 @@ Follow these steps precisely to submit your extension to the Chrome Web Store.
 ### 6. Submit
 - Once all red asterisks are filled in both tabs, click **Submit for Review**.
 - Wait 1-3 days for approval!
+
+### 7. Reviewer Test Instructions (Chrome + Edge)
+- Use the copy-ready instructions from: `store_reviewer_test_instructions.md`
+- Replace placeholders before submission:
+  - `{{REVIEWER_TEST_EMAIL}}`
+  - `{{REVIEWER_TEST_PASSWORD}}`

@@ -15,7 +15,7 @@
              </p>
           </div>
 
-          <form v-if="!requiresOtp" class="space-y-5" @submit.prevent="handleRegister">
+          <form class="space-y-5" @submit.prevent="handleRegister">
              <div class="space-y-4">
                  <div>
                     <label for="name" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Full name</label>
@@ -47,7 +47,7 @@
                  <p class="text-sm text-red-600 dark:text-red-400 font-medium text-center">{{ error }}</p>
              </div>
              
-             <div v-if="!requiresOtp" class="relative my-6">
+             <div class="relative my-6">
                  <div class="absolute inset-0 flex items-center">
                      <div class="w-full border-t border-zinc-200 dark:border-zinc-800"></div>
                  </div>
@@ -56,7 +56,7 @@
                  </div>
              </div>
 
-             <div v-if="!requiresOtp" class="flex flex-col gap-3">
+             <div class="flex flex-col gap-3">
                  <button type="button" @click="loginWithProvider('google')" class="w-full inline-flex justify-center items-center py-2.5 px-4 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors duration-200">
                      <svg class="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/></svg>
                      Google
@@ -68,21 +68,7 @@
              </div>
           </form>
 
-          <form v-else class="space-y-5" @submit.prevent="handleVerifyOtp">
-             <div>
-                <label for="otp" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">Verification Code</label>
-                <div class="text-sm text-zinc-500 mb-4">We've sent a 6-digit code to {{ email }}. Please enter it below.</div>
-                <input id="otp" name="otp" type="text" maxlength="6" autocomplete="one-time-code" required v-model="otp" class="appearance-none block w-full px-3.5 py-3 text-center tracking-[0.5em] text-2xl font-mono bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-lg placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 focus:border-transparent transition-shadow duration-200" placeholder="••••••" />
-             </div>
-             <div class="pt-2">
-                 <button type="submit" :disabled="loading || otp.length !== 6" class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] disabled:opacity-50 transition-colors duration-200">
-                    <LoadingLogo v-if="loading" size="sm" class="mr-2 h-4 w-4" />
-                    {{ loading ? 'Verifying...' : 'Verify Email' }}
-                 </button>
-             </div>
-          </form>
-
-          <div v-if="!requiresOtp" class="text-center pt-2">
+          <div class="text-center pt-2">
              <p class="text-sm text-zinc-600 dark:text-zinc-400">
                  Already have an account? 
                  <router-link to="/login" class="font-medium text-zinc-900 dark:text-zinc-100 hover:underline underline-offset-4 decoration-zinc-300 dark:decoration-zinc-600 transition-colors">
@@ -99,7 +85,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useAuthStore } from '../stores/auth';
-import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
@@ -109,13 +94,16 @@ const password = ref('');
 const loading = ref(false);
 const error = ref('');
 const turnstileToken = ref('');
-const otp = ref('');
-const requiresOtp = ref(false);
 const turnstileId = ref(null);
 
 const authStore = useAuthStore();
-const router = useRouter();
 const toast = useToast();
+
+const loginWithProvider = (provider) => {
+  localStorage.setItem('lastProvider', provider);
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+  window.location.href = `${apiUrl}/auth/oauth/${provider}/login`;
+};
 
 onMounted(() => {
   window.onTurnstileSuccess = (token) => {
@@ -155,8 +143,14 @@ const handleRegister = async () => {
   error.value = '';
   try {
     await authStore.register(email.value, password.value, name.value, turnstileToken.value);
-    requiresOtp.value = true;
-    toast.success('Registration successful! Please enter the 6-digit code sent to your email.');
+    toast.success('Registration successful! Check your email for a verification link.');
+    name.value = '';
+    email.value = '';
+    password.value = '';
+    if (window.turnstile && turnstileId.value !== null) {
+      window.turnstile.reset(turnstileId.value);
+      turnstileToken.value = '';
+    }
   } catch (err) {
     if (err.response?.data?.detail) {
       error.value = err.response.data.detail;
@@ -170,24 +164,6 @@ const handleRegister = async () => {
   } finally {
     loading.value = false;
   }
-};
-
-const handleVerifyOtp = async () => {
-    loading.value = true;
-    error.value = '';
-    try {
-        await authStore.verifyEmailOtp(email.value, otp.value);
-        toast.success('Email verified successfully!');
-        router.push('/');
-    } catch (err) {
-        if (err.response?.data?.detail) {
-            error.value = err.response.data.detail;
-        } else {
-            error.value = 'Verification failed. Please try again.';
-        }
-    } finally {
-        loading.value = false;
-    }
 };
 </script>
 

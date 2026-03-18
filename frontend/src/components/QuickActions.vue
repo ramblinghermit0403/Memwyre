@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+  <div class="fixed bottom-6 right-10 sm:right-16 lg:right-28 z-50 flex flex-col items-end">
     <!-- Actions Menu -->
     <transition
       enter-active-class="transition duration-200 ease-out"
