@@ -78,6 +78,11 @@ export const useAuthStore = defineStore('auth', {
                 );
 
                 this.setTokens(response.data.access_token, response.data.refresh_token);
+                try {
+                    await this.fetchUser();
+                } catch (e) {
+                    // Fallback to token claims if profile sync fails.
+                }
                 return true;
             } catch (error) {
                 console.error('Login failed:', error);
@@ -129,11 +134,30 @@ export const useAuthStore = defineStore('auth', {
                 const data = await response.json();
 
                 this.setTokens(data.access_token, data.refresh_token || this.refreshToken);
+                try {
+                    await this.fetchUser();
+                } catch (e) {
+                    // Fallback to token claims if profile sync fails.
+                }
                 return data.access_token;
             } catch (e) {
                 this.logout();
                 throw e;
             }
+        },
+
+        async fetchUser() {
+            if (!this.token) return null;
+            const response = await api.get('/auth/verify');
+            const userData = response.data || {};
+            this.user = {
+                id: userData.id ?? this.user?.id ?? null,
+                email: userData.email ?? this.user?.email ?? '',
+                name: userData.name ?? this.user?.name ?? '',
+                is_verified: !!userData.is_verified
+            };
+            localStorage.setItem('lastKnownUser', JSON.stringify(this.user));
+            return this.user;
         },
 
         async register(email, password, name, turnstileToken) {

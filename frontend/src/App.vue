@@ -1,5 +1,6 @@
 <script setup>
 import { RouterView } from 'vue-router'
+import { onMounted } from 'vue'
 import { useThemeStore } from './stores/theme'
 import { useAuthStore } from './stores/auth'
 import OnboardingOverlay from './components/OnboardingOverlay.vue'
@@ -7,6 +8,15 @@ import OnboardingOverlay from './components/OnboardingOverlay.vue'
 // Initialize theme store to ensure dark mode preference persists on reload
 const themeStore = useThemeStore()
 const authStore = useAuthStore()
+
+onMounted(async () => {
+  if (!authStore.isAuthenticated) return
+  try {
+    await authStore.fetchUser()
+  } catch (e) {
+    // Keep app usable even if profile sync fails.
+  }
+})
 </script>
 
 <template>

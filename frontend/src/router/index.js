@@ -147,7 +147,7 @@ router.beforeEach((to, from, next) => {
         to.meta.requiresAuth &&
         authStore.isAuthenticated &&
         authStore.user &&
-        !authStore.user.is_verified &&
+        authStore.user.is_verified === false &&
         !['settings', 'dashboard'].includes(to.name)
     ) {
         next('/settings');
