@@ -982,6 +982,7 @@ import ChatDemo from '@/components/landing/ChatDemo.vue';
 const demoVideo1 = ref(null);
 const demoVideo2 = ref(null);
 let videoObserver = null;
+let shouldRestoreDarkClass = false;
 
 const setupVideoObserver = () => {
   videoObserver = new IntersectionObserver(
@@ -1004,6 +1005,12 @@ const setupVideoObserver = () => {
 
 onUnmounted(() => {
   if (videoObserver) videoObserver.disconnect();
+  document.documentElement.style.colorScheme = '';
+  if (shouldRestoreDarkClass) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
 });
 
 const faqs = ref([
@@ -1040,6 +1047,9 @@ const toggleFaq = (index) => {
 
 // --- Animations ---
 onMounted(() => {
+    shouldRestoreDarkClass = document.documentElement.classList.contains('dark');
+    document.documentElement.classList.remove('dark');
+    document.documentElement.style.colorScheme = 'light';
     typeWriter();
     setupVideoObserver();
 });

@@ -7,11 +7,6 @@ import router from './router'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
-// Force light mode globally, independent of browser/system preference.
-document.documentElement.classList.remove('dark')
-document.documentElement.style.colorScheme = 'light'
-localStorage.setItem('theme', 'light')
-
 const app = createApp(App)
 
 app.use(createPinia())
