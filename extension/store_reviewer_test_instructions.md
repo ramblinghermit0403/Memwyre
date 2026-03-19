@@ -40,10 +40,10 @@ Use this exact text in your store submission **Test instructions** field (replac
 - Side panel UI and tab navigation.
 - Memory save + memory search end-to-end API path.
 - Inbox/Timeline retrieval.
-- Context menu (`contextMenus`, `activeTab`, `scripting`) behavior.
+- Context menu (`contextMenus`, `activeTab`) behavior.
 - Session clear/logout behavior.
 
 ## Assumptions
-- Submission build uses production endpoints (`memwyre.tech` / `server.memwyre.tech`), not localhost.
+- Submission build uses production endpoints (`memwyre.tech` / `server.memwyre.tech`).
 - Provided reviewer account is email-verified and has required access level for save/search features.
 - Same instructions are used for both Chrome and Edge (behavior is identical for this extension).

@@ -416,7 +416,11 @@ async def google_one_tap_login(
 class VerifyEmailRequest(BaseModel):
     token: str
 
-@router.post("/verify-email")
+class VerifyEmailResponse(BaseModel):
+    message: str
+    verified_at: datetime | None = None
+
+@router.post("/verify-email", response_model=VerifyEmailResponse)
 async def verify_email_endpoint(request: VerifyEmailRequest, db: AsyncSession = Depends(deps.get_db)):
     result = await db.execute(
         select(VerificationToken).where(
@@ -436,24 +440,18 @@ async def verify_email_endpoint(request: VerifyEmailRequest, db: AsyncSession = 
         
     if v_token.expires_at < datetime.now(timezone.utc):
         raise HTTPException(status_code=400, detail="Token has expired")
-        
+
+    verified_at = datetime.now(timezone.utc)
     user.is_verified = True
     db.add(user)
     await db.delete(v_token) # optional: delete or keep for audit
     await db.commit()
-    
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    refresh_token_expires = timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
-    
+
+    # Email verification is intentionally non-authenticating.
+    # Users should continue through the standard login flow.
     return {
-        "access_token": security.create_access_token(
-            user.id, expires_delta=access_token_expires, extra_claims={"email": user.email, "name": user.name, "is_verified": user.is_verified}
-        ),
-        "refresh_token": security.create_refresh_token(
-            user.id, expires_delta=refresh_token_expires
-        ),
-        "token_type": "bearer",
-        "message": "Email verified successfully"
+        "message": "Email verified successfully.",
+        "verified_at": verified_at,
     }
 
 @router.post("/resend-verification")

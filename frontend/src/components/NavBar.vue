@@ -30,7 +30,7 @@
             <span v-if="inboxCount > 0" class="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white dark:ring-gray-800">{{ inboxCount > 99 ? '99+' : inboxCount }}</span>
           </router-link>
 
-          <router-link to="/chat" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
+          <router-link id="tour-ask" to="/chat" class="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
             Ask
           </router-link>
 
@@ -115,7 +115,7 @@ watch(() => route.path, () => {
 });
 
 const logout = () => {
-  localStorage.removeItem('token');
+  authStore.logout();
   router.push('/login');
 };
 

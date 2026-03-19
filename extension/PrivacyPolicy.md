@@ -8,8 +8,8 @@ This Privacy Policy applies to the MemWyre Chrome Extension ("Extension"). Our g
 ## Data Collection and Usage
 The MemWyre Extension requires specific permissions to function. We only collect the data necessary to provide the core service of saving "memories" and conversation context.
 
-1. **Active Tab / Scripting (`activeTab`, `scripting`)**
-   - The extension uses these permissions to extract text, chat history, and context from specific AI platforms (such as ChatGPT, Claude, Gemini, Perplexity) when you explicitly initiate an action.
+1. **Active Tab (`activeTab`)**
+   - The extension uses this permission to extract text, chat history, and context from specific AI platforms (such as ChatGPT, Claude, Gemini, Perplexity) when you explicitly initiate an action.
    - **Usage:** This data is strictly used to create a memory or search context in your MemWyre unified knowledge base. It is securely transmitted to the MemWyre API (`server.memwyre.tech`).
 
 2. **Storage (`storage`)**

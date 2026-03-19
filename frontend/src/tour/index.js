@@ -15,16 +15,16 @@ export const createTour = () => {
                 element: '#tour-welcome',
                 popover: {
                     title: 'Welcome to MemWyre',
-                    description: 'Your personal AI-powered knowledge base. Let us show you around!',
+                    description: 'This is your dashboard home for daily AI work.',
                     side: "bottom",
                     align: 'start'
                 }
             },
             {
-                element: '#tour-knowledge-base',
+                element: '#tour-timeline',
                 popover: {
-                    title: 'Your Memories',
-                    description: 'This is your central knowledge base. All your memories and documents are stored here for easy access.',
+                    title: 'AI Timeline',
+                    description: 'Review and reopen your saved interactions from the timeline panel.',
                     side: "right",
                     align: 'start'
                 }
@@ -48,19 +48,10 @@ export const createTour = () => {
                 }
             },
             {
-                element: '#tour-retrieval',
+                element: '#tour-ask',
                 popover: {
-                    title: 'Chat with MemWyre',
-                    description: 'Ask questions and get answers based on your knowledge base.',
-                    side: "bottom",
-                    align: 'center'
-                }
-            },
-            {
-                element: '#tour-memory-map',
-                popover: {
-                    title: 'Memory Map',
-                    description: 'Visualize how your memories connect in an interactive graph.',
+                    title: 'Ask',
+                    description: 'Open Ask to query your saved context and memories.',
                     side: "bottom",
                     align: 'center'
                 }

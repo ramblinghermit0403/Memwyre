@@ -548,6 +548,7 @@ const copyToken = async () => {
 
 const restartTour = () => {
     localStorage.removeItem('tour_completed');
+    localStorage.setItem('tour_requested', 'true');
     toast.info("Tour reset. Returning to Dashboard...");
     setTimeout(() => router.push('/dashboard'), 1000);
 };

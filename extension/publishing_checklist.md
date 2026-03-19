@@ -4,7 +4,7 @@ Follow these steps precisely to submit your extension to the Chrome Web Store.
 
 ### 1. Pre-Publishing Setup
 - [ ] Read and approve the `PrivacyPolicy.md` draft. Host it publicly (e.g., on a GitHub Gist, your personal site, or as a public page on your app website) so you can get a link to it.
-- [ ] Review the `manifest.json` updates planned (removing localhost permissions).
+- [ ] Review the `manifest.json` for production-only host permissions.
 - [ ] Create your Promotional Images:
   - **Store Icon:** You already have `icon128.png` (Good!).
   - **Screenshots:** Take 1-5 screenshots of the extension working (Must be `1280x800` or `640x400`).
@@ -32,7 +32,7 @@ Follow these steps precisely to submit your extension to the Chrome Web Store.
 ### 5. Privacy Tab (Crucial!)
 1. **Single Purpose:** "MemWyre connects users browsing and AI chats to their personal Brain Vault knowledge base."
 2. **Permissions Justification:**
-   - **`activeTab` / `scripting`:** Needed to extract the current AI chat context or page content to save as a memory in the Brain Vault.
+   - **`activeTab`:** Needed to extract the current AI chat context or page content to save as a memory in the Brain Vault.
    - **`storage`:** Needed to save the user's authentication token across sessions.
 3. **Data Usage:**
    - Check the boxes indicating you collect "Website content" and "Authentication info".

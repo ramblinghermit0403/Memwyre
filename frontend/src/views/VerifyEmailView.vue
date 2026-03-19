@@ -5,7 +5,7 @@
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
       </div>
       
-      <h2 class="text-2xl font-bold mb-2">Email Verification</h2>
+      <h2 class="text-2xl font-bold mb-2">{{ success ? 'Account verified' : 'Email Verification' }}</h2>
       
       <div v-if="loading" class="text-text-secondary py-8">
         Verifying your email address...
@@ -16,7 +16,7 @@
           {{ message }}
         </p>
         <router-link to="/login" class="block w-full py-3 bg-[#D97757] text-white font-bold rounded-xl hover:bg-[#C4654A] transition-colors">
-          Log in now
+          Log in
         </router-link>
       </div>
       
@@ -35,10 +35,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAuthStore } from '../stores/auth';
 
 const route = useRoute();
-const authStore = useAuthStore();
 const loading = ref(true);
 const success = ref(false);
 const message = ref('');
@@ -62,15 +60,10 @@ onMounted(async () => {
     if (!res.ok) throw new Error(data.detail || 'Verification failed');
     
     success.value = true;
-    message.value = data.message || 'Email successfully verified!';
-    
-    // Inject the new JWT tokens that contain the `is_verified: true` claim
-    if (data.access_token) {
-        authStore.setTokens(data.access_token, data.refresh_token);
-    }
+    message.value = data.message || 'Your account has been verified. You can log in now.';
   } catch (err) {
     success.value = false;
-    message.value = err.message;
+    message.value = err?.message || 'Verification failed';
   } finally {
     loading.value = false;
   }
