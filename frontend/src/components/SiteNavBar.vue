@@ -20,7 +20,7 @@
               Log in
             </router-link>
             <router-link to="/signup" class="px-4 py-2 bg-[#D97757] text-white text-sm font-semibold rounded-lg hover:bg-[#C4654A] transition-colors">
-              Get MemWyre free
+              Signup
             </router-link>
           </div>
         </div>
