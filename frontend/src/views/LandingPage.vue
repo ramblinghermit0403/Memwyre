@@ -517,9 +517,11 @@
                  <p class="text-text-secondary mb-8">
                      Capture the web as you browse. Save articles, documentation, or code snippets instantly without breaking your flow.
                  </p>
-                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold">
-                      <span>✨ Coming Soon</span>
-                  </div>
+                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold">
+                     <img src="@/assets/chrome-logo-svgrepo-com.svg" alt="Chrome" class="w-4 h-4" />
+                     <img src="@/assets/microsoft-edge-logo.svg" alt="Edge" class="w-4 h-4" />
+                     <span>Chrome &amp; Edge</span>
+                 </div>
              </div>
 
              <div class="p-10 bg-[#F7F6F3] rounded-2xl hover:shadow-lg transition-all duration-300">
