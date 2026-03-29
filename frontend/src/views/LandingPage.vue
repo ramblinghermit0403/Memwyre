@@ -33,7 +33,7 @@
               to="/signup"
               class="px-6 py-3 bg-primary text-white text-base font-semibold rounded-xl hover:bg-primary-600 transition-colors inline-flex items-center justify-center gap-2"
             >
-              Try it free
+              Get started
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </router-link>
             <a
@@ -43,6 +43,19 @@
               See how it works
             </a>
           </div>
+
+          <p class="mt-4 max-w-2xl text-sm text-text-secondary leading-relaxed">
+            Explore
+            <router-link to="/use-cases" class="text-primary hover:text-primary-600 font-semibold">real-world use cases</router-link>,
+            review our
+            <router-link to="/privacy-policy" class="text-primary hover:text-primary-600 font-semibold">privacy policy</router-link>
+            and
+            <router-link to="/terms" class="text-primary hover:text-primary-600 font-semibold">terms of service</router-link>.
+            MemWyre is built around standards like
+            <a href="https://modelcontextprotocol.io/introduction" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-600 font-semibold">Model Context Protocol</a>
+            and official
+            <a href="https://developer.chrome.com/docs/extensions" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-600 font-semibold">Chrome extension APIs</a>.
+          </p>
 
           <div class="mt-10 pt-6 border-t border-black/5">
             <div class="text-xs font-semibold uppercase tracking-widest text-text-muted">Supported AI tools</div>
@@ -544,7 +557,7 @@
         <div class="max-w-7xl mx-auto px-10 sm:px-16 lg:px-28">
             <div class="text-center mb-16">
                  <h2 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4">Pricing</h2>
-                 <p class="font-display text-4xl font-extrabold tracking-tight text-balance">AI that works where your team works. Try for free.</p>
+                 <p class="font-display text-4xl font-extrabold tracking-tight text-balance">AI that works where your team works.</p>
             </div>
 
             <div class="max-w-md mx-auto">
@@ -575,7 +588,7 @@
                         <img src="/image.svg" alt="MemWyre" class="w-5 h-5 rounded" />
                     </div>
 
-                    <div class="mt-8 text-sm font-semibold">Everything in Free, plus:</div>
+                    <!-- <div class="mt-8 text-sm font-semibold">Everything in Free, plus:</div> -->
                     <ul class="mt-4 space-y-3 text-sm text-text-secondary">
                         <li class="flex items-start gap-3">
                             <svg class="w-5 h-5 text-text-muted shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>

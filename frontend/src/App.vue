@@ -5,11 +5,15 @@ import { useThemeStore } from './stores/theme'
 import { useAuthStore } from './stores/auth'
 
 // Initialize theme store to ensure dark mode preference persists on reload
-const themeStore = useThemeStore()
-const authStore = useAuthStore()
+const isClient = typeof window !== 'undefined'
+if (isClient) {
+  useThemeStore()
+}
+
+const authStore = isClient ? useAuthStore() : null
 
 onMounted(async () => {
-  if (!authStore.isAuthenticated) return
+  if (!authStore || !authStore.isAuthenticated) return
   try {
     await authStore.fetchUser()
   } catch (e) {

@@ -1,0 +1,136 @@
+﻿{
+    "slides":  [
+                   {
+                       "source":  "save_button.png",
+                       "headlineIcon":  "extension/logo.png",
+                       "id":  "01-capture-button",
+                       "headlineLines":  [
+                                             "Save AI",
+                                             "responses and prompts",
+                                             "with the [logo]"
+                                         ],
+                       "headline":  "Save AI responses and prompts with the [logo]",
+                       "support":  "",
+                       "primary":  {
+                                       "y":  168,
+                                       "w":  648,
+                                       "h":  540,
+                                       "x":  566
+                                   },
+                       "extraCards":  [
+                                          {
+                                              "image":  "save_btn_2.png",
+                                              "rect":  {
+                                                           "y":  470,
+                                                           "w":  360,
+                                                           "h":  152,
+                                                           "x":  86
+                                                       }
+                                          }
+                                      ],
+                       "secondary":  null
+                   },
+                   {
+                       "source":  "sync button.png",
+                       "headlineIcon":  "extension/logo.png",
+                       "id":  "02-sync-button",
+                       "headlineLines":  [
+                                             "Tap [logo] button",
+                                             "to sync your",
+                                             "context to your",
+                                             "knowledge base."
+                                         ],
+                       "headline":  "Tap [logo] button to sync your context to your knowledge base.",
+                       "support":  "",
+                       "primary":  {
+                                       "y":  168,
+                                       "w":  648,
+                                       "h":  540,
+                                       "x":  70
+                                   },
+                       "extraCards":  [
+                                          {
+                                              "image":  "sync_btn.png",
+                                              "rect":  {
+                                                           "y":  516,
+                                                           "w":  360,
+                                                           "h":  152,
+                                                           "x":  776
+                                                       }
+                                          }
+                                      ],
+                       "secondary":  null
+                   },
+                   {
+                       "id":  "03-mcp-server-connections",
+                       "source":  "mcp_connections.png",
+                       "secondary":  null,
+                       "support":  "Use your memory from Cursor, Claude, VS Code, and more.",
+                       "headline":  "Connect your AI stack with MCP.",
+                       "primary":  {
+                                       "y":  168,
+                                       "w":  648,
+                                       "h":  540,
+                                       "x":  566
+                                   }
+                   },
+                   {
+                       "id":  "04-save-from-any-webpage",
+                       "source":  "save_webpage.png",
+                       "secondary":  null,
+                       "support":  "Capture articles, docs, and notes without breaking flow.",
+                       "headline":  "Save from any webpage.",
+                       "primary":  {
+                                       "y":  168,
+                                       "w":  648,
+                                       "h":  540,
+                                       "x":  70
+                                   }
+                   },
+                   {
+                       "id":  "05-ask-to-memwyre",
+                       "source":  "talk_to_knowledge.png",
+                       "secondary":  null,
+                       "support":  "Get grounded answers from your saved context.",
+                       "headline":  "Ask MemWyre.",
+                       "primary":  {
+                                       "y":  168,
+                                       "w":  648,
+                                       "h":  540,
+                                       "x":  566
+                                   }
+                   },
+                   {
+                       "id":  "06-cross-ai-post",
+                       "source":  "cross-ai-post.png",
+                       "secondary":  null,
+                       "support":  "Continue in ChatGPT, Claude, or Gemini in one click.",
+                       "headline":  "Cross-post to any AI.",
+                       "primary":  {
+                                       "y":  168,
+                                       "w":  648,
+                                       "h":  540,
+                                       "x":  70
+                                   }
+                   }
+               ],
+    "brandTokens":  {
+                        "surface":  "#2D2B2A",
+                        "heading":  "#FAF6F0",
+                        "border":  "rgba(255,255,255,0.10)",
+                        "highlight":  "#E8956E",
+                        "bgDepth":  "#24211F",
+                        "body":  "#F2EEE8",
+                        "accent":  "#D97757",
+                        "bgBase":  "#1A1918"
+                    },
+    "anchors":  {
+                    "primaryCardRadius":  24
+                },
+    "canvas":  {
+                   "count":  6,
+                   "format":  "png",
+                   "width":  1280,
+                   "height":  800
+               }
+}

@@ -1,10 +1,24 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 
+function getStorage() {
+    if (typeof localStorage !== 'undefined') return localStorage;
+    return {
+        getItem: () => null,
+        setItem: () => { },
+    };
+}
+
 export const useThemeStore = defineStore('theme', () => {
+    const storage = getStorage();
+    const hasWindow = typeof window !== 'undefined';
+    const hasDocument = typeof document !== 'undefined';
+
     // Initialize from localStorage or system preference
-    const savedTheme = localStorage.getItem('theme');
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = storage.getItem('theme');
+    const systemDark = hasWindow && typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        : false;
 
     const isDark = ref(savedTheme === 'dark' || (!savedTheme && systemDark));
 
@@ -14,13 +28,15 @@ export const useThemeStore = defineStore('theme', () => {
 
     // Watch for changes and update DOM/localStorage
     watch(isDark, (val) => {
-        if (val) {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
+        if (hasDocument) {
+            if (val) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         }
+
+        storage.setItem('theme', val ? 'dark' : 'light');
     }, { immediate: true });
 
     return {

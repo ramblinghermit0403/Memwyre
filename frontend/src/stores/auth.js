@@ -2,10 +2,21 @@ import { defineStore } from 'pinia';
 import api from '../services/api';
 import { jwtDecode } from "jwt-decode";
 
+function getStorage() {
+    if (typeof localStorage !== 'undefined') return localStorage;
+    return {
+        getItem: () => null,
+        setItem: () => { },
+        removeItem: () => { },
+    };
+}
+
 // --- Extension Token Relay ---
 // Broadcasts auth state to the MemWyre browser extension via postMessage.
 // auth_relay.js (content script) catches these and relays to the background script.
 function broadcastToExtension(type, token, refreshToken, user) {
+    if (typeof window === 'undefined') return;
+
     const payload = { type };
     if (type === 'MEMWYRE_AUTH_SUCCESS') {
         payload.token = token;
@@ -22,6 +33,7 @@ function broadcastToExtension(type, token, refreshToken, user) {
 // We respond by re-broadcasting the current auth state.
 let _relayListenerAttached = false;
 function attachRelayListener(store) {
+    if (typeof window === 'undefined') return;
     if (_relayListenerAttached) return;
     _relayListenerAttached = true;
     window.addEventListener('message', (event) => {
@@ -34,9 +46,10 @@ function attachRelayListener(store) {
 
 export const useAuthStore = defineStore('auth', {
     state: () => {
-        const token = localStorage.getItem('token');
-        const refreshToken = localStorage.getItem('refreshToken');
-        const hasCompletedOnboarding = localStorage.getItem('hasCompletedOnboarding') === 'true';
+        const storage = getStorage();
+        const token = storage.getItem('token');
+        const refreshToken = storage.getItem('refreshToken');
+        const hasCompletedOnboarding = storage.getItem('hasCompletedOnboarding') === 'true';
         let user = null;
 
         const decodeUser = (t) => {
@@ -55,7 +68,7 @@ export const useAuthStore = defineStore('auth', {
 
         if (token) {
             user = decodeUser(token);
-            if (!user) localStorage.removeItem('token');
+            if (!user) storage.removeItem('token');
         }
 
         return {
@@ -91,13 +104,14 @@ export const useAuthStore = defineStore('auth', {
         },
 
         setTokens(accessToken, refreshToken) {
+            const storage = getStorage();
             this.token = accessToken;
             this.refreshToken = refreshToken; // May be undefined if not provided
             this.isAuthenticated = true;
 
-            localStorage.setItem('token', accessToken);
+            storage.setItem('token', accessToken);
             if (refreshToken) {
-                localStorage.setItem('refreshToken', refreshToken);
+                storage.setItem('refreshToken', refreshToken);
             }
 
             // buffer decode
@@ -109,7 +123,7 @@ export const useAuthStore = defineStore('auth', {
                     name: decoded.name || (decoded.email || decoded.sub || '').split('@')[0],
                     is_verified: decoded.is_verified || false
                 };
-                localStorage.setItem('lastKnownUser', JSON.stringify(this.user));
+                storage.setItem('lastKnownUser', JSON.stringify(this.user));
             } catch (e) { console.error("Token decode failed", e); }
 
             // Broadcast to extension
@@ -147,6 +161,7 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async fetchUser() {
+            const storage = getStorage();
             if (!this.token) return null;
             const response = await api.get('/auth/verify');
             const userData = response.data || {};
@@ -156,7 +171,7 @@ export const useAuthStore = defineStore('auth', {
                 name: userData.name ?? this.user?.name ?? '',
                 is_verified: !!userData.is_verified
             };
-            localStorage.setItem('lastKnownUser', JSON.stringify(this.user));
+            storage.setItem('lastKnownUser', JSON.stringify(this.user));
             return this.user;
         },
 
@@ -170,21 +185,23 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         logout() {
+            const storage = getStorage();
             this.user = null;
             this.token = null;
             this.refreshToken = null;
             this.isAuthenticated = false;
             this.hasCompletedOnboarding = false;
-            localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('hasCompletedOnboarding');
+            storage.removeItem('token');
+            storage.removeItem('refreshToken');
+            storage.removeItem('hasCompletedOnboarding');
 
             // Notify extension to clear its tokens too
             broadcastToExtension('MEMWYRE_AUTH_LOGOUT');
         },
         completeOnboarding() {
+            const storage = getStorage();
             this.hasCompletedOnboarding = true;
-            localStorage.setItem('hasCompletedOnboarding', 'true');
+            storage.setItem('hasCompletedOnboarding', 'true');
         }
     },
 });
