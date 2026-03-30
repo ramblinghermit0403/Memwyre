@@ -54,7 +54,7 @@ async def ingest_url(
         content=data["content"],
         # Normalized source fields for timeline & filter compatibility
         source_llm="web",
-        source_app="web",
+        source_app=url_str,
         interaction_type="webpage",
         user_id=current_user.id,
         tags=request.tags,
@@ -78,7 +78,7 @@ async def ingest_url(
             content=memory.content,
             title=memory.title,
             tags=request.tags,
-            source="web"
+            source=url_str
         )
         # Dedupe check
         dedupe_memory_task.delay(memory.id)

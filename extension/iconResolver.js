@@ -34,7 +34,12 @@
   function getIconForSource(item) {
     if (!item) return { type: 'svg', content: SVG_DOC };
 
-    const src = (item.source || '').toLowerCase();
+    let rawSource = item.source;
+    if (item.source_app && (item.source_app.startsWith('http') || item.source_app.includes('.'))) {
+      rawSource = item.source_app;
+    }
+
+    const src = (rawSource || '').toLowerCase();
 
     if (src) {
       // YouTube
@@ -60,7 +65,7 @@
 
       // Generic URL → Google favicon service
       try {
-        let urlStr = item.source;
+        let urlStr = typeof rawSource === 'string' ? rawSource : '';
         if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
           if (urlStr.includes('.') && !urlStr.includes(' ')) urlStr = 'https://' + urlStr;
         }

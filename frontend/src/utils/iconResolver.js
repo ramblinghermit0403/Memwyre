@@ -40,9 +40,15 @@ const DEFAULT_WEB_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentCo
 export function getIconForSource(item) {
     if (!item) return { type: 'svg', content: DEFAULT_DOC_ICON };
 
+    let rawSource = item.source;
+    // Prefer source_app if it looks like a URL
+    if (item.source_app && (item.source_app.startsWith('http') || item.source_app.includes('.'))) {
+        rawSource = item.source_app;
+    }
+
     // 1. Check the source property FIRST (most reliable indicator)
-    if (item.source) {
-        const sourceStr = item.source.toLowerCase();
+    if (rawSource) {
+        const sourceStr = typeof rawSource === 'string' ? rawSource.toLowerCase() : '';
 
         // 1a. YouTube check
         if (sourceStr.includes('youtube.com') || sourceStr.includes('youtu.be')) {
@@ -82,7 +88,7 @@ export function getIconForSource(item) {
 
         // 1d. Try parsing as a URL for a favicon
         try {
-            let urlString = item.source;
+            let urlString = typeof rawSource === 'string' ? rawSource : '';
             if (!urlString.startsWith('http://') && !urlString.startsWith('https://')) {
                 if (urlString.includes('.') && !urlString.includes(' ')) {
                     urlString = 'https://' + urlString;
