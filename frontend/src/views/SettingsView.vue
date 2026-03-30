@@ -69,6 +69,33 @@
                     </div>
                     
                     <hr class="border-gray-100 dark:border-border" />
+                     <!-- Chat Defaults (Fix 4) -->
+                     <div>
+                       <h4 class="text-sm font-medium text-gray-900 dark:text-text-primary mb-1">Chat Defaults</h4>
+                       <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Default temperature and token budget for new chats. Overridable per session.</p>
+                       <div class="space-y-4">
+                         <div>
+                           <div class="flex justify-between items-center mb-1">
+                             <label class="text-xs font-medium text-gray-700 dark:text-gray-300">Default Temperature</label>
+                             <span class="text-xs font-mono bg-gray-100 dark:bg-surface-2 px-2 py-0.5 rounded">{{ settings.chat_temperature_default ?? 0.7 }}</span>
+                           </div>
+                           <input type="range" min="0" max="1" step="0.1" v-model.number="settings.chat_temperature_default"
+                             class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#D97757]" />
+                           <p class="text-xs text-gray-400 mt-1">Higher = more creative responses.</p>
+                         </div>
+                         <div>
+                           <label class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">Default Max Tokens</label>
+                           <input type="number" min="128" max="8192" step="1" v-model.number="settings.chat_max_tokens_default"
+                             class="w-full sm:max-w-xs px-3 py-2 border border-gray-200 dark:border-border rounded-lg text-sm bg-gray-50 dark:bg-surface-2 focus:ring-1 focus:ring-[#D97757] focus:border-[#D97757]" />
+                         </div>
+                         <button @click="saveChatDefaults" :disabled="savingChatDefaults"
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#D97757] hover:bg-[#C4654A] disabled:opacity-50 transition-colors">
+                           {{ savingChatDefaults ? 'Saving\u2026' : 'Save Chat Defaults' }}
+                         </button>
+                       </div>
+                     </div>
+
+                     <hr class="border-gray-100 dark:border-border" />
                     
                     <!-- Account Info -->
                     <div>
@@ -446,6 +473,24 @@ const revokeKeyConfirm = (id) => {
 };
 
 // ... existing logic ...
+
+const savingChatDefaults = ref(false);
+
+const saveChatDefaults = async () => {
+  const temp = Math.min(1, Math.max(0, Number(settings.value.chat_temperature_default) || 0.7));
+  const tokens = Math.round(Math.min(8192, Math.max(128, Number(settings.value.chat_max_tokens_default) || 2800)));
+  settings.value.chat_temperature_default = temp;
+  settings.value.chat_max_tokens_default = tokens;
+  savingChatDefaults.value = true;
+  try {
+    await api.patch('/user/settings', { chat_temperature_default: temp, chat_max_tokens_default: tokens });
+    toast.success('Chat defaults saved');
+  } catch (err) {
+    toast.error('Failed to save chat defaults');
+  } finally {
+    savingChatDefaults.value = false;
+  }
+};
 
 const loadSettings = async () => {
   try {

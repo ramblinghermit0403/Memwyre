@@ -473,51 +473,39 @@ const providerUrl = (provider, text) => {
   const encoded = encodeURIComponent(text || '');
   if (provider === 'chatgpt') return `https://chatgpt.com/?prompt=${encoded}`;
   if (provider === 'claude') return `https://claude.ai/new?q=${encoded}`;
-  if (provider === 'gemini') {
-    // Gemini URL prefill support is inconsistent; include both query/hash patterns.
-    return `https://gemini.google.com/app?hl=en&q=${encoded}&prompt=${encoded}#prompt=${encoded}`;
-  }
+  if (provider === 'gemini') return `https://gemini.google.com/app?q=${encoded}`;
   return null;
 };
 
 const handoff = async (item, provider) => {
-  // Open the tab immediately from the click gesture to reduce popup blocking.
-  const popup = window.open('', '_blank', 'noopener,noreferrer');
   try {
     const payload = await composeContext({ itemIds: [item.id], maxChars: 2800 });
     const contextText = payload?.context_text || item.content || '';
     const prefillText = provider === 'gemini' ? contextText.slice(0, 1500) : contextText;
     const url = providerUrl(provider, prefillText);
 
-    if (url) {
-      const copied = await copyText(contextText);
-      if (popup) {
-        popup.location.href = url;
-      } else {
-        window.open(url, '_blank', 'noopener,noreferrer');
-      }
+    // Always copy to clipboard first — reliable fallback regardless of popup state
+    const copied = await copyText(contextText);
 
+    if (url) {
+      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      if (!opened) {
+        // Popup blocked — clipboard is already copied above
+        toast.error('Popup blocked. Context copied — paste in your AI tool with Ctrl+V.');
+        return;
+      }
       if (provider === 'gemini') {
-        if (copied) {
-          toast.success('Opened Gemini. If prompt is empty, paste with Ctrl+V.');
-        } else {
-          toast.info('Opened Gemini. Prompt prefill may vary by browser/account.');
-        }
+        toast.success(copied ? 'Opened Gemini. If prompt is empty, paste with Ctrl+V.' : 'Opened Gemini. Prompt prefill may vary by browser/account.');
       } else {
         toast.success(copied ? 'Opened AI tool. Context copied as fallback.' : 'Opened AI tool.');
       }
       return;
     }
 
-    if (popup) popup.close();
-    const copied = await copyText(contextText);
-    if (copied) {
-      toast.success('Context copied to clipboard.');
-    } else {
-      toast.error('Could not copy context automatically.');
-    }
+    // No URL (shouldn't happen) — context already copied above
+    if (copied) toast.success('Context copied to clipboard.');
+    else toast.error('Could not copy context automatically.');
   } catch (error) {
-    if (popup) popup.close();
     console.error('Handoff failed', error);
     toast.error('Could not prepare context handoff');
   }

@@ -6,6 +6,7 @@ from app.api import deps
 from app.models.user import User
 from app.models.memory import Memory
 from app.services.web_ingestion import web_ingestion
+from app.services.websocket import manager
 from app.worker import ingest_memory_task, process_memory_metadata_task, dedupe_memory_task
 import uuid
 
@@ -41,8 +42,8 @@ async def ingest_url(
     auto_approve = True
                 
     initial_status = "approved" if auto_approve else "pending"
-    # Content created from UI should natively bypass inbox
-    show_in_inbox = not auto_approve
+    # Web ingests always appear in Inbox so the user is notified
+    show_in_inbox = True
     
     # Enforce Usage Limits
     await deps.verify_usage_limits(doc_type="memory", content_len=len(data["content"]), current_user=current_user, db=db)
@@ -51,7 +52,10 @@ async def ingest_url(
     memory = Memory(
         title=data["title"],
         content=data["content"],
-        source_llm=url_str, # Save the URL to display its Favicon later
+        # Normalized source fields for timeline & filter compatibility
+        source_llm="web",
+        source_app="web",
+        interaction_type="webpage",
         user_id=current_user.id,
         tags=request.tags,
         embedding_id=str(uuid.uuid4()), # Placeholder
@@ -78,5 +82,13 @@ async def ingest_url(
         )
         # Dedupe check
         dedupe_memory_task.delay(memory.id)
+
+    # 5. Broadcast so UI refreshes Inbox without full reload
+    await manager.broadcast({
+        "type": "inbox_update",
+        "action": "new_ingest",
+        "id": f"mem_{memory.id}",
+        "title": memory.title
+    })
         
     return {"status": "success", "memory_id": memory.id, "title": memory.title, "queued": True}
