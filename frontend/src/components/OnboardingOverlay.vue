@@ -24,7 +24,7 @@
                   <div :class="[
                     'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold border transition-colors',
                     currentStep > step ? 'bg-[#D97757] text-white border-[#D97757] shadow-sm' :
-                    currentStep === step ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 ring-2 ring-gray-100 dark:ring-gray-800 ring-offset-1' :
+                    currentStep === step ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600' :
                     'bg-transparent text-gray-400 border-gray-200 dark:border-gray-700'
                   ]">
                     <i v-if="currentStep > step" class="fa-solid fa-check text-xs"></i>
@@ -61,9 +61,11 @@
                   <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Capture web context seamlessly into your workspace.</p>
                 </div>
 
-                <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-10 text-center rounded-xl">
-                  <i class="fa-brands fa-chrome text-5xl text-gray-400 dark:text-gray-500 mx-auto mb-6 block"></i>
-                  <a href="#" target="_blank" class="inline-flex justify-center items-center gap-2 w-full rounded-lg bg-white dark:bg-gray-700 px-6 py-3 text-sm font-bold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 sm:w-auto transition-colors">
+                <div class="flex flex-col items-center justify-center text-center py-10 gap-6">
+                  <i class="fa-brands fa-chrome text-7xl text-gray-300 dark:text-gray-600"></i>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm">The MemWyre Chrome extension lets you capture web pages, articles, and AI chats directly to your vault.</p>
+                  <a href="#" target="_blank" class="inline-flex justify-center items-center gap-2 rounded-lg bg-white dark:bg-gray-700 px-8 py-3 text-sm font-bold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fa-brands fa-chrome"></i>
                     Add to Chrome
                   </a>
                 </div>

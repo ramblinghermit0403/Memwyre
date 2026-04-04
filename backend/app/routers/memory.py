@@ -157,6 +157,7 @@ async def read_memories(
     view: str | None = None,
     project_id: int | None = None,
     source_app: str | None = None,
+    interaction_type: str | None = None,
     date_from: str | None = None,
     date_to: str | None = None,
     db: AsyncSession = Depends(deps.get_db),
@@ -175,6 +176,11 @@ async def read_memories(
         filters.append(Memory.project_id == project_id)
     if source_app:
         filters.append(Memory.source_app == source_app)
+    if interaction_type:
+        if interaction_type == "webpage":
+            filters.append(Memory.interaction_type.in_(["webpage", "web_snippet"]))
+        else:
+            filters.append(Memory.interaction_type == interaction_type)
     if date_from:
         try:
             filters.append(Memory.created_at >= datetime.fromisoformat(date_from))

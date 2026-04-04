@@ -274,7 +274,13 @@ const isViewMode = ref(route.params.id !== 'new');
 const documentId = computed(() => route.params.id);
 const docMetadata = ref({});
 const selectedProjectId = ref(null);
-const interactionType = ref(route.query.interaction_type || 'conversation');
+const normalizeInteractionType = (value) => {
+  const normalized = String(value || '').toLowerCase();
+  if (normalized === 'web_snippet') return 'webpage';
+  if (['conversation', 'prompt', 'webpage', 'memory'].includes(normalized)) return normalized;
+  return 'memory';
+};
+const interactionType = ref(normalizeInteractionType(route.query.interaction_type));
 const sourceApp = ref(route.query.source_app || null);
 const projects = ref([]);
 const editorInstance = shallowRef(null);
@@ -666,16 +672,19 @@ onMounted(() => {
   if (documentId.value === 'new' && !title.value?.trim()) {
     if (interactionType.value === 'prompt') title.value = 'New Prompt';
     else if (interactionType.value === 'conversation') title.value = 'New Conversation';
-    else if (interactionType.value === 'web_snippet') title.value = 'Web Context Snippet';
+    else if (interactionType.value === 'webpage') title.value = 'New Webpage Memory';
+    else title.value = 'New Memory';
   }
 });
 
 watch(
-  () => route.params.id,
-  async (newId) => {
+  () => [route.params.id, route.query.interaction_type, route.query.source_app],
+  async ([newId, queryInteractionType, querySourceApp]) => {
     resolvedId.value = null;
     isInboxItem.value = false;
     isViewMode.value = newId !== 'new';
+    interactionType.value = normalizeInteractionType(queryInteractionType);
+    sourceApp.value = querySourceApp || null;
 
     if (newId === 'new') {
       title.value = '';
@@ -683,6 +692,10 @@ watch(
       tags.value = '';
       selectedProjectId.value = null;
       docMetadata.value = {};
+      if (interactionType.value === 'prompt') title.value = 'New Prompt';
+      else if (interactionType.value === 'conversation') title.value = 'New Conversation';
+      else if (interactionType.value === 'webpage') title.value = 'New Webpage Memory';
+      else title.value = 'New Memory';
       return;
     }
 

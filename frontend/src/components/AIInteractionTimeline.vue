@@ -18,6 +18,15 @@
             </svg>
           </button>
         </div>
+        <select
+          v-model="activeType"
+          @change="fetchTimeline"
+          class="text-xs border border-gray-200 dark:border-gray-700 rounded-md px-2.5 py-1.5 bg-white dark:bg-surface hover:bg-gray-50 dark:hover:bg-gray-800"
+        >
+          <option v-for="option in typeOptions" :key="option.value" :value="option.value">
+            {{ option.label }}
+          </option>
+        </select>
         <button @click="fetchTimeline" class="text-xs px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700">Refresh</button>
       </div>
     </div>
@@ -57,7 +66,7 @@
                   <div class="min-w-0">
                     <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ item.title || 'Untitled AI Interaction' }}</p>
                     <p class="text-xs text-gray-500 mt-1">
-                      {{ displaySource(item.source_app) }} | {{ item.interaction_type || 'conversation' }} | {{ formatTime(item.created_at) }}
+                      {{ displaySource(item.source_app) }} | {{ displayInteractionType(item.interaction_type) }} | {{ formatTime(item.created_at) }}
                     </p>
                     <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">{{ item.content }}</p>
                     <div class="mt-2 flex items-center gap-2">
@@ -206,6 +215,7 @@ const toast = useToast();
 const loading = ref(false);
 const items = ref([]);
 const activeSource = ref('');
+const activeType = ref('');
 const projects = ref([]);
 const sourceMenuOpen = ref(false);
 const projectMenuForId = ref(null);
@@ -220,6 +230,13 @@ const sourceOptions = [
   { value: 'claude', label: 'Claude' },
   { value: 'gemini', label: 'Gemini' },
   { value: 'web', label: 'Web' },
+];
+const typeOptions = [
+  { value: '', label: 'All Types' },
+  { value: 'conversation', label: 'Conversation' },
+  { value: 'prompt', label: 'Prompt' },
+  { value: 'webpage', label: 'Webpage' },
+  { value: 'memory', label: 'Memory' },
 ];
 
 const activeSourceLabel = computed(() => sourceOptions.find((x) => x.value === activeSource.value)?.label || 'All Sources');
@@ -264,6 +281,12 @@ const displaySource = (source) => {
   if (normalized.includes('gemini')) return 'Gemini';
   if (normalized.includes('web')) return 'Web';
   return source || 'AI Tool';
+};
+
+const displayInteractionType = (interactionType) => {
+  const normalized = String(interactionType || 'conversation').toLowerCase();
+  const value = normalized === 'web_snippet' ? 'webpage' : normalized;
+  return value.charAt(0).toUpperCase() + value.slice(1);
 };
 
 const getTimelineIcon = (item) => getIconForSource({
@@ -408,6 +431,7 @@ const fetchTimeline = async () => {
       params.project_id = Number(props.projectId);
     }
     if (activeSource.value) params.source_app = activeSource.value;
+    if (activeType.value) params.interaction_type = activeType.value;
     const response = await api.get('/memory/', { params });
     items.value = (response.data || []).filter((x) => String(x.id || '').startsWith('mem_'));
   } catch (error) {
@@ -543,4 +567,3 @@ onUnmounted(() => {
 
 defineExpose({ fetchTimeline });
 </script>
-

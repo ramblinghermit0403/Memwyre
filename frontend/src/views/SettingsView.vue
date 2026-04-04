@@ -370,6 +370,7 @@ import ThemeToggle from '../components/ThemeToggle.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import McpConnectionGuide from '../components/McpConnectionGuide.vue';
 import { useToast } from 'vue-toastification';
+import { writeScopedBoolean } from '../utils/onboardingState';
 
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
@@ -592,8 +593,13 @@ const copyToken = async () => {
 };
 
 const restartTour = () => {
-    localStorage.removeItem('tour_completed');
-    localStorage.setItem('tour_requested', 'true');
+    if (authStore.user?.id) {
+        writeScopedBoolean(localStorage, authStore.user.id, 'tour_completed', false);
+        writeScopedBoolean(localStorage, authStore.user.id, 'tour_requested', true);
+    } else {
+        localStorage.removeItem('tour_completed');
+        localStorage.setItem('tour_requested', 'true');
+    }
     toast.info("Tour reset. Returning to Dashboard...");
     setTimeout(() => router.push('/dashboard'), 1000);
 };

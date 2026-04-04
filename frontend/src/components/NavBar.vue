@@ -68,7 +68,7 @@
       </div>
     </div>
   </nav>
-  <QuickCreateModal :is-open="isQuickCreateOpen" @close="isQuickCreateOpen = false" />
+  <QuickCreateModal :is-open="isQuickCreateOpen" :initial-tab="quickAddTab" @close="isQuickCreateOpen = false" />
 </template>
 
 <script setup>
@@ -85,6 +85,11 @@ const authStore = useAuthStore();
 const inboxCount = computed(() => inboxStore.count);
 const isProfileOpen = ref(false);
 const isQuickCreateOpen = ref(false);
+const quickAddTab = computed(() => {
+  const candidate = String(route.query.quick_add || '').toLowerCase();
+  if (['create', 'documents', 'webpage'].includes(candidate)) return candidate;
+  return 'documents';
+});
 
 const pastelColors = ['FFB3BA', 'FFDFBA', 'FFFFBA', 'BAFFC9', 'BAE1FF', 'E6B3FF', 'FFB3E6', 'B3FFE6', 'E6FFB3', 'FFE6B3'];
 
@@ -113,6 +118,19 @@ const closeProfile = () => {
 watch(() => route.path, () => {
   closeProfile();
 });
+
+watch(
+  () => route.query.quick_add,
+  (value) => {
+    const candidate = String(value || '').toLowerCase();
+    if (!['create', 'documents', 'webpage'].includes(candidate)) return;
+    isQuickCreateOpen.value = true;
+    const query = { ...route.query };
+    delete query.quick_add;
+    router.replace({ query });
+  },
+  { immediate: true },
+);
 
 const logout = () => {
   authStore.logout();

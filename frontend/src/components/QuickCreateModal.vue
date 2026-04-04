@@ -273,14 +273,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '../services/api';
 import { useToast } from 'vue-toastification';
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const props = defineProps({
-  isOpen: Boolean
+  isOpen: Boolean,
+  initialTab: {
+    type: String,
+    default: 'documents',
+  },
 });
 
 const emit = defineEmits(['close']);
@@ -301,6 +305,12 @@ const tabs = [
     { id: 'webpage', name: 'Webpage', icon: 'svg-web' },
 ];
 
+const resolveInitialTab = () => {
+    const candidate = String(props.initialTab || '').toLowerCase();
+    if (tabs.some((tab) => tab.id === candidate)) return candidate;
+    return 'documents';
+};
+
 const navigateToEditor = () => {
     close();
     router.push('/editor/new');
@@ -317,7 +327,7 @@ const reset = () => {
     urlInput.value = '';
     youtubePreview.value = { videoId: null, thumbnail: null, title: null };
     webpagePreview.value = { url: null, domain: null, favicon: null, title: null, loading: false };
-    activeTab.value = 'documents';
+    activeTab.value = resolveInitialTab();
 };
 
 const triggerFileInput = () => {
@@ -501,6 +511,20 @@ const ingest = async () => {
         uploading.value = false;
     }
 };
+
+watch(
+  () => props.isOpen,
+  (isOpen) => {
+    if (isOpen) activeTab.value = resolveInitialTab();
+  },
+);
+
+watch(
+  () => props.initialTab,
+  () => {
+    if (props.isOpen) activeTab.value = resolveInitialTab();
+  },
+);
 
 </script>
 

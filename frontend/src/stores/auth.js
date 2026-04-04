@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
 import { jwtDecode } from "jwt-decode";
+import {
+    migrateOnboardingLegacyState,
+    readScopedBoolean,
+    writeScopedBoolean,
+} from '../utils/onboardingState';
 
 function getStorage() {
     if (typeof localStorage !== 'undefined') return localStorage;
@@ -49,7 +54,7 @@ export const useAuthStore = defineStore('auth', {
         const storage = getStorage();
         const token = storage.getItem('token');
         const refreshToken = storage.getItem('refreshToken');
-        const hasCompletedOnboarding = storage.getItem('hasCompletedOnboarding') === 'true';
+        let hasCompletedOnboarding = false;
         let user = null;
 
         const decodeUser = (t) => {
@@ -69,6 +74,10 @@ export const useAuthStore = defineStore('auth', {
         if (token) {
             user = decodeUser(token);
             if (!user) storage.removeItem('token');
+            if (user?.id) {
+                migrateOnboardingLegacyState(storage, user.id);
+                hasCompletedOnboarding = readScopedBoolean(storage, user.id, 'completed', false);
+            }
         }
 
         return {
@@ -124,6 +133,8 @@ export const useAuthStore = defineStore('auth', {
                     is_verified: decoded.is_verified || false
                 };
                 storage.setItem('lastKnownUser', JSON.stringify(this.user));
+                migrateOnboardingLegacyState(storage, this.user.id);
+                this.hasCompletedOnboarding = readScopedBoolean(storage, this.user.id, 'completed', false);
             } catch (e) { console.error("Token decode failed", e); }
 
             // Broadcast to extension
@@ -172,6 +183,8 @@ export const useAuthStore = defineStore('auth', {
                 is_verified: !!userData.is_verified
             };
             storage.setItem('lastKnownUser', JSON.stringify(this.user));
+            migrateOnboardingLegacyState(storage, this.user.id);
+            this.hasCompletedOnboarding = readScopedBoolean(storage, this.user.id, 'completed', false);
             return this.user;
         },
 
@@ -193,7 +206,6 @@ export const useAuthStore = defineStore('auth', {
             this.hasCompletedOnboarding = false;
             storage.removeItem('token');
             storage.removeItem('refreshToken');
-            storage.removeItem('hasCompletedOnboarding');
 
             // Notify extension to clear its tokens too
             broadcastToExtension('MEMWYRE_AUTH_LOGOUT');
@@ -201,7 +213,9 @@ export const useAuthStore = defineStore('auth', {
         completeOnboarding() {
             const storage = getStorage();
             this.hasCompletedOnboarding = true;
-            storage.setItem('hasCompletedOnboarding', 'true');
+            if (this.user?.id) {
+                writeScopedBoolean(storage, this.user.id, 'completed', true);
+            }
         }
     },
 });

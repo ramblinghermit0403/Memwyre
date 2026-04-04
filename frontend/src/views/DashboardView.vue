@@ -9,115 +9,6 @@
           <p class="mt-1 text-gray-500 dark:text-text-secondary">This is where your AI work lives.</p>
         </div>
 
-        <div
-          v-if="showOnboardingCard"
-          class="mb-6 shrink-0 rounded-xl border border-[#E8CFC6] bg-[#FFF7F3] dark:bg-surface dark:border-border p-5"
-        >
-          <template v-if="!isVerified">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-              <div>
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Verify your email to finish setup</h2>
-                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                  Your account is created, but email verification is required before full onboarding.
-                </p>
-              </div>
-              <div class="flex flex-wrap gap-2">
-                <button
-                  @click="resendVerification"
-                  :disabled="resendingVerification"
-                  class="px-4 py-2 rounded-lg bg-[#D97757] text-white text-sm font-semibold hover:bg-[#C4654A] disabled:opacity-50"
-                >
-                  {{ resendingVerification ? 'Sending...' : 'Resend verification' }}
-                </button>
-                <button
-                  @click="router.push('/settings')"
-                  class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-800"
-                >
-                  Go to settings
-                </button>
-                <button
-                  @click="skipOnboarding"
-                  class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-white/70 dark:hover:bg-gray-800"
-                >
-                  Skip for now
-                </button>
-              </div>
-            </div>
-          </template>
-
-          <template v-else>
-            <div class="flex flex-col gap-4">
-              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-                <div>
-                  <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Complete your onboarding</h2>
-                  <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                    Progress: {{ requiredProgress.completed }}/{{ requiredProgress.total }} required steps.
-                  </p>
-                </div>
-                <div class="h-2 w-full lg:w-48 rounded-full bg-[#EEDAD3] dark:bg-gray-700 overflow-hidden">
-                  <div class="h-full bg-[#D97757] transition-all" :style="{ width: requiredProgress.percent + '%' }"></div>
-                </div>
-              </div>
-
-              <div class="grid gap-3">
-                <div class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-2 px-4 py-3">
-                  <div class="text-sm text-gray-800 dark:text-gray-100">
-                    <span class="font-semibold">Step 1:</span> Email verified
-                  </div>
-                  <span class="text-xs font-bold text-green-700 dark:text-green-400">Done</span>
-                </div>
-
-                <div class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-2 px-4 py-3">
-                  <div class="text-sm text-gray-800 dark:text-gray-100">
-                    <span class="font-semibold">Step 2:</span> Start your first memory
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span v-if="hasStartedFirstMemory" class="text-xs font-bold text-green-700 dark:text-green-400">Done</span>
-                    <button
-                      v-else
-                      @click="startFirstMemory"
-                      class="px-3 py-1.5 rounded-md bg-[#D97757] text-white text-xs font-semibold hover:bg-[#C4654A]"
-                    >
-                      Open editor
-                    </button>
-                  </div>
-                </div>
-
-                <div class="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-2 px-4 py-3">
-                  <div class="text-sm text-gray-800 dark:text-gray-100">
-                    <span class="font-semibold">Optional:</span> Take the demo tour
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span v-if="hasCompletedTour" class="text-xs font-bold text-green-700 dark:text-green-400">Done</span>
-                    <button
-                      v-else
-                      @click="startTour"
-                      class="px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-600 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    >
-                      Start tour
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex flex-wrap gap-2 justify-end">
-                <button
-                  @click="skipOnboarding"
-                  class="px-4 py-2 rounded-lg text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-white/70 dark:hover:bg-gray-800"
-                >
-                  Skip for now
-                </button>
-                <button
-                  @click="completeOnboarding"
-                  class="px-4 py-2 rounded-lg bg-[#D97757] text-white text-sm font-semibold hover:bg-[#C4654A]"
-                >
-                  Complete onboarding
-                </button>
-              </div>
-            </div>
-          </template>
-        </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
           <div class="lg:col-span-8 min-h-0">
             <div id="tour-timeline" class="bg-white dark:bg-surface rounded-xl shadow-sm border border-gray-100 dark:border-border overflow-hidden h-[640px] lg:h-full min-h-0">
@@ -136,11 +27,247 @@
 
     <QuickActions @open-review="showDailyReview = true" />
     <DailyReviewModal v-if="showDailyReview" @close="showDailyReview = false" />
+
+    <Teleport to="body">
+      <div v-if="showOnboardingModal" class="fixed inset-0 z-[1200]">
+        <div class="absolute inset-0 bg-black/45 backdrop-blur-sm"></div>
+
+        <div class="relative h-screen w-screen flex items-center justify-center">
+          <div class="w-[1120px] h-[760px] rounded-[30px] bg-white dark:bg-surface shadow-2xl">
+            <div class="relative h-full overflow-hidden rounded-[30px] bg-white dark:bg-surface flex flex-col">
+              <div class="relative px-6 sm:px-10 pt-8 pb-6 border-b border-gray-100 dark:border-gray-800">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex items-center">
+                    <div>
+                      <p class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">MemWyre Onboarding</p>
+                      <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-300">
+                        {{ isVerified ? `Step ${onboardingStep} of 3` : 'Verify account before setup' }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    @click="skipOnboarding"
+                    class="rounded-full border border-gray-200 dark:border-gray-700 px-3 py-1.5 text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    Skip for now
+                  </button>
+                </div>
+
+                <div v-if="isVerified" class="mt-5">
+                  <div class="h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                    <div class="h-full bg-[#D97757] transition-all duration-300" :style="{ width: progressPercent + '%' }"></div>
+                  </div>
+                  <div class="mt-3 grid grid-cols-3 gap-2">
+                    <button
+                      v-for="step in 3"
+                      :key="step"
+                      @click="setStep(step)"
+                      :disabled="step > maxUnlockedStep"
+                      :class="[
+                        'rounded-lg border px-3 py-2 text-left text-xs sm:text-sm transition-colors',
+                        onboardingStep === step
+                          ? 'border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
+                          : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-surface text-gray-500 dark:text-gray-400',
+                        step > maxUnlockedStep ? 'opacity-40 cursor-not-allowed' : ''
+                      ]"
+                    >
+                      <div class="font-semibold">Step {{ step }}</div>
+                      <div class="text-[11px] sm:text-xs mt-0.5">
+                        {{ step === 1 ? 'AI work type' : step === 2 ? 'Browser extension' : 'First memory and tour' }}
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="relative px-6 sm:px-10 py-6 sm:py-8 flex-1 overflow-y-auto">
+                <template v-if="!isVerified">
+                  <div class="rounded-2xl border border-[#EBC4B6] bg-[#FFF5F1] dark:bg-gray-800/70 p-6 sm:p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Verify your email first</h3>
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-300 max-w-2xl">
+                      Email verification is required before we can finish onboarding and unlock the full workflow.
+                    </p>
+
+                    <div class="mt-6 flex flex-wrap gap-3">
+                      <button
+                        @click="resendVerification"
+                        :disabled="resendingVerification"
+                        class="px-4 py-2.5 rounded-lg bg-[#D97757] text-white text-sm font-semibold hover:bg-[#C4654A] disabled:opacity-50"
+                      >
+                        {{ resendingVerification ? 'Sending...' : 'Resend verification email' }}
+                      </button>
+                      <button
+                        @click="router.push('/settings')"
+                        class="px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      >
+                        Open settings
+                      </button>
+                    </div>
+                  </div>
+                </template>
+
+                <template v-else-if="onboardingStep === 1">
+                  <div class="mb-5">
+                    <h3 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Where do you do AI work first?</h3>
+                    <p class="mt-2 text-sm sm:text-base text-gray-500 dark:text-gray-300">
+                      Select one option. You can change this later.
+                    </p>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button
+                      v-for="option in aiWorkTypes"
+                      :key="option.id"
+                      @click="selectType(option.id)"
+                      :class="[
+                        'group rounded-2xl border p-4 sm:p-5 text-left transition-all',
+                        selectedType === option.id
+                          ? 'border-[#D97757] bg-[#FFF3EE] dark:bg-gray-800 shadow-[0_8px_20px_rgba(217,119,87,0.15)]'
+                          : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-surface hover:border-[#D97757]/50'
+                      ]"
+                    >
+                      <div class="flex items-start justify-between gap-3">
+                        <div class="flex items-start gap-3">
+                          <div class="h-11 w-11 rounded-xl bg-[#FFF3EE] dark:bg-gray-700/80 flex items-center justify-center">
+                            <svg v-if="option.id === 'conversation'" class="h-6 w-6 text-[#D97757] dark:text-[#F3D4C8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 10h8M8 14h5M5 5h14a2 2 0 012 2v8a2 2 0 01-2 2H9l-4 4v-4H5a2 2 0 01-2-2V7a2 2 0 012-2z" />
+                            </svg>
+                            <svg v-else-if="option.id === 'prompt'" class="h-6 w-6 text-[#D97757] dark:text-[#F3D4C8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 18l8-8m0 0l2-2a2.828 2.828 0 114 4l-2 2m-4-4l4 4M5 20h4l9-9" />
+                            </svg>
+                            <svg v-else-if="option.id === 'webpage'" class="h-6 w-6 text-[#D97757] dark:text-[#F3D4C8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 6h18M8 3v3m8-3v3M5 6h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 11h4m-4 4h7" />
+                            </svg>
+                            <svg v-else class="h-6 w-6 text-[#D97757] dark:text-[#F3D4C8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 3h10a2 2 0 012 2v16l-7-4-7 4V5a2 2 0 012-2z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ option.label }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-300 mt-1">{{ option.description }}</p>
+                          </div>
+                        </div>
+                        <div
+                          :class="[
+                            'mt-1 h-6 w-6 rounded-full border flex items-center justify-center',
+                            selectedType === option.id
+                              ? 'border-[#D97757] bg-[#D97757] text-white'
+                              : 'border-gray-300 dark:border-gray-600 text-transparent'
+                          ]"
+                        >
+                          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                </template>
+
+                <template v-else-if="onboardingStep === 2">
+                  <div class="h-full flex flex-col">
+                    <div class="mb-5">
+                      <h3 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Install extension in Chrome or Edge</h3>
+                      <p class="mt-2 text-sm sm:text-base text-gray-500 dark:text-gray-300">
+                        This gives one-click capture from AI chats and webpages.
+                      </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 flex-1">
+                      <button
+                        v-for="choice in extensionOptions"
+                        :key="choice.id"
+                        @click="handleExtensionChoice(choice)"
+                        class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md p-6 sm:p-8 text-left transition-all h-full flex flex-col items-center justify-center gap-4 group"
+                      >
+                        <div class="h-16 w-16 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
+                          <img
+                            :src="choice.logo"
+                            :alt="choice.label"
+                            class="h-8 w-8 object-contain"
+                          />
+                        </div>
+                        <div class="text-center">
+                          <p class="text-xl font-bold text-gray-900 dark:text-white">{{ choice.label }}</p>
+                          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ choice.description }}</p>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </template>
+
+                <template v-else>
+                  <div class="mb-5">
+                    <h3 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Create your first {{ selectedTypeLabel.toLowerCase() }}</h3>
+                    <p class="mt-2 text-sm sm:text-base text-gray-500 dark:text-gray-300">
+                      Start now, then finish onboarding.
+                    </p>
+                  </div>
+
+                  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface p-5">
+                      <p class="text-sm font-semibold text-gray-800 dark:text-gray-100">Selected work type</p>
+                      <p class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{{ selectedTypeLabel }}</p>
+                      <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">{{ selectedTypeHint }}</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface p-5">
+                      <p class="text-sm font-semibold text-gray-800 dark:text-gray-100">Status</p>
+                      <p v-if="firstActionDone" class="mt-2 text-green-700 dark:text-green-400 font-semibold">
+                        First action completed. You can finish onboarding.
+                      </p>
+                      <p v-else class="mt-2 text-gray-500 dark:text-gray-300">
+                        First action not completed yet. Click the primary button to start.
+                      </p>
+
+                      <button
+                        @click="startTour"
+                        class="mt-4 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      >
+                        {{ hasCompletedTour ? 'Run tour again' : 'Start optional tour' }}
+                      </button>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+              <div class="relative px-6 sm:px-10 py-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <button
+                  v-if="isVerified && onboardingStep > 1"
+                  @click="previousStep"
+                  class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Back
+                </button>
+                <div v-else></div>
+
+                <button
+                  v-if="isVerified"
+                  @click="handlePrimaryAction"
+                  :disabled="!canRunPrimaryAction"
+                  class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#D97757] text-white text-sm sm:text-base font-semibold hover:bg-[#C4654A] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {{ primaryActionLabel }}
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import NavBar from '../components/NavBar.vue';
@@ -152,31 +279,263 @@ import { createTour } from '../tour';
 import { useInboxStore } from '../stores/inbox';
 import { useAuthStore } from '../stores/auth';
 import api from '../services/api';
+import chromeLogo from '../assets/chrome-logo-svgrepo-com.svg';
+import edgeLogo from '../assets/microsoft-edge-logo.svg';
+import {
+  migrateOnboardingLegacyState,
+  readScopedBoolean,
+  readScopedString,
+  writeScopedBoolean,
+  writeScopedString,
+} from '../utils/onboardingState';
 
 const route = useRoute();
 const router = useRouter();
 const toast = useToast();
 const inboxStore = useInboxStore();
 const authStore = useAuthStore();
+
 const user = computed(() => authStore.user);
 const isVerified = computed(() => !!user.value?.is_verified);
 const showDailyReview = ref(false);
 const timelineRef = ref(null);
 const resendingVerification = ref(false);
-const hasStartedFirstMemory = ref(localStorage.getItem('onboarding_first_memory_started') === 'true');
-const hasCompletedTour = ref(localStorage.getItem('tour_completed') === 'true');
+
+const onboardingStep = ref(1);
+const selectedType = ref('');
+const firstActionDone = ref(false);
+const firstActionStartedAt = ref('');
+const hasCompletedTour = ref(false);
+const extensionChoice = ref('');
+
+const aiWorkTypes = [
+  { id: 'conversation', label: 'Conversation', description: 'Save an AI chat exchange.' },
+  { id: 'prompt', label: 'Prompt', description: 'Store a reusable prompt template.' },
+  { id: 'webpage', label: 'Webpage', description: 'Ingest a web page as memory context.' },
+  { id: 'memory', label: 'Memory', description: 'Create a standalone memory note.' },
+];
+
+const extensionOptions = [
+  {
+    id: 'chrome',
+    label: 'I use Chrome',
+    description: 'Install from the Chrome Web Store.',
+    logo: chromeLogo,
+    url: 'https://chromewebstore.google.com/detail/memwyre/biplnkodgfdgejgblohhjeckiclfpekn',
+  },
+  {
+    id: 'edge',
+    label: 'I use Edge',
+    description: 'Install from Microsoft Edge Add-ons.',
+    logo: edgeLogo,
+    url: 'https://microsoftedge.microsoft.com/addons/detail/memwyre/ihibkjgaiafhhbjmchmkphlkomodkmpd',
+  },
+];
 
 const focusToday = computed(() => route.query.view === 'today');
-const showOnboardingCard = computed(() => authStore.isAuthenticated && !authStore.hasCompletedOnboarding);
-const requiredProgress = computed(() => {
-  const total = 2;
-  const completed = 1 + (hasStartedFirstMemory.value ? 1 : 0);
-  return {
-    total,
-    completed,
-    percent: Math.round((completed / total) * 100),
-  };
+const showOnboardingModal = computed(() => authStore.isAuthenticated && !authStore.hasCompletedOnboarding);
+
+const selectedTypeLabel = computed(
+  () => aiWorkTypes.find((item) => item.id === selectedType.value)?.label || 'AI work',
+);
+
+const selectedTypeHint = computed(() => {
+  if (selectedType.value === 'webpage') return 'This opens the existing webpage ingestion flow.';
+  if (selectedType.value === 'prompt') return 'The editor will open with prompt type selected.';
+  if (selectedType.value === 'conversation') return 'The editor will open with conversation type selected.';
+  return 'The editor will open with memory type selected.';
 });
+
+const progressPercent = computed(() => {
+  const step = Math.max(1, Math.min(3, onboardingStep.value || 1));
+  return Math.round((step / 3) * 100);
+});
+
+const maxUnlockedStep = computed(() => {
+  if (!selectedType.value) return 1;
+  if (!extensionChoice.value) return 2;
+  return 3;
+});
+
+const canRunPrimaryAction = computed(() => {
+  if (onboardingStep.value === 1) return !!selectedType.value;
+  if (onboardingStep.value === 2) return !!extensionChoice.value;
+  return !!selectedType.value && !!extensionChoice.value;
+});
+
+const primaryActionLabel = computed(() => {
+  if (onboardingStep.value === 1) return 'Continue';
+  if (onboardingStep.value === 2) return 'Continue';
+  if (!firstActionDone.value) return 'Start first action';
+  return 'Finish onboarding';
+});
+
+const onboardingStorageReady = computed(() => !!user.value?.id && typeof localStorage !== 'undefined');
+
+const onboardingNow = () => new Date().toISOString().replace('Z', '');
+
+const persistOnboardingStep = () => {
+  if (!onboardingStorageReady.value) return;
+  writeScopedString(localStorage, user.value.id, 'step', onboardingStep.value);
+};
+
+const setStep = (step) => {
+  const target = Math.max(1, Math.min(3, Number(step) || 1));
+  if (target > maxUnlockedStep.value) return;
+  onboardingStep.value = target;
+  persistOnboardingStep();
+};
+
+const previousStep = () => {
+  setStep(onboardingStep.value - 1);
+};
+
+const selectType = (typeId) => {
+  selectedType.value = typeId;
+  if (!onboardingStorageReady.value) return;
+  writeScopedString(localStorage, user.value.id, 'selected_type', typeId);
+};
+
+const setExtensionChoice = (choice) => {
+  extensionChoice.value = choice;
+  if (!onboardingStorageReady.value) return;
+  writeScopedString(localStorage, user.value.id, 'extension_choice', choice);
+};
+
+const handleExtensionChoice = (choice) => {
+  if (!choice) return;
+  setExtensionChoice(choice.id);
+  if (choice.url) {
+    window.open(choice.url, '_blank', 'noopener,noreferrer');
+  }
+};
+
+const hydrateOnboardingState = () => {
+  if (!onboardingStorageReady.value) return;
+
+  migrateOnboardingLegacyState(localStorage, user.value.id);
+
+  const storedType = readScopedString(localStorage, user.value.id, 'selected_type', '');
+  selectedType.value = aiWorkTypes.some((item) => item.id === storedType) ? storedType : '';
+  firstActionDone.value = readScopedBoolean(localStorage, user.value.id, 'first_action_done', false);
+  firstActionStartedAt.value = readScopedString(localStorage, user.value.id, 'first_action_started_at', '');
+  hasCompletedTour.value = readScopedBoolean(localStorage, user.value.id, 'tour_completed', false);
+  extensionChoice.value = readScopedString(localStorage, user.value.id, 'extension_choice', '');
+
+  const rawStep = Number.parseInt(readScopedString(localStorage, user.value.id, 'step', '1'), 10);
+  onboardingStep.value = Number.isFinite(rawStep) ? rawStep : 1;
+
+  if (!selectedType.value) onboardingStep.value = 1;
+  else if (!extensionChoice.value) onboardingStep.value = Math.max(2, onboardingStep.value);
+  else onboardingStep.value = 3;
+
+  persistOnboardingStep();
+};
+
+const runTour = () => {
+  setTimeout(() => {
+    const driver = createTour();
+    driver.drive();
+    if (onboardingStorageReady.value) {
+      writeScopedBoolean(localStorage, user.value.id, 'tour_completed', true);
+      writeScopedBoolean(localStorage, user.value.id, 'tour_requested', false);
+    }
+    hasCompletedTour.value = true;
+  }, 250);
+};
+
+const startTour = () => {
+  if (onboardingStorageReady.value) {
+    writeScopedBoolean(localStorage, user.value.id, 'tour_completed', false);
+    writeScopedBoolean(localStorage, user.value.id, 'tour_requested', true);
+  }
+  hasCompletedTour.value = false;
+  // Close the modal first so the tour can highlight elements underneath
+  authStore.completeOnboarding();
+  runTour();
+};
+
+const refreshFirstActionCompletion = async () => {
+  if (!showOnboardingModal.value || !isVerified.value || !selectedType.value) return;
+  if (firstActionDone.value) return;
+
+  try {
+    const params = {
+      view: 'timeline',
+      limit: 1,
+      interaction_type: selectedType.value,
+    };
+    if (firstActionStartedAt.value) params.date_from = firstActionStartedAt.value;
+
+    const response = await api.get('/memory/', { params });
+    const hasCreatedItem = (response.data || []).some((item) => String(item.id || '').startsWith('mem_'));
+    if (!hasCreatedItem) return;
+
+    firstActionDone.value = true;
+    if (onboardingStorageReady.value) {
+      writeScopedBoolean(localStorage, user.value.id, 'first_action_done', true);
+    }
+    toast.success('First action completed.');
+  } catch (error) {
+    console.error('Failed to verify onboarding first action completion', error);
+  }
+};
+
+const startFirstAction = () => {
+  if (!selectedType.value || !onboardingStorageReady.value) return;
+
+  firstActionStartedAt.value = onboardingNow();
+  writeScopedString(localStorage, user.value.id, 'first_action_started_at', firstActionStartedAt.value);
+  writeScopedString(localStorage, user.value.id, 'selected_type', selectedType.value);
+
+  if (selectedType.value === 'webpage') {
+    router.push({
+      path: '/dashboard',
+      query: {
+        ...route.query,
+        quick_add: 'webpage',
+      },
+    });
+    return;
+  }
+
+  router.push(`/editor/new?interaction_type=${selectedType.value}&source_app=web-app`);
+};
+
+const completeOnboarding = (message, requireReady = true) => {
+  if (requireReady && (!selectedType.value || !extensionChoice.value || !firstActionDone.value)) return;
+  authStore.completeOnboarding();
+  if (onboardingStorageReady.value) {
+    writeScopedBoolean(localStorage, user.value.id, 'tour_requested', false);
+  }
+  if (message) toast.success(message);
+};
+
+const skipOnboarding = () => {
+  completeOnboarding('Onboarding skipped for now.', false);
+};
+
+const handlePrimaryAction = () => {
+  if (onboardingStep.value === 1 && selectedType.value) {
+    onboardingStep.value = 2;
+    persistOnboardingStep();
+    return;
+  }
+
+  if (onboardingStep.value === 2 && extensionChoice.value) {
+    onboardingStep.value = 3;
+    persistOnboardingStep();
+    return;
+  }
+
+  if (onboardingStep.value === 3) {
+    if (!firstActionDone.value) {
+      startFirstAction();
+      return;
+    }
+    completeOnboarding('Onboarding completed.');
+  }
+};
 
 const timeOfDay = computed(() => {
   const hour = new Date().getHours();
@@ -193,43 +552,6 @@ const openItem = (item) => {
 inboxStore.fetchInbox();
 inboxStore.connectWebSocket();
 
-const runTour = () => {
-  setTimeout(() => {
-    const driver = createTour();
-    driver.drive();
-    localStorage.setItem('tour_completed', 'true');
-    hasCompletedTour.value = true;
-    localStorage.removeItem('tour_requested');
-  }, 250);
-};
-
-const startTour = () => {
-  localStorage.removeItem('tour_completed');
-  hasCompletedTour.value = false;
-  localStorage.setItem('tour_requested', 'true');
-  runTour();
-};
-
-const startFirstMemory = () => {
-  localStorage.setItem('onboarding_first_memory_started', 'true');
-  hasStartedFirstMemory.value = true;
-  router.push('/editor/new?interaction_type=conversation&source_app=chatgpt');
-};
-
-const completeOnboarding = () => {
-  authStore.completeOnboarding();
-  localStorage.setItem('tour_completed', 'true');
-  hasCompletedTour.value = true;
-  toast.success('Onboarding completed.');
-};
-
-const skipOnboarding = () => {
-  authStore.completeOnboarding();
-  localStorage.setItem('tour_completed', 'true');
-  hasCompletedTour.value = true;
-  toast.info('Onboarding skipped for now.');
-};
-
 const resendVerification = async () => {
   if (resendingVerification.value) return;
   resendingVerification.value = true;
@@ -243,9 +565,27 @@ const resendVerification = async () => {
   }
 };
 
+watch(
+  () => user.value?.id,
+  () => {
+    hydrateOnboardingState();
+    refreshFirstActionCompletion();
+  },
+);
+
+watch(
+  () => route.fullPath,
+  () => {
+    refreshFirstActionCompletion();
+  },
+);
+
 onMounted(() => {
-  if (localStorage.getItem('tour_requested') === 'true') {
+  hydrateOnboardingState();
+  if (onboardingStorageReady.value && readScopedBoolean(localStorage, user.value.id, 'tour_requested', false)) {
     runTour();
   }
+  refreshFirstActionCompletion();
 });
 </script>
+
