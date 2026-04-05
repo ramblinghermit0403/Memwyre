@@ -18,16 +18,12 @@ const inputContent = ref('');
 const messagesContainer = ref(null);
 const storedTemperature = Number(localStorage.getItem('chat-temperature'));
 const storedMaxTokens = Number(localStorage.getItem('chat-max-tokens'));
-// Precedence: localStorage override > server default > hardcoded fallback
-// Server defaults are loaded in onMounted and only applied if no local override exists
-const modelTemperature = ref(Number.isFinite(storedTemperature) ? storedTemperature : 0.7);
+const modelTemperature = ref(Number.isFinite(storedTemperature) ? storedTemperature : 0.8);
 const maxTokens = ref(
   Number.isFinite(storedMaxTokens)
-    ? (storedMaxTokens === 2048 ? 2800 : storedMaxTokens)
-    : 2800
+    ? (storedMaxTokens === 2048 ? 8000 : storedMaxTokens)
+    : 8000
 );
-const hasLocalTemperature = Number.isFinite(storedTemperature);
-const hasLocalMaxTokens = Number.isFinite(storedMaxTokens);
 const showHistory = ref(window.innerWidth >= 768);
 const showControls = ref(true);
 const showDeleteModal = ref(false);
@@ -40,17 +36,6 @@ const waitingForFirstStep = computed(() => chatStore.thinking && activeThinkingS
 onMounted(async () => {
   await chatStore.fetchSessions();
   chatStore.connectWebSocket();
-  // Apply server-side chat defaults if no local override exists
-  try {
-    const res = await import('../services/api').then(m => m.default.get('/user/settings'));
-    const s = res.data || {};
-    if (!hasLocalTemperature && s.chat_temperature_default != null) {
-      modelTemperature.value = clampTemperature(s.chat_temperature_default);
-    }
-    if (!hasLocalMaxTokens && s.chat_max_tokens_default != null) {
-      maxTokens.value = clampMaxTokens(s.chat_max_tokens_default);
-    }
-  } catch (_) { /* silently ignore - defaults already set */ }
 });
 
 onUnmounted(() => {
@@ -63,13 +48,13 @@ watch(() => chatStore.thinking, () => nextTick(scrollToBottom));
 
 const clampTemperature = (value) => {
   const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return 0.7;
+  if (!Number.isFinite(parsed)) return 0.8;
   return Math.min(1, Math.max(0, parsed));
 };
 
 const clampMaxTokens = (value) => {
   const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return 2800;
+  if (!Number.isFinite(parsed)) return 8000;
   return Math.round(Math.min(8192, Math.max(128, parsed)));
 };
 
