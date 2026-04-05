@@ -45,13 +45,6 @@
                       </p>
                     </div>
                   </div>
-
-                  <button
-                    @click="skipOnboarding"
-                    class="rounded-full border border-gray-200 dark:border-gray-700 px-3 py-1.5 text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  >
-                    Skip for now
-                  </button>
                 </div>
 
                 <div v-if="isVerified" class="mt-5">
@@ -87,6 +80,7 @@
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Verify your email first</h3>
                     <p class="mt-2 text-sm text-gray-600 dark:text-gray-300 max-w-2xl">
                       Email verification is required before we can finish onboarding and unlock the full workflow.
+                      A verification link was sent to <strong>{{ user?.email }}</strong>.
                     </p>
 
                     <div class="mt-6 flex flex-wrap gap-3">
@@ -98,12 +92,17 @@
                         {{ resendingVerification ? 'Sending...' : 'Resend verification email' }}
                       </button>
                       <button
-                        @click="router.push('/settings')"
-                        class="px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+                        @click="checkVerificationStatus"
+                        :disabled="checkingVerification"
+                        class="px-4 py-2.5 rounded-lg border border-[#D97757] text-[#D97757] text-sm font-semibold hover:bg-[#FFF5F1] disabled:opacity-50"
                       >
-                        Open settings
+                        {{ checkingVerification ? 'Checking...' : "I've verified — Check status" }}
                       </button>
                     </div>
+
+                    <p v-if="verificationPollActive" class="mt-3 text-xs text-gray-400 dark:text-gray-500">
+                      Auto-checking every 8 seconds... {{ verificationCountdown }}s
+                    </p>
                   </div>
                 </template>
 
@@ -267,7 +266,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import NavBar from '../components/NavBar.vue';
@@ -300,6 +299,11 @@ const isVerified = computed(() => !!user.value?.is_verified);
 const showDailyReview = ref(false);
 const timelineRef = ref(null);
 const resendingVerification = ref(false);
+const checkingVerification = ref(false);
+const verificationPollActive = ref(false);
+const verificationCountdown = ref(8);
+let _verificationPollTimer = null;
+let _verificationCountdownTimer = null;
 
 const onboardingStep = ref(1);
 const selectedType = ref('');
@@ -558,11 +562,65 @@ const resendVerification = async () => {
   try {
     await api.post('/auth/resend-verification');
     toast.success('Verification email sent. Please check your inbox.');
+    startVerificationPolling();
   } catch (err) {
     toast.error(err.response?.data?.detail || 'Failed to resend verification email.');
   } finally {
     resendingVerification.value = false;
   }
+};
+
+const checkVerificationStatus = async () => {
+  if (checkingVerification.value) return;
+  checkingVerification.value = true;
+  try {
+    await authStore.fetchUser();
+    if (isVerified.value) {
+      stopVerificationPolling();
+      toast.success('Email verified! Continuing onboarding.');
+    } else {
+      toast.info('Email not yet verified. Please check your inbox.');
+    }
+  } catch (err) {
+    toast.error('Failed to check verification status.');
+  } finally {
+    checkingVerification.value = false;
+  }
+};
+
+const startVerificationPolling = () => {
+  if (verificationPollActive.value) return;
+  verificationPollActive.value = true;
+  verificationCountdown.value = 8;
+
+  _verificationCountdownTimer = setInterval(() => {
+    verificationCountdown.value -= 1;
+    if (verificationCountdown.value <= 0) {
+      verificationCountdown.value = 8;
+    }
+  }, 1000);
+
+  _verificationPollTimer = setInterval(async () => {
+    if (isVerified.value) {
+      stopVerificationPolling();
+      return;
+    }
+    try {
+      await authStore.fetchUser();
+      if (isVerified.value) {
+        stopVerificationPolling();
+        toast.success('Email verified! Continuing onboarding.');
+      }
+    } catch (e) { /* silent */ }
+  }, 8000);
+};
+
+const stopVerificationPolling = () => {
+  verificationPollActive.value = false;
+  clearInterval(_verificationPollTimer);
+  clearInterval(_verificationCountdownTimer);
+  _verificationPollTimer = null;
+  _verificationCountdownTimer = null;
 };
 
 watch(
@@ -586,6 +644,20 @@ onMounted(() => {
     runTour();
   }
   refreshFirstActionCompletion();
+  // Start polling for email verification if modal is shown and not yet verified
+  if (showOnboardingModal.value && !isVerified.value) {
+    startVerificationPolling();
+  }
+});
+
+// Stop polling when component unmounts
+onUnmounted(() => {
+  stopVerificationPolling();
+});
+
+// Watch: if verification is detected via any means, stop polling
+watch(isVerified, (verified) => {
+  if (verified) stopVerificationPolling();
 });
 </script>
 

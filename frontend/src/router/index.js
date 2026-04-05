@@ -234,6 +234,17 @@ export function createAppRouter({ ssr = false } = {}) {
         ) {
             next('/settings');
         }
+        // If they are verified but haven't completed onboarding, trap them securely in dashboard
+        else if (
+            to.meta.requiresAuth &&
+            authStore.isAuthenticated &&
+            authStore.user &&
+            authStore.user.is_verified &&
+            authStore.hasCompletedOnboarding === false &&
+            !['dashboard', 'editor'].includes(to.name)
+        ) {
+            next('/dashboard');
+        }
         else {
             next();
         }
