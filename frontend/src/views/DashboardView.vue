@@ -448,7 +448,7 @@ const runTour = () => {
   }, 250);
 };
 
-const startTour = () => {
+const startTour = async () => {
   if (onboardingStorageReady.value) {
     writeScopedBoolean(localStorage, user.value.id, 'tour_completed', false);
     writeScopedBoolean(localStorage, user.value.id, 'tour_requested', true);
@@ -515,8 +515,8 @@ const completeOnboarding = async (message, requireReady = true) => {
   if (message) toast.success(message);
 };
 
-const skipOnboarding = () => {
-  completeOnboarding('Onboarding skipped for now.', false);
+const skipOnboarding = async () => {
+  await completeOnboarding('Onboarding skipped for now.', false);
 };
 
 const handlePrimaryAction = async () => {
