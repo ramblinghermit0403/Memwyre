@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, Dict, Any
 from datetime import datetime
 
 class UserBase(BaseModel):
@@ -21,6 +21,8 @@ class UserInDBBase(UserBase):
     id: int
     is_active: bool
     is_verified: bool = False
+    onboarding_completed: bool = False
+    settings: Dict[str, Any] = {}
     created_at: datetime
 
     class Config:

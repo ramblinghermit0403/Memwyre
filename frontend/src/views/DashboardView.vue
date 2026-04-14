@@ -455,7 +455,7 @@ const startTour = () => {
   }
   hasCompletedTour.value = false;
   // Close the modal first so the tour can highlight elements underneath
-  authStore.completeOnboarding();
+  await authStore.completeOnboarding();
   runTour();
 };
 
@@ -506,9 +506,9 @@ const startFirstAction = () => {
   router.push(`/editor/new?interaction_type=${selectedType.value}&source_app=web-app`);
 };
 
-const completeOnboarding = (message, requireReady = true) => {
+const completeOnboarding = async (message, requireReady = true) => {
   if (requireReady && (!selectedType.value || !extensionChoice.value || !firstActionDone.value)) return;
-  authStore.completeOnboarding();
+  await authStore.completeOnboarding();
   if (onboardingStorageReady.value) {
     writeScopedBoolean(localStorage, user.value.id, 'tour_requested', false);
   }
@@ -519,7 +519,7 @@ const skipOnboarding = () => {
   completeOnboarding('Onboarding skipped for now.', false);
 };
 
-const handlePrimaryAction = () => {
+const handlePrimaryAction = async () => {
   if (onboardingStep.value === 1 && selectedType.value) {
     onboardingStep.value = 2;
     persistOnboardingStep();

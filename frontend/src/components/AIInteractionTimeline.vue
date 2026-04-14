@@ -50,14 +50,14 @@
                     <template v-if="getTimelineIcon(item).type === 'svg'">
                       <div
                         v-html="getTimelineIcon(item).content"
-                        :class="['w-full h-full', isOpenAIItem(item) ? 'dark:invert dark:brightness-0' : '']"
+                        :class="['w-full h-full', isOpenAIItem(item) ? 'dark:invert' : '']"
                       ></div>
                     </template>
                     <template v-else-if="getTimelineIcon(item).type === 'img'">
                       <img
                         :src="getTimelineIcon(item).content"
                         alt="Source Icon"
-                        :class="['w-full h-full object-cover rounded-sm', isOpenAIItem(item) ? 'dark:invert dark:brightness-0' : '']"
+                        :class="['w-full h-full object-cover rounded-sm', isOpenAIItem(item) ? 'dark:invert' : '']"
                         @error="handleImageError($event)"
                       />
                     </template>
@@ -108,7 +108,7 @@
                   </summary>
                   <div class="absolute right-0 mt-1 w-52 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface shadow-lg z-20 p-1">
                     <button @click="handoff(item, 'chatgpt')" class="w-full text-left text-xs px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded flex items-center gap-2">
-                      <img :src="openaiIcon" alt="ChatGPT" class="w-4 h-4 dark:invert dark:brightness-0" />
+                      <img :src="openaiIcon" alt="ChatGPT" class="w-4 h-4 dark:invert" />
                       Continue in ChatGPT
                     </button>
                     <button @click="handoff(item, 'claude')" class="w-full text-left text-xs px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded flex items-center gap-2">

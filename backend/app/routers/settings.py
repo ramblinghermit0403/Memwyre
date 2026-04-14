@@ -27,7 +27,11 @@ async def update_settings(
         except:
             current_settings = {}
             
-    # Merge updates
+    # Extract known model columns from settings blob for direct update
+    if "onboarding_completed" in settings:
+        current_user.onboarding_completed = bool(settings.pop("onboarding_completed"))
+
+    # Merge remaining updates
     current_settings.update(settings)
     
     current_user.settings = current_settings

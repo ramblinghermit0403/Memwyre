@@ -36,7 +36,7 @@
                         <img
                           :src="getIconForSource(doc).content"
                           alt="Source Icon"
-                          :class="['w-full h-full object-cover rounded-sm', isOpenAIIcon(getIconForSource(doc).content) ? 'dark:invert' : '']"
+                          :class="['w-full h-full object-cover rounded-sm', getIconForSource(doc).darkInvert ? 'dark:invert' : '']"
                           @error="handleImageError($event)"
                         />
                      </template>
@@ -193,7 +193,7 @@ const handleImageError = (e) => {
     e.target.style.display = 'none';
 };
 
-const isOpenAIIcon = (iconContent) => typeof iconContent === 'string' && iconContent.includes('openai.svg');
+// isOpenAIIcon check removed in favor of resolver darkInvert property
 
 onMounted(fetchDocuments);
 

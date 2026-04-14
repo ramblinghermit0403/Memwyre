@@ -76,7 +76,17 @@ export const useAuthStore = defineStore('auth', {
             if (!user) storage.removeItem('token');
             if (user?.id) {
                 migrateOnboardingLegacyState(storage, user.id);
-                hasCompletedOnboarding = readScopedBoolean(storage, user.id, 'completed', false);
+                // Check backend state first if we had a lastKnownUser (cached)
+                const lastKnown = storage.getItem('lastKnownUser');
+                if (lastKnown) {
+                    try {
+                        const parsed = JSON.parse(lastKnown);
+                        if (parsed.onboarding_completed) hasCompletedOnboarding = true;
+                    } catch(e) {}
+                }
+                if (!hasCompletedOnboarding) {
+                    hasCompletedOnboarding = readScopedBoolean(storage, user.id, 'completed', false);
+                }
             }
         }
 
@@ -130,7 +140,8 @@ export const useAuthStore = defineStore('auth', {
                     id: decoded.sub,
                     email: decoded.email || decoded.sub,
                     name: decoded.name || (decoded.email || decoded.sub || '').split('@')[0],
-                    is_verified: decoded.is_verified || false
+                    is_verified: decoded.is_verified || false,
+                    settings: {}
                 };
                 storage.setItem('lastKnownUser', JSON.stringify(this.user));
                 migrateOnboardingLegacyState(storage, this.user.id);
@@ -180,11 +191,13 @@ export const useAuthStore = defineStore('auth', {
                 id: userData.id ?? this.user?.id ?? null,
                 email: userData.email ?? this.user?.email ?? '',
                 name: userData.name ?? this.user?.name ?? '',
-                is_verified: !!userData.is_verified
+                is_verified: !!userData.is_verified,
+                onboarding_completed: !!userData.onboarding_completed,
+                settings: userData.settings ?? {}
             };
             storage.setItem('lastKnownUser', JSON.stringify(this.user));
             migrateOnboardingLegacyState(storage, this.user.id);
-            this.hasCompletedOnboarding = readScopedBoolean(storage, this.user.id, 'completed', false);
+            this.hasCompletedOnboarding = this.user.onboarding_completed || readScopedBoolean(storage, this.user.id, 'completed', false);
             return this.user;
         },
 
@@ -210,11 +223,19 @@ export const useAuthStore = defineStore('auth', {
             // Notify extension to clear its tokens too
             broadcastToExtension('MEMWYRE_AUTH_LOGOUT');
         },
-        completeOnboarding() {
+        async completeOnboarding() {
             const storage = getStorage();
             this.hasCompletedOnboarding = true;
             if (this.user?.id) {
                 writeScopedBoolean(storage, this.user.id, 'completed', true);
+                // Persist to backend
+                try {
+                    await api.patch('/settings', { onboarding_completed: true });
+                    this.user.onboarding_completed = true;
+                    storage.setItem('lastKnownUser', JSON.stringify(this.user));
+                } catch (error) {
+                    console.error('Failed to sync onboarding completion to backend', error);
+                }
             }
         }
     },

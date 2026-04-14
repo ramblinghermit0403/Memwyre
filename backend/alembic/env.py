@@ -33,6 +33,9 @@ target_metadata = Base.metadata
 url = settings.assemble_db_url
 if url.startswith("postgresql://"):
     url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+# Escape % for configparser interpolation
+url = url.replace("%", "%%")
 config.set_main_option("sqlalchemy.url", url)
 
 

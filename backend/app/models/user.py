@@ -12,6 +12,7 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
+    onboarding_completed = Column(Boolean, default=False)
     settings = Column(JSON, default={}) # For user preferences like auto_approve
     drop_token = Column(String, unique=True, index=True, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

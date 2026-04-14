@@ -37,7 +37,7 @@
                                            <img
                                              :src="getIconForSource(item).content"
                                              alt="Source"
-                                             :class="['w-full h-full object-cover rounded-sm', isOpenAIIcon(getIconForSource(item).content) ? 'dark:invert' : '']"
+                                             :class="['w-full h-full object-cover rounded-sm', getIconForSource(item).darkInvert ? 'dark:invert' : '']"
                                              @error="handleImageError($event)"
                                            />
                                        </template>
@@ -302,7 +302,7 @@ const handleImageError = (e) => {
     e.target.style.display = 'none';
 };
 
-const isOpenAIIcon = (iconContent) => typeof iconContent === 'string' && iconContent.includes('openai.svg');
+// isOpenAIIcon check removed in favor of resolver darkInvert property
 
 const startEditing = (item) => {
     router.push(`/editor/${item.id}`);
