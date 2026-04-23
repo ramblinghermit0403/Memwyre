@@ -4,6 +4,7 @@
 User-agent: *
 Allow: /
 Allow: /.well-known/
+Content-Signal: ai-train=no, search=yes, ai-input=yes
 
 # AI Agent Bots - Explicitly Welcome
 User-agent: GPTBot
@@ -28,6 +29,5 @@ User-agent: CCBot
 Allow: /
 
 # Content Signals — AI usage preferences (IETF Draft / contentsignals.org)
-Content-Signal: ai-train=no, search=yes, ai-input=yes
 
 Sitemap: https://memwyre.tech/sitemap.xml
