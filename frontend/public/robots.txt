@@ -1,4 +1,30 @@
+# MemWyre - Agent-Discoverable Configuration
+# https://memwyre.tech
+
 User-agent: *
+Allow: /
+Allow: /.well-known/
+
+# AI Agent Bots - Explicitly Welcome
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
 Allow: /
 
 Sitemap: https://memwyre.tech/sitemap.xml
