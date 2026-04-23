@@ -27,4 +27,7 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
+# Content Signals — AI usage preferences (IETF Draft / contentsignals.org)
+Content-Signal: ai-train=no, search=yes, ai-input=yes
+
 Sitemap: https://memwyre.tech/sitemap.xml

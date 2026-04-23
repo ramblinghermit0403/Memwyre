@@ -1,0 +1,66 @@
+{
+  "name": "MemWyre",
+  "description": "Personal Knowledge Base & Memory Layer for AI Agents. Save, search, and retrieve memories, documents, and contextual knowledge across any LLM.",
+  "version": "1.0.0",
+  "homepage": "https://memwyre.tech",
+  "logo": "https://memwyre.tech/apple-touch-icon.png",
+  "contact": {
+    "email": "support@memwyre.tech"
+  },
+  "transport": {
+    "type": "streamable-http",
+    "url": "https://server.memwyre.tech/mcp/"
+  },
+  "authentication": {
+    "type": "bearer",
+    "description": "Generate an API key from your MemWyre dashboard at https://memwyre.tech/dashboard/settings. Pass it as a Bearer token in the Authorization header.",
+    "token_prefix": "bv_sk_"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": true
+  },
+  "tools": [
+    {
+      "name": "search_memwyre",
+      "description": "Semantic search across your saved memories, documents, and notes."
+    },
+    {
+      "name": "save_memory",
+      "description": "Save a new memory snippet to your MemWyre Vault."
+    },
+    {
+      "name": "list_memories",
+      "description": "List recent memories and documents."
+    },
+    {
+      "name": "get_document",
+      "description": "Retrieve the full content of a specific document by ID."
+    },
+    {
+      "name": "get_inbox",
+      "description": "Get list of pending memories in the Inbox."
+    },
+    {
+      "name": "update_memory",
+      "description": "Update the content of an existing memory."
+    },
+    {
+      "name": "delete_memory",
+      "description": "Delete a memory or document by ID."
+    },
+    {
+      "name": "search_by_date",
+      "description": "Find memories created within a specific date range."
+    },
+    {
+      "name": "get_all_tags",
+      "description": "Get a list of all tags used in your knowledge base."
+    },
+    {
+      "name": "generate_prompt",
+      "description": "Generate a prompt with retrieved context from your memories."
+    }
+  ]
+}
