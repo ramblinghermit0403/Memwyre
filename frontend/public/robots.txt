@@ -4,7 +4,7 @@
 User-agent: *
 Allow: /
 Allow: /.well-known/
-Content-Signal: ai-train=no, search=yes, ai-input=yes
+Content-Signal: ai-train=no, search=yes, ai-input=no
 
 # AI Agent Bots - Explicitly Welcome
 User-agent: GPTBot
