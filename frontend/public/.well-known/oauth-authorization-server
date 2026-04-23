@@ -1,0 +1,16 @@
+{
+  "issuer": "https://server.memwyre.tech",
+  "authorization_endpoint": "https://server.memwyre.tech/api/v1/auth/oauth/google/login",
+  "token_endpoint": "https://server.memwyre.tech/api/v1/auth/login",
+  "registration_endpoint": "https://server.memwyre.tech/api/v1/auth/register",
+  "scopes_supported": ["mcp:read", "mcp:write"],
+  "response_types_supported": ["code"],
+  "grant_types_supported": ["authorization_code", "password"],
+  "token_endpoint_auth_methods_supported": ["client_secret_post"],
+  "service_documentation": "https://memwyre.tech",
+  "ui_locales_supported": ["en"],
+  "x_api_key_info": {
+    "description": "For programmatic / MCP access, generate a persistent API key from your dashboard at https://memwyre.tech/dashboard/settings. API keys use the prefix 'bv_sk_' and support Bearer auth.",
+    "prefix": "bv_sk_"
+  }
+}

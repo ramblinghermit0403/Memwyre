@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
+  "name": "MemWyre",
+  "description": "Personal Knowledge Base & Memory Layer for AI Agents",
+  "url": "https://memwyre.tech",
+  "skills": [
+    {
+      "name": "semantic-search",
+      "type": "mcp-tool",
+      "description": "Search across saved memories and documents using natural language queries.",
+      "url": "https://server.memwyre.tech/mcp/"
+    },
+    {
+      "name": "memory-management",
+      "type": "mcp-tool",
+      "description": "Save, update, delete, and list personal knowledge memories.",
+      "url": "https://server.memwyre.tech/mcp/"
+    },
+    {
+      "name": "document-retrieval",
+      "type": "mcp-tool",
+      "description": "Retrieve full content of uploaded documents (PDF, text, web pages).",
+      "url": "https://server.memwyre.tech/mcp/"
+    },
+    {
+      "name": "context-generation",
+      "type": "mcp-tool",
+      "description": "Generate prompts enriched with personal knowledge context.",
+      "url": "https://server.memwyre.tech/mcp/"
+    }
+  ]
+}

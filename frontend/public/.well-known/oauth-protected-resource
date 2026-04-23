@@ -1,0 +1,7 @@
+{
+  "resource": "https://server.memwyre.tech",
+  "authorization_servers": ["https://server.memwyre.tech"],
+  "scopes_supported": ["mcp:read", "mcp:write"],
+  "bearer_methods_supported": ["header"],
+  "resource_documentation": "https://memwyre.tech"
+}

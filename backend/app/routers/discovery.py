@@ -87,3 +87,109 @@ async def mcp_server_card():
             {"name": "generate_prompt", "description": "Generate a prompt with retrieved context from your memories."},
         ],
     })
+
+
+@router.get("/.well-known/oauth-authorization-server")
+async def oauth_authorization_server():
+    """
+    RFC 8414 — OAuth 2.0 Authorization Server Metadata.
+    Describes MemWyre's auth endpoints so agents know how to authenticate.
+    """
+    return JSONResponse(content={
+        "issuer": "https://server.memwyre.tech",
+        "authorization_endpoint": f"https://server.memwyre.tech{settings.API_V1_STR}/auth/oauth/google/login",
+        "token_endpoint": f"https://server.memwyre.tech{settings.API_V1_STR}/auth/login",
+        "registration_endpoint": f"https://server.memwyre.tech{settings.API_V1_STR}/auth/register",
+        "scopes_supported": ["mcp:read", "mcp:write"],
+        "response_types_supported": ["code"],
+        "grant_types_supported": ["authorization_code", "password"],
+        "token_endpoint_auth_methods_supported": ["client_secret_post"],
+        "service_documentation": "https://memwyre.tech",
+        "ui_locales_supported": ["en"],
+        "code_challenge_methods_supported": [],
+        "x_api_key_info": {
+            "description": (
+                "For programmatic / MCP access, generate a persistent API key "
+                "from your dashboard at https://memwyre.tech/dashboard/settings. "
+                "API keys use the prefix 'bv_sk_' and support Bearer auth."
+            ),
+            "prefix": "bv_sk_",
+        },
+    })
+
+
+@router.get("/.well-known/openid-configuration")
+async def openid_configuration():
+    """
+    OpenID Connect Discovery — minimal OIDC metadata.
+    MemWyre delegates identity to Google; this document helps agents
+    understand the auth flow.
+    """
+    return JSONResponse(content={
+        "issuer": "https://server.memwyre.tech",
+        "authorization_endpoint": f"https://server.memwyre.tech{settings.API_V1_STR}/auth/oauth/google/login",
+        "token_endpoint": f"https://server.memwyre.tech{settings.API_V1_STR}/auth/login",
+        "userinfo_endpoint": f"https://server.memwyre.tech{settings.API_V1_STR}/auth/verify",
+        "scopes_supported": ["openid", "email", "profile"],
+        "response_types_supported": ["code"],
+        "grant_types_supported": ["authorization_code", "password"],
+        "subject_types_supported": ["public"],
+        "id_token_signing_alg_values_supported": ["HS256"],
+        "token_endpoint_auth_methods_supported": ["client_secret_post"],
+    })
+
+
+@router.get("/.well-known/oauth-protected-resource")
+async def oauth_protected_resource():
+    """
+    RFC 9728 — OAuth Protected Resource Metadata.
+    Tells agents this resource requires auth and how to obtain tokens.
+    """
+    return JSONResponse(content={
+        "resource": "https://server.memwyre.tech",
+        "authorization_servers": ["https://server.memwyre.tech"],
+        "scopes_supported": ["mcp:read", "mcp:write"],
+        "bearer_methods_supported": ["header"],
+        "resource_documentation": "https://memwyre.tech",
+    })
+
+
+@router.get("/.well-known/agent-skills/index.json")
+async def agent_skills_index():
+    """
+    Agent Skills Discovery (Cloudflare RFC v0.2.0).
+    Lists MemWyre's capabilities as discoverable agent skills.
+    """
+    return JSONResponse(content={
+        "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
+        "name": "MemWyre",
+        "description": "Personal Knowledge Base & Memory Layer for AI Agents",
+        "url": "https://memwyre.tech",
+        "skills": [
+            {
+                "name": "semantic-search",
+                "type": "mcp-tool",
+                "description": "Search across saved memories and documents using natural language queries.",
+                "url": "https://server.memwyre.tech/mcp/",
+            },
+            {
+                "name": "memory-management",
+                "type": "mcp-tool",
+                "description": "Save, update, delete, and list personal knowledge memories.",
+                "url": "https://server.memwyre.tech/mcp/",
+            },
+            {
+                "name": "document-retrieval",
+                "type": "mcp-tool",
+                "description": "Retrieve full content of uploaded documents (PDF, text, web pages).",
+                "url": "https://server.memwyre.tech/mcp/",
+            },
+            {
+                "name": "context-generation",
+                "type": "mcp-tool",
+                "description": "Generate prompts enriched with personal knowledge context.",
+                "url": "https://server.memwyre.tech/mcp/",
+            },
+        ],
+    })
+
