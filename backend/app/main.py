@@ -1,6 +1,8 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse, PlainTextResponse
+
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing, admin_bypass, bypass, projects, context, discovery
@@ -107,8 +109,31 @@ app.include_router(bypass.router, prefix=f"{settings.API_V1_STR}/bypass", tags=[
 app.include_router(discovery.router)
 
 @app.get("/")
-async def root():
-    return {"message": "Welcome to MemWyre API", "status": "running"}
+async def root(request: Request):
+    link_header = '</.well-known/api-catalog>; rel="api-catalog", </.well-known/mcp.json>; rel="mcp-server-card"'
+    accept = request.headers.get("accept", "")
+
+    if "text/markdown" in accept:
+        md_content = (
+            "# MemWyre API\n\n"
+            "Personal Knowledge Base & Memory Layer for AI Agents.\n\n"
+            "## MCP Server\n\n"
+            "Connect via Streamable HTTP at `https://server.memwyre.tech/mcp/`\n\n"
+            "See [/.well-known/mcp.json](/.well-known/mcp.json) for full capabilities.\n\n"
+            "## API Documentation\n\n"
+            f"OpenAPI spec: [{settings.API_V1_STR}/openapi.json]({settings.API_V1_STR}/openapi.json)\n"
+        )
+        return PlainTextResponse(
+            content=md_content,
+            media_type="text/markdown",
+            headers={"Link": link_header},
+        )
+
+    return JSONResponse(
+        content={"message": "Welcome to MemWyre API", "status": "running"},
+        headers={"Link": link_header},
+    )
+
 
 @app.get("/health")
 async def health_check():
