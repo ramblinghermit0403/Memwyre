@@ -48,13 +48,17 @@ class MemoryService:
 
         tags_list = tags or []
         is_extension = "extension" in tags_list
-        internal_sources = {"user", "user-upload", "web-app"}
+        internal_sources = {"user", "user-upload", "web-app", "extension-manual", "manual"}
         is_external_source = source.lower() not in internal_sources
+        is_manual = (not is_external_source) or ("manual" in tags_list)
 
-        show_in_inbox = is_external_source or is_extension
-
-        if initial_status == "approved" and not is_external_source and not is_extension:
+        if is_manual:
+            initial_status = "approved"
             show_in_inbox = False
+        else:
+            show_in_inbox = is_external_source or is_extension
+            if initial_status == "approved" and not is_external_source and not is_extension:
+                show_in_inbox = False
 
         memory = Memory(
             title=title,

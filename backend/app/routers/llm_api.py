@@ -52,11 +52,16 @@ async def save_memory(
     # - If Source is 'user-upload', and pending -> Show in inbox.
     # - If Source is EXTERNAL (e.g. 'chatgpt', 'mcp'), -> ALWAYS show in inbox so user knows it happened (Notification).
     
-    is_external = memory_in.source_llm not in ["user-upload", "user"]
+    is_external = memory_in.source_llm not in ["user-upload", "user", "web-app", "extension-manual", "manual"]
+    is_manual = (not is_external) or ("manual" in (memory_in.tags or []))
     
-    show_in_inbox = True 
-    if not is_external and status == "approved":
-        show_in_inbox = False # Skip inbox for manual approvals
+    if is_manual:
+        status = "approved"
+        show_in_inbox = False
+    else:
+        show_in_inbox = True 
+        if not is_external and status == "approved":
+            show_in_inbox = False # Skip inbox for manual approvals
         
     # Enforce Usage Limits
     await deps.verify_usage_limits(doc_type="memory", content_len=len(memory_in.content), current_user=current_user, db=db)

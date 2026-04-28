@@ -333,9 +333,14 @@ async def create_memory(
     # User upload: If approved, skip inbox. If pending, show in inbox.
     show_in_inbox = True if initial_status == "pending" else False
     
-    # Rule: Anything external (identified by 'extension' tag) goes to inbox
-    if memory_in.tags and "extension" in memory_in.tags:
-        show_in_inbox = True
+    is_manual = memory_in.tags and "manual" in memory_in.tags
+    if is_manual:
+        initial_status = "approved"
+        show_in_inbox = False
+    else:
+        # Rule: Anything external (identified by 'extension' tag) goes to inbox
+        if memory_in.tags and "extension" in memory_in.tags:
+            show_in_inbox = True
     
     embedding_id = str(uuid.uuid4())
     
