@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MemWyre</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Login View -->
+    <div id="login-view" class="hidden">
+        <div class="login-container">
+            <img src="logo.svg" alt="MemWyre Logo" class="login-logo-img">
+            <h2>Welcome Back</h2>
+            <p>Connect to MemWyre</p>
+            <button id="save-token"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <p class="helper-text">This will open a new tab to authenticate.</p>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="hidden">
+        <!-- Header -->
+        <div class="app-header">
+            <div class="logo-section">
+                <img src="logo.svg" alt="MemWyre Logo" class="header-logo-img">
+                <span class="app-name">MemWyre</span>
+            </div>
+            <button id="settings-btn" class="icon-btn-header" title="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+
+        <!-- Segmented Control Tabs -->
+        <div class="tabs-container" id="tabs-container">
+            <div class="tabs-segmented">
+                <button class="tab-segment active" data-tab="inbox" title="Inbox">
+                    <i class="fas fa-inbox"></i> Inbox
+                </button>
+                <button class="tab-segment" data-tab="timeline" title="Timeline">
+                    <i class="fas fa-stream"></i> Timeline
+                </button>
+                <button class="tab-segment" data-tab="search" title="Search">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <button class="tab-segment" data-tab="save" title="Save">
+                    <i class="fas fa-plus"></i> Save
+                </button>
+            </div>
+        </div>
+
+        <main class="content">
+            <!-- Inbox Tab -->
+            <div id="view-inbox" class="view active">
+                <div class="section-header-modern pr-2">
+                    <div class="header-text">
+                        <h3><i class="fas fa-inbox text-gray-500"></i> Recent Inbox</h3>
+                        <p>Pending items waiting for review.</p>
+                    </div>
+                    <button id="refresh-inbox" class="text-link-btn-refresh">Refresh</button>
+                </div>
+                <div id="inbox-container" class="modern-list">
+                    <div class="status-msg"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Timeline Tab -->
+            <div id="view-timeline" class="view">
+                <div class="section-header-modern pr-2">
+                    <div class="header-text">
+                        <h3><i class="fas fa-stream text-gray-500"></i> Recent AI Work</h3>
+                        <p>Interaction timeline across tools.</p>
+                    </div>
+                    <div class="header-actions">
+                        <select id="timeline-source" class="select-input-mini">
+                            <option value="">All Sources</option>
+                            <option value="chatgpt">ChatGPT</option>
+                            <option value="claude">Claude</option>
+                            <option value="gemini">Gemini</option>
+                        </select>
+                        <button id="refresh-timeline" class="text-link-btn-refresh">Refresh</button>
+                    </div>
+                </div>
+                <div id="timeline-container" class="timeline-list">
+                    <div class="status-msg"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+            </div>
+
+            <!-- Search Tab -->
+            <div id="view-search" class="view">
+                <div class="search-bar">
+                    <input type="text" id="search-query" placeholder="Ask MemWyre...">
+                    <button id="search-btn" class="icon-btn-search">
+                        <i class="fas fa-search" id="search-icon"></i>
+                        <i class="fas fa-spinner fa-spin hidden" id="loading-icon"></i>
+                    </button>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <select id="search-filter" class="select-input small">
+                            <option value="all">All Results</option>
+                            <option value="facts">Facts Only</option>
+                            <option value="memories">Memories Only</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="search-k" class="select-input small">
+                            <option value="5">Top 5</option>
+                            <option value="10">Top 10</option>
+                            <option value="20">Top 20</option>
+                        </select>
+                    </div>
+                </div>
+                <style>
+                    .results-container { margin-top: 16px; }
+                </style>
+                <div id="search-results" class="results-container hidden mt-2"></div>
+            </div>
+
+            <!-- Save Tab -->
+            <div id="view-save" class="view">
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-heading"></i> Title</label>
+                    <input type="text" id="save-title" placeholder="Memory Title">
+                </div>
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-tags"></i> Tags</label>
+                    <input type="text" id="save-tags" placeholder="e.g. project, idea, todo (comma separated)">
+                </div>
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-align-left"></i> Content</label>
+                    <textarea id="save-content" rows="8" placeholder="Paste content here..."></textarea>
+                </div>
+                <button id="save-btn" class="primary-btn"><i class="fas fa-save"></i> Save Memory</button>
+                <div id="save-status" class="status-msg hidden"></div>
+            </div>
+
+            <!-- Settings View (New) -->
+            <div id="view-settings" class="view">
+                <div class="section-header">
+                    <span class="section-title">Account</span>
+                </div>
+                <button id="logout-btn" class="secondary-btn"
+                    style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+
+                <div class="section-header" style="margin-top: 24px;">
+                    <span class="section-title">About</span>
+                </div>
+                <div class="result-item">
+                    <div class="result-title">MemWyre Extension</div>
+                    <div class="result-meta">Version 1.0.0</div>
+                </div>
+
+                <button id="back-from-settings" class="text-link-btn" style="margin-top: 20px;">
+                    <i class="fas fa-arrow-left"></i> Back to App
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="iconResolver.js"></script>
+    <script src="config.js"></script>
+    <script src="sidepanel.js"></script>
+</body>
+
+</html>

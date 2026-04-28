@@ -1,0 +1,7 @@
+{
+  "name": "memwyre-ecosystem",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
