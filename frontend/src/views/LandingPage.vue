@@ -532,6 +532,13 @@
       </div>
     </div>
 
+    <!-- ScrollLaunch Badge (Detectable but visually hidden) -->
+    <div class="sr-only">
+      <a href="https://www.scrolllaunch.com/products/memwyre?utm_source=badge&utm_medium=embed&utm_campaign=memwyre&ref=scrolllaunch" target="_blank" rel="noopener noreferrer">
+        <img src="https://www.scrolllaunch.com/api/badge/memwyre" alt="Featured on ScrollLaunch" width="220" height="48" loading="lazy" />
+      </a>
+    </div>
+
   </div>
 </template>
 
