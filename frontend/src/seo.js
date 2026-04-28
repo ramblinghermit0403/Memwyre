@@ -1,41 +1,41 @@
 export const SITE_URL = 'https://memwyre.tech';
-export const SITE_NAME = 'MemWyre';
+export const SITE_NAME = 'Memwyre';
 export const DEFAULT_SOCIAL_IMAGE_PATH = '/sequence/ezgif-frame-015.png';
 export const PRERENDER_ROUTES = ['/', '/use-cases', '/pricing', '/privacy-policy', '/terms'];
 
 export const DEFAULT_SEO = {
-  title: 'MemWyre | AI Memory Vault for ChatGPT, Claude and More',
+  title: 'Memwyre | AI Memory Vault for ChatGPT, Claude and More',
   description:
-    'Capture prompts, conversations, and research context across AI tools. MemWyre helps your knowledge compound so you can reuse insights faster.',
+    'Capture prompts, conversations, and research context across AI tools. Memwyre helps your knowledge compound so you can reuse insights faster.',
   ogType: 'website',
   twitterCard: 'summary_large_image',
 };
 
 export const PUBLIC_ROUTE_SEO = {
   '/': {
-    title: 'MemWyre | AI Memory Vault for ChatGPT, Claude and More',
+    title: 'Memwyre | AI Memory Vault for ChatGPT, Claude and More',
     description:
-      'Capture prompts, conversations, and research context across AI tools. MemWyre helps your knowledge compound so you can reuse insights faster.',
+      'Capture prompts, conversations, and research context across AI tools. Memwyre helps your knowledge compound so you can reuse insights faster.',
   },
   '/use-cases': {
-    title: 'MemWyre Use Cases | AI Workflow Memory for Teams and Builders',
+    title: 'Memwyre Use Cases | AI Workflow Memory for Teams and Builders',
     description:
-      'See how engineers, researchers, students, and product teams use MemWyre to retain AI context, reduce repeated work, and move faster.',
+      'See how engineers, researchers, students, and product teams use Memwyre to retain AI context, reduce repeated work, and move faster.',
   },
   '/pricing': {
-    title: 'MemWyre Pricing | Plans for Individuals and Teams',
+    title: 'Memwyre Pricing | Plans for Individuals and Teams',
     description:
       'Choose the plan that fits your AI workflow. Free for personal use, Pro for teams needing persistent memory and advanced integrations.',
   },
   '/privacy-policy': {
-    title: 'MemWyre Privacy Policy | Data Handling, Security, and Retention',
+    title: 'Memwyre Privacy Policy | Data Handling, Security, and Retention',
     description:
-      'Read how MemWyre collects, processes, secures, and deletes data across the web app, extension, and MCP integrations.',
+      'Read how Memwyre collects, processes, secures, and deletes data across the web app, extension, and MCP integrations.',
   },
   '/terms': {
-    title: 'MemWyre Terms of Service | Platform Rules and Responsibilities',
+    title: 'Memwyre Terms of Service | Platform Rules and Responsibilities',
     description:
-      'Review MemWyre Terms of Service, including account use, acceptable behavior, billing expectations, and service limitations.',
+      'Review Memwyre Terms of Service, including account use, acceptable behavior, billing expectations, and service limitations.',
   },
 };
 
@@ -57,7 +57,7 @@ export function getDefaultJsonLd() {
       name: SITE_NAME,
       url: `${SITE_URL}/`,
       logo: `${SITE_URL}/image.svg`,
-      sameAs: ['https://x.com/MemWyre'],
+      sameAs: ['https://x.com/Memwyre'],
     },
     {
       '@context': 'https://schema.org',

@@ -1,4 +1,4 @@
-# MemWyre - Agent-Discoverable Configuration
+# Memwyre - Agent-Discoverable Configuration
 # https://memwyre.tech
 
 User-agent: *
