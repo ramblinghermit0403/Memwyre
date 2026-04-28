@@ -3,10 +3,10 @@
     <div class="w-full px-10 sm:px-16 lg:px-28">
       <div class="flex justify-between h-16">
         <div class="flex items-center">
-          <router-link to="/" class="flex-shrink-0 flex items-center">
-            <div class="flex items-center gap-2 select-none" id="nav-logo">
-              <img src="/image.svg" alt="MemWyre" class="w-8 h-8 rounded-lg" />
-              <h1 class="text-xl font-medium text-black dark:text-white font-zalando">MemWyre</h1>
+          <router-link to="/" class="flex-shrink-0 flex items-center group">
+            <div class="flex items-center select-none" id="nav-logo">
+              <img src="/image.svg" alt="Memwyre" class="w-7 h-7 rounded-sm mr-2.5 group-hover:scale-105 transition-transform duration-300" />
+              <h1 class="text-2xl font-medium tracking-tight text-black dark:text-white transition-colors duration-300" style="font-family: 'Inter', system-ui, sans-serif;">Memwyre</h1>
             </div>
           </router-link>
         </div>
