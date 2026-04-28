@@ -291,10 +291,10 @@ const triggerPhase2 = async () => {
     let progress = (i + 1) / fullText.length
     let currentX = -200 + (progress * 260)
 
-    // 3 millisecond snap transition for a robotic typewriter stepping effect
-    focusCamera(currentX, 0, 1.8, 3)
+    // Buttery smooth tracking transition that slightly overlaps the next keystroke
+    focusCamera(currentX, 0, 1.8, 12)
 
-    await sleep(25) // High speed typing
+    await sleep(2) // Absolute minimum sleep
   }
   await sleep(200)
 
