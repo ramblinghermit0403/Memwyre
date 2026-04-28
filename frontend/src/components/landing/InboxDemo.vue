@@ -1,6 +1,13 @@
 <template>
   <div ref="root"
-    class="dark w-full relative mx-auto overflow-hidden bg-[#111111] border border-gray-700/60 flex items-center justify-center rounded-xl min-h-[400px] font-sans">
+    class="dark w-full h-full relative mx-auto overflow-hidden bg-[#111111] border border-gray-700/60 flex items-center justify-center rounded-xl font-sans">
+    
+    <!-- Trial RGB Dots -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-[-10%] left-[10%] w-72 h-72 bg-red-500 opacity-40 blur-[120px] rounded-full"></div>
+      <div class="absolute top-[40%] left-[60%] w-72 h-72 bg-green-500 opacity-35 blur-[120px] rounded-full"></div>
+      <div class="absolute bottom-[-10%] left-[20%] w-72 h-72 bg-blue-500 opacity-40 blur-[120px] rounded-full"></div>
+    </div>
 
     <!-- Single Camera Rig -->
     <div class="absolute w-full h-full z-10 flex items-center justify-center origin-center"

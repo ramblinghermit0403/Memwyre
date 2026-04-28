@@ -1,5 +1,12 @@
 <template>
   <div class="relative overflow-hidden w-full h-full bg-black dark flex items-center justify-center">
+    
+    <!-- Trial RGB Dots -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-[-10%] left-[10%] w-72 h-72 bg-red-500 opacity-40 blur-[120px] rounded-full"></div>
+      <div class="absolute top-[40%] left-[60%] w-72 h-72 bg-green-500 opacity-35 blur-[120px] rounded-full"></div>
+      <div class="absolute bottom-[-10%] left-[20%] w-72 h-72 bg-blue-500 opacity-40 blur-[120px] rounded-full"></div>
+    </div>
     <!-- Master Camera Rig (handles Zoom/Pan for the entire scene including cursor and popups) -->
     <div class="absolute inset-0 z-10 flex items-center justify-center origin-center ease-[cubic-bezier(0.25,1,0.35,1)]"
       :style="{ transform: `translate(${camX}px, ${camY}px) scale(${camScale})`, transitionDuration: camDuration + 'ms', transition: `transform ${camDuration}ms cubic-bezier(0.25,1,0.35,1)` }">

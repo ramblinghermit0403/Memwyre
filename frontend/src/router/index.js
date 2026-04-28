@@ -85,6 +85,19 @@ export function createAppRouter({ ssr = false } = {}) {
 
     const router = createRouter({
         history,
+        scrollBehavior(to, from, savedPosition) {
+            if (to.hash) {
+                return {
+                    el: to.hash,
+                    behavior: 'smooth',
+                };
+            }
+            if (savedPosition) {
+                return savedPosition;
+            } else {
+                return { top: 0 };
+            }
+        },
         routes: [
             {
                 path: '/',
@@ -113,6 +126,12 @@ export function createAppRouter({ ssr = false } = {}) {
                         name: 'terms',
                         component: () => import('../views/TermsView.vue'),
                         meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/terms'] }
+                    },
+                    {
+                        path: 'pricing',
+                        name: 'pricing',
+                        component: () => import('../views/PricingView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/pricing'] }
                     }
                 ]
             },
@@ -210,6 +229,16 @@ export function createAppRouter({ ssr = false } = {}) {
                 path: '/redeem',
                 name: 'redeem',
                 component: () => import('../views/RedeemView.vue')
+            },
+            {
+                path: '/slides',
+                name: 'slides',
+                component: () => import('../views/SlideGalleryView.vue')
+            },
+            {
+                path: '/export-slide/:id',
+                name: 'export-slide',
+                component: () => import('../views/ExportSlideView.vue')
             }
         ]
     });

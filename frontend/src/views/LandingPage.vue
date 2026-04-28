@@ -1,28 +1,29 @@
 <template>
   <div
-    class="force-light relative min-h-screen bg-white text-text-primary transition-colors duration-300 font-sans overflow-x-hidden selection:bg-primary selection:text-white *:selection:bg-primary *:selection:text-white">
+    class="force-light relative min-h-[100svh] bg-white text-text-primary transition-colors duration-300 font-sans overflow-x-hidden selection:bg-primary selection:text-white *:selection:bg-primary *:selection:text-white">
 
-    <!-- Hero Section -->
-    <div class="relative z-10 pt-40 sm:pt-48 lg:pt-60 pb-56 sm:pb-64 overflow-hidden min-h-screen flex items-center">
+    <!-- Hero Section (WHITE) -->
+    <div data-theme="light"
+      class="relative z-10 pt-16 sm:pt-20 lg:pt-32 pb-20 sm:pb-24 lg:pb-32 overflow-hidden min-h-[calc(100svh-120px)] flex items-center bg-white">
 
-      <!-- Background Image -->
-      <div class="absolute inset-0 -z-10 overflow-hidden">
-        <img src="@/assets/hero-bg-v4.jpg" alt="Hero Background"
-          class="absolute -top-[320px] w-full h-[calc(100%+320px)] object-cover object-top select-none" />
-      </div>
+      <NumericBgAnimation :invert="true" class="absolute inset-0 z-0 opacity-40" />
 
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center relative z-10 -translate-y-[100px]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center relative z-10">
 
-        <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-[5rem] font-bold tracking-tight leading-[1.05] text-white">
+        <h1
+          class="animate-fade-in-up text-4xl sm:text-5xl md:text-7xl lg:text-[5rem] font-bold tracking-tight leading-[1.05] text-gray-900">
           Stop repeating yourself <br class="hidden md:block" />
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#ff9a7b] to-[#ffd2ac]">to every AI
+          <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-[#D97757] via-[#FF9A7B] to-[#D97757] animate-gradient-x italic font-normal">to
+            every AI
             tool.</span>
         </h1>
 
-        <p class="text-balance text-lg sm:text-xl md:text-2xl text-white leading-relaxed mt-8 max-w-4xl font-semibold">
-          MemWyre saves your prompts, conversations, and research so you can bring them back into <span
-            class="text-[#ff9a7b] font-bold">any AI tool, anytime.</span>
+        <p
+          class="animate-fade-in-up animation-delay-150 text-balance text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed mt-8 max-w-4xl font-normal">
+          Memwyre saves your prompts, conversations, and research so you can bring them back into <span
+            class="text-transparent bg-clip-text bg-gradient-to-r from-[#D97757] to-[#FF9A7B]">any AI tool,
+            anytime.</span>
         </p>
 
       </div>
@@ -30,15 +31,16 @@
 
 
 
-    <!-- Inbox Showcase -->
-    <div id="features" class="py-12 sm:py-14">
+    <!-- Features Section (WHITE) -->
+    <div id="features" data-theme="light"
+      class="relative z-20 -mt-20 sm:-mt-28 lg:-mt-36 pt-16 sm:pt-20 pb-16 sm:pb-24 bg-transparent">
       <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
 
         <!-- Video Demos -->
-        <div class="space-y-20 mb-20">
+        <div class="space-y-14 sm:space-y-20 mb-16 sm:mb-20">
 
           <!-- 1. Omnipresent Overlay Demo -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center pt-18 sm:pt-24">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
             <div class="lg:col-span-5 mb-6 lg:mb-0">
               <div class="w-12 h-12 flex items-center justify-left text-gray-900 mb-4">
                 <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -81,7 +83,8 @@
                 </li>
               </ul>
             </div>
-            <div class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5">
+            <div
+              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative aspect-[16/10]">
               <!-- Animated Omnipresent Demo -->
               <OmnipresentDemo />
             </div>
@@ -137,7 +140,8 @@
                 </li>
               </ul>
             </div>
-            <div class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5">
+            <div
+              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative aspect-[16/10]">
               <ChatDemo />
             </div>
           </div>
@@ -190,7 +194,7 @@
               </ul>
             </div>
             <div
-              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 aspect-video relative">
+              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 aspect-[16/10] relative">
               <TimelineDemo />
             </div>
           </div>
@@ -243,406 +247,286 @@
               </ul>
             </div>
             <div
-              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative min-h-[400px] bg-[#111111]">
+              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative bg-[#111111] aspect-[16/10]">
               <InboxDemo />
             </div>
           </div>
 
         </div>
 
-
-        <!-- Ecosystem -->
-        <div id="ecosystem" class="py-12 sm:py-14 max-w-7xl mx-auto">
-          <div class="max-w-3xl mb-16">
-            <h2 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4">Ecosystem</h2>
-            <p class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance">
-              Built to extend.</p>
-            <p class="text-lg md:text-xl text-text-secondary">MemWyre isn't a silo. It powers your entire workflow
-              through standard protocols.</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="p-10 bg-[#F7F6F3] rounded-2xl hover:shadow-lg transition-all duration-300">
-              <div class="w-12 h-12 bg-primary text-white rounded-lg flex items-center justify-center mb-6">
-                <svg class="w-8 h-8" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M18 84.8528L85.8822 16.9706C95.2548 7.59798 110.451 7.59798 119.823 16.9706V16.9706C129.196 26.3431 129.196 41.5391 119.823 50.9117L68.5581 102.177"
-                    stroke="currentColor" stroke-width="12" stroke-linecap="round" />
-                  <path
-                    d="M69.2652 101.47L119.823 50.9117C129.196 41.5391 144.392 41.5391 153.765 50.9117L154.118 51.2652C163.491 60.6378 163.491 75.8338 154.118 85.2063L92.7248 146.6C89.6006 149.724 89.6006 154.789 92.7248 157.913L105.331 170.52"
-                    stroke="currentColor" stroke-width="12" stroke-linecap="round" />
-                  <path
-                    d="M102.853 33.9411L52.6482 84.1457C43.2756 93.5183 43.2756 108.714 52.6482 118.087V118.087C62.0208 127.459 77.2167 127.459 86.5893 118.087L136.794 67.8822"
-                    stroke="currentColor" stroke-width="12" stroke-linecap="round" />
-                </svg>
-              </div>
-              <h3 class="text-2xl font-bold mb-4">MCP Server</h3>
-              <p class="text-text-secondary mb-8">
-                Connect MemWyre directly to Claude Desktop or any MCP-compliant client. Give your AI assistant
-                direct
-                access to your knowledge base.
-              </p>
-              <div class="bg-surface-2 rounded-lg p-4 font-mono text-xs text-text-secondary">
-                $ npx -y @memwyre/mcp-server
-              </div>
-            </div>
-
-            <div class="p-10 bg-[#F7F6F3] rounded-2xl hover:shadow-lg transition-all duration-300">
-              <div
-                class="w-12 h-12 bg-primary text-white rounded-lg flex items-center justify-center mb-6 font-bold text-xl">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
-              </div>
-              <h3 class="text-2xl font-bold mb-4">Browser Extension</h3>
-              <p class="text-text-secondary mb-8">
-                Capture the web as you browse. Save articles, documentation, or code snippets instantly without
-                breaking
-                your flow.
-              </p>
-              <div
-                class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold">
-                <img src="@/assets/chrome-logo-svgrepo-com.svg" alt="Chrome" class="w-6 h-6" />
-                <img src="@/assets/microsoft-edge-logo.svg" alt="Edge" class="w-6 h-6" />
-                <span>Chrome &amp; Edge</span>
-              </div>
-            </div>
-
-            <div class="p-10 bg-[#F7F6F3] rounded-2xl hover:shadow-lg transition-all duration-300">
-              <div class="w-12 h-12 bg-primary text-white rounded-lg flex items-center justify-center mb-6">
-                <img src="@/assets/openclaw-color.svg" alt="OpenClaw"
-                  class="w-8 h-8 invert brightness-0 contrast-200" />
-              </div>
-              <h3 class="text-2xl font-bold mb-4">OpenClaw Plugin</h3>
-              <p class="text-text-secondary mb-8">
-                Give autonomous agents persistent memory. The OpenClaw plugin lets AI agents save and recall context
-                from your vault automatically.
-              </p>
-              <div class="bg-surface-2 rounded-lg p-4 font-mono text-xs text-text-secondary">
-                $ openclaw plugins install @memwyre/openclaw
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- Workflow Section -->
-    <div id="workflow" class="py-12 sm:py-14">
+    <!-- Ecosystem Section (BLACK) -->
+    <div id="ecosystem" data-theme="dark" class="py-16 sm:py-24 bg-[#111111]">
       <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div class="mb-16">
-          <h2 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4">Workflow</h2>
-          <p class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-balance">
-            Structured
-            for flow.</p>
+        <div class="max-w-3xl mb-16">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">Ecosystem</h2>
+          <p
+            class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance text-white">
+            Built to extend.</p>
+          <p class="text-lg md:text-xl text-gray-400">MemWyre isn't a silo. It powers your entire workflow
+            through standard protocols.</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div class="space-y-12">
-            <div class="flex gap-6">
-              <span class="text-4xl font-light text-gray-200">01</span>
-              <div>
-                <h3 class="text-2xl font-bold mb-2">Ingestion via Browser/MCP</h3>
-                <p class="text-text-secondary">Capture the web as you browse or connect directly from your IDE using
-                  our
-                  Model Context Protocol.</p>
-              </div>
-            </div>
-            <div class="flex gap-6">
-              <span class="text-4xl font-light text-gray-200">02</span>
-              <div>
-                <h3 class="text-2xl font-bold mb-2">Context Organization</h3>
-                <p class="text-text-secondary">AI automatically parses, tags, and stores your documents, notes, and
-                  links, building your central brain.</p>
-              </div>
-            </div>
-            <div class="flex gap-6">
-              <span class="text-4xl font-light text-gray-200">03</span>
-              <div>
-                <h3 class="text-2xl font-bold mb-2">Seamless AI Chat</h3>
-                <p class="text-text-secondary">Retrieve context naturally through our UI or via your own local LLMs
-                  configured with your MemWyre MCP.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="relative group">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div
+            class="p-10 border border-white/10 rounded-2xl transition-all duration-300 relative overflow-hidden group backdrop-blur-xl">
+            <!-- Tilted MCP Background Icon -->
             <div
-              class="absolute -inset-1 bg-gradient-to-r from-primary/30 to-primary/10 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000">
+              class="absolute z-0 -top-12 -right-12 w-52 h-52 opacity-70 rotate-[20deg] pointer-events-none transition-opacity duration-500 text-white">
+              <svg viewBox="0 0 172 172" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                <path
+                  d="M18 84.8528L85.8822 16.9706C95.2548 7.59798 110.451 7.59798 119.823 16.9706V16.9706C129.196 26.3431 129.196 41.5391 119.823 50.9117L68.5581 102.177"
+                  stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+                <path
+                  d="M69.2652 101.47L119.823 50.9117C129.196 41.5391 144.392 41.5391 153.765 50.9117L154.118 51.2652C163.491 60.6378 163.491 75.8338 154.118 85.2063L92.7248 146.6C89.6006 149.724 89.6006 154.789 92.7248 157.913L105.331 170.52"
+                  stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+                <path
+                  d="M102.853 33.9411L52.6482 84.1457C43.2756 93.5183 43.2756 108.714 52.6482 118.087V118.087C62.0208 127.459 77.2167 127.459 86.5893 118.087L136.794 67.8822"
+                  stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+              </svg>
             </div>
-            <div class="relative bg-surface border border-primary/10 rounded-2xl p-8 shadow-2xl">
-              <div class="font-mono text-sm space-y-4">
-                <div class="flex items-center gap-2 border-b border-primary/10 pb-4 mb-4">
-                  <span class="w-3 h-3 rounded-full bg-primary"></span>
-                  <span class="text-text-muted">Ask MemWyre</span>
-                </div>
-                <p class="text-gray-800 min-h-[50px]">
-                  {{ typedText }}<span class="cursor">&nbsp;</span>
-                </p>
-                <transition name="fade">
-                  <div v-if="typedText.length >= 20" class="transition-opacity duration-1000 ease-in-out">
-                    <br>
-                    <span class="text-text-muted">Searching 3 documents...</span><br>
-                    <span class="text-primary">Found matches in \"Auth Specs v2\" and \"API Docs\".</span><br><br>
-                    Based on \"Auth Specs v2\", you should use the OAuth2 provider pattern. Here is the
-                    implementation
-                    snippet...
-                  </div>
-                </transition>
-              </div>
+            <h3 class="relative z-10 text-2xl font-bold mb-4 mt-8 text-white">MCP Server</h3>
+            <p class="relative z-10 text-white mb-8">
+              Connect MemWyre directly to Claude Desktop or any MCP-compliant client. Give your AI assistant
+              direct access to your knowledge base.
+            </p>
+            <div class="relative z-10 bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg p-4 font-mono text-xs text-gray-400">
+              $ npx -y @memwyre/mcp-server
+            </div>
+          </div>
+
+          <div
+            class="p-10 border border-white/10 rounded-2xl transition-all duration-300 relative overflow-hidden group backdrop-blur-xl">
+            <!-- Tilted Chrome Background Icon -->
+            <img src="@/assets/chrome-logo-svgrepo-com.svg" alt=""
+              class="absolute z-0 -top-14 -right-14 w-56 h-56 opacity-70 rotate-[25deg] pointer-events-none transition-opacity duration-500" />
+
+            <h3 class="relative z-10 text-2xl font-bold mb-4 mt-8 text-white">Browser Extension</h3>
+            <p class="relative z-10 text-white mb-8">
+              Capture the web as you browse. Save articles, documentation, or code snippets instantly without
+              breaking your flow.
+            </p>
+            <div
+              class="relative z-10 inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-black/50 backdrop-blur-sm text-primary text-sm font-bold">
+              <img src="@/assets/chrome-logo-svgrepo-com.svg" alt="Chrome" class="w-6 h-6" />
+              <img src="@/assets/microsoft-edge-logo.svg" alt="Edge" class="w-6 h-6" />
+              <span>Chrome &amp; Edge</span>
+            </div>
+          </div>
+
+          <div
+            class="p-10 border border-white/10 rounded-2xl transition-all duration-300 relative overflow-hidden group backdrop-blur-xl">
+            <!-- Tilted OpenClaw Background Icon -->
+            <img src="@/assets/openclaw-color.svg" alt=""
+              class="absolute z-0 -top-12 -right-12 w-52 h-52 opacity-70 rotate-[20deg] pointer-events-none transition-opacity duration-500" />
+
+            <h3 class="relative z-10 text-2xl font-bold mb-4 mt-8 text-white">OpenClaw Plugin</h3>
+            <p class="relative z-10 text-white mb-8">
+              Give autonomous agents persistent memory. The OpenClaw plugin lets AI agents save and recall context
+              from your vault automatically.
+            </p>
+            <div class="relative z-10 bg-black/50 backdrop-blur-sm border border-white/10 rounded-lg p-4 font-mono text-xs text-gray-400">
+              $ openclaw plugins install @memwyre/openclaw
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Use Cases Section -->
-    <div id="use-cases" class="py-12 sm:py-14 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-      <div class="text-center mb-16">
-        <h2 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4">Use Cases</h2>
-        <p class="font-display text-4xl lg:text-5xl font-extrabold tracking-tight mb-6 text-balance">Designed for
-          how
-          you work</p>
-        <p class="text-xl text-text-secondary max-w-2xl mx-auto text-balance">
-          Memwyre isn't just a note app. It's a cognitive bridging tool built for the specific ways different
-          professionals leverage AI.
-        </p>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-        <!-- Use Case 1: Software Engineers -->
-        <div class="flex flex-col items-center group">
-          <div
-            class="w-full aspect-square bg-[#0a0f1d] rounded-[2rem] overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative flex items-center justify-center p-4">
-            <!-- Mesh Gradient Background (Generated Image) -->
-            <div class="absolute inset-0 overflow-hidden pointer-events-none">
-              <img src="@/assets/usecase-mesh-bg.png" alt="Card Background" class="w-full h-full object-cover blur-xl" />
-            </div>
-            
-            <div class="w-full max-w-[240px] relative z-10">
-              <EngineerMinAnimation />
-            </div>
-          </div>
-          <div class="text-center mt-6">
-            <h3 class="font-display text-2xl font-extrabold text-gray-900 mb-3 tracking-tight">Software Engineers</h3>
-            <p class="text-gray-500 text-sm leading-relaxed max-w-[240px] mx-auto font-medium">
-              Connect your IDE directly via MCP. Past bug fixes, API specs, and AI chats become instantly searchable context inside Cursor or VS Code.
-            </p>
-          </div>
-        </div>
 
-        <!-- Use Case 2: Compounding Knowledge — Timeline visual -->
-        <div class="flex flex-col items-center group">
-          <div
-            class="w-full aspect-square bg-[#0a0f1d] rounded-[2rem] overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative">
-            <!-- Mesh Gradient Background (Generated Image) -->
-            <div class="absolute inset-0 overflow-hidden pointer-events-none">
-              <img src="@/assets/usecase-mesh-bg.png" alt="Card Background" class="w-full h-full object-cover blur-xl" />
-            </div>
-
-            <div class="absolute top-14 left-10 z-10" style="width: 130%; min-height: 130%;">
-              <div class="bg-[#F7F6F3] rounded-xl border border-gray-200 shadow-2xl overflow-hidden">
-                <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-gray-50/80">
-                  <div>
-                    <h3 class="text-sm font-semibold text-gray-900">Recent AI Work</h3>
-                    <p class="text-[9px] text-gray-400 mt-0.5">Your interaction timeline</p>
-                  </div>
-                  <span class="text-[10px] border border-gray-200 rounded-md px-1.5 py-0.5 bg-[#F7F6F3] text-gray-600">All Sources</span>
-                </div>
-                <div class="p-3 space-y-3">
-                  <div>
-                    <h4 class="text-[9px] uppercase tracking-wider text-gray-400 font-bold mb-1.5">Today</h4>
-                    <div class="py-2 flex items-start gap-2 border-t border-gray-200">
-                      <img src="@/assets/openai.svg" alt="ChatGPT" class="w-5 h-5 shrink-0 mt-0.5" />
-                      <div class="min-w-0 flex-1">
-                        <p class="text-xs font-semibold text-gray-900 truncate">Refining Memwyre Pitch Strategy</p>
-                        <p class="text-[9px] text-gray-400 mt-0.5">ChatGPT · 11:25 AM</p>
-                        <p class="text-[10px] text-gray-500 mt-1 line-clamp-2">Rating: 6.5/10 — Good instinct, clear pain — but it's too explicit...</p>
-                        <span class="inline-flex items-center mt-1.5 px-1.5 py-0.5 rounded text-[9px] font-medium bg-blue-50 text-blue-600 border border-blue-100">memwyre</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 class="text-[9px] uppercase tracking-wider text-gray-400 font-bold mb-1.5">Yesterday</h4>
-                    <div class="py-2 flex items-start gap-2 border-t border-gray-200">
-                      <img src="@/assets/perplexity-color.svg" alt="Perplexity" class="w-5 h-5 shrink-0 mt-0.5" />
-                      <div class="min-w-0 flex-1">
-                        <p class="text-xs font-semibold text-gray-900 truncate">Open-source remote MCP clients</p>
-                        <p class="text-[9px] text-gray-400 mt-0.5">Perplexity · 01:24 PM</p>
-                        <p class="text-[10px] text-gray-500 mt-1 line-clamp-2">Open-source remote MCP clients are available on GitHub...</p>
-                        <span class="inline-flex items-center mt-1.5 px-1.5 py-0.5 rounded text-[9px] font-medium bg-blue-50 text-blue-600 border border-blue-100">memwyre</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="text-center mt-6">
-            <h3 class="font-display text-2xl font-extrabold text-gray-900 mb-3 tracking-tight">Compounding Knowledge</h3>
-            <p class="text-gray-500 text-sm leading-relaxed max-w-[240px] mx-auto font-medium">
-              Never repeat yourself. Every prompt and insight becomes searchable, reusable leverage.
-            </p>
-          </div>
-        </div>
-
-        <!-- Use Case 3: DevOps & Agents — Terminal animation -->
-        <div class="flex flex-col items-center group">
-          <div
-            class="w-full aspect-square bg-[#0a0f1d] rounded-[2rem] overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative">
-            <!-- Mesh Gradient Background (Generated Image) -->
-            <div class="absolute inset-0 overflow-hidden pointer-events-none">
-              <img src="@/assets/usecase-mesh-bg.png" alt="Card Background" class="w-full h-full object-cover blur-xl" />
-            </div>
-
-            <div class="absolute top-10 left-6 z-10" style="width: 125%; min-height: 125%;">
-              <DevOpsMinAnimation />
-            </div>
-          </div>
-          <div class="text-center mt-6">
-            <h3 class="font-display text-2xl font-extrabold text-gray-900 mb-3 tracking-tight">DevOps & Agents</h3>
-            <p class="text-gray-500 text-sm leading-relaxed max-w-[240px] mx-auto font-medium">
-              Agents remember past runs, build on previous sessions, and accumulate operational knowledge over time.
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Pricing Section -->
-    <div id="pricing" class="py-12 sm:py-14">
+    <!-- Use Cases Section (WHITE) -->
+    <div id="use-cases" data-theme="light" class="py-24 sm:py-32 bg-white border-t border-black/5">
       <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div class="text-center mb-16">
-          <h2 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4">Pricing</h2>
-          <p class="font-display text-4xl font-extrabold tracking-tight text-balance">AI that works where your team
-            works.</p>
-        </div>
 
-        <div class="max-w-md mx-auto">
-          <!-- Pro (Recommended) -->
-          <div class="rounded-2xl bg-[#F7F6F3] border border-black/5 p-8 sm:p-10 relative">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="text-lg font-semibold">Pro</div>
-              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-700">
-                Recommended
-              </span>
-            </div>
-            <div class="flex items-end gap-2 mb-3">
-              <div class="text-4xl font-extrabold tracking-tight">$12</div>
-              <div class="text-sm text-text-muted mb-1">per member/month</div>
-            </div>
-            <p class="text-text-secondary mb-6">For growing teams to streamline teamwork with persistent AI context.
-            </p>
 
-            <router-link to="/signup"
-              class="inline-flex w-full items-center justify-center rounded-xl bg-primary text-white px-4 py-3 text-sm font-semibold hover:bg-primary-600 transition-colors">
-              Get started
-            </router-link>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <!-- Use Case 1: Software Engineers (WIDER) -->
+          <div
+            class="md:col-span-7 relative min-h-[450px] rounded-2xl overflow-hidden group transition-all duration-500 flex flex-col border border-white/10">
+            <!-- Background Image -->
+            <img src="@/assets/card1-bg.jpg" alt=""
+              class="absolute inset-0 w-full h-full object-cover pointer-events-none" />
 
-            <div class="mt-6 flex flex-wrap items-center gap-2">
-              <span class="text-xs font-semibold uppercase tracking-widest text-text-muted mr-2">Integrations</span>
-              <img src="@/assets/openai.svg" alt="ChatGPT" class="w-5 h-5" />
-              <img src="@/assets/perplexity-color.svg" alt="Perplexity" class="w-5 h-5" />
-              <img src="@/assets/chrome-logo-svgrepo-com.svg" alt="Chrome" class="w-5 h-5" />
-              <img src="@/assets/notion-svgrepo-com.svg" alt="Notion" class="w-5 h-5" />
-              <img src="/image.svg" alt="MemWyre" class="w-5 h-5 rounded" />
+            <!-- Text Layer (TOP) -->
+            <div class="relative z-20 p-8 pb-0 text-left">
+              <h3 class="font-display text-2xl font-extrabold text-white mb-2 tracking-tight">Native IDE Memory</h3>
+              <p class="text-white/80 text-sm leading-relaxed max-w-md font-medium drop-shadow-md">
+                Connect your IDE directly via MCP. Past bug fixes and API specs become instantly searchable context
+                inside Cursor.
+              </p>
             </div>
 
-            <!-- <div class="mt-8 text-sm font-semibold">Everything in Free, plus:</div> -->
-            <ul class="mt-4 space-y-3 text-sm text-text-secondary">
-              <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-text-muted shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                1M+ token storage
-              </li>
-              <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-text-muted shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                100K daily AI token budget
-              </li>
-              <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-text-muted shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                PDF &amp; web page ingestion <span class="text-xs text-text-muted">(YouTube coming soon)</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-text-muted shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <div class="flex flex-wrap items-center gap-2">
-                  <span>MCP Server for IDE integration</span>
-                  <span class="inline-flex items-center gap-1.5 ml-1">
-                    <span
-                      class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-white/70 border border-black/10"
-                      title="VS Code">
-                      <svg class="w-4 h-4" viewBox="0 0 256 254" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path fill="#007ACC"
-                          d="M246.201 33.592 196.63 9.915a19.547 19.547 0 0 0-21.58 3.41L78.94 101.334 40.746 72.36a13.02 13.02 0 0 0-16.69 1.025L4.022 91.46a13.02 13.02 0 0 0-.17 19.365l30.96 30.01-30.96 30.01a13.02 13.02 0 0 0 .17 19.365l20.034 18.074a13.02 13.02 0 0 0 16.69 1.025l38.194-28.974 96.11 88.009a19.547 19.547 0 0 0 21.58 3.41l49.571-23.677A19.547 19.547 0 0 0 256 225.513V55.671a19.547 19.547 0 0 0-9.799-22.079zM196.923 188.82l-73.09-60.33 73.09-60.33z" />
-                      </svg>
-                    </span>
-                    <span
-                      class="inline-flex items-center justify-center px-2 h-6 rounded-md bg-white/70 border border-black/10 text-xs font-semibold text-text-muted"
-                      title="Cursor">
-                      Cursor
-                    </span>
-                  </span>
-                </div>
-              </li>
-              <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-text-muted shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Browser Extension (Chrome &amp; Edge)
-              </li>
-              <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-text-muted shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                OpenClaw agent plugin access
-              </li>
-              <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-text-muted shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Priority support
-              </li>
-            </ul>
+            <!-- Animation Layer (BOTTOM) -->
+            <div class="relative z-10 flex-1 flex items-center justify-center p-8 overflow-hidden">
+              <div class="w-full max-w-[320px] transition-transform duration-500">
+                <EngineerMinAnimation />
+              </div>
+            </div>
           </div>
+
+          <!-- Use Case 2: 60-Second Setup (NARROWER) -->
+          <div
+            class="md:col-span-5 relative min-h-[450px] bg-[#f7f6f3] rounded-2xl overflow-hidden group transition-all duration-500 flex flex-col border border-black/5">
+            <!-- Text Layer (TOP) -->
+            <div class="relative z-20 p-8 pb-0 text-left">
+              <h3 class="font-display text-2xl font-extrabold text-gray-900 mb-2 tracking-tight">60-Second Setup</h3>
+              <p class="text-gray-600 text-sm leading-relaxed font-medium">
+                No complex onboarding or data migrations. Install the MCP server and connect your workspace instantly.
+              </p>
+            </div>
+
+            <!-- Animation Layer (BOTTOM) -->
+            <div class="relative z-10 flex-1 flex items-center justify-center p-6 overflow-hidden">
+              <div class="w-full max-w-[320px] transition-transform duration-500">
+                <SetupTimerAnimation />
+              </div>
+            </div>
+          </div>
+
+          <!-- Use Case 3: DevOps & Agents (NARROWER) -->
+          <div
+            class="md:col-span-5 relative min-h-[450px] bg-[#f7f6f3] rounded-2xl overflow-hidden group transition-all duration-500 flex flex-col border border-black/5">
+            <!-- Text Layer (TOP) -->
+            <div class="relative z-20 p-8 pb-0 text-left">
+              <h3 class="font-display text-2xl font-extrabold text-gray-900 mb-2 tracking-tight">DevOps & Agents</h3>
+              <p class="text-gray-600 text-sm leading-relaxed font-medium">
+                Agents remember past runs and build on previous sessions, accumulating knowledge.
+              </p>
+            </div>
+
+            <!-- Animation Layer (BOTTOM) -->
+            <div class="relative z-10 flex-1 flex items-center justify-center p-8 overflow-hidden">
+              <div class="w-full max-w-[280px] transition-transform duration-500">
+                <DevOpsMinAnimation />
+              </div>
+            </div>
+          </div>
+
+          <!-- Use Case 4: Product Managers (WIDER) -->
+          <div
+            class="md:col-span-7 relative min-h-[450px] rounded-2xl overflow-hidden group transition-all duration-500 flex flex-col border border-white/10">
+            <!-- Background Image (Landscape) -->
+            <img src="@/assets/bento-gradient-bg.png" alt=""
+              class="absolute inset-0 w-full h-full object-cover rotate-90 scale-[1.8] pointer-events-none" />
+            <!-- Text Layer (TOP) -->
+            <div class="relative z-20 p-8 pb-0 text-left">
+              <h3 class="font-display text-2xl font-extrabold text-white mb-2 tracking-tight">Works With Every LLM</h3>
+              <p class="text-white/70 text-sm leading-relaxed max-w-md font-medium">
+                One memory layer across ChatGPT, Gemini, and Claude. Your context follows you, no matter which LLM you
+                use.
+              </p>
+            </div>
+
+            <!-- Animation Layer (Centered) -->
+            <div class="absolute inset-0 z-10 flex items-center justify-center">
+              <ScatteredWorkMinAnimation />
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <!-- FAQ Section -->
-    <div id="faq" class="py-12 sm:py-16 max-w-3xl mx-auto px-6 sm:px-10 lg:px-0">
-      <div class="mb-6 text-left">
-        <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">Questions & answers
+
+
+
+
+
+    <!-- Final CTA Section: Memory and Personality -->
+    <div
+      class="pt-20 pb-10 sm:pt-28 sm:pb-16 bg-white text-center px-6 relative overflow-hidden border-t border-black/5">
+      <!-- Logo-masked numeric background (INVERTED for white bg) -->
+      <LogoBgAnimation class="absolute inset-0 z-0 opacity-[0.08]" :invert="true" />
+
+      <div class="max-w-7xl mx-auto relative z-10">
+        <h2 class="font-display text-5xl sm:text-7xl lg:text-[7rem] font-medium tracking-tight mb-10 leading-[0.95]">
+          <span
+            class="bg-clip-text text-transparent bg-[repeating-linear-gradient(to_bottom,#111,#111_6px,white_6px,white_9px)]">
+            The Second Brain
+          </span><br />
+          <span class="text-[#9575CD]">
+            For Your AI.
+          </span>
         </h2>
+        <p class="text-gray-600 text-xl sm:text-2xl mb-14 max-w-3xl mx-auto font-medium leading-relaxed">
+          A persistent knowledge vault that works everywhere you use AI.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+          <router-link to="/signup"
+            class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105">
+            Start Building Your Brain
+          </router-link>
+          <router-link to="/pricing"
+            class="w-full sm:w-auto px-10 py-4 bg-white text-black font-bold rounded-xl border border-black/10 hover:bg-black/5 transition-all duration-300 hover:border-black/20">
+            Pricing
+          </router-link>
+        </div>
       </div>
 
-      <div class="border-t border-black/5">
-        <div v-for="(faq, index) in faqs" :key="index" class="border-b border-black/5">
-          <button @click="toggleFaq(index)" class="flex justify-between items-center w-full text-left py-5 group">
-            <span class="text-[15px] font-semibold text-gray-900 group-hover:text-gray-600 transition-colors">{{
-              faq.question }}</span>
-            <span class="ml-4 flex-shrink-0 text-gray-400 font-light text-2xl leading-none">
-              <span v-if="faq.isOpen">&minus;</span>
-              <span v-else>+</span>
-            </span>
-          </button>
-          <div v-show="faq.isOpen" class="text-text-secondary pb-6 leading-relaxed text-[15px] pr-8">
-            {{ faq.answer }}
+      <div
+        class="max-w-7xl mx-auto px-8 lg:px-12 mt-12 relative z-10 border-t border-black/5 pt-10 flex flex-col md:flex-row justify-between items-start gap-8 text-left">
+        <div class="flex flex-col items-start gap-8">
+          <!-- Socials -->
+          <div class="flex items-center gap-5">
+            <a v-if="false" href="https://linkedin.com/company/memwyre" target="_blank"
+              class="text-black hover:text-gray-500 transition-all duration-300 transform hover:scale-110">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg>
+            </a>
+            <a href="https://twitter.com/MemWyre" target="_blank"
+              class="text-black hover:text-gray-500 transition-all duration-300 transform hover:scale-110">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </a>
+            <a href="https://github.com/ramblinghermit0403/Memwyre" target="_blank"
+              class="text-black hover:text-gray-500 transition-all duration-300 transform hover:scale-110">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <img src="/image.svg" alt="MemWyre" class="w-6 h-6 rounded" />
+            <span class="font-medium text-2xl text-black tracking-tight"
+              style="font-family: 'Inter', system-ui, sans-serif;">Memwyre</span>
+          </div>
+          <p class="text-sm text-gray-500 max-w-xs leading-relaxed">
+            Building the unified memory layer for the next generation of AI agents and professionals.
+          </p>
+          <p class="text-xs text-black/30 font-medium">© 2026 Memwyre. Crafted for clarity.</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-12 sm:gap-24 w-full md:w-auto">
+          <div class="flex flex-col gap-4">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Product</h4>
+            <a href="/#features"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Features</a>
+            <a href="/pricing" class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Pricing</a>
+            <a href="/#ecosystem"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Ecosystem</a>
+          </div>
+          <div class="flex flex-col gap-4">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support</h4>
+            <a href="mailto:shivharehimansh@gmail.com"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Contact Us</a>
+            <a href="https://x.com/MemWyre" target="_blank"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Twitter</a>
+          </div>
+          <div class="flex flex-col gap-4">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Legal</h4>
+            <router-link to="/privacy-policy"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Privacy</router-link>
+            <router-link to="/terms"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Terms</router-link>
           </div>
         </div>
       </div>
@@ -659,10 +543,15 @@ import TimelineDemo from '@/components/landing/TimelineDemo.vue';
 import InboxDemo from '@/components/landing/InboxDemo.vue';
 import ScatteredWorkHero from '@/components/landing/ScatteredWorkHero.vue';
 import ProductShowcase from '@/components/landing/ProductShowcase.vue';
+import SetupTimerAnimation from '@/components/landing/usecases/SetupTimerAnimation.vue';
+import NumericBgAnimation from '@/components/landing/NumericBgAnimation.vue';
+import LogoBgAnimation from '@/components/landing/LogoBgAnimation.vue';
+import LavaNumericPattern from '@/components/landing/LavaNumericPattern.vue';
 
 // Use Case Animations
 import EngineerMinAnimation from '@/components/landing/usecases/EngineerMinAnimation.vue';
 import DevOpsMinAnimation from '@/components/landing/usecases/DevOpsMinAnimation.vue';
+import ScatteredWorkMinAnimation from '@/components/landing/usecases/ScatteredWorkMinAnimation.vue';
 
 
 // --- Video scroll-triggered playback ---
@@ -700,37 +589,7 @@ onUnmounted(() => {
   }
 });
 
-const faqs = ref([
-  {
-    question: "What exactly is MemWyre?",
-    answer: "MemWyre is a unified AI memory vault that captures your context across tools (browser, ChatGPT, Claude, Cursor) so you never lose an insight, code snippet, or research finding. It then makes this knowledge instantly searchable and reusable.",
-    isOpen: false
-  },
-  {
-    question: "How do I connect MemWyre to Cursor or VS Code?",
-    answer: "You can connect MemWyre to Cursor, VS Code, or Claude Desktop using our official Model Context Protocol (MCP) server. This gives your AI assistant direct, real-time access to your entire personal knowledge base.",
-    isOpen: false
-  },
-  {
-    question: "Do you offer a browser extension?",
-    answer: "Yes! The MemWyre browser extension (coming soon for Chrome and Edge) lets you instantly clip text, articles, and code snippets directly into your vault without breaking your flow.",
-    isOpen: false
-  },
-  {
-    question: "Is my data private and secure?",
-    answer: "Absolutely. Your memory vault is fully private and encrypted. Your data is only accessible to you via authenticated sessions and your personal API keys.",
-    isOpen: false
-  },
-  {
-    question: "What is the OpenClaw plugin?",
-    answer: "The OpenClaw plugin allows autonomous AI agents to read from and write to your MemWyre vault. This gives agents persistent memory across runs, letting them build on past debugging sessions and research.",
-    isOpen: false
-  }
-]);
 
-const toggleFaq = (index) => {
-  faqs.value[index].isOpen = !faqs.value[index].isOpen;
-};
 
 // --- Animations ---
 onMounted(() => {
@@ -803,6 +662,23 @@ html {
   }
 }
 
+@keyframes gradient-slow {
+
+  0%,
+  100% {
+    background-position: 0% 0%;
+  }
+
+  50% {
+    background-position: 100% 100%;
+  }
+}
+
+.animate-gradient-slow {
+  background-size: 200% 200%;
+  animation: gradient-slow 8s ease-in-out infinite;
+}
+
 /* Video edge feathering via CSS mask — no overlays needed */
 .video-blend {
   -webkit-mask-image:
@@ -840,5 +716,22 @@ html {
 
 .animate-float-3 {
   animation: float 6s ease-in-out infinite;
+}
+
+@keyframes gradient-x {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 4s ease-in-out infinite;
 }
 </style>

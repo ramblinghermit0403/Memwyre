@@ -16,7 +16,7 @@
                     <router-link to="/signup" class="px-8 py-4 bg-primary text-white text-lg font-bold rounded-full hover:bg-primary-600 transition-colors text-center">
                         See How It Works
                     </router-link>
-                    <a href="mailto:sales@memwyre.tech" class="px-8 py-4 border border-primary/30 text-text-primary text-lg font-bold rounded-full hover:bg-primary/10 transition-colors text-center">
+                    <a href="mailto:shivharehimansh@gmail.com" class="px-8 py-4 border border-primary/30 text-text-primary text-lg font-bold rounded-full hover:bg-primary/10 transition-colors text-center">
                         Talk to Us
                     </a>
                 </div>
@@ -371,7 +371,7 @@
             <router-link to="/signup" class="px-10 py-5 bg-primary text-white text-xl font-bold rounded-full hover:bg-primary-600 transition-colors shadow-xl">
                 Start Building Your Brain
             </router-link>
-            <a href="mailto:sales@memwyre.tech" class="px-10 py-5 border border-primary/30 text-text-primary text-xl font-bold rounded-full hover:bg-primary/10 transition-colors">
+            <a href="mailto:shivharehimansh@gmail.com" class="px-10 py-5 border border-primary/30 text-text-primary text-xl font-bold rounded-full hover:bg-primary/10 transition-colors">
                 Contact Sales
             </a>
         </div>

@@ -1,7 +1,7 @@
 export const SITE_URL = 'https://memwyre.tech';
 export const SITE_NAME = 'MemWyre';
 export const DEFAULT_SOCIAL_IMAGE_PATH = '/sequence/ezgif-frame-015.png';
-export const PRERENDER_ROUTES = ['/', '/use-cases', '/privacy-policy', '/terms'];
+export const PRERENDER_ROUTES = ['/', '/use-cases', '/pricing', '/privacy-policy', '/terms'];
 
 export const DEFAULT_SEO = {
   title: 'MemWyre | AI Memory Vault for ChatGPT, Claude and More',
@@ -21,6 +21,11 @@ export const PUBLIC_ROUTE_SEO = {
     title: 'MemWyre Use Cases | AI Workflow Memory for Teams and Builders',
     description:
       'See how engineers, researchers, students, and product teams use MemWyre to retain AI context, reduce repeated work, and move faster.',
+  },
+  '/pricing': {
+    title: 'MemWyre Pricing | Plans for Individuals and Teams',
+    description:
+      'Choose the plan that fits your AI workflow. Free for personal use, Pro for teams needing persistent memory and advanced integrations.',
   },
   '/privacy-policy': {
     title: 'MemWyre Privacy Policy | Data Handling, Security, and Retention',

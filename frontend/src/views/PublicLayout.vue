@@ -4,12 +4,12 @@
     
     <!-- Content Router View -->
     <router-view />
-
-    <SiteFooter />
   </div>
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router';
 import SiteNavBar from '../components/SiteNavBar.vue';
-import SiteFooter from '../components/SiteFooter.vue';
+
+const route = useRoute();
 </script>

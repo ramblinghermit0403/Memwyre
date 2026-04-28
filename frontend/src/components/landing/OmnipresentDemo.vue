@@ -1,7 +1,13 @@
 <template>
-  <div class="relative w-full h-[400px] overflow-hidden flex items-center justify-center bg-[#111111] font-sans">
+  <div class="relative w-full h-full overflow-hidden flex items-center justify-center bg-[#111111] font-sans">
     <div class="absolute inset-0 bg-black/40 z-0"></div>
 
+    <!-- Trial RGB Dots -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-[-10%] left-[10%] w-72 h-72 bg-red-500 opacity-40 blur-[120px] rounded-full"></div>
+      <div class="absolute top-[40%] left-[60%] w-72 h-72 bg-green-500 opacity-35 blur-[120px] rounded-full"></div>
+      <div class="absolute bottom-[-10%] left-[20%] w-72 h-72 bg-blue-500 opacity-40 blur-[120px] rounded-full"></div>
+    </div>
     <!-- Camera Viewport Rig -->
     <div
       class="absolute w-full h-full z-10 flex items-center justify-center origin-center ease-[cubic-bezier(0.25,1,0.35,1)]"
@@ -53,7 +59,7 @@
               <!-- Tooltip Toast for Phase 1 -->
               <transition name="pop">
                 <div v-if="phase === 1 && subphase === 'toast'"
-                  class="absolute -top-[50px] left-1/2 transform -translate-x-1/2 bg-[#1B8054] text-[#f4fef8] px-4 py-2 rounded-lg shadow-[0_0_30px_rgba(27,128,84,0.7)] text-[15px] font-bold z-30 whitespace-nowrap tracking-wide border border-[#23a36b]">
+                  class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-[#1B8054] text-[#f4fef8] px-4 py-2 rounded-lg shadow-[0_0_30px_rgba(27,128,84,0.7)] text-[15px] font-bold z-30 whitespace-nowrap tracking-wide border border-[#23a36b]">
                   Saved to Memwyre!
                 </div>
               </transition>

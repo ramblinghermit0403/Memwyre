@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && vite build --ssr src/entry-server.js --outDir dist/server && node scripts/prerender.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "video:intro": "node scripts/render-intro-video.mjs"
   },
   "dependencies": {
     "@guolao/vue-monaco-editor": "^1.6.0",
@@ -39,10 +40,12 @@
     "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.22",
     "baseline-browser-mapping": "^2.10.8",
     "postcss": "^8.5.6",
+    "playwright": "^1.54.2",
     "tailwindcss": "^4.1.17",
     "vite": "^7.2.4"
   }

@@ -1,7 +1,14 @@
 <template>
   <div ref="root"
-    class="dark relative w-full max-w-4xl mx-auto overflow-hidden bg-white dark:bg-[#111111] border border-gray-200/60 dark:border-gray-700/60 border-b-0 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col rounded-t-xl min-h-[400px] sm:min-h-[auto]"
+    class="dark relative w-full max-w-4xl mx-auto overflow-hidden bg-white dark:bg-[#111111] border border-gray-200/60 dark:border-gray-700/60 border-b-0 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col rounded-t-xl"
     style="aspect-ratio: 16/10; text-align: left;">
+    
+    <!-- Trial RGB Dots -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-[-10%] left-[10%] w-72 h-72 bg-red-500 opacity-40 blur-[120px] rounded-full"></div>
+      <div class="absolute top-[40%] left-[60%] w-72 h-72 bg-green-500 opacity-35 blur-[120px] rounded-full"></div>
+      <div class="absolute bottom-[-10%] left-[20%] w-72 h-72 bg-blue-500 opacity-40 blur-[120px] rounded-full"></div>
+    </div>
 
     <!-- Master Camera Viewport Rig (Handles smooth zooms and pans internally) -->
     <div class="absolute inset-0 z-10 origin-center ease-[cubic-bezier(0.25,1,0.35,1)]"

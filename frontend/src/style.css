@@ -122,7 +122,29 @@ body {
   text-wrap: balance;
 }
 
-/* Scrollbar styling */
+/* Global Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+html {
+  scrollbar-color: #333 #111111;
+}
+
+/* Custom scrollbar class for inner elements */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -133,13 +155,11 @@ body {
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #94a3b8;
-  /* Slate 400 - much more visible than border color */
   border-radius: 20px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #64748b;
-  /* Slate 500 on hover */
 }
 
 /* Hide scrollbar utilities */
@@ -165,3 +185,25 @@ body {
 .font-zalando {
   font-family: var(--font-body);
 }
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animation-delay-150 { animation-delay: 150ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-450 { animation-delay: 450ms; }
+.animation-delay-600 { animation-delay: 600ms; }
