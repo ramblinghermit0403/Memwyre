@@ -90,15 +90,40 @@ jobs:
       - name: Sync to S3
         working-directory: frontend
         run: |
+          # Sync fingerprinted assets (JS/CSS chunks) with long-lived immutable cache
           aws s3 sync dist/ s3://$S3_BUCKET/ --delete \
             --acl public-read \
             --cache-control "public, max-age=31536000, immutable" \
-            --exclude "index.html"
+            --exclude "index.html" \
+            --exclude "*.png" \
+            --exclude "*.ico" \
+            --exclude "*.svg" \
+            --exclude "*.txt" \
+            --exclude "*.xml" \
+            --exclude "*.json"
 
-          # index.html should not be cached aggressively
+          # Non-fingerprinted static assets: short cache so CDN picks up updates quickly
+          aws s3 sync dist/ s3://$S3_BUCKET/ \
+            --acl public-read \
+            --cache-control "public, max-age=3600, must-revalidate" \
+            --exclude "*" \
+            --include "*.png" \
+            --include "*.ico" \
+            --include "*.svg" \
+            --include "*.txt" \
+            --include "*.xml" \
+            --include "*.json"
+
+          # index.html: never cache
           aws s3 cp dist/index.html s3://$S3_BUCKET/index.html \
             --acl public-read \
             --cache-control "public, max-age=0, must-revalidate"
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/index.html" "/apple-touch-icon.png" "/favicon-192.png" "/image.svg" "/robots.txt" "/sitemap.xml"
 
   # ─────────────────────────────────────────────
   # Job 3: Deploy backend to EC2 via SSH
