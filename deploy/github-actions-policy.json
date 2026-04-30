@@ -35,6 +35,12 @@
                 "arn:aws:s3:::memwyre.tech",
                 "arn:aws:s3:::memwyre.tech/*"
             ]
+        },
+        {
+            "Sid": "CloudFrontInvalidate",
+            "Effect": "Allow",
+            "Action": "cloudfront:CreateInvalidation",
+            "Resource": "arn:aws:cloudfront::911167915656:distribution/*"
         }
     ]
 }
