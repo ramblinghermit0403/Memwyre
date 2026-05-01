@@ -6,7 +6,7 @@
     <div data-theme="light"
       class="relative z-10 pt-16 sm:pt-20 lg:pt-32 pb-20 sm:pb-24 lg:pb-32 overflow-hidden min-h-[calc(100svh-120px)] flex items-center bg-white">
 
-      <NumericBgAnimation :invert="true" class="absolute inset-0 z-0 opacity-40" />
+      <LogoBgAnimation class="absolute inset-0 z-0 opacity-[0.08]" :invert="true" />
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center relative z-10">
 
@@ -25,6 +25,17 @@
             class="text-transparent bg-clip-text bg-gradient-to-r from-[#D97757] to-[#FF9A7B]">any AI tool,
             anytime.</span>
         </p>
+
+        <div class="animate-fade-in-up animation-delay-300 flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+          <router-link to="/signup"
+            class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105 text-base">
+            Start Building Your Brain
+          </router-link>
+          <router-link to="/pricing"
+            class="w-full sm:w-auto px-10 py-4 bg-white text-black font-bold rounded-xl border border-black/10 hover:bg-black/5 transition-all duration-300 hover:border-black/20 text-base">
+            See Pricing
+          </router-link>
+        </div>
 
       </div>
     </div>
@@ -48,8 +59,7 @@
                     d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Omnipresent
-                Overlay</h3>
+              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Access It From Any App</h3>
               <p class="text-base text-gray-500 mt-4 leading-relaxed max-w-xl">Invoke Memwyre instantly on top of
                 any
                 app. Your context is always one keystroke away with our native desktop experience.</p>
@@ -99,9 +109,7 @@
                     d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
               </div>
-              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Contextual
-                Chat
-                Interface</h3>
+              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Chat With Your Notes</h3>
               <p class="text-base text-gray-500 mt-4 leading-relaxed max-w-xl">Ask questions grounded in your
                 personal
                 knowledge base — with sources cited inline.</p>
@@ -155,8 +163,7 @@
                     d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Cross-Post
-                Context Instantly</h3>
+              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Send to Any AI in One Click</h3>
               <p class="text-base text-gray-500 mt-4 leading-relaxed max-w-xl">Find the exact reference you need and
                 launch it directly into your preferred AI model.</p>
               <ul class="mt-6 space-y-3">
@@ -208,9 +215,7 @@
                     d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                 </svg>
               </div>
-              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Granular
-                Memory
-                Control</h3>
+              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">You Decide What's Saved</h3>
               <p class="text-base text-gray-500 mt-4 leading-relaxed max-w-xl">Review, edit, and curate your
                 memories
                 before they are saved to your vault.</p>
@@ -435,11 +440,95 @@
 
 
 
+    <!-- Workflow Section (HOW IT WORKS) -->
+    <div id="workflow" data-theme="light" class="py-20 sm:py-28 bg-white border-t border-black/5">
+      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div class="mb-16">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Workflow</h2>
+          <p class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 text-balance">
+            Structured for flow.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div class="space-y-12">
+            <div class="flex gap-6">
+              <span class="text-4xl font-light text-gray-200 leading-none shrink-0">01</span>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Ingestion via Browser / MCP</h3>
+                <p class="text-gray-500 leading-relaxed">Capture the web as you browse or connect directly from your IDE using our Model Context Protocol server.</p>
+              </div>
+            </div>
+            <div class="flex gap-6">
+              <span class="text-4xl font-light text-gray-200 leading-none shrink-0">02</span>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Context Organisation</h3>
+                <p class="text-gray-500 leading-relaxed">AI automatically parses, tags, and stores your documents, notes, and links — building your central brain.</p>
+              </div>
+            </div>
+            <div class="flex gap-6">
+              <span class="text-4xl font-light text-gray-200 leading-none shrink-0">03</span>
+              <div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Seamless AI Chat</h3>
+                <p class="text-gray-500 leading-relaxed">Retrieve context naturally through our UI or via your own local LLMs configured with your MemWyre MCP.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-[#D97757]/30 to-[#FF9A7B]/10 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+            <div class="relative bg-white border border-[#D97757]/10 rounded-2xl p-8 shadow-2xl">
+              <div class="font-mono text-sm space-y-4">
+                <div class="flex items-center gap-2 border-b border-[#D97757]/10 pb-4 mb-4">
+                  <span class="w-3 h-3 rounded-full bg-[#D97757]"></span>
+                  <span class="text-gray-400">Ask MemWyre</span>
+                </div>
+                <p class="text-gray-800 min-h-[50px]">
+                  {{ typedText }}<span class="cursor">&nbsp;</span>
+                </p>
+                <div class="transition-opacity duration-1000 ease-in-out">
+                  <br>
+                  <span class="text-gray-400">Searching 3 documents...</span><br>
+                  <span class="text-[#D97757]">Found matches in "Auth Specs v2" and "API Docs".</span><br><br>
+                  Based on "Auth Specs v2", you should use the OAuth2 provider pattern. Here is the implementation snippet...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div id="faq" data-theme="light" class="py-20 sm:py-28 bg-[#f7f6f3] border-t border-black/5">
+      <div class="max-w-3xl mx-auto px-6 sm:px-10 lg:px-0">
+        <div class="mb-10 text-left">
+          <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">FAQ</h2>
+          <p class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">Questions &amp; answers</p>
+        </div>
+
+        <div class="border-t border-black/5">
+          <div v-for="(faq, index) in faqs" :key="index" class="border-b border-black/5">
+            <button @click="toggleFaq(index)" class="flex justify-between items-center w-full text-left py-5 group">
+              <span class="text-[15px] font-semibold text-gray-900 group-hover:text-gray-500 transition-colors">{{ faq.question }}</span>
+              <span class="ml-4 flex-shrink-0 text-gray-400 font-light text-2xl leading-none">
+                <span v-if="faq.isOpen">&minus;</span>
+                <span v-else>+</span>
+              </span>
+            </button>
+            <div v-show="faq.isOpen" class="text-gray-500 pb-6 leading-relaxed text-[15px] pr-8">
+              {{ faq.answer }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Final CTA Section: Memory and Personality -->
     <div
       class="pt-20 pb-10 sm:pt-28 sm:pb-16 bg-white text-center px-6 relative overflow-hidden border-t border-black/5">
-      <!-- Logo-masked numeric background (INVERTED for white bg) -->
-      <LogoBgAnimation class="absolute inset-0 z-0 opacity-[0.08]" :invert="true" />
+      <!-- Numeric background animation -->
+      <NumericBgAnimation :invert="true" class="absolute inset-0 z-0 opacity-40" />
 
       <div class="max-w-7xl mx-auto relative z-10">
         <h2 class="font-display text-5xl sm:text-7xl lg:text-[7rem] font-medium tracking-tight mb-10 leading-[0.95]">
@@ -607,6 +696,39 @@ onMounted(() => {
   setupVideoObserver();
 });
 
+
+// 3. FAQ accordion
+const faqs = ref([
+  {
+    question: "What exactly is MemWyre?",
+    answer: "MemWyre is a unified AI memory vault that captures your context across tools (browser, ChatGPT, Claude, Cursor) so you never lose an insight, code snippet, or research finding. It then makes this knowledge instantly searchable and reusable.",
+    isOpen: false
+  },
+  {
+    question: "How do I connect MemWyre to Cursor or VS Code?",
+    answer: "You can connect MemWyre to Cursor, VS Code, or Claude Desktop using our official Model Context Protocol (MCP) server. This gives your AI assistant direct, real-time access to your entire personal knowledge base.",
+    isOpen: false
+  },
+  {
+    question: "Do you offer a browser extension?",
+    answer: "Yes! The MemWyre browser extension (available for Chrome and Edge) lets you instantly clip text, articles, and code snippets directly into your vault without breaking your flow.",
+    isOpen: false
+  },
+  {
+    question: "Is my data private and secure?",
+    answer: "Absolutely. Your memory vault is fully private and encrypted. Your data is only accessible to you via authenticated sessions and your personal API keys.",
+    isOpen: false
+  },
+  {
+    question: "What is the OpenClaw plugin?",
+    answer: "The OpenClaw plugin allows autonomous AI agents to read from and write to your MemWyre vault. This gives agents persistent memory across runs, letting them build on past debugging sessions and research.",
+    isOpen: false
+  }
+]);
+
+const toggleFaq = (index) => {
+  faqs.value[index].isOpen = !faqs.value[index].isOpen;
+};
 
 // 2. Typing Effect
 const typedText = ref("> How do I implement the new auth flow?");
