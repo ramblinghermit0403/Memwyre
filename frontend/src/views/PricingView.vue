@@ -10,7 +10,7 @@
           </p>
         </div>
 
-        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           <!-- Free Plan -->
           <div class="rounded-3xl bg-white border border-black/5 p-8 sm:p-10 relative transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
             <div class="flex items-center gap-3 mb-4">
@@ -71,9 +71,9 @@
             </div>
             <div class="flex items-end gap-2 mb-3">
               <div class="text-4xl font-extrabold tracking-tight text-gray-900">$12</div>
-              <div class="text-sm text-gray-500 mb-1">per member/month</div>
+              <div class="text-sm text-gray-500 mb-1">/month</div>
             </div>
-            <p class="text-text-secondary mb-6">For growing teams to streamline teamwork with persistent AI context.
+            <p class="text-text-secondary mb-6">Everything in Free, plus unlimited storage and priority features.
             </p>
 
             <router-link to="/signup"
@@ -96,14 +96,14 @@
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                1M+ token storage
+                Unlimited memories & documents
               </li>
               <li class="flex items-start gap-3">
                 <svg class="w-5 h-5 text-[#D97757] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                100K daily AI token budget
+                Extended daily AI chat quota
               </li>
               <li class="flex items-start gap-3">
                 <svg class="w-5 h-5 text-[#D97757] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
@@ -156,6 +156,61 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
                 Priority support
+              </li>
+            </ul>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="rounded-3xl bg-white border border-black/5 p-8 sm:p-10 relative transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="text-xl font-bold text-gray-900">Enterprise</div>
+            </div>
+            <div class="flex items-end gap-2 mb-3">
+              <div class="text-4xl font-extrabold tracking-tight text-gray-900">Custom</div>
+            </div>
+            <p class="text-text-secondary mb-6">Tailored deployments for teams that need dedicated infrastructure, SSO, and volume pricing.</p>
+
+            <a href="mailto:shivharehimansh@gmail.com?subject=MemWyre%20Enterprise%20Inquiry"
+              class="inline-flex w-full items-center justify-center rounded-xl bg-gray-50 text-gray-900 border border-gray-200 px-4 py-3.5 text-sm font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-[1.02]">
+              Contact Sales
+            </a>
+
+            <ul class="mt-8 space-y-3 text-sm text-text-secondary">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Everything in Pro
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Dedicated infrastructure
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                SSO &amp; team management
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Volume pricing
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Custom integrations &amp; SLA
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Dedicated support
               </li>
             </ul>
           </div>
