@@ -90,19 +90,20 @@ jobs:
       - name: Sync to S3
         working-directory: frontend
         run: |
-          # Sync fingerprinted assets (JS/CSS chunks) with long-lived immutable cache
+          # 1. Sync assets with long-lived immutable cache (fingerprinted JS/CSS)
           aws s3 sync dist/ s3://$S3_BUCKET/ --delete \
             --acl public-read \
             --cache-control "public, max-age=31536000, immutable" \
-            --exclude "index.html" \
+            --exclude "*.html" \
             --exclude "*.png" \
             --exclude "*.ico" \
             --exclude "*.svg" \
             --exclude "*.txt" \
             --exclude "*.xml" \
-            --exclude "*.json"
+            --exclude "*.json" \
+            --exclude "*.md"
 
-          # Non-fingerprinted static assets: short cache so CDN picks up updates quickly
+          # 2. Static assets (images, icons, manifests): short cache
           aws s3 sync dist/ s3://$S3_BUCKET/ \
             --acl public-read \
             --cache-control "public, max-age=3600, must-revalidate" \
@@ -112,18 +113,22 @@ jobs:
             --include "*.svg" \
             --include "*.txt" \
             --include "*.xml" \
-            --include "*.json"
+            --include "*.json" \
+            --include "*.md"
 
-          # index.html: never cache
-          aws s3 cp dist/index.html s3://$S3_BUCKET/index.html \
+          # 3. HTML files (Root + Docs + any other subfolders): never cache
+          # We use --include "*.html" to catch index.html and docs/index.html
+          aws s3 sync dist/ s3://$S3_BUCKET/ \
             --acl public-read \
-            --cache-control "public, max-age=0, must-revalidate"
+            --cache-control "public, max-age=0, must-revalidate" \
+            --exclude "*" \
+            --include "*.html"
 
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/index.html" "/apple-touch-icon.png" "/favicon-192.png" "/image.svg" "/robots.txt" "/sitemap.xml"
+            --paths "/index.html" "/docs/*" "/image.svg" "/robots.txt" "/sitemap.xml"
 
   # ─────────────────────────────────────────────
   # Job 3: Deploy backend to EC2 via SSH
