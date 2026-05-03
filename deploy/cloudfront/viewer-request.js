@@ -23,7 +23,19 @@ function handler(event) {
         };
     }
 
-    // --- 2. Markdown Content Negotiation ---
+    // --- 2. Trailing Slash Normalization ---
+    // If URI ends with '/' and is not just '/', redirect to non-trailing slash version
+    if (uri.length > 1 && uri.endsWith('/')) {
+        return {
+            statusCode: 301,
+            statusDescription: "Moved Permanently",
+            headers: {
+                "location": { "value": "https://" + host + uri.slice(0, -1) }
+            }
+        };
+    }
+
+    // --- 3. Markdown Content Negotiation ---
     // If requesting homepage and Accept includes text/markdown, serve index.md
     if (uri === '/' || uri === '/index.html') {
         var accept = headers['accept'] ? headers['accept'].value : '';
