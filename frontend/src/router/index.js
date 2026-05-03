@@ -239,6 +239,12 @@ export function createAppRouter({ ssr = false } = {}) {
                 path: '/export-slide/:id',
                 name: 'export-slide',
                 component: () => import('../views/ExportSlideView.vue')
+            },
+            {
+                path: '/:pathMatch(.*)*',
+                name: 'not-found',
+                component: () => import('../views/NotFoundView.vue'),
+                meta: { requiresAuth: false }
             }
         ]
     });
