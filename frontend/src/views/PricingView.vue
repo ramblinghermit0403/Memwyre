@@ -10,7 +10,7 @@
           </p>
         </div>
 
-        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           <!-- Free Plan -->
           <div class="rounded-3xl bg-white border border-black/5 p-8 sm:p-10 relative transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
             <div class="flex items-center gap-3 mb-4">
