@@ -185,11 +185,11 @@
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
           <router-link to="/signup"
             class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105">
-            Start Building Your Brain
+            Get Started — It's Free
           </router-link>
           <router-link to="/pricing"
             class="w-full sm:w-auto px-10 py-4 bg-white text-black font-bold rounded-xl border border-black/10 hover:bg-black/5 transition-all duration-300 hover:border-black/20">
-            Pricing
+            Compare Plans
           </router-link>
         </div>
       </div>

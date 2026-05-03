@@ -29,11 +29,11 @@
         <div class="animate-fade-in-up animation-delay-300 flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
           <router-link to="/signup"
             class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105 text-base">
-            Start Building Your Brain
+            Get Started — It's Free
           </router-link>
           <router-link to="/pricing"
             class="w-full sm:w-auto px-10 py-4 bg-white text-black font-bold rounded-xl border border-black/10 hover:bg-black/5 transition-all duration-300 hover:border-black/20 text-base">
-            See Pricing
+            See Plans
           </router-link>
         </div>
 
@@ -546,11 +546,11 @@
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
           <router-link to="/signup"
             class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105">
-            Start Building Your Brain
+            Get Started — It's Free
           </router-link>
           <router-link to="/pricing"
             class="w-full sm:w-auto px-10 py-4 bg-white text-black font-bold rounded-xl border border-black/10 hover:bg-black/5 transition-all duration-300 hover:border-black/20">
-            Pricing
+            Compare Plans
           </router-link>
         </div>
       </div>
@@ -702,6 +702,11 @@ const faqs = ref([
   {
     question: "What exactly is MemWyre?",
     answer: "MemWyre is a unified AI memory vault that captures your context across tools (browser, ChatGPT, Claude, Cursor) so you never lose an insight, code snippet, or research finding. It then makes this knowledge instantly searchable and reusable.",
+    isOpen: false
+  },
+  {
+    question: "Is there a free plan?",
+    answer: "Yes! MemWyre has a generous free tier that includes up to 50 memories, 10 document uploads, 30 AI chat messages, and full IDE integration via MCP. No credit card required — just sign up and start building your brain.",
     isOpen: false
   },
   {

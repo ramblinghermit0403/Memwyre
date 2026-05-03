@@ -65,6 +65,7 @@ watch(() => route.path, () => {
             { name: 'Features', href: '/#features' },
             { name: 'Ecosystem', href: '/#ecosystem' },
             { name: 'Use Cases', href: '/#use-cases' },
+            { name: 'Integrations', href: '/docs/' },
             { name: 'Pricing', href: '/pricing' }
           ]" :key="link.name" :href="link.href"
             class="px-3 py-1.5 text-sm font-medium transition-all duration-200 rounded-md text-black/60 hover:text-black hover:bg-black/5">
@@ -79,7 +80,7 @@ watch(() => route.path, () => {
           </router-link>
           <router-link to="/signup"
             class="px-4 py-2 bg-black text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition-colors shadow-sm">
-            Sign up
+            Start Free
           </router-link>
         </div>
       </div>
