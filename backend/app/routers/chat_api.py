@@ -176,7 +176,7 @@ async def send_message(
             if msg_count >= settings.FREE_CHAT_LIMIT:
                 raise HTTPException(
                     status_code=403,
-                    detail="The free tier is currently disabled. Please upgrade to Pro inside the Billing page.",
+                    detail="Free tier limit reached. Please upgrade to Pro inside the Billing page to continue.",
                     headers={"X-Requires-Subscription": "true"}
                 )
 
