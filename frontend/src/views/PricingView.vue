@@ -10,7 +10,57 @@
           </p>
         </div>
 
-        <div class="max-w-md mx-auto">
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <!-- Free Plan -->
+          <div class="rounded-3xl bg-white border border-black/5 p-8 sm:p-10 relative transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="text-xl font-bold text-gray-900">Free</div>
+            </div>
+            <div class="flex items-end gap-2 mb-3">
+              <div class="text-4xl font-extrabold tracking-tight text-gray-900">$0</div>
+              <div class="text-sm text-gray-500 mb-1">forever</div>
+            </div>
+            <p class="text-text-secondary mb-6">A great way to get started with building your personal memory vault.</p>
+
+            <router-link to="/signup"
+              class="inline-flex w-full items-center justify-center rounded-xl bg-gray-50 text-gray-900 border border-gray-200 px-4 py-3.5 text-sm font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-[1.02]">
+              Get Started for Free
+            </router-link>
+
+            <ul class="mt-8 space-y-3 text-sm text-text-secondary">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Up to 50 memories
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Up to 10 document uploads
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Standard AI token budget
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                IDE Integration (MCP)
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Community Support
+              </li>
+            </ul>
+          </div>
+
           <!-- Pro (Recommended) -->
           <div class="rounded-3xl bg-white border border-black/5 p-8 sm:p-10 relative shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)]">
             <div class="flex items-center gap-3 mb-4">

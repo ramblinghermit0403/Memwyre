@@ -10,7 +10,7 @@ from app.models.user import User
 from app.models.memory import Memory
 from app.models.document import Document
 
-router = APIRouter(dependencies=[Depends(deps.require_subscription)])
+router = APIRouter()
 
 @router.get("/json")
 async def export_json(

@@ -19,7 +19,7 @@ import json
 from datetime import datetime, timedelta
 from app.services.llm_service import llm_service
 
-router = APIRouter(dependencies=[Depends(deps.require_subscription)])
+router = APIRouter()
 
 @router.post("/save_memory", response_model=LLMMemoryResponse)
 async def save_memory(
