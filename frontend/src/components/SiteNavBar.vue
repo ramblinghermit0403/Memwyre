@@ -61,16 +61,18 @@ watch(() => route.path, () => {
         </router-link>
 
         <div class="hidden md:flex items-center gap-1">
-          <a v-for="link in [
-            { name: 'Features', href: '/#features' },
-            { name: 'Ecosystem', href: '/#ecosystem' },
-            { name: 'Use Cases', href: '/#use-cases' },
-            { name: 'Integrations', href: '/docs/' },
-            { name: 'Pricing', href: '/pricing' }
-          ]" :key="link.name" :href="link.href"
-            class="px-3 py-1.5 text-sm font-medium transition-all duration-200 rounded-md text-black/60 hover:text-black hover:bg-black/5">
-            {{ link.name }}
-          </a>
+          <template v-for="link in [
+            { name: 'Features', to: '/#features' },
+            { name: 'Ecosystem', to: '/#ecosystem' },
+            { name: 'Use Cases', to: '/#use-cases' },
+            { name: 'Integrations', to: '/docs/' },
+            { name: 'Pricing', to: '/pricing' }
+          ]" :key="link.name">
+            <router-link :to="link.to"
+              class="px-3 py-1.5 text-sm font-medium transition-all duration-200 rounded-md text-black/60 hover:text-black hover:bg-black/5">
+              {{ link.name }}
+            </router-link>
+          </template>
         </div>
 
         <div class="flex items-center gap-3">

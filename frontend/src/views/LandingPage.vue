@@ -597,11 +597,11 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-12 sm:gap-24 w-full md:w-auto">
           <div class="flex flex-col gap-4">
             <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Product</h4>
-            <a href="/#features"
-              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Features</a>
-            <a href="/pricing" class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Pricing</a>
-            <a href="/#ecosystem"
-              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Ecosystem</a>
+            <router-link to="/#features"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Features</router-link>
+            <router-link to="/pricing" class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Pricing</router-link>
+            <router-link to="/#ecosystem"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Ecosystem</router-link>
           </div>
           <div class="flex flex-col gap-4">
             <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support</h4>
