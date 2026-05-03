@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && vite build --ssr src/entry-server.js --outDir dist/server && node scripts/prerender.mjs",
+    "build": "vite build && vite build --ssr src/entry-server.js --outDir dist/server && node scripts/prerender.mjs && npm run docs:build",
     "preview": "vite preview",
-    "video:intro": "node scripts/render-intro-video.mjs"
+    "video:intro": "node scripts/render-intro-video.mjs",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
     "@guolao/vue-monaco-editor": "^1.6.0",
@@ -44,9 +47,10 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.22",
     "baseline-browser-mapping": "^2.10.8",
-    "postcss": "^8.5.6",
     "playwright": "^1.54.2",
+    "postcss": "^8.5.6",
     "tailwindcss": "^4.1.17",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitepress": "^1.5.0"
   }
 }
