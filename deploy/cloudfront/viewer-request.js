@@ -25,8 +25,8 @@ function handler(event) {
 
     // --- 2. Trailing Slash Normalization ---
     // Special case for /docs (static site needs trailing slash)
-    if (uri.startsWith('/docs')) {
-        if (!uri.endsWith('/')) {
+    if (uri.indexOf('/docs') === 0) {
+        if (uri.charAt(uri.length - 1) !== '/') {
             return {
                 statusCode: 301,
                 statusDescription: "Moved Permanently",
@@ -37,7 +37,7 @@ function handler(event) {
         }
     } else {
         // For other URIs, strip trailing slash (SPA routes)
-        if (uri.length > 1 && uri.endsWith('/')) {
+        if (uri.length > 1 && uri.charAt(uri.length - 1) === '/') {
             return {
                 statusCode: 301,
                 statusDescription: "Moved Permanently",
@@ -60,7 +60,7 @@ function handler(event) {
 
     // --- 4. Directory Index Rewrite ---
     // If URI ends with '/', append index.html for S3 serving
-    if (request.uri.endsWith('/')) {
+    if (request.uri.charAt(request.uri.length - 1) === '/') {
         request.uri += 'index.html';
     }
 
