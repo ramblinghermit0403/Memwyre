@@ -192,9 +192,8 @@ jobs:
             # Write the ECR image to an env override
             echo "ECR_IMAGE=$ECR_IMAGE" > .env.ecr
 
-            # Stop ALL running containers and free port 8000
-            sudo docker stop $(sudo docker ps -aq) 2>/dev/null || true
-            sudo docker rm $(sudo docker ps -aq) 2>/dev/null || true
+            # Cleanly stop services and remove orphans
+            sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr down --remove-orphans || true
 
             # Start Redis first and flush stale Celery tasks
             sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr up -d redis
@@ -203,10 +202,10 @@ jobs:
             echo "Redis flushed — stale tasks cleared"
 
             # Deploy all services
-            sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr up -d --remove-orphans
+            sudo docker compose -f docker-compose.prod.yml --env-file .env.prod --env-file .env.ecr up -d
 
-            # Cleanup old images
-            sudo docker image prune -af --filter "until=48h"
+            # Aggressive cleanup: remove all unused images, stopped containers, and build cache
+            sudo docker system prune -af
 
             # Health check
             sleep 10

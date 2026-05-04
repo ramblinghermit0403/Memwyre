@@ -17,6 +17,9 @@ docker container prune -f
 echo "=== Pruning unused networks ==="
 docker network prune -f
 
+echo "=== Pruning unused images ==="
+docker image prune -f
+
 echo "=== Starting services ==="
 docker compose up -d --remove-orphans "$@"
 

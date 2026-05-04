@@ -5,6 +5,11 @@ services:
     command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -26,6 +31,11 @@ services:
       resources:
         limits:
           memory: 1024M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     ports:
       - "8000:8000"
     env_file:
@@ -49,6 +59,11 @@ services:
       resources:
         limits:
           memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     ports:
       - "8001:8001"
     env_file:
@@ -74,6 +89,11 @@ services:
       resources:
         limits:
           memory: 768M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     env_file:
       - .env.prod
     environment:
