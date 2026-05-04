@@ -21,7 +21,7 @@ export default defineConfig({
 
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Features', link: '/features/youtube-ingestion' },
+      { text: 'Features', link: '/features/web-ingestion' },
       { text: 'Integrations', link: '/integrations/' },
       { text: 'GitHub', link: 'https://github.com/ramblinghermit0403/memwyer-prod' },
       { text: '← Back to App', link: 'https://memwyre.tech/' }
@@ -38,7 +38,6 @@ export default defineConfig({
       {
         text: 'Platform Features',
         items: [
-          { text: 'YouTube Ingestion', link: '/features/youtube-ingestion' },
           { text: 'Web Page Ingestion', link: '/features/web-ingestion' }
         ]
       },
