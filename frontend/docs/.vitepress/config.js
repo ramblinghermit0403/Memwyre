@@ -23,6 +23,7 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       { text: 'Features', link: '/features/youtube-ingestion' },
       { text: 'Integrations', link: '/integrations/' },
+      { text: 'GitHub', link: 'https://github.com/ramblinghermit0403/memwyer-prod' },
       { text: '← Back to App', link: 'https://memwyre.tech/' }
     ],
 
