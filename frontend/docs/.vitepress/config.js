@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   outDir: '../dist/docs',
   base: '/docs/',
+  appearance: false,
   title: 'Memwyre',
   titleTemplate: ':title — Memwyre Docs',
   description: 'Official documentation for Memwyre — the universal memory layer for AI.',
