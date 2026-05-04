@@ -23,7 +23,7 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       { text: 'Features', link: '/features/web-ingestion' },
       { text: 'Integrations', link: '/integrations/' },
-      { text: 'GitHub', link: 'https://github.com/ramblinghermit0403/memwyer-prod' },
+      { text: 'GitHub', link: 'https://github.com/ramblinghermit0403/Memwyre' },
       { text: '← Back to App', link: 'https://memwyre.tech/' }
     ],
 
@@ -52,7 +52,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/ramblinghermit0403/memwyer-prod' }
+      { icon: 'github', link: 'https://github.com/ramblinghermit0403/Memwyre' }
     ],
 
     footer: {
