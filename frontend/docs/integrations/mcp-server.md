@@ -55,13 +55,98 @@ Set `MEMWYRE_API_KEY` in the environment variables section of your IDE's MCP con
 
 ## Available Tools
 
-Once connected, your IDE or agent will have access to:
+Once connected, your IDE or agent will have access to the following tools. Click on a tool to see its details and parameters:
 
-| Tool | Description |
-|---|---|
-| `search_memory(query, top_k)` | Semantic search across your entire knowledge base. |
-| `save_memory(text, tags)` | Save a new snippet or note directly into your Memwyre Inbox. |
-| `get_document(doc_id)` | Retrieve the full text of a specific saved document. |
+<details>
+<summary><b><code>search_memwyre</code></b> (Primary Search)</summary>
+
+The most important tool for retrieving context. It performs a semantic vector search across your entire vault.
+
+- **Parameters:**
+  - `query` (Required): Your search terms or question.
+  - `purpose` (Optional): Hint for formatting results. Options: `general`, `code`, or `summary`.
+</details>
+
+<details>
+<summary><b><code>save_memory</code></b> (Capture Context)</summary>
+
+Save new information or notes directly into your Memwyre Inbox.
+
+- **Parameters:**
+  - `text` (Required): The content you want to save.
+  - `tags` (Optional): A list of tags to categorize the memory (e.g. `["project-x", "todo"]`).
+  - `source` (Optional): Origin of the memory (defaults to `mcp`).
+</details>
+
+<details>
+<summary><b><code>generate_prompt</code></b> (Prompt Engineering)</summary>
+
+Retrieves relevant context and wraps it in a pre-formatted prompt for an LLM.
+
+- **Parameters:**
+  - `query` (Required): The topic to generate a prompt for.
+  - `template` (Optional): The prompt structure. Options: `standard`, `code`, or `summary`.
+</details>
+
+<details>
+<summary><b><code>get_document</code></b> (Full Text Retrieval)</summary>
+
+Retrieve the entire content of a specific document (PDF, Doc, or Web Page) by its ID.
+
+- **Parameters:**
+  - `doc_id` (Required): The numeric ID of the document (e.g. `123`).
+</details>
+
+<details>
+<summary><b><code>list_memories</code></b> (Discovery)</summary>
+
+List the most recent memories and documents added to your vault.
+
+- **Parameters:**
+  - `limit` (Optional): Number of items to return (default: 10).
+  - `offset` (Optional): Pagination offset.
+</details>
+
+<details>
+<summary><b><code>get_inbox</code></b> (Pending Review)</summary>
+
+Lists all memories currently in your "Inbox" status that are awaiting review or confirmation.
+</details>
+
+<details>
+<summary><b><code>update_memory</code></b> (Edit)</summary>
+
+Update the content of an existing memory snippet.
+
+- **Parameters:**
+  - `memory_id` (Required): The ID of the memory, starting with `mem_` (e.g. `mem_45`).
+  - `content` (Required): The new text content.
+</details>
+
+<details>
+<summary><b><code>delete_memory</code></b> (Cleanup)</summary>
+
+Permanently remove a memory or document from your vault.
+
+- **Parameters:**
+  - `memory_id` (Required): The ID of the item, starting with `mem_` or `doc_` (e.g. `doc_12`).
+</details>
+
+<details>
+<summary><b><code>search_by_date</code></b> (Chronological Search)</summary>
+
+Find memories created within a specific timeframe.
+
+- **Parameters:**
+  - `start_date` (Required): Start date in `YYYY-MM-DD` format.
+  - `end_date` (Optional): End date in `YYYY-MM-DD` format.
+</details>
+
+<details>
+<summary><b><code>get_all_tags</code></b> (Taxonomy)</summary>
+
+Retrieve a comprehensive list of all tags currently used across your entire memory vault.
+</details>
 
 ## Troubleshooting
 
