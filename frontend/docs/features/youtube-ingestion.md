@@ -1,19 +1,32 @@
 # YouTube Ingestion
 
-MemWyre features built-in intelligence capable of reading directly from YouTube videos. You no longer need to take extensive notes or manually copy subtitles while watching educational videos, tutorials, or meetings.
+Memwyre can read directly from YouTube videos — no manual note-taking or transcript copying required.
 
 ## Overview
 
-Whenever you provide a YouTube URL to MemWyre, the system automatically runs a backend process to extract the video's transcript, title, and description. This turns hours of video content into instantly searchable, semantic text within your memory vault.
+When you provide a YouTube URL, Memwyre automatically fetches the video's transcript, title, and description in the background. Hours of video content become instantly searchable, semantic text inside your memory vault.
 
 ## How It Works
 
-1. **Paste the Link**: Simply paste a YouTube link (e.g., standard watch URLs, `youtu.be` links, or Shorts) into the MemWyre chat or save it as a new memory in your Inbox.
-2. **Automatic Extraction**: MemWyre automatically fetches the English transcript (either manually created or auto-generated). 
-3. **Semantic Storage**: The transcript is chunked and stored in your vault. You can now ask MemWyre questions like *"What was the main takeaway from that YouTube video I saved yesterday?"* and it will answer using the exact quotes from the video.
+1. **Paste the link** — Drop a YouTube URL into the Memwyre chat, or save it as a new memory from your Inbox.
+2. **Automatic extraction** — Memwyre fetches the English transcript (manual captions or auto-generated).
+3. **Semantic storage** — The transcript is chunked and embedded into your vault. You can then ask questions like:
 
-## Supported Formats
-- Standard Videos (`youtube.com/watch?v=...`)
-- YouTube Shorts (`youtube.com/shorts/...`)
-- Short Links (`youtu.be/...`)
-- Embedded Links
+   > *"What was the main takeaway from that machine learning video I saved yesterday?"*
+
+   Memwyre answers using exact quotes from the video.
+
+## Supported URL Formats
+
+| Format | Example |
+|---|---|
+| Standard watch URL | `youtube.com/watch?v=...` |
+| YouTube Shorts | `youtube.com/shorts/...` |
+| Short link | `youtu.be/...` |
+| Embedded iframe URL | `youtube.com/embed/...` |
+
+## Tips
+
+- Videos with **manually created captions** produce better quality memories than auto-generated ones.
+- If a video has no English captions available, ingestion will be skipped and you'll see an error in your Inbox.
+- Long videos (1 hour+) may take a few seconds longer to process.

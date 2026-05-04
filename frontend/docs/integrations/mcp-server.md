@@ -1,33 +1,38 @@
-# IDEs & Agents (MCP Server)
+# IDEs & Agents — MCP Server
 
-MemWyre provides a fully compliant **Model Context Protocol (MCP)** server. This allows your local AI agents, code editors, and desktop applications to seamlessly read from and write to your MemWyre vault.
+Memwyre provides a fully compliant **Model Context Protocol (MCP)** server. This lets your local AI agents, code editors, and desktop apps seamlessly read from and write to your Memwyre vault.
 
 ## Overview
 
-The Model Context Protocol (MCP) connects AI systems with external tools. By running the MemWyre MCP Server script locally, you give your favorite local agents (like Claude Desktop) or IDEs (like Cursor and VS Code) direct access to your centralized memory without needing to copy-paste context manually.
+The [Model Context Protocol](https://modelcontextprotocol.io/) is an open standard that connects AI systems with external tools and data sources. By running the Memwyre MCP Server locally, you give your IDE or agent (Claude Desktop, Cursor, VS Code, etc.) direct access to your centralised memory — no more copy-pasting context manually.
 
-## Setup & Installation
+## Prerequisites
 
-The MemWyre MCP Server is distributed as a standalone Python script (`mcp_server.py`). You must configure your local environment to run this script.
+Before you begin, make sure you have:
 
-### Prerequisites
-1. **Python**: Ensure Python 3.10+ is installed on your machine.
-2. **API Key**: Generate your `MEMWYRE_API_KEY` from the Settings page in the MemWyre web app.
-3. **Dependencies**: If required by the distribution, ensure you install the necessary Python packages (e.g., `pip install mcp langchain` depending on the provided requirements).
+- **Python 3.10+** installed on your machine.
+- Your **`MEMWYRE_API_KEY`** — generate one from **Settings → API Keys** in the Memwyre web app.
+- The `mcp_server.py` script downloaded to a permanent location on your hard drive.
 
-### Step 1: Download the Server
-Download the `mcp_server.py` file provided by MemWyre and save it to a secure location on your hard drive.
+## Setup
 
-### Step 2: Configure Claude Desktop
+### Step 1 — Download the Server Script
 
-Add the following configuration to your Claude Desktop config file (typically found at `~/Library/Application Support/Claude/claude_desktop_config.json` on Mac, or `%APPDATA%\Claude\claude_desktop_config.json` on Windows):
+Download `mcp_server.py` from your [Memwyre dashboard](https://memwyre.tech) and save it somewhere stable (e.g. `~/memwyre/mcp_server.py`).
+
+### Step 2 — Configure Claude Desktop
+
+Add the following block to your Claude Desktop config file:
+
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
-    "brain-vault": {
+    "memwyre": {
       "command": "python",
-      "args": ["/absolute/path/to/your/mcp_server.py"],
+      "args": ["/absolute/path/to/mcp_server.py"],
       "env": {
         "MEMWYRE_API_KEY": "your_api_key_here"
       }
@@ -35,20 +40,33 @@ Add the following configuration to your Claude Desktop config file (typically fo
   }
 }
 ```
-*Make sure to replace `/absolute/path/to/your/mcp_server.py` with the actual path where you saved the script on your computer.*
 
-### Step 3: Configure VS Code / Cursor
+> Replace `/absolute/path/to/mcp_server.py` with the actual path where you saved the file.
 
-In your IDE's MCP client settings, configure a new server using the `python` command and point it to the script:
+### Step 3 — Configure VS Code or Cursor
+
+In your IDE's MCP client settings, add a new server entry pointing to the script:
 
 ```bash
-python /absolute/path/to/your/mcp_server.py
+python /absolute/path/to/mcp_server.py
 ```
-You will also need to add your `MEMWYRE_API_KEY` to the environment variables section within your IDE's MCP configuration panel.
 
-## Capabilities
+Set `MEMWYRE_API_KEY` in the environment variables section of your IDE's MCP configuration panel.
 
-Once connected, your IDE or agent will have access to the following tools:
-- **`search_memory(query, top_k)`**: Perform semantic searches across your knowledge base to retrieve highly relevant coding context.
-- **`save_memory(text, tags)`**: Save new code snippets or architectural decisions directly into your MemWyre Inbox.
-- **`get_document(doc_id)`**: Retrieve the full text of a specific saved document.
+## Available Tools
+
+Once connected, your IDE or agent will have access to:
+
+| Tool | Description |
+|---|---|
+| `search_memory(query, top_k)` | Semantic search across your entire knowledge base. |
+| `save_memory(text, tags)` | Save a new snippet or note directly into your Memwyre Inbox. |
+| `get_document(doc_id)` | Retrieve the full text of a specific saved document. |
+
+## Troubleshooting
+
+**Claude Desktop doesn't show the Memwyre tools.**  
+Check that the `command` path resolves correctly — try `python3` instead of `python` on macOS/Linux.
+
+**`MEMWYRE_API_KEY` environment variable not found.**  
+Make sure the key is set inside the `env` block of your config file, not as a system environment variable.

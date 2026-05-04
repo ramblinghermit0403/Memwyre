@@ -1,44 +1,50 @@
 # OpenClaw Plugin
 
-This plugin enables the **OpenClaw** autonomous agent framework to seamlessly use MemWyre as its persistent memory and context engine. 
+Add persistent, long-term memory to your **OpenClaw** autonomous agent sessions using Memwyre as the memory and context engine.
 
 ## Overview
 
-If you use OpenClaw for autonomous tasks, this plugin bridges the gap between OpenClaw's transient session state and MemWyre's long-term memory. The agent can recall previous sessions, look up project documentation, and automatically save its own insights back to your vault.
+OpenClaw agents operate within a single session and lose context when that session ends. This plugin bridges the gap — giving your agent access to Memwyre's vault so it can recall previous sessions, look up project documentation, and save its own findings for future runs.
 
-## Capabilities
+## Available Tools
 
-Once configured, the OpenClaw agent will have access to the following tools:
-- **`save_memory`**: Saves a new memory/note directly into your MemWyre Inbox. The agent can use this to document its findings.
-- **`search_memwyre`**: Performs semantic search across your MemWyre Vault to retrieve past context, code snippets, or instructions.
+Once configured, the OpenClaw agent can use the following Memwyre tools:
 
-## Setup & Installation
+| Tool | Description |
+|---|---|
+| `save_memory` | Save a new memory or note into your Memwyre Inbox. |
+| `search_memwyre` | Run a semantic search across your Memwyre Vault. |
 
-You can install the plugin directly via the OpenClaw CLI or NPM.
+## Installation
 
-1. **Install the Plugin**:
-   ```bash
-   openclaw plugins install @memwyre/openclaw-plugin
-   ```
+Install the plugin via the OpenClaw CLI:
 
-2. **Configure OpenClaw**:
-   Add the following to your OpenClaw settings file (usually `~/.openclaw/config.json`):
+```bash
+openclaw plugins install @memwyre/openclaw-plugin
+```
 
-   ```json
-   "plugins": {
-       "entries": {
-         "openclaw-plugin": {
-           "enabled": true,
-           "config": {
-             "apiKey": "bv_sk_your_api_key_here",
-             "hostUrl": "https://server.memwyre.tech"
-           }
-         }
-       }
-   }
-   ```
-   *Note: Generate your API key from the MemWyre web interface under Settings > API Keys.*
+## Configuration
 
-### Important: Agent Tool Profile
+Add the following to your OpenClaw settings file (typically `~/.openclaw/config.json`):
 
-To ensure the tools are injected into your OpenClaw agent session, you **must set your agent tool profile to `full` or `coding`**. If your profile is set to standard or bare minimum, OpenClaw may artificially disable these custom memory plugins to save tokens.
+```json
+"plugins": {
+  "entries": {
+    "openclaw-plugin": {
+      "enabled": true,
+      "config": {
+        "apiKey": "bv_sk_your_api_key_here",
+        "hostUrl": "https://server.memwyre.tech"
+      }
+    }
+  }
+}
+```
+
+> Generate your API key from **Settings → API Keys** in the Memwyre web app.
+
+## Important: Agent Tool Profile
+
+To ensure the Memwyre tools are injected into your agent session, **set your agent tool profile to `full` or `coding`**.
+
+If your profile is set to `standard` or `minimal`, OpenClaw may disable custom memory plugins to reduce token usage.

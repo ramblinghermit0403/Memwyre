@@ -3,15 +3,36 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   outDir: '../dist/docs',
   base: '/docs/',
-  title: "MemWyre Docs",
-  description: "Official documentation for MemWyre - Your Second Brain.",
+  title: 'Memwyre',
+  titleTemplate: ':title — Memwyre Docs',
+  description: 'Official documentation for Memwyre — the universal memory layer for AI.',
+
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/docs/image.svg' }],
+    ['meta', { name: 'theme-color', content: '#111111' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:site_name', content: 'Memwyre Docs' }],
+  ],
+
   themeConfig: {
-    logo: '/image.svg', // Assuming we copy the logo to docs/public later or point to absolute url
+    logo: '/image.svg',
+    siteTitle: 'Memwyre',
+
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Integrations', link: '/integrations/' }
+      { text: 'Features', link: '/features/youtube-ingestion' },
+      { text: 'Integrations', link: '/integrations/' },
+      { text: '← Back to App', link: 'https://memwyre.tech/' }
     ],
+
     sidebar: [
+      {
+        text: 'Getting Started',
+        items: [
+          { text: 'Overview', link: '/' },
+          { text: 'Introduction', link: '/introduction' }
+        ]
+      },
       {
         text: 'Platform Features',
         items: [
@@ -28,8 +49,22 @@ export default defineConfig({
         ]
       }
     ],
+
     socialLinks: [
       { icon: 'github', link: 'https://github.com/memwyre' }
-    ]
+    ],
+
+    footer: {
+      message: 'Built with ❤️ by the Memwyre team.',
+      copyright: `Copyright © ${new Date().getFullYear()} Memwyre. All rights reserved.`
+    },
+
+    search: {
+      provider: 'local'
+    },
+
+    editLink: false,
+
+    lastUpdated: false
   }
 })

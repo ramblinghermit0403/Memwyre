@@ -1,7 +1,9 @@
 # Integrations Overview
 
-MemWyre acts as a universal memory layer, meaning it's designed to seamlessly plug into your existing workflow. Choose an integration below to learn how to connect your second brain to your favorite tools:
+Memwyre is designed to plug into your existing workflow with zero friction. Choose an integration below to connect your memory vault to your favourite tools:
 
-- [Browser Extension](./browser-extension.md)
-- [IDEs & Agents (MCP Server)](./mcp-server.md)
-- [OpenClaw Plugin](./openclaw-plugin.md)
+| Integration | Description |
+|---|---|
+| [Browser Extension](./browser-extension) | Capture content and inject memory directly inside ChatGPT, Claude, and Gemini. |
+| [IDEs & Agents (MCP Server)](./mcp-server) | Give Cursor, VS Code, and Claude Desktop direct read/write access to your vault. |
+| [OpenClaw Plugin](./openclaw-plugin) | Add persistent memory to autonomous OpenClaw agent sessions. |
