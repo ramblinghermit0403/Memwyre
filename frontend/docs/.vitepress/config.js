@@ -52,7 +52,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/memwyre' }
+      { icon: 'github', link: 'https://github.com/ramblinghermit0403/memwyer-prod' }
     ],
 
     footer: {
