@@ -72,6 +72,7 @@ from mcp.server.transport_security import TransportSecuritySettings
 
 mcp = FastMCP(
     "MemWyre",
+    stateless_http=True,
     transport_security=TransportSecuritySettings(
         allowed_hosts=["server.memwyre.tech", "localhost", "127.0.0.1"],
     ),
