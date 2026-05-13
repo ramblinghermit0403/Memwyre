@@ -15,13 +15,10 @@ const startTime = ref(null);
 let animationFrameId;
 let resizeObserver;
 let observer;
-let startAnimation = () => {};
-let stopAnimation = () => {};
 
 // Configuration
-const fontSize = 10;
-const updateRate = 0.02;
-const frameInterval = 1000 / 24;
+const fontSize = 8; // Smaller cell size for finer image detail
+const updateRate = 0.05; // probability a character changes per frame
 
 onMounted(() => {
   const canvas = canvasRef.value;
@@ -44,10 +41,10 @@ onMounted(() => {
     height = canvas.parentElement.clientHeight;
     
     // Support high DPI displays
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const dpr = window.devicePixelRatio || 1;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.scale(dpr, dpr);
     
     cols = Math.ceil(width / fontSize);
     rows = Math.ceil(height / fontSize);
@@ -113,17 +110,14 @@ onMounted(() => {
 
   let glitchFramesRemaining = 0;
   let glitchRect = { x: 0, y: 0, w: 0, h: 0 };
-  let lastFrame = 0;
 
-  const draw = (timestamp = 0) => {
-    if (!isVisible.value) return;
-    animationFrameId = requestAnimationFrame(draw);
-    if (timestamp - lastFrame < frameInterval) return;
-    lastFrame = timestamp;
-
+  const draw = () => {
     ctx.clearRect(0, 0, width, height);
     
-    if (!startTime.value) startTime.value = Date.now();
+    if (!startTime.value) {
+      animationFrameId = requestAnimationFrame(draw);
+      return;
+    }
     
     const elapsed = Date.now() - startTime.value;
 
@@ -167,21 +161,8 @@ onMounted(() => {
         ctx.fillText(cell.char, drawX, drawY);
       }
     }
-  };
-
-  startAnimation = () => {
-    if (animationFrameId) return;
-    if (!startTime.value) startTime.value = Date.now();
-    isVisible.value = true;
+    
     animationFrameId = requestAnimationFrame(draw);
-  };
-
-  stopAnimation = () => {
-    isVisible.value = false;
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-      animationFrameId = null;
-    }
   };
 
   maskImage.onload = () => {
@@ -195,14 +176,15 @@ onMounted(() => {
     }
   });
   resizeObserver.observe(canvas.parentElement);
+  
+  animationFrameId = requestAnimationFrame(draw);
 });
 
 onMounted(() => {
   observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      startAnimation();
-    } else {
-      stopAnimation();
+    if (entries[0].isIntersecting && !startTime.value) {
+      startTime.value = Date.now();
+      isVisible.value = true;
     }
   }, { threshold: 0.1 });
   
@@ -212,7 +194,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  stopAnimation();
+  if (animationFrameId) cancelAnimationFrame(animationFrameId);
   if (resizeObserver) resizeObserver.disconnect();
   if (observer) observer.disconnect();
 });

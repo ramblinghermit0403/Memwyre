@@ -637,9 +637,12 @@ import ChatDemo from '@/components/landing/ChatDemo.vue';
 import OmnipresentDemo from '@/components/landing/OmnipresentDemo.vue';
 import TimelineDemo from '@/components/landing/TimelineDemo.vue';
 import InboxDemo from '@/components/landing/InboxDemo.vue';
+import ScatteredWorkHero from '@/components/landing/ScatteredWorkHero.vue';
+import ProductShowcase from '@/components/landing/ProductShowcase.vue';
 import SetupTimerAnimation from '@/components/landing/usecases/SetupTimerAnimation.vue';
 import NumericBgAnimation from '@/components/landing/NumericBgAnimation.vue';
 import LogoBgAnimation from '@/components/landing/LogoBgAnimation.vue';
+import LavaNumericPattern from '@/components/landing/LavaNumericPattern.vue';
 
 // Use Case Animations
 import EngineerMinAnimation from '@/components/landing/usecases/EngineerMinAnimation.vue';
@@ -647,9 +650,33 @@ import DevOpsMinAnimation from '@/components/landing/usecases/DevOpsMinAnimation
 import ScatteredWorkMinAnimation from '@/components/landing/usecases/ScatteredWorkMinAnimation.vue';
 
 
+// --- Video scroll-triggered playback ---
+const demoVideo1 = ref(null);
+const demoVideo2 = ref(null);
+let videoObserver = null;
 let shouldRestoreDarkClass = false;
 
+const setupVideoObserver = () => {
+  videoObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          video.play().catch(() => { });
+        } else {
+          video.pause();
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+
+  if (demoVideo1.value) videoObserver.observe(demoVideo1.value);
+  if (demoVideo2.value) videoObserver.observe(demoVideo2.value);
+};
+
 onUnmounted(() => {
+  if (videoObserver) videoObserver.disconnect();
   document.documentElement.style.colorScheme = '';
   if (shouldRestoreDarkClass) {
     document.documentElement.classList.add('dark');
@@ -666,6 +693,7 @@ onMounted(() => {
   document.documentElement.classList.remove('dark');
   document.documentElement.style.colorScheme = 'light';
   typeWriter();
+  setupVideoObserver();
 });
 
 

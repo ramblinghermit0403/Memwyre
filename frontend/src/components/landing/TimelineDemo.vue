@@ -1,5 +1,5 @@
 <template>
-  <div ref="root" class="relative overflow-hidden w-full h-full bg-black dark flex items-center justify-center">
+  <div class="relative overflow-hidden w-full h-full bg-black dark flex items-center justify-center">
     
     <!-- Trial RGB Dots -->
     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -322,20 +322,7 @@ const inputBarClicked = ref(false);
 // Fade out timeline when dropdown is shown
 const timelineFaded = ref(false);
 
-const root = ref(null);
-
-let timers = [];
-let observer = null;
-let animationFrameId = null;
-let runId = 0;
-
-const sleep = ms => new Promise((resolve) => {
-  const timer = setTimeout(() => {
-    timers = timers.filter(item => item.timer !== timer);
-    resolve();
-  }, ms);
-  timers.push({ timer, resolve });
-});
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const scrollTimeline = (y, duration = 1000) => {
   timelineY.value = -y;
@@ -349,12 +336,11 @@ const focusCamera = (x, y, scale = 1, duration = 1000) => {
   camDuration.value = duration;
 };
 
-let alive = false;
-const isActiveRun = (id) => alive && id === runId;
+let alive = true;
 
 function trackScroll() {
   if (!alive) return;
-  const rig = root.value?.querySelector('.camera-rig');
+  const rig = document.querySelector('.camera-rig');
   if (rig) {
     const transform = window.getComputedStyle(rig).transform;
     if (transform && transform !== 'none') {
@@ -370,34 +356,29 @@ function trackScroll() {
       }
     }
   }
-  animationFrameId = requestAnimationFrame(trackScroll);
+  requestAnimationFrame(trackScroll);
 }
 
-async function pause(ms, id) {
-  await sleep(ms);
-  return isActiveRun(id);
-}
+async function loop() {
+  await sleep(700);
 
-async function loop(id) {
-  if (!(await pause(700, id))) return;
-
-  while (isActiveRun(id)) {
+  while (alive) {
     // --- Phase 1: Scroll from top to 5th card ---
     scrollTimeline(0, 530);
-    if (!(await pause(1000, id))) return;
+    await sleep(1000);
 
     // Slow scroll to center the 5th card in frame
     scrollTimeline(700, 2000);
 
     // Wait until scroll settles
-    if (!(await pause(1300, id))) return;
+    await sleep(1300);
 
     // --- Phase 2: Cursor enters from bottom-right, clicks "Use in AI" ---
     cursorDuration.value = 0;
     cursorX.value = 200;
     cursorY.value = 150;
     cursorOp.value = 0;
-    if (!(await pause(30, id))) return;
+    await sleep(30);
 
     // Glide to "Use in AI" button on the active (5th) card + ZOOM
     cursorDuration.value = 500;
@@ -405,12 +386,12 @@ async function loop(id) {
     cursorX.value = 240;
     cursorY.value = 0;
     focusCamera(120, -20, 1.3, 500); // zoom in on right side button
-    if (!(await pause(570, id))) return;
+    await sleep(570);
 
     // Click!
     cursorClick.value = true;
     useInAiActive.value = true;
-    if (!(await pause(120, id))) return;
+    await sleep(120);
     cursorClick.value = false;
 
 
@@ -418,37 +399,37 @@ async function loop(id) {
     timelineFaded.value = true;
     focusCamera(0, 0, 1.2, 400); // pull back to center
     showDropdown.value = true;
-    if (!(await pause(400, id))) return;
+    await sleep(400);
 
     // Re-enter cursor from bottom-right for shot 2
     cursorDuration.value = 0;
     cursorX.value = 200;
     cursorY.value = 150;
     cursorOp.value = 0;
-    if (!(await pause(30, id))) return;
+    await sleep(30);
 
     // Glide to ChatGPT row in Dropdown
     cursorDuration.value = 500;
     cursorOp.value = 1;
     cursorX.value = -60;
     cursorY.value = -88;
-    if (!(await pause(570, id))) return;
+    await sleep(570);
 
     // Click ChatGPT row
     cursorClick.value = true;
     chatGptClicked.value = true;
-    if (!(await pause(120, id))) return;
+    await sleep(120);
     cursorClick.value = false;
     cursorOp.value = 0;
-    if (!(await pause(200, id))) return;
+    await sleep(200);
 
 
     // Dropdown fades out, Input Bar appears
     showDropdown.value = false;
-    if (!(await pause(250, id))) return;
+    await sleep(250);
     showInputBar.value = true;
     focusCamera(0, 0, 1.2, 500); // 1.2x Zoom for the final shot
-    if (!(await pause(2400, id))) return;
+    await sleep(2400);
     cursorClick.value = false;
     inputBarClicked.value = false;
     chatGptClicked.value = false;
@@ -457,76 +438,27 @@ async function loop(id) {
     showInputBar.value = false;
     showDropdown.value = false;
     focusCamera(0, 0, 1, 600); // Reset Master Rig camera
-    if (!(await pause(200, id))) return;
+    await sleep(200);
     timelineFaded.value = false;
     useInAiActive.value = false;
     cursorOp.value = 0;
-    if (!(await pause(400, id))) return;
+    await sleep(400);
 
     // Fast rewind to top
     scrollTimeline(0, 530);
-    if (!(await pause(670, id))) return;
-  }
-}
-
-function clearTimers() {
-  timers.forEach(({ timer, resolve }) => {
-    clearTimeout(timer);
-    resolve();
-  });
-  timers = [];
-}
-
-function resetDemo() {
-  scrollTimeline(0, 0);
-  focusCamera(0, 0, 1, 0);
-  activeIndex.value = 0;
-  cursorX.value = 200;
-  cursorY.value = 150;
-  cursorOp.value = 0;
-  cursorClick.value = false;
-  useInAiActive.value = false;
-  showDropdown.value = false;
-  showInputBar.value = false;
-  chatGptClicked.value = false;
-  inputBarClicked.value = false;
-  timelineFaded.value = false;
-}
-
-function startDemo() {
-  if (alive) return;
-  alive = true;
-  const currentRun = ++runId;
-  resetDemo();
-  animationFrameId = requestAnimationFrame(trackScroll);
-  loop(currentRun);
-}
-
-function stopDemo() {
-  runId += 1;
-  alive = false;
-  clearTimers();
-  if (animationFrameId) {
-    cancelAnimationFrame(animationFrameId);
-    animationFrameId = null;
+    await sleep(670);
   }
 }
 
 onMounted(() => {
-  observer = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) {
-      startDemo();
-    } else {
-      stopDemo();
-    }
-  }, { threshold: 0.25 });
-
-  if (root.value) observer.observe(root.value);
+  alive = true;
+  scrollTimeline(0, 0);
+  requestAnimationFrame(trackScroll);
+  loop();
 });
 
 onUnmounted(() => {
-  stopDemo();
-  if (observer) observer.disconnect();
+  alive = false;
 });
 </script>
 
