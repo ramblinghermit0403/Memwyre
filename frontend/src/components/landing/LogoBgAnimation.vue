@@ -19,10 +19,13 @@ const startTime = ref(null);
 let animationFrameId;
 let resizeObserver;
 let observer;
+let startAnimation = () => {};
+let stopAnimation = () => {};
 
 // Configuration
-const fontSize = 8;
-const updateRate = 0.05;
+const fontSize = 10;
+const updateRate = 0.02;
+const frameInterval = 1000 / 24;
 
 onMounted(() => {
   const canvas = canvasRef.value;
@@ -42,10 +45,10 @@ onMounted(() => {
     width = canvas.parentElement.clientWidth;
     height = canvas.parentElement.clientHeight;
     
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     canvas.width = width * dpr;
     canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     
     cols = Math.ceil(width / fontSize);
     rows = Math.ceil(height / fontSize);
@@ -115,14 +118,17 @@ onMounted(() => {
 
   let glitchFramesRemaining = 0;
   let glitchRect = { x: 0, y: 0, w: 0, h: 0 };
+  let lastFrame = 0;
 
-  const draw = () => {
+  const draw = (timestamp = 0) => {
+    if (!isVisible.value) return;
+    animationFrameId = requestAnimationFrame(draw);
+    if (timestamp - lastFrame < frameInterval) return;
+    lastFrame = timestamp;
+
     ctx.clearRect(0, 0, width, height);
     
-    if (!startTime.value) {
-      animationFrameId = requestAnimationFrame(draw);
-      return;
-    }
+    if (!startTime.value) startTime.value = Date.now();
     
     const elapsed = Date.now() - startTime.value;
 
@@ -164,7 +170,21 @@ onMounted(() => {
         ctx.fillText(cell.char, drawX, drawY);
       }
     }
+  };
+
+  startAnimation = () => {
+    if (animationFrameId) return;
+    if (!startTime.value) startTime.value = Date.now();
+    isVisible.value = true;
     animationFrameId = requestAnimationFrame(draw);
+  };
+
+  stopAnimation = () => {
+    isVisible.value = false;
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
   };
 
   maskImage.onload = () => {
@@ -176,15 +196,14 @@ onMounted(() => {
     if (maskImage.complete) initGrid();
   });
   resizeObserver.observe(canvas.parentElement);
-  
-  animationFrameId = requestAnimationFrame(draw);
 });
 
 onMounted(() => {
   observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !startTime.value) {
-      startTime.value = Date.now();
-      isVisible.value = true;
+    if (entries[0].isIntersecting) {
+      startAnimation();
+    } else {
+      stopAnimation();
     }
   }, { threshold: 0.1 });
   
@@ -194,7 +213,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (animationFrameId) cancelAnimationFrame(animationFrameId);
+  stopAnimation();
   if (resizeObserver) resizeObserver.disconnect();
   if (observer) observer.disconnect();
 });

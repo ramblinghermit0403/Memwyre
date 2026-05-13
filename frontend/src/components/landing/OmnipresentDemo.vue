@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full h-full overflow-hidden flex items-center justify-center bg-[#111111] font-sans">
+  <div ref="root" class="relative w-full h-full overflow-hidden flex items-center justify-center bg-[#111111] font-sans">
     <div class="absolute inset-0 bg-black/40 z-0"></div>
 
     <!-- Trial RGB Dots -->
@@ -202,13 +202,28 @@ const typedText = ref('')
 const fullText = "Memwyre api v1 auth specs..."
 const contextSynced = ref(false)
 const toastMsg = ref('')
+const root = ref(null)
 
-let isRunning = true
+let isRunning = false
+let observer = null
+let timers = []
+let runId = 0
 
 // Helper for delaying transitions safely
-const sleep = (ms) => new Promise(r => {
-  if (isRunning) setTimeout(r, ms)
+const sleep = (ms) => new Promise((resolve) => {
+  const timer = setTimeout(() => {
+    timers = timers.filter(item => item.timer !== timer)
+    resolve()
+  }, ms)
+  timers.push({ timer, resolve })
 })
+
+const isActiveRun = (id) => isRunning && id === runId
+
+const pause = async (ms, id) => {
+  await sleep(ms)
+  return isActiveRun(id)
+}
 
 const focusCamera = (x, y, scale = 1, duration = 1000) => {
   camX.value = -x
@@ -217,8 +232,8 @@ const focusCamera = (x, y, scale = 1, duration = 1000) => {
   camDuration.value = duration
 }
 
-const triggerPhase1 = async () => {
-  if (!isRunning) return
+const triggerPhase1 = async (id) => {
+  if (!isActiveRun(id)) return
   phase.value = 1
   subphase.value = 'init'
   cursorOp.value = 0
@@ -227,45 +242,45 @@ const triggerPhase1 = async () => {
 
   // Camera zooms in on the text content quickly
   focusCamera(0, -20, 1.1, 800)
-  await sleep(400)
+  if (!(await pause(400, id))) return
 
-  if (!isRunning) return
+  if (!isActiveRun(id)) return
   subphase.value = 'move'
   cursorX.value = -20
   cursorY.value = 100
   cursorOp.value = 1
-  await sleep(200)
+  if (!(await pause(200, id))) return
 
   // Move to injected Memwyre icon
   cursorX.value = -10
   cursorY.value = 75
   // Camera slowly tracks and zooms in on MemWyre button
   focusCamera(-10, 70, 1.4, 600)
-  await sleep(650)
+  if (!(await pause(650, id))) return
 
-  if (!isRunning) return
+  if (!isActiveRun(id)) return
   subphase.value = 'click'
-  await sleep(150)
+  if (!(await pause(150, id))) return
 
-  if (!isRunning) return
+  if (!isActiveRun(id)) return
   subphase.value = 'toast'
   toastMsg.value = 'Exact memory saved'
   cursorX.value = -10
   cursorY.value = 85
 
-  await sleep(600)
+  if (!(await pause(600, id))) return
 
-  if (!isRunning) return
+  if (!isActiveRun(id)) return
   cursorOp.value = 0
   phase.value = 0 // Cleanup phase
   focusCamera(0, 0, 1.0, 500)
   // await sleep(500)
 
-  triggerPhase2()
+  triggerPhase2(id)
 }
 
-const triggerPhase2 = async () => {
-  if (!isRunning) return
+const triggerPhase2 = async (id) => {
+  if (!isActiveRun(id)) return
   phase.value = 2
   subphase.value = 'init'
   typedText.value = "Ask anything"
@@ -277,14 +292,14 @@ const triggerPhase2 = async () => {
   // Camera zooms in hard on the absolute leftmost edge of the input bar
   focusCamera(-200, 0, 1.8, 600)
 
-  await sleep(300)
+  if (!(await pause(300, id))) return
 
-  if (!isRunning) return
+  if (!isActiveRun(id)) return
   subphase.value = 'typing'
   typedText.value = ""
 
   for (let i = 0; i < fullText.length; i++) {
-    if (!isRunning) return
+    if (!isActiveRun(id)) return
     typedText.value += fullText[i]
 
     // Dynamically calculate camera X to trace the typing (-200 to +60)
@@ -294,13 +309,13 @@ const triggerPhase2 = async () => {
     // Buttery smooth tracking transition that slightly overlaps the next keystroke
     focusCamera(currentX, 0, 1.8, 12)
 
-    await sleep(2) // Absolute minimum sleep
+    if (!(await pause(16, id))) return
   }
-  await sleep(200)
+  if (!(await pause(200, id))) return
 
-  if (!isRunning) return
+  if (!isActiveRun(id)) return
   cursorOp.value = 1
-  await sleep(30)
+  if (!(await pause(30, id))) return
   subphase.value = 'move'
 
   // Move cursor to MemWyre Button (Right side)
@@ -308,17 +323,17 @@ const triggerPhase2 = async () => {
   cursorY.value = 15
   // Camera snaps forcefully to the action cluster on the far right
   focusCamera(100, 15, 1.9, 400)
-  await sleep(450)
+  if (!(await pause(450, id))) return
 
-  if (!isRunning) return
+  if (!isActiveRun(id)) return
   subphase.value = 'click'
-  await sleep(120)
+  if (!(await pause(120, id))) return
 
   // Context Sync Action!
   contextSynced.value = true
-  await sleep(80)
+  if (!(await pause(80, id))) return
 
-  if (!isRunning) return
+  if (!isActiveRun(id)) return
   subphase.value = 'toast'
   toastMsg.value = 'Context synced'
   cursorX.value = 100
@@ -327,25 +342,70 @@ const triggerPhase2 = async () => {
   // Instant zoom out to frame the interaction at 1.5x!
   focusCamera(0, 0, 1.5, 250)
 
-  await sleep(400)
+  if (!(await pause(400, id))) return
 
-  if (!isRunning) return
+  if (!isActiveRun(id)) return
   cursorOp.value = 0
   phase.value = 0 // Clean up
   focusCamera(0, 0, 1, 500)
-  await sleep(500)
+  if (!(await pause(500, id))) return
 
   // Loop back
-  triggerPhase1()
+  triggerPhase1(id)
+}
+
+function clearTimers() {
+  timers.forEach(({ timer, resolve }) => {
+    clearTimeout(timer)
+    resolve()
+  })
+  timers = []
+}
+
+function resetDemo() {
+  phase.value = 1
+  subphase.value = 'init'
+  cursorX.value = 60
+  cursorY.value = 150
+  cursorOp.value = 0
+  camX.value = 0
+  camY.value = 0
+  camScale.value = 1
+  camDuration.value = 0
+  typedText.value = ''
+  contextSynced.value = false
+  toastMsg.value = ''
+}
+
+function startDemo() {
+  if (isRunning) return
+  isRunning = true
+  const currentRun = ++runId
+  resetDemo()
+  triggerPhase1(currentRun)
+}
+
+function stopDemo() {
+  runId += 1
+  isRunning = false
+  clearTimers()
 }
 
 onMounted(() => {
-  isRunning = true
-  triggerPhase1()
+  observer = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      startDemo()
+    } else {
+      stopDemo()
+    }
+  }, { threshold: 0.25 })
+
+  if (root.value) observer.observe(root.value)
 })
 
 onUnmounted(() => {
-  isRunning = false
+  stopDemo()
+  if (observer) observer.disconnect()
 })
 </script>
 
