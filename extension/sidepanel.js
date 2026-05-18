@@ -120,21 +120,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             const targetView = document.getElementById(`view-${targetId}`);
             if (targetView) targetView.classList.add('active');
 
-            // If inbox is the active tab, load content
+            // Load content for data tabs
             if (targetId === 'inbox') {
                 setTimeout(() => loadInbox(), 100);
             } else if (targetId === 'timeline') {
                 setTimeout(() => loadTimeline(), 100);
             }
         } else {
-            // Default fallback if no tab is active
-            const defaultTab = document.querySelector('[data-tab="inbox"]');
+            // Default fallback — timeline is the primary view
+            const defaultTab = document.querySelector('[data-tab="timeline"]');
             if (defaultTab) defaultTab.classList.add('active');
 
-            const defaultView = document.getElementById('view-inbox');
+            const defaultView = document.getElementById('view-timeline');
             if (defaultView) defaultView.classList.add('active');
 
-            setTimeout(() => loadInbox(), 100);
+            setTimeout(() => loadTimeline(), 100);
         }
     }
 
@@ -241,22 +241,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 3. Load Inbox
     if (refreshInboxBtn) refreshInboxBtn.addEventListener('click', loadInbox);
 
+    // --- Session Expired Helper ---
+    function renderSessionExpired(container) {
+        container.innerHTML = `
+            <div class="session-expired-msg">
+                <i class="fas fa-lock" style="font-size: 24px; color: var(--text-muted); margin-bottom: 12px;"></i>
+                <div style="font-weight: 600; margin-bottom: 4px;">Session Expired</div>
+                <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 12px;">Your login has expired. Please re-login to continue.</div>
+                <button class="primary-btn relogin-btn" style="padding: 10px 20px; width: auto; font-size: 13px;">Re-login</button>
+            </div>
+        `;
+        container.querySelector('.relogin-btn').addEventListener('click', () => {
+            chrome.tabs.create({ url: `${CONFIG[ENV].WEB_APP_URL}/login?source=extension` });
+        });
+    }
+
     async function loadInbox() {
         inboxContainer.innerHTML = '<div class="status-msg"><i class="fas fa-spinner fa-spin"></i> Loading inbox...</div>';
         try {
             const { token: freshToken } = await chrome.storage.local.get('token');
-            if (!freshToken) { inboxContainer.innerHTML = '<div class="status-msg">Please log in to view your inbox.</div>'; return; }
+            if (!freshToken) { renderSessionExpired(inboxContainer); return; }
             const response = await fetch(`${CONFIG[ENV].API_BASE_URL}/inbox/`, {
                 headers: { 'Authorization': `Bearer ${freshToken}` }
             });
             if (response.ok) {
                 const data = await response.json();
                 renderInbox(data || []);
+            } else if (response.status === 401) {
+                renderSessionExpired(inboxContainer);
             } else {
-                inboxContainer.innerHTML = `<div class="status-msg">Failed to load inbox (${response.status}).</div>`;
+                inboxContainer.innerHTML = `<div class="status-msg"><i class="fas fa-exclamation-triangle" style="color: var(--primary);"></i> Could not load inbox. <button class="text-link-btn-refresh" onclick="this.closest('.view').querySelector('#refresh-inbox')?.click()">Retry</button></div>`;
             }
         } catch (err) {
-            inboxContainer.innerHTML = '<div class="status-msg">Error loading inbox.</div>';
+            inboxContainer.innerHTML = '<div class="status-msg"><i class="fas fa-wifi" style="color: var(--text-muted);"></i> Connection error. Check your network.</div>';
         }
     }
 
@@ -269,22 +286,45 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         items.slice(0, 15).forEach(item => {
             const el = document.createElement('div');
-            el.className = 'list-item-modern';
+            el.className = 'inbox-item';
 
-            let badgeClass = 'badge-default';
-            let sourceText = 'User';
-            if (item.source === 'agent_drop') { badgeClass = 'badge-agent'; sourceText = 'Agent'; }
-            if (item.source === 'browser_extension') { badgeClass = 'badge-extension'; sourceText = 'Extension'; }
+            // Use the same icon engine as the timeline
+            const iconData = window.getIconForSource({ source: item.source || '', tags: item.tags || [] });
+            let iconHtml;
+            if (iconData.type === 'img') {
+                iconHtml = `<img src="${iconData.content}" alt="source" style="width:24px;height:24px;object-fit:contain;border-radius:4px;" onerror="this.style.display='none';" />`;
+            } else {
+                iconHtml = iconData.content;
+            }
+
+            // Provider label (mirrors timeline)
+            const src = (item.source || '').toLowerCase();
+            let providerStr = 'User';
+            if (src.includes('chatgpt') || src.includes('openai')) providerStr = 'ChatGPT';
+            else if (src.includes('claude')) providerStr = 'Claude';
+            else if (src.includes('gemini')) providerStr = 'Gemini';
+            else if (src.includes('perplexity')) providerStr = 'Perplexity';
+            else if (src.includes('cursor')) providerStr = 'Cursor';
+            else if (src.includes('openclaw')) providerStr = 'OpenClaw';
+            else if (src.includes('codex')) providerStr = 'Codex';
+            else if (src.includes('antigravity') || src === 'mcp') providerStr = 'Antigravity';
+            else if (src === 'agent_drop') providerStr = 'Agent';
+            else if (src === 'browser_extension') providerStr = 'Extension';
+            else if (item.source) providerStr = item.source;
 
             const dateStr = new Date(item.created_at || Date.now()).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+            const title = item.details || 'Inbox Item';
+            const preview = (item.content || '').substring(0, 120);
 
             el.innerHTML = `
-                <span class="item-source-badge ${badgeClass}">${sourceText}</span>
-                <div class="item-title">${item.details || 'Inbox Item'}</div>
-                <div class="item-preview">${item.content || ''}</div>
-                <div class="item-meta">
-                    <span>${dateStr}</span>
-                    <i class="fas fa-chevron-right"></i>
+                <div class="inbox-icon-box">${iconHtml}</div>
+                <div class="inbox-content">
+                    <div class="inbox-header">
+                        <div class="inbox-title">${title}</div>
+                        <div class="inbox-time">${dateStr}</div>
+                    </div>
+                    <div class="inbox-source-info">${providerStr} | ${item.status || 'pending'}</div>
+                    <div class="inbox-preview">${preview}</div>
                 </div>
             `;
 
@@ -304,7 +344,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         timelineContainer.innerHTML = '<div class="status-msg"><i class="fas fa-spinner fa-spin"></i> Loading timeline...</div>';
         try {
             const { token: freshToken } = await chrome.storage.local.get('token');
-            if (!freshToken) { timelineContainer.innerHTML = '<div class="status-msg">Please log in to view your timeline.</div>'; return; }
+            if (!freshToken) { renderSessionExpired(timelineContainer); return; }
             let url = `${CONFIG[ENV].API_BASE_URL}/memory/?view=timeline&limit=50`;
             const source = timelineSource.value;
             if (source) url += `&source_app=${encodeURIComponent(source)}`;
@@ -316,11 +356,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (response.ok) {
                 const data = await response.json();
                 renderTimeline(data || []);
+            } else if (response.status === 401) {
+                renderSessionExpired(timelineContainer);
             } else {
-                timelineContainer.innerHTML = `<div class="status-msg">Failed to load timeline (${response.status}).</div>`;
+                timelineContainer.innerHTML = `<div class="status-msg"><i class="fas fa-exclamation-triangle" style="color: var(--primary);"></i> Could not load timeline. <button class="text-link-btn-refresh" onclick="this.closest('.view').querySelector('#refresh-timeline')?.click()">Retry</button></div>`;
             }
         } catch (err) {
-            timelineContainer.innerHTML = '<div class="status-msg">Error loading timeline.</div>';
+            timelineContainer.innerHTML = '<div class="status-msg"><i class="fas fa-wifi" style="color: var(--text-muted);"></i> Connection error. Check your network.</div>';
         }
     }
 
@@ -396,7 +438,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <div class="timeline-title">${title}</div>
                             <div class="timeline-time">${timeStr}</div>
                         </div>
-                        <div class="timeline-source-info">${providerStr} · ${displayType}</div>
+                        <div class="timeline-source-info">${providerStr} | ${displayType}</div>
                         <div class="timeline-preview">${item.content || ''}</div>
                     </div>
                 `;

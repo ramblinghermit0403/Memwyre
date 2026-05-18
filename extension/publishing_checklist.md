@@ -1,4 +1,4 @@
-# MemWyre Extension Publishing Checklist
+# Memwyre Extension Publishing Checklist
 
 Follow these steps precisely to submit your extension to the Chrome Web Store.
 
@@ -22,7 +22,7 @@ Follow these steps precisely to submit your extension to the Chrome Web Store.
 3. Click the **+ New Item** button and upload your `memwyre-v1.0.zip` file.
 
 ### 4. Store Listing Details
-1. **Title:** MemWyre
+1. **Title:** Memwyre
 2. **Summary:** (Will be pulled from manifest.json).
 3. **Description:** Write a full description of the features.
 4. **Category:** Productivity (or Tools).
@@ -30,7 +30,7 @@ Follow these steps precisely to submit your extension to the Chrome Web Store.
 6. Upload your `icon128.png` and your Screenshots.
 
 ### 5. Privacy Tab (Crucial!)
-1. **Single Purpose:** "MemWyre connects users browsing and AI chats to their personal Brain Vault knowledge base."
+1. **Single Purpose:** "Memwyre connects users browsing and AI chats to their personal Brain Vault knowledge base."
 2. **Permissions Justification:**
    - **`activeTab`:** Needed to extract the current AI chat context or page content to save as a memory in the Brain Vault.
    - **`storage`:** Needed to save the user's authentication token across sessions.

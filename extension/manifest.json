@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "MemWyre",
-  "version": "1.0",
+  "name": "Memwyre",
+  "version": "1.1.1",
   "description": "Connect your second brain to your browser. Capture content and inject memory into any AI.",
   "permissions": [
     "activeTab",
@@ -17,13 +17,13 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Open MemWyre",
-    "default_icon": "logo.png"
+    "default_title": "Open Memwyre",
+    "default_icon": "icon48.png"
   },
   "icons": {
-    "16": "logo.png",
-    "48": "logo.png",
-    "128": "logo.png"
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   },
   "side_panel": {
     "default_path": "sidepanel.html"
@@ -40,6 +40,7 @@
       ],
       "js": [
         "config.js",
+        "turndown.min.js",
         "content.js"
       ]
     },

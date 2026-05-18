@@ -1,6 +1,5 @@
 <template>
-  <div class="relative w-full h-full overflow-hidden flex items-center justify-center bg-[#111111] font-sans">
-    <div class="absolute inset-0 bg-black/40 z-0"></div>
+  <div class="relative overflow-hidden w-full h-full dark-hero-wash flex items-center justify-center font-sans">
 
     <!-- Trial RGB Dots -->
     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -8,6 +7,7 @@
       <div class="absolute top-[40%] left-[60%] w-72 h-72 bg-green-500 opacity-35 blur-[120px] rounded-full"></div>
       <div class="absolute bottom-[-10%] left-[20%] w-72 h-72 bg-blue-500 opacity-40 blur-[120px] rounded-full"></div>
     </div>
+
     <!-- Camera Viewport Rig -->
     <div
       class="absolute w-full h-full z-10 flex items-center justify-center origin-center ease-[cubic-bezier(0.25,1,0.35,1)]"
@@ -176,10 +176,6 @@
 
     </div> <!-- End Camera Viewport Rig -->
 
-    <!-- Edge Gradients (Fixed outside camera rig) -->
-    <div
-      class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#111111] to-transparent z-20 pointer-events-none">
-    </div>
   </div>
 </template>
 

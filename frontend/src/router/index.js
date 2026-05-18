@@ -136,6 +136,16 @@ export function createAppRouter({ ssr = false } = {}) {
                 ]
             },
             {
+                path: '/portfolio',
+                name: 'portfolio',
+                component: () => import('../views/PortfolioView.vue')
+            },
+            {
+                path: '/portfolio/:id',
+                name: 'project-detail',
+                component: () => import('../views/ProjectDetailView.vue')
+            },
+            {
                 path: '/dashboard',
                 name: 'dashboard',
                 component: () => import('../views/DashboardView.vue'),

@@ -5,7 +5,7 @@
     <div class="min-h-[calc(100vh-6rem)] max-w-7xl mx-auto px-6 lg:px-8 mb-32 flex items-center">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
             <div class="space-y-8">
-                <h1 class="text-6xl font-black tracking-tighter leading-none">
+                <h1 class="hero-serif text-6xl font-extrabold tracking-tighter leading-none">
                     Your AI Forgets.<br>
                     <span class="text-primary">Memwyre Remembers.</span>
                 </h1>
@@ -165,7 +165,7 @@
     <!-- 3. DETAILED USE CASES (Grid) -->
     <div class="py-32 max-w-7xl mx-auto px-6 lg:px-8">
         <div class="text-center mb-20">
-             <h2 class="text-4xl lg:text-5xl font-black mb-6">Designed for How You Work</h2>
+             <h2 class="text-4xl lg:text-5xl font-extrabold mb-6">Designed for How You Work</h2>
              <p class="text-xl text-text-secondary max-w-2xl mx-auto">
                  Memwyre isn't just a note app. It's a cognitive bridging tool built for the specific ways different professionals leverage AI.
              </p>
@@ -388,4 +388,7 @@
 .animate-float-1 { animation: float 4s ease-in-out infinite; }
 .animate-float-2 { animation: float 5s ease-in-out infinite reverse; }
 .animate-float-3 { animation: float 6s ease-in-out infinite; }
+.hero-serif {
+    font-family: 'DM Serif Text', serif;
+}
 </style>

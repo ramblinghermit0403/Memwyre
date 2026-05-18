@@ -246,7 +246,7 @@ chrome.sidePanel
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "memwyre-save-page",
-        title: "Save Page to MemWyre",
+        title: "Save Page to Memwyre",
         contexts: ["page"]
     });
 });

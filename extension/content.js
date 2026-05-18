@@ -4,6 +4,104 @@
 console.log('Memwyre Extension loaded');
 
 // ============================================================================
+// MARKDOWN EXTRACTION (Turndown HTML-to-Markdown)
+// ============================================================================
+
+/**
+ * Converts a DOM element's rendered HTML back to clean Markdown.
+ * Uses Turndown (loaded via manifest before this script) to preserve:
+ * - **bold**, *italic*, headings, code blocks, lists, links, tables, etc.
+ * Falls back to .innerText if Turndown is unavailable.
+ *
+ * @param {HTMLElement} element - The DOM element to extract markdown from
+ * @returns {string} Markdown-formatted text
+ */
+let _turndownInstance = null;
+function extractMarkdown(element) {
+    if (!element) return '';
+
+    // Fallback if Turndown didn't load
+    if (typeof TurndownService === 'undefined') {
+        console.warn('Memwyre: TurndownService not available, falling back to innerText');
+        return element.innerText || '';
+    }
+
+    try {
+        // Lazy-initialize a single Turndown instance with optimal settings
+        if (!_turndownInstance) {
+            _turndownInstance = new TurndownService({
+                headingStyle: 'atx',           // # Heading style
+                codeBlockStyle: 'fenced',      // ```code``` style
+                fence: '```',
+                bulletListMarker: '-',
+                strongDelimiter: '**',
+                emDelimiter: '*',
+                linkStyle: 'inlined',
+                preformattedCode: true          // Preserve code formatting
+            });
+
+            // Remove Turndown's escaping for underscores within words
+            // (LLM outputs often have variable_names that shouldn't be escaped)
+            _turndownInstance.escape = function(string) {
+                return string
+                    .replace(/\\/g, '\\\\')
+                    .replace(/\*/g, '\\*')
+                    .replace(/^-/g, '\\-')
+                    .replace(/^\+ /g, '\\+ ')
+                    .replace(/^(=+)/g, '\\$1')
+                    .replace(/^(#{1,6}) /g, '\\$1 ')
+                    .replace(/`/g, '\\`')
+                    .replace(/^~~~/g, '\\~~~')
+                    .replace(/\[/g, '\\[')
+                    .replace(/\]/g, '\\]')
+                    .replace(/^>/g, '\\>')
+                    .replace(/^(\d+)\. /g, '$1\\. ');
+                // NOTE: intentionally NOT escaping underscores
+            };
+
+            // Custom rule: handle <table> elements by keeping them as HTML
+            // (Turndown doesn't natively support tables)
+            _turndownInstance.addRule('table', {
+                filter: ['table'],
+                replacement: function(content, node) {
+                    // Try to convert table to markdown table format
+                    const rows = node.querySelectorAll('tr');
+                    if (!rows.length) return content;
+
+                    let md = '\n\n';
+                    rows.forEach((row, rowIdx) => {
+                        const cells = row.querySelectorAll('th, td');
+                        const cellTexts = Array.from(cells).map(c => c.textContent.trim());
+                        md += '| ' + cellTexts.join(' | ') + ' |\n';
+
+                        // Add separator after header row
+                        if (rowIdx === 0) {
+                            md += '| ' + cellTexts.map(() => '---').join(' | ') + ' |\n';
+                        }
+                    });
+                    return md + '\n';
+                }
+            });
+
+            // Remove buttons, SVGs, and interactive elements from output
+            _turndownInstance.remove(['button', 'svg', 'script', 'style', 'nav']);
+        }
+
+        // Clone the element to avoid mutating the live DOM
+        const clone = element.cloneNode(true);
+
+        // Remove any Memwyre-injected buttons from the clone
+        clone.querySelectorAll('.brain-vault-save-btn, .brain-vault-inject-btn').forEach(el => el.remove());
+
+        const markdown = _turndownInstance.turndown(clone);
+        return markdown || element.innerText || '';
+    } catch (err) {
+        console.warn('Memwyre: Turndown conversion failed, falling back to innerText', err);
+        return element.innerText || '';
+    }
+}
+
+// ============================================================================
 // BASE UTILITIES
 // ============================================================================
 
@@ -377,7 +475,7 @@ const ADAPTERS = {
                 const toolbars = queryAllWithFallback(this.selectors.messageToolbar).filter(bar => row.contains(bar));
                 for (const bar of toolbars) {
                     if (bar.querySelector('.brain-vault-save-btn')) continue;
-                    requestAnimationFrame(() => bar.appendChild(createSaveButton(() => msg.innerText, this.name)));
+                    requestAnimationFrame(() => bar.appendChild(createSaveButton(() => extractMarkdown(msg), this.name)));
                 }
             }
         },
@@ -392,11 +490,11 @@ const ADAPTERS = {
                     turn.parentElement?.querySelector('.flex.flex-wrap.items-center.gap-y-4');
                 if (!actionBar || actionBar.querySelector('.brain-vault-save-btn')) continue;
 
+                const turnText = extractMarkdown(turn) || extractMarkdown(textEl) || '';
                 const btn = createSaveButton(() => turnText, this.name);
-                const turnText = turn.innerText || textEl?.innerText || '';
                 btn.onclick = async (e) => {
                     e.stopPropagation();
-                    const text = turn.innerText;
+                    const text = extractMarkdown(turn);
                     const resp = await chrome.runtime.sendMessage({ action: 'saveMemory', data: { title: 'ChatGPT Prompt', content: text, source: 'chatgpt', interaction_type: 'prompt', tags: ['prompt', 'chatgpt'] } });
                     const originalIcon = btn.querySelector('img')?.cloneNode(true);
                     if (resp?.success) {
@@ -470,11 +568,11 @@ const ADAPTERS = {
                 const interactionType = isUser ? 'prompt' : 'conversation';
                 const tag = isUser ? 'prompt' : 'response';
 
-                const btn = createSaveButton(() => textEl?.innerText || '', this.name);
+                const btn = createSaveButton(() => extractMarkdown(textEl) || '', this.name);
                 
                 btn.onclick = async (e) => {
                     e.stopPropagation();
-                    const text = textEl?.innerText || '';
+                    const text = extractMarkdown(textEl) || '';
                     const originalIcon = btn.querySelector('img')?.cloneNode(true);
                     const resp = await chrome.runtime.sendMessage({ 
                         action: 'saveMemory', 
@@ -584,7 +682,7 @@ const ADAPTERS = {
                 const textEl = container.querySelector(this.selectors.modelResponseText[0]);
                 if (!textEl) continue;
 
-                const btn = createSaveButton(() => textEl.innerText, this.name);
+                const btn = createSaveButton(() => extractMarkdown(textEl), this.name);
                 const spacer = toolbar.querySelector('.spacer');
                 if (spacer) toolbar.insertBefore(btn, spacer);
                 else toolbar.appendChild(btn);
@@ -601,10 +699,10 @@ const ADAPTERS = {
                 if (!copyBtn) continue;
 
                 const textEl = container.querySelector('.query-text') || container;
-                const btn = createSaveButton(() => textEl.innerText || '', this.name);
+                const btn = createSaveButton(() => extractMarkdown(textEl) || '', this.name);
                 btn.onclick = async (e) => {
                     e.stopPropagation();
-                    const text = textEl.innerText;
+                    const text = extractMarkdown(textEl);
                     const originalIcon = btn.querySelector('img')?.cloneNode(true);
                     const resp = await chrome.runtime.sendMessage({ action: 'saveMemory', data: { title: 'Gemini Prompt', content: text, source: 'gemini', interaction_type: 'prompt', tags: ['prompt', 'gemini'] } });
                     if (resp?.success) {
@@ -724,7 +822,7 @@ const ADAPTERS = {
                     responseContainer?.querySelector('.whitespace-pre-wrap');
 
                 const btn = createSaveButton(
-                    () => textElement?.innerText || 'Perplexity Response',
+                    () => extractMarkdown(textElement) || 'Perplexity Response',
                     this.name
                 );
 
@@ -770,10 +868,10 @@ const ADAPTERS = {
                 const outerWrap = actionGroup.closest('.flex.items-start');
                 const textEl = outerWrap?.querySelector('.whitespace-pre-line, span.min-w-0') || outerWrap;
 
-                const btn = createSaveButton(() => textEl?.innerText || '', this.name);
+                const btn = createSaveButton(() => extractMarkdown(textEl) || '', this.name);
                 btn.onclick = async (e) => {
                     e.stopPropagation();
-                    const text = textEl?.innerText || '';
+                    const text = extractMarkdown(textEl) || '';
                     const originalIcon = btn.querySelector('img')?.cloneNode(true);
                     const resp = await chrome.runtime.sendMessage({ action: 'saveMemory', data: { title: 'Perplexity Prompt', content: text, source: 'perplexity', interaction_type: 'prompt', tags: ['prompt', 'perplexity'] } });
                     if (resp?.success) {

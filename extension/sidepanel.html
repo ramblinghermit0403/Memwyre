@@ -2,9 +2,9 @@
 <html>
 
 <head>
-    <title>MemWyre</title>
+    <title>Memwyre</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
@@ -13,9 +13,9 @@
     <!-- Login View -->
     <div id="login-view" class="hidden">
         <div class="login-container">
-            <img src="logo.svg" alt="MemWyre Logo" class="login-logo-img">
+            <img src="logo.svg" alt="Memwyre Logo" class="login-logo-img">
             <h2>Welcome Back</h2>
-            <p>Connect to MemWyre</p>
+            <p>Connect to Memwyre</p>
             <button id="save-token"><i class="fas fa-sign-in-alt"></i> Login</button>
             <p class="helper-text">This will open a new tab to authenticate.</p>
         </div>
@@ -26,8 +26,8 @@
         <!-- Header -->
         <div class="app-header">
             <div class="logo-section">
-                <img src="logo.svg" alt="MemWyre Logo" class="header-logo-img">
-                <span class="app-name">MemWyre</span>
+                <img src="logo.svg" alt="Memwyre Logo" class="header-logo-img">
+                <span class="app-name">Memwyre</span>
             </div>
             <button id="settings-btn" class="icon-btn-header" title="Settings">
                 <i class="fas fa-cog"></i>
@@ -37,10 +37,10 @@
         <!-- Segmented Control Tabs -->
         <div class="tabs-container" id="tabs-container">
             <div class="tabs-segmented">
-                <button class="tab-segment active" data-tab="inbox" title="Inbox">
+                <button class="tab-segment" data-tab="inbox" title="Inbox">
                     <i class="fas fa-inbox"></i> Inbox
                 </button>
-                <button class="tab-segment" data-tab="timeline" title="Timeline">
+                <button class="tab-segment active" data-tab="timeline" title="Timeline">
                     <i class="fas fa-stream"></i> Timeline
                 </button>
                 <button class="tab-segment" data-tab="search" title="Search">
@@ -54,7 +54,7 @@
 
         <main class="content">
             <!-- Inbox Tab -->
-            <div id="view-inbox" class="view active">
+            <div id="view-inbox" class="view">
                 <div class="section-header-modern pr-2">
                     <div class="header-text">
                         <h3><i class="fas fa-inbox text-gray-500"></i> Recent Inbox</h3>
@@ -68,7 +68,7 @@
             </div>
 
             <!-- Timeline Tab -->
-            <div id="view-timeline" class="view">
+            <div id="view-timeline" class="view active">
                 <div class="section-header-modern pr-2">
                     <div class="header-text">
                         <h3><i class="fas fa-stream text-gray-500"></i> Recent AI Work</h3>
@@ -92,7 +92,7 @@
             <!-- Search Tab -->
             <div id="view-search" class="view">
                 <div class="search-bar">
-                    <input type="text" id="search-query" placeholder="Ask MemWyre...">
+                    <input type="text" id="search-query" placeholder="Ask Memwyre...">
                     <button id="search-btn" class="icon-btn-search">
                         <i class="fas fa-search" id="search-icon"></i>
                         <i class="fas fa-spinner fa-spin hidden" id="loading-icon"></i>
@@ -152,7 +152,7 @@
                     <span class="section-title">About</span>
                 </div>
                 <div class="result-item">
-                    <div class="result-title">MemWyre Extension</div>
+                    <div class="result-title">Memwyre Extension</div>
                     <div class="result-meta">Version 1.0.0</div>
                 </div>
 

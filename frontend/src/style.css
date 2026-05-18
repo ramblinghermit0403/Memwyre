@@ -212,3 +212,18 @@ body {
 .animation-delay-300 { animation-delay: 300ms; }
 .animation-delay-450 { animation-delay: 450ms; }
 .animation-delay-600 { animation-delay: 600ms; }
+
+/* Portfolio Image Utility */
+.portfolio-image-crop {
+  clip-path: inset(2px);
+}
+
+.dark-hero-wash {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+    radial-gradient(circle at 23% 14%, rgba(255, 231, 92, 0.72), transparent 30%),
+    radial-gradient(circle at 74% 30%, rgba(255, 235, 125, 0.76), transparent 32%),
+    radial-gradient(circle at 12% 86%, rgba(149, 205, 255, 0.68), transparent 34%),
+    radial-gradient(circle at 88% 91%, rgba(175, 220, 255, 0.62), transparent 32%),
+    linear-gradient(115deg, #fff7ca 0%, #fffdf4 43%, #eff8ff 100%);
+}

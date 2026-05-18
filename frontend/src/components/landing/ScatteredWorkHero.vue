@@ -4,7 +4,7 @@
       <div class="space-y-8">
         <h2 class="text-base font-bold uppercase tracking-widest text-text-muted mb-4">Why MemWyre</h2>
         <p
-          class="font-display text-balance text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.08]">
+          class="hero-serif text-balance text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[1.08]">
           Your AI work scatters.<br>
           <span class="text-primary">MemWyre compounds it.</span>
         </p>
@@ -174,5 +174,8 @@
 
 .animate-float-3 {
   animation: float 6s ease-in-out infinite;
+}
+.hero-serif {
+  font-family: 'DM Serif Text', serif;
 }
 </style>

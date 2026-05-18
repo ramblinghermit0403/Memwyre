@@ -1,8 +1,8 @@
 <template>
   <div ref="root"
-    class="dark relative w-full max-w-4xl mx-auto overflow-hidden bg-white dark:bg-[#111111] border border-gray-200/60 dark:border-gray-700/60 border-b-0 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col rounded-t-xl"
+    class="relative w-full max-w-4xl mx-auto overflow-hidden dark-hero-wash border border-gray-800 border-b-0 shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex flex-col rounded-t-xl"
     style="aspect-ratio: 16/10; text-align: left;">
-    
+
     <!-- Trial RGB Dots -->
     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
       <div class="absolute top-[-10%] left-[10%] w-72 h-72 bg-red-500 opacity-40 blur-[120px] rounded-full"></div>
@@ -367,5 +367,22 @@ onUnmounted(() => { stop(); if (observer) observer.disconnect(); });
       rgba(255, 255, 255, 0.15) 50%,
       rgba(255, 255, 255, 0.06) 75%);
   background-size: 200% 100%;
+}
+
+.hero-wash {
+  background:
+    radial-gradient(circle at 23% 14%, rgba(255, 231, 92, 0.72), transparent 30%),
+    radial-gradient(circle at 74% 30%, rgba(255, 235, 125, 0.76), transparent 32%),
+    radial-gradient(circle at 12% 86%, rgba(149, 205, 255, 0.68), transparent 34%),
+    radial-gradient(circle at 88% 91%, rgba(175, 220, 255, 0.62), transparent 32%),
+    linear-gradient(115deg, #fff7ca 0%, #fffdf4 43%, #eff8ff 100%);
+}
+
+.hero-grain {
+  background-image:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.6), transparent 52%),
+    radial-gradient(circle at center, rgba(5, 6, 20, 0.05) 1px, transparent 1px);
+  background-size: auto, 28px 28px;
+  opacity: 0.34;
 }
 </style>

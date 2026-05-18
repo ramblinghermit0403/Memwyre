@@ -56,7 +56,7 @@
                         class="text-[11px] font-mono text-gray-400 truncate max-w-[140px] tracking-tight">chatgpt</span>
                     </div>
                     <span
-                      class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black w-fit bg-[#D97757]/20 text-[#D97757] border border-[#D97757]/30 uppercase tracking-widest">Pending</span>
+                      class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold w-fit bg-[#D97757]/20 text-[#D97757] border border-[#D97757]/30 uppercase tracking-widest">Pending</span>
                   </div>
                   <span class="text-[10px] uppercase font-bold tracking-tighter text-gray-500">1d ago</span>
                 </div>

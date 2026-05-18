@@ -4,7 +4,7 @@ window.addEventListener("message", (event) => {
     if (event.source !== window) return;
 
     if (event.data.type && (event.data.type === "MEMWYRE_AUTH_SUCCESS")) {
-        console.log("MemWyre Extension: Received auth token from web app");
+        console.log("Memwyre Extension: Received auth token from web app");
 
         // Relay to background script
         chrome.runtime.sendMessage({
@@ -16,7 +16,7 @@ window.addEventListener("message", (event) => {
     }
 
     if (event.data.type && (event.data.type === "MEMWYRE_AUTH_LOGOUT")) {
-        console.log("MemWyre Extension: Logout received from web app");
+        console.log("Memwyre Extension: Logout received from web app");
         chrome.runtime.sendMessage({ action: "logout" });
     }
 });

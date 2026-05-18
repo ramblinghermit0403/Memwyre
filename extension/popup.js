@@ -20,7 +20,7 @@ function showLogin() {
     mainApp.classList.add('hidden');
     // Update UI text
     // tokenInput.classList.add('hidden'); // Removed
-    saveTokenBtn.textContent = "Login to MemWyre";
+    saveTokenBtn.textContent = "Login to Memwyre";
     // document.querySelector('#login-view p').textContent = "Click above to login via the web app.";
 }
 
@@ -61,7 +61,7 @@ logoutBtn.addEventListener('click', async () => {
 function showLogin() {
     loginView.classList.remove('hidden');
     mainApp.classList.add('hidden');
-    saveTokenBtn.textContent = "Login to MemWyre";
+    saveTokenBtn.textContent = "Login to Memwyre";
 }
 
 function showMain() {

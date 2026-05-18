@@ -3,7 +3,7 @@
 Use this exact text in your store submission **Test instructions** field (replace placeholders):
 
 1. Install the extension and pin it to the toolbar.
-2. Click the extension icon. The MemWyre side panel opens.
+2. Click the extension icon. The Memwyre side panel opens.
 3. In the side panel, click **Login**. This opens: `https://memwyre.tech/login?source=extension`.
 4. Sign in with this reviewer test account:
    - Email: `{{REVIEWER_TEST_EMAIL}}`
@@ -26,14 +26,14 @@ Use this exact text in your store submission **Test instructions** field (replac
    - Expected: timeline list renders; source filter dropdown works.
 10. Test context menu permission:
    - Open any normal webpage.
-   - Right-click page and click **Save Page to MemWyre**.
+   - Right-click page and click **Save Page to Memwyre**.
    - Expected: extension badge briefly shows success (`OK`) and page is ingested.
 11. Test logout:
    - Open extension settings (gear icon) -> **Logout**.
    - Expected: extension returns to Login view.
 12. Optional supported-site verification:
    - Visit one supported AI site (`chatgpt.com`, `claude.ai`, `gemini.google.com/app`, or `perplexity.ai`).
-   - Expected: MemWyre action UI appears for saving prompt/response content.
+   - Expected: Memwyre action UI appears for saving prompt/response content.
 
 ## Test Coverage Checklist
 - Auth handoff from web app to extension token storage.

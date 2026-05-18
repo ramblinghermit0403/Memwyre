@@ -1,23 +1,23 @@
-# Privacy Policy for MemWyre Extension
+# Privacy Policy for Memwyre Extension
 
 **Effective Date:** Feb 27, 2026
 
 ## Introduction
-This Privacy Policy applies to the MemWyre Chrome Extension ("Extension"). Our goal is to connect your browsing experience and AI chats securely to your personal MemWyre Brain Vault.
+This Privacy Policy applies to the Memwyre Chrome Extension ("Extension"). Our goal is to connect your browsing experience and AI chats securely to your personal Memwyre Brain Vault.
 
 ## Data Collection and Usage
-The MemWyre Extension requires specific permissions to function. We only collect the data necessary to provide the core service of saving "memories" and conversation context.
+The Memwyre Extension requires specific permissions to function. We only collect the data necessary to provide the core service of saving "memories" and conversation context.
 
 1. **Active Tab (`activeTab`)**
    - The extension uses this permission to extract text, chat history, and context from specific AI platforms (such as ChatGPT, Claude, Gemini, Perplexity) when you explicitly initiate an action.
-   - **Usage:** This data is strictly used to create a memory or search context in your MemWyre unified knowledge base. It is securely transmitted to the MemWyre API (`server.memwyre.tech`).
+   - **Usage:** This data is strictly used to create a memory or search context in your Memwyre unified knowledge base. It is securely transmitted to the Memwyre API (`server.memwyre.tech`).
 
 2. **Storage (`storage`)**
    - We use local extension storage to securely store your authentication token (Access Token).
-   - **Usage:** This token is used solely to authenticate your requests against the MemWyre API.
+   - **Usage:** This token is used solely to authenticate your requests against the Memwyre API.
 
 ## Data Sharing and Third Parties
-We **do not** sell, trade, or otherwise transfer your personally identifiable information or saved browsing data to outside parties. All data transmitted from the Extension is sent directly to your MemWyre account backend via HTTPS.
+We **do not** sell, trade, or otherwise transfer your personally identifiable information or saved browsing data to outside parties. All data transmitted from the Extension is sent directly to your Memwyre account backend via HTTPS.
 
 ## User Control
 You maintain full control over the data processed by the Extension:
@@ -25,4 +25,4 @@ You maintain full control over the data processed by the Extension:
 - You can revoke access by uninstalling the Extension at any time, which also clears the locally stored authentication token.
 
 ## Contact Information
-If you have any questions regarding this Privacy Policy or the MemWyre Extension, you may contact us through standard support channels on our platform at `memwyre.tech`.
+If you have any questions regarding this Privacy Policy or the Memwyre Extension, you may contact us through standard support channels on our platform at `memwyre.tech`.

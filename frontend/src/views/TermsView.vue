@@ -123,7 +123,7 @@
             class="bg-clip-text text-transparent bg-[repeating-linear-gradient(to_bottom,#111,#111_6px,white_6px,white_9px)]">
             The Second Brain
           </span><br />
-          <span class="text-[#9575CD]">
+          <span class="text-black">
             For Your AI.
           </span>
         </h2>
