@@ -1,5 +1,5 @@
 <template>
-  <div class="relative overflow-hidden w-full h-full dark-hero-wash flex items-center justify-center font-sans">
+  <div class="relative overflow-hidden w-full h-full bg-black dark flex items-center justify-center font-sans">
 
     <!-- Trial RGB Dots -->
     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">

@@ -1,6 +1,6 @@
 <template>
   <div ref="root"
-    class="relative w-full max-w-4xl mx-auto overflow-hidden dark-hero-wash border border-gray-800 border-b-0 shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex flex-col rounded-t-xl"
+    class="relative w-full max-w-4xl mx-auto overflow-hidden bg-black dark border border-gray-800 border-b-0 shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex flex-col rounded-t-xl"
     style="aspect-ratio: 16/10; text-align: left;">
 
     <!-- Trial RGB Dots -->

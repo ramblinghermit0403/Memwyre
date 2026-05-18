@@ -218,9 +218,10 @@ body {
   clip-path: inset(2px);
 }
 
+/* Deep, premium dark mode hero-wash gradient with black hue overlay */
 .dark-hero-wash {
   background:
-    linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+    linear-gradient(rgba(10, 10, 12, 0.88), rgba(10, 10, 12, 0.88)),
     radial-gradient(circle at 23% 14%, rgba(255, 231, 92, 0.72), transparent 30%),
     radial-gradient(circle at 74% 30%, rgba(255, 235, 125, 0.76), transparent 32%),
     radial-gradient(circle at 12% 86%, rgba(149, 205, 255, 0.68), transparent 34%),

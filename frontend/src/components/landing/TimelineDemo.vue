@@ -1,5 +1,5 @@
 <template>
-  <div class="relative overflow-hidden w-full h-full dark-hero-wash flex items-center justify-center">
+  <div class="relative overflow-hidden w-full h-full bg-black dark flex items-center justify-center">
 
     <!-- Trial RGB Dots -->
     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -16,7 +16,7 @@
         :style="{ transform: `translateY(${timelineY}px)`, transitionDuration: timelineDuration + 'ms', opacity: timelineFaded ? 0 : 1, transition: `transform ${timelineDuration}ms cubic-bezier(0.25,1,0.35,1), opacity 0.5s ease` }">
 
         <!-- Exact Original UI Preserved -->
-        <div class="w-full bg-transparent min-h-screen pt-[30%] pb-[100%]">
+        <div class="w-full bg-[#111111] min-h-screen pt-[30%] pb-[100%]">
 
           <!-- Timeline Feed -->
           <div class="max-w-2xl mx-auto px-8 sm:px-16 md:px-24">
