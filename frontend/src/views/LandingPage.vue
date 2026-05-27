@@ -9,7 +9,9 @@
       <div class="absolute inset-0 z-0 hero-grain pointer-events-none"></div>
 
       <!-- Background Animation Layer -->
-      <div class="absolute inset-0 z-[1] pointer-events-none overflow-hidden flex items-center justify-end"
+      <div
+        class="hero-animation-layer absolute inset-0 z-[1] pointer-events-none overflow-hidden flex items-center justify-end"
+        :class="{ 'hero-animation-layer-ready': heroAnimationReady }"
         aria-hidden="true">
         <div class="relative w-full lg:w-1/2 h-full flex items-center justify-center">
           <ProcessorAnimation />
@@ -670,7 +672,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { nextTick, ref, onMounted, onUnmounted } from 'vue';
 import frame10Png from '@/assets/motion/FRAME 10.png';
 import ChatDemo from '@/components/landing/ChatDemo.vue';
 import OmnipresentDemo from '@/components/landing/OmnipresentDemo.vue';
@@ -692,6 +694,7 @@ import ScatteredWorkMinAnimation from '@/components/landing/usecases/ScatteredWo
 // --- Video scroll-triggered playback ---
 const demoVideo1 = ref(null);
 const demoVideo2 = ref(null);
+const heroAnimationReady = ref(false);
 let videoObserver = null;
 let shouldRestoreDarkClass = false;
 
@@ -731,6 +734,13 @@ onMounted(() => {
   shouldRestoreDarkClass = document.documentElement.classList.contains('dark');
   document.documentElement.classList.remove('dark');
   document.documentElement.style.colorScheme = 'light';
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        heroAnimationReady.value = true;
+      });
+    });
+  });
   typeWriter();
   setupVideoObserver();
 });
@@ -804,6 +814,18 @@ html {
     radial-gradient(circle at center, rgba(5, 6, 20, 0.05) 1px, transparent 1px);
   background-size: auto, 28px 28px;
   opacity: 0.34;
+}
+
+.hero-animation-layer {
+  opacity: 0;
+  transform: translate3d(18px, 0, 0) scale(0.985);
+  transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1), transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.hero-animation-layer.hero-animation-layer-ready {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .hero-serif {
