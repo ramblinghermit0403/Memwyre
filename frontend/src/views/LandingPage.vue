@@ -12,9 +12,10 @@
       <div
         class="hero-animation-layer absolute inset-0 z-[1] pointer-events-none overflow-hidden flex items-center justify-end"
         :class="{ 'hero-animation-layer-ready': heroAnimationReady }"
+        :style="heroAnimationStyle"
         aria-hidden="true">
         <div class="relative w-full lg:w-1/2 h-full flex items-center justify-center">
-          <ProcessorAnimation />
+          <ProcessorAnimation v-if="heroAnimationMounted" />
         </div>
       </div>
 
@@ -672,7 +673,7 @@
 </template>
 
 <script setup>
-import { nextTick, ref, onMounted, onUnmounted } from 'vue';
+import { computed, nextTick, ref, onMounted, onUnmounted } from 'vue';
 import frame10Png from '@/assets/motion/FRAME 10.png';
 import ChatDemo from '@/components/landing/ChatDemo.vue';
 import OmnipresentDemo from '@/components/landing/OmnipresentDemo.vue';
@@ -694,9 +695,17 @@ import ScatteredWorkMinAnimation from '@/components/landing/usecases/ScatteredWo
 // --- Video scroll-triggered playback ---
 const demoVideo1 = ref(null);
 const demoVideo2 = ref(null);
+const heroAnimationMounted = ref(false);
 const heroAnimationReady = ref(false);
 let videoObserver = null;
 let shouldRestoreDarkClass = false;
+
+const heroAnimationStyle = computed(() => ({
+  opacity: heroAnimationReady.value ? 1 : 0,
+  transform: heroAnimationReady.value
+    ? 'translate3d(0, 0, 0) scale(1)'
+    : 'translate3d(18px, 0, 0) scale(0.985)',
+}));
 
 const setupVideoObserver = () => {
   videoObserver = new IntersectionObserver(
@@ -736,6 +745,7 @@ onMounted(() => {
   document.documentElement.style.colorScheme = 'light';
   nextTick(() => {
     requestAnimationFrame(() => {
+      heroAnimationMounted.value = true;
       requestAnimationFrame(() => {
         heroAnimationReady.value = true;
       });
