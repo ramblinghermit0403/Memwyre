@@ -230,6 +230,12 @@ export function createAppRouter({ ssr = false } = {}) {
                 meta: { requiresAuth: true }
             },
             {
+                path: '/admin',
+                name: 'admin-insights',
+                component: () => import('../views/AdminInsightsView.vue'),
+                meta: { requiresAuth: true }
+            },
+            {
                 path: '/admin/bypass',
                 name: 'admin-bypass',
                 component: () => import('../views/AdminBypassView.vue'),
@@ -280,7 +286,7 @@ export function createAppRouter({ ssr = false } = {}) {
             authStore.user &&
             authStore.user.is_verified &&
             authStore.hasCompletedOnboarding === false &&
-            !['dashboard', 'editor'].includes(to.name)
+            !['dashboard', 'editor', 'admin-insights', 'admin-bypass'].includes(to.name)
         ) {
             next('/dashboard');
         }

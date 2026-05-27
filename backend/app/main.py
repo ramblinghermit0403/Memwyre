@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing, admin_bypass, bypass, projects, context, discovery
+from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing, admin, admin_bypass, bypass, projects, context, discovery
 from app.db.base import Base
 from app.db.session import engine
 import app.models # Register models
@@ -102,6 +102,7 @@ from app.routers import user_api_keys
 app.include_router(user_api_keys.router, prefix=f"{settings.API_V1_STR}/user", tags=["api-keys"])
 app.include_router(ws.router, prefix="/ws", tags=["websocket"])
 app.include_router(billing.router, prefix=f"{settings.API_V1_STR}/billing", tags=["billing"])
+app.include_router(admin.router, prefix=f"{settings.API_V1_STR}/admin", tags=["admin"])
 app.include_router(admin_bypass.router, prefix=f"{settings.API_V1_STR}/admin/bypass", tags=["admin-bypass"])
 app.include_router(bypass.router, prefix=f"{settings.API_V1_STR}/bypass", tags=["bypass"])
 
