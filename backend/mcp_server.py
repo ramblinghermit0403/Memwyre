@@ -327,6 +327,110 @@ async def get_inbox(ctx: Context) -> str:
             return f"Error getting inbox: {str(e)}"
 
 @mcp.tool()
+async def approve_memory(memory_id: str, ctx: Context) -> str:
+    """
+    Approve a pending memory in the Inbox and begin its ingestion process.
+    Args:
+        memory_id: The ID of the memory (e.g., 'mem_123').
+    """
+    if not memory_id.startswith("mem_"):
+        return "Error: ID must start with 'mem_'."
+
+    async with AsyncSessionLocal() as db:
+        try:
+            user, _ = await get_current_user(db, ctx, required_scope="mcp:write")
+            if not user:
+                return "Error: No user found."
+
+            try:
+                mem_id = int(memory_id.split("_")[1])
+            except ValueError:
+                return "Error: Invalid ID format."
+
+            result = await db.execute(
+                select(Memory).filter(Memory.id == mem_id, Memory.user_id == user.id)
+            )
+            memory = result.scalars().first()
+            if not memory:
+                return "Error: Memory not found."
+            
+            if memory.status != "pending":
+                return f"Memory is already {memory.status}."
+
+            # Update DB
+            memory.status = "approved"
+            memory.show_in_inbox = False
+            await db.commit()
+            await db.refresh(memory)
+
+            # Trigger ingestion
+            try:
+                from app.worker import ingest_memory_task
+                ingest_memory_task.delay(
+                    memory_id=memory.id,
+                    user_id=user.id,
+                    content=memory.content,
+                    title=memory.title,
+                    tags=memory.tags,
+                    source=memory.source_llm,
+                    doc_type="memory"
+                )
+            except Exception as e:
+                logger.error(f"Error triggering background task: {e}")
+                return f"Memory {memory_id} approved, but failed to trigger ingestion task: {str(e)}"
+
+            return f"Memory {memory_id} approved successfully and queued for ingestion."
+        except Exception as e:
+            logger.error(f"Error approving memory: {e}", exc_info=True)
+            return f"Error approving memory: {str(e)}"
+
+@mcp.tool()
+async def discard_memory(memory_id: str, ctx: Context) -> str:
+    """
+    Discard a pending memory in the Inbox, removing it from view and deleting its embeddings.
+    Args:
+        memory_id: The ID of the memory (e.g., 'mem_123').
+    """
+    if not memory_id.startswith("mem_"):
+        return "Error: ID must start with 'mem_'."
+
+    async with AsyncSessionLocal() as db:
+        try:
+            user, _ = await get_current_user(db, ctx, required_scope="mcp:write")
+            if not user:
+                return "Error: No user found."
+
+            try:
+                mem_id = int(memory_id.split("_")[1])
+            except ValueError:
+                return "Error: Invalid ID format."
+
+            result = await db.execute(
+                select(Memory).filter(Memory.id == mem_id, Memory.user_id == user.id)
+            )
+            memory = result.scalars().first()
+            if not memory:
+                return "Error: Memory not found."
+
+            # Update DB
+            memory.status = "discarded"
+            memory.show_in_inbox = False
+            
+            if memory.embedding_id:
+                try:
+                    vector_store.delete(ids=[memory.embedding_id])
+                    memory.embedding_id = None
+                except Exception as e:
+                    logger.error(f"Error deleting embedding for memory {memory_id}: {e}")
+            
+            await db.commit()
+
+            return f"Memory {memory_id} discarded successfully."
+        except Exception as e:
+            logger.error(f"Error discarding memory: {e}", exc_info=True)
+            return f"Error discarding memory: {str(e)}"
+
+@mcp.tool()
 async def get_document(doc_id: int, ctx: Context) -> str:
     """
     Retrieve the full content of a specific document by ID from MemWyre.
