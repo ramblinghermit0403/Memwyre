@@ -33,7 +33,7 @@
           </h1>
 
           <p
-            class="animate-fade-in-up animation-delay-150 text-balance text-lg sm:text-xl lg:text-xl text-[#111827] leading-relaxed mt-6 sm:mt-8 max-w-2xl font-normal">
+            class="animate-fade-in-up animation-delay-150 text-balance text-base sm:text-lg lg:text-xl text-[#111827] leading-relaxed mt-6 sm:mt-8 max-w-2xl font-normal">
             Memwyre turns your prompts, conversations, and research into a memory layer you can reuse anywhere you work
             with AI.
           </p>
@@ -82,7 +82,7 @@
                     d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Access it from
+              <h3 class="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">Access it from
                 any app</h3>
               <p class="text-base text-gray-500 mt-4 leading-relaxed max-w-xl">Invoke Memwyre instantly on top of
                 any
@@ -118,9 +118,18 @@
               </ul>
             </div>
             <div
-              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative aspect-[16/10]">
-              <!-- Animated Omnipresent Demo -->
-              <OmnipresentDemo />
+              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative aspect-[16/10] bg-black">
+              <!-- Recorded demo video -->
+              <video
+                ref="demoVideo1"
+                class="w-full h-full object-cover"
+                autoplay
+                loop
+                muted
+                playsinline
+              >
+                <source src="/demo1.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
 
@@ -134,7 +143,7 @@
                     d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight"> Send to any AI
+              <h3 class="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight"> Send to any AI
                 in one click</h3>
               <p class="text-base text-gray-500 mt-4 leading-relaxed max-w-xl">Find the exact reference you need and
                 launch it directly into your preferred AI model.</p>
@@ -173,8 +182,18 @@
               </ul>
             </div>
             <div
-              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 aspect-[16/10] relative">
-              <TimelineDemo />
+              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 aspect-[16/10] relative bg-black">
+              <!-- Recorded demo video -->
+              <video
+                ref="demoVideo2"
+                class="w-full h-full object-cover"
+                autoplay
+                loop
+                muted
+                playsinline
+              >
+                <source src="/demo2.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
 
@@ -188,7 +207,7 @@
                     d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
               </div>
-              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Chat with your
+              <h3 class="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">Chat with your
                 notes</h3>
               <p class="text-base text-gray-500 mt-4 leading-relaxed max-w-xl">Ask questions grounded in your
                 personal
@@ -229,8 +248,18 @@
               </ul>
             </div>
             <div
-              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative aspect-[16/10]">
-              <ChatDemo />
+              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative aspect-[16/10] bg-black">
+              <!-- Recorded demo video -->
+              <video
+                ref="demoVideo3"
+                class="w-full h-full object-cover"
+                autoplay
+                loop
+                muted
+                playsinline
+              >
+                <source src="/demo3.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
 
@@ -244,7 +273,7 @@
                     d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                 </svg>
               </div>
-              <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">You decide
+              <h3 class="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">You decide
                 what's saved</h3>
               <p class="text-base text-gray-500 mt-4 leading-relaxed max-w-xl">Review, edit, and curate your
                 memories
@@ -282,8 +311,18 @@
               </ul>
             </div>
             <div
-              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative bg-[#111111] aspect-[16/10]">
-              <InboxDemo />
+              class="lg:col-span-7 rounded-2xl overflow-hidden shadow-xl border border-black/5 relative bg-black aspect-[16/10]">
+              <!-- Recorded demo video -->
+              <video
+                ref="demoVideo4"
+                class="w-full h-full object-cover"
+                autoplay
+                loop
+                muted
+                playsinline
+              >
+                <source src="/demo4.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
 
@@ -304,7 +343,7 @@
         <div class="max-w-3xl mb-16">
           <h2 class="text-sm font-bold uppercase tracking-widest text-black/60 mb-4">Ecosystem</h2>
           <p
-            class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance text-black">
+            class="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance text-black">
             Built to extend.</p>
           <p class="text-lg md:text-xl text-black/80">MemWyre isn't a silo. It powers your entire workflow
             through standard protocols.</p>
@@ -476,7 +515,7 @@
         <div class="mb-16">
           <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">Workflow</h2>
           <p
-            class="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 text-balance">
+            class="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 text-balance">
             Structured for flow.
           </p>
         </div>
@@ -540,7 +579,7 @@
       <div class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
         <div class="mb-10 text-left">
           <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">FAQ</h2>
-          <p class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">Questions &amp; answers
+          <p class="font-display text-2xl sm:text-4xl font-bold tracking-tight text-gray-900">Questions &amp; answers
           </p>
         </div>
 
@@ -569,7 +608,7 @@
       <NumericBgAnimation :invert="true" class="absolute inset-0 z-0 opacity-40" />
 
       <div class="max-w-7xl mx-auto relative z-10">
-        <h2 class="font-display text-5xl sm:text-7xl lg:text-[7rem] font-medium tracking-tight mb-10 leading-[0.95]">
+        <h2 class="font-display text-4xl sm:text-7xl lg:text-[7rem] font-medium tracking-tight mb-10 leading-[0.95]">
           <span
             class="bg-clip-text text-transparent bg-[repeating-linear-gradient(to_bottom,#111,#111_6px,white_6px,white_9px)]">
             The Second Brain
@@ -578,7 +617,7 @@
             For Your AI.
           </span>
         </h2>
-        <p class="text-gray-600 text-xl sm:text-2xl mb-14 max-w-3xl mx-auto font-medium leading-relaxed">
+        <p class="text-gray-600 text-lg sm:text-2xl mb-14 max-w-3xl mx-auto font-medium leading-relaxed">
           A persistent knowledge vault that works everywhere you use AI.
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
@@ -695,6 +734,8 @@ import ScatteredWorkMinAnimation from '@/components/landing/usecases/ScatteredWo
 // --- Video scroll-triggered playback ---
 const demoVideo1 = ref(null);
 const demoVideo2 = ref(null);
+const demoVideo3 = ref(null);
+const demoVideo4 = ref(null);
 const heroAnimationMounted = ref(false);
 const heroAnimationReady = ref(false);
 let videoObserver = null;
@@ -724,6 +765,8 @@ const setupVideoObserver = () => {
 
   if (demoVideo1.value) videoObserver.observe(demoVideo1.value);
   if (demoVideo2.value) videoObserver.observe(demoVideo2.value);
+  if (demoVideo3.value) videoObserver.observe(demoVideo3.value);
+  if (demoVideo4.value) videoObserver.observe(demoVideo4.value);
 };
 
 onUnmounted(() => {

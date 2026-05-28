@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memwyre — Demo Launcher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface-2: #18181f;
+      --border: rgba(255,255,255,0.07);
+      --primary: #7c6ef7;
+      --primary-glow: rgba(124, 110, 247, 0.3);
+      --text: #f0eeff;
+      --text-muted: #9090a8;
+      --green: #3ecf8e;
+      --amber: #f59e0b;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80vw;
+      height: 60vh;
+      background: radial-gradient(ellipse, rgba(124,110,247,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .logo-ring {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), #a78bfa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 0 24px var(--primary-glow);
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    .badge {
+      margin-left: auto;
+      background: rgba(62,207,142,0.12);
+      color: var(--green);
+      border: 1px solid rgba(62,207,142,0.25);
+      border-radius: 999px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── Controls bar ── */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      flex-wrap: wrap;
+    }
+
+    .controls label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .controls select, .controls input[type="text"] {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.75rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .controls select:focus, .controls input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+
+    .controls select option { background: #1a1a2e; }
+
+    .sep { flex: 1; }
+
+    .obs-tip {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .obs-tip span { color: var(--amber); }
+
+    /* ── Section headings ── */
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.9rem;
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.9rem;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.1rem 1.2rem;
+      cursor: pointer;
+      transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s, background 0.18s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      position: relative;
+      overflow: hidden;
+      text-align: left;
+      user-select: none;
+    }
+
+    .card:hover {
+      border-color: var(--primary);
+      background: var(--surface-2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(124,110,247,0.15);
+    }
+
+    .card:active {
+      transform: translateY(0);
+    }
+
+    /* Glow on hover */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(124,110,247,0.08) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    .card-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card-route {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: rgba(255,255,255,0.04);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      width: fit-content;
+    }
+
+    .card-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-top: 0.15rem;
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(124,110,247,0.12);
+      color: #a78bfa;
+      border: 1px solid rgba(124,110,247,0.2);
+      width: fit-content;
+    }
+
+    .card-tag.auth {
+      background: rgba(245,158,11,0.1);
+      color: var(--amber);
+      border-color: rgba(245,158,11,0.2);
+    }
+
+    /* ── Footer note ── */
+    .footer-note {
+      margin-top: 2.5rem;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .footer-note strong { color: var(--text); }
+
+    kbd {
+      display: inline-block;
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 5px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.75rem;
+      font-family: monospace;
+      color: var(--text);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.4);
+    }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 99;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <header>
+      <div class="logo-ring">🧠</div>
+      <div>
+        <h1>Memwyre — Demo Launcher</h1>
+        <p>Open any view in a dedicated window sized for OBS recording</p>
+      </div>
+      <span class="badge">OBS Ready</span>
+    </header>
+
+    <!-- Controls -->
+    <div class="controls">
+      <label for="base-url">Base URL</label>
+      <input type="text" id="base-url" value="http://localhost:5173" style="width:220px" />
+
+      <label for="res-preset">Window size</label>
+      <select id="res-preset" onchange="applyPreset()">
+        <option value="1920,1080">1920 × 1080  (Full HD)</option>
+        <option value="2560,1440">2560 × 1440  (2K)</option>
+        <option value="1280,720">1280 × 720   (720p)</option>
+        <option value="1366,768">1366 × 768   (Laptop)</option>
+        <option value="custom">Custom…</option>
+      </select>
+
+      <label for="win-w">W</label>
+      <input type="text" id="win-w" value="1920" style="width:60px;text-align:center" />
+      <label for="win-h">H</label>
+      <input type="text" id="win-h" value="1080" style="width:60px;text-align:center" />
+
+      <div class="sep"></div>
+      <span class="obs-tip">
+        <span>⚡</span> Click any card → window opens at exact capture size
+      </span>
+    </div>
+
+    <!-- ★ Feature animation demos -->
+    <div class="section-label">⭐ Feature animation demos</div>
+    <div class="grid" id="feature-grid"></div>
+
+    <!-- Public views -->
+    <div class="section-label">Public pages</div>
+    <div class="grid" id="public-grid"></div>
+
+    <!-- Auth-required views -->
+    <div class="section-label">Authenticated views</div>
+    <div class="grid" id="auth-grid"></div>
+
+    <!-- Tips -->
+    <div class="footer-note">
+      <strong>OBS tip:</strong> After opening a window, in OBS add a <em>Window Capture</em> source, select the browser window,
+      and enable <em>Client Area</em> to avoid capturing the browser chrome. Use <kbd>F11</kbd> to toggle fullscreen inside the
+      opened window for a clean capture. <br /><br />
+      <strong>Hotkey shortcut:</strong> Press <kbd>Alt</kbd> + <kbd>F</kbd> inside any opened demo window to force fullscreen.
+    </div>
+
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    const FEATURE_DEMOS = [
+      { icon: '🌐', name: 'Access from any app',     route: '/demo/omnipresent', desc: 'Floating overlay — save & sync from ChatGPT, Notion, etc.' },
+      { icon: '📤', name: 'Send to any AI',          route: '/demo/timeline',    desc: 'Memory list → "Use in AI" → launch into ChatGPT/Claude' },
+      { icon: '💬', name: 'Chat with your notes',    route: '/demo/chat',        desc: 'Grounded Q&A with inline source citations' },
+      { icon: '✅', name: "You decide what's saved", route: '/demo/inbox',       desc: 'Review, approve or dismiss incoming memories' },
+    ];
+
+    const VIEWS = {
+      public: [
+        { icon: '🏠', name: 'Landing Page',     route: '/',              desc: 'Marketing homepage with hero & features' },
+        { icon: '📖', name: 'Use Cases',         route: '/use-cases',     desc: 'Feature use-case showcase' },
+        { icon: '💰', name: 'Pricing',           route: '/pricing',       desc: 'Pricing tiers & comparison table' },
+        { icon: '🔐', name: 'Login',             route: '/login',         desc: 'Auth login screen' },
+        { icon: '📝', name: 'Sign Up',           route: '/signup',        desc: 'Registration flow' },
+        { icon: '🗺️', name: 'Memory Map',        route: '/map',           desc: 'Visual knowledge graph' },
+        { icon: '🎁', name: 'Redeem',            route: '/redeem',        desc: 'Coupon / invite redemption' },
+        { icon: '🖼️', name: 'Slide Gallery',     route: '/slides',        desc: 'Exported slide decks gallery' },
+        { icon: '📄', name: 'Privacy Policy',    route: '/privacy-policy',desc: 'Legal / privacy page' },
+        { icon: '📜', name: 'Terms',             route: '/terms',         desc: 'Terms & conditions' },
+      ],
+      auth: [
+        { icon: '🎛️', name: 'Dashboard',         route: '/dashboard',     desc: 'Main workspace hub & timeline' },
+        { icon: '✉️', name: 'Inbox',             route: '/inbox',         desc: 'AI interaction inbox' },
+        { icon: '✏️', name: 'Editor (new)',       route: '/editor/new',    desc: 'Memory / conversation editor' },
+        { icon: '💬', name: 'Chat',              route: '/chat',          desc: 'AI chat interface' },
+        { icon: '🔮', name: 'Prompt Generator',  route: '/prompts',       desc: 'AI prompt builder' },
+        { icon: '⚙️', name: 'Settings',          route: '/settings',      desc: 'Account & preferences' },
+        { icon: '💳', name: 'Billing',           route: '/billing',       desc: 'Subscription management' },
+        { icon: '📊', name: 'Admin Insights',    route: '/admin',         desc: 'Usage analytics (admin only)' },
+        { icon: '🔑', name: 'Admin Bypass',      route: '/admin/bypass',  desc: 'Auth bypass for demos (admin)' },
+      ],
+    };
+
+    function getSettings() {
+      const base = document.getElementById('base-url').value.replace(/\/$/, '');
+      const w = parseInt(document.getElementById('win-w').value) || 1920;
+      const h = parseInt(document.getElementById('win-h').value) || 1080;
+      return { base, w, h };
+    }
+
+    function openView(route) {
+      const { base, w, h } = getSettings();
+      const url = base + route;
+      // Center the window on screen
+      const left = Math.round((screen.width - w) / 2);
+      const top  = Math.round((screen.height - h) / 2);
+      const win  = window.open(
+        url,
+        '_blank',
+        `width=${w},height=${h},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,scrollbars=yes`
+      );
+      if (!win) {
+        showToast('⚠️ Pop-up blocked — please allow pop-ups for this page');
+        return;
+      }
+      showToast(`✅ Opened ${route}  at ${w}×${h}`);
+    }
+
+    function makeCard(view, tag) {
+      const card = document.createElement('button');
+      card.className = 'card';
+      card.setAttribute('title', `Open ${view.route}`);
+      card.innerHTML = `
+        <span class="card-icon">${view.icon}</span>
+        <span class="card-name">${view.name}</span>
+        <span class="card-route">${view.route}</span>
+        <span class="card-desc">${view.desc}</span>
+        ${tag ? `<span class="card-tag ${tag}">${tag}</span>` : ''}
+      `;
+      card.addEventListener('click', () => openView(view.route));
+      return card;
+    }
+
+    function render() {
+      const fg = document.getElementById('feature-grid');
+      const pg = document.getElementById('public-grid');
+      const ag = document.getElementById('auth-grid');
+      fg.innerHTML = '';
+      pg.innerHTML = '';
+      ag.innerHTML = '';
+      FEATURE_DEMOS.forEach(v => {
+        const card = makeCard(v, '');
+        card.style.borderColor = 'rgba(124,110,247,0.35)';
+        card.style.background = 'rgba(124,110,247,0.06)';
+        fg.appendChild(card);
+      });
+      VIEWS.public.forEach(v => pg.appendChild(makeCard(v, '')));
+      VIEWS.auth.forEach(v  => ag.appendChild(makeCard(v, 'auth')));
+    }
+
+    function applyPreset() {
+      const val = document.getElementById('res-preset').value;
+      if (val === 'custom') return;
+      const [w, h] = val.split(',');
+      document.getElementById('win-w').value = w;
+      document.getElementById('win-h').value = h;
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    render();
+  </script>
+</body>
+</html>

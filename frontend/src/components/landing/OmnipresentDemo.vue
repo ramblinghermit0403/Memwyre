@@ -287,10 +287,10 @@ const triggerPhase2 = async () => {
     let progress = (i + 1) / fullText.length
     let currentX = -200 + (progress * 260)
 
-    // Buttery smooth tracking transition that slightly overlaps the next keystroke
-    focusCamera(currentX, 0, 1.8, 12)
+    // Smooth camera pan that tracks each keystroke
+    focusCamera(currentX, 0, 1.8, 80)
 
-    await sleep(2) // Absolute minimum sleep
+    await sleep(40) // Deliberate typing pace
   }
   await sleep(200)
 

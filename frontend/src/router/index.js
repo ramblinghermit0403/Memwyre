@@ -255,6 +255,31 @@ export function createAppRouter({ ssr = false } = {}) {
                 path: '/export-slide/:id',
                 name: 'export-slide',
                 component: () => import('../views/ExportSlideView.vue')
+            },
+            // ── Demo recording routes (OBS) ──────────────────────────────
+            {
+                path: '/demo/omnipresent',
+                name: 'demo-omnipresent',
+                component: () => import('../views/demo/DemoOmnipresent.vue'),
+                meta: { requiresAuth: false }
+            },
+            {
+                path: '/demo/timeline',
+                name: 'demo-timeline',
+                component: () => import('../views/demo/DemoTimeline.vue'),
+                meta: { requiresAuth: false }
+            },
+            {
+                path: '/demo/chat',
+                name: 'demo-chat',
+                component: () => import('../views/demo/DemoChat.vue'),
+                meta: { requiresAuth: false }
+            },
+            {
+                path: '/demo/inbox',
+                name: 'demo-inbox',
+                component: () => import('../views/demo/DemoInbox.vue'),
+                meta: { requiresAuth: false }
             }
         ]
     });
