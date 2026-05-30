@@ -153,6 +153,20 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
             for key, value in header_dict.items():
                 if key.lower() == 'x-mcp-client-name':
                     protocol_client_name = protocol_client_name or value
+
+            # Fallback: Check User-Agent header for known clients
+            if not protocol_client_name:
+                for key, value in header_dict.items():
+                    if key.lower() == 'user-agent':
+                        ua = value.lower()
+                        if 'claude' in ua:
+                            protocol_client_name = 'Claude Desktop'
+                        elif 'cursor' in ua:
+                            protocol_client_name = 'Cursor'
+                        elif 'postman' in ua:
+                            protocol_client_name = 'Postman'
+                        elif 'curl' in ua:
+                            protocol_client_name = 'cURL'
             
             # Check Authorization Header (case-insensitive)
             auth_header = None
