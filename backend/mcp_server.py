@@ -98,55 +98,11 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
     Returns a tuple of (User, client_source) where client_source is determined from protocol or API key name.
     """
     api_key = None
-    protocol_client_name = None
-
-    # 0. Check Protocol Client Info (MCP standard initialize params)
-    if ctx:
-        try:
-            if hasattr(ctx, 'session'):
-                session = ctx.session
-                if hasattr(session, '_client_info') and hasattr(session._client_info, 'name'):
-                    protocol_client_name = session._client_info.name
-                elif hasattr(session, 'client_info') and hasattr(session.client_info, 'name'):
-                    protocol_client_name = session.client_info.name
-                elif hasattr(session, 'init_options') and hasattr(session.init_options, 'clientInfo'):
-                    protocol_client_name = session.init_options.clientInfo.name
-                elif hasattr(session, 'client_params') and hasattr(session.client_params, 'clientInfo') and hasattr(session.client_params.clientInfo, 'name'):
-                    protocol_client_name = session.client_params.clientInfo.name
-                elif hasattr(session, '_client_params') and hasattr(session._client_params, 'clientInfo') and hasattr(session._client_params.clientInfo, 'name'):
-                    protocol_client_name = session._client_params.clientInfo.name
-                else:
-                    # Ultimate fallback for SDK internal refactoring
-                    try:
-                        params_str = ""
-                        if hasattr(session, 'client_params'):
-                            params_str += str(session.client_params)
-                        if hasattr(session, '_client_params'):
-                            params_str += str(session._client_params)
-                            
-                        params_lower = params_str.lower()
-                        if 'claude' in params_lower:
-                            protocol_client_name = 'Claude Desktop'
-                        elif 'cursor' in params_lower:
-                            protocol_client_name = 'Cursor'
-                    except Exception as ex:
-                        pass
-            
-                if protocol_client_name:
-                    logger.info(f"Detected MCP protocol client name: {protocol_client_name}")
-                else:
-                    logger.debug(f"Session attrs (could not find client info): {[a for a in dir(session) if not a.startswith('_')]}")
-        except Exception as e:
-            logger.error(f"Error extracting protocol client info: {e}")
-
-    # Explicit environment variable source override
-    env_client_name = os.environ.get("BRAIN_VAULT_CLIENT_NAME")
 
     # 1. Check Context for Headers (HTTP Mode)
     if ctx and hasattr(ctx, 'request_context'):
         try:
             rc = ctx.request_context
-            logger.info(f"request_context type: {type(rc)}, attrs: {[a for a in dir(rc) if not a.startswith('_')]}")
             
             # Try multiple ways to get headers (varies by transport)
             headers = {}
@@ -163,28 +119,6 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
             else:
                 header_dict = {}
             
-            logger.info(f"Extracted headers keys: {list(header_dict.keys())}")
-            
-            # Check Custom Headers for explicit client name
-            for key, value in header_dict.items():
-                if key.lower() == 'x-mcp-client-name':
-                    protocol_client_name = protocol_client_name or value
-
-            # Fallback: Check User-Agent header for known clients
-            if not protocol_client_name:
-                for key, value in header_dict.items():
-                    if key.lower() == 'user-agent':
-                        ua = str(value).lower()
-                        logger.info(f"Checking User-Agent: {value}")
-                        if 'claude' in ua:
-                            protocol_client_name = 'Claude Desktop'
-                        elif 'cursor' in ua:
-                            protocol_client_name = 'Cursor'
-                        elif 'postman' in ua:
-                            protocol_client_name = 'Postman'
-                        elif 'curl' in ua:
-                            protocol_client_name = 'cURL'
-            
             # Check Authorization Header (case-insensitive)
             auth_header = None
             for key, value in header_dict.items():
@@ -193,7 +127,6 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
                     break
 
             if auth_header:
-                logger.info(f"Found auth header: {auth_header[:20]}...")
                 if auth_header.startswith("Bearer "):
                     token = auth_header.split(" ")[1]
                     if token.startswith("bv_sk_"):
@@ -265,7 +198,7 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
             user = result.scalars().first()
 
     # Determine priority for client_source
-    client_source = protocol_client_name or env_client_name or key_record_name
+    client_source = key_record_name or "mcp-server"
     return (user, client_source)
 
 
