@@ -105,14 +105,16 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
         try:
             if hasattr(ctx, 'session'):
                 session = ctx.session
-                # Attempt to extract from standard mcp python SDK internals
-                # Different versions of the SDK store it in different places
                 if hasattr(session, '_client_info') and hasattr(session._client_info, 'name'):
                     protocol_client_name = session._client_info.name
                 elif hasattr(session, 'client_info') and hasattr(session.client_info, 'name'):
                     protocol_client_name = session.client_info.name
                 elif hasattr(session, 'init_options') and hasattr(session.init_options, 'clientInfo'):
                     protocol_client_name = session.init_options.clientInfo.name
+                elif hasattr(session, 'client_params') and hasattr(session.client_params, 'clientInfo') and hasattr(session.client_params.clientInfo, 'name'):
+                    protocol_client_name = session.client_params.clientInfo.name
+                elif hasattr(session, '_client_params') and hasattr(session._client_params, 'clientInfo') and hasattr(session._client_params.clientInfo, 'name'):
+                    protocol_client_name = session._client_params.clientInfo.name
             
                 if protocol_client_name:
                     logger.info(f"Detected MCP protocol client name: {protocol_client_name}")
