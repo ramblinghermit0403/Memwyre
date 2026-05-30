@@ -115,6 +115,22 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
                     protocol_client_name = session.client_params.clientInfo.name
                 elif hasattr(session, '_client_params') and hasattr(session._client_params, 'clientInfo') and hasattr(session._client_params.clientInfo, 'name'):
                     protocol_client_name = session._client_params.clientInfo.name
+                else:
+                    # Ultimate fallback for SDK internal refactoring
+                    try:
+                        params_str = ""
+                        if hasattr(session, 'client_params'):
+                            params_str += str(session.client_params)
+                        if hasattr(session, '_client_params'):
+                            params_str += str(session._client_params)
+                            
+                        params_lower = params_str.lower()
+                        if 'claude' in params_lower:
+                            protocol_client_name = 'Claude Desktop'
+                        elif 'cursor' in params_lower:
+                            protocol_client_name = 'Cursor'
+                    except Exception as ex:
+                        pass
             
                 if protocol_client_name:
                     logger.info(f"Detected MCP protocol client name: {protocol_client_name}")
