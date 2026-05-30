@@ -158,7 +158,8 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
             if not protocol_client_name:
                 for key, value in header_dict.items():
                     if key.lower() == 'user-agent':
-                        ua = value.lower()
+                        ua = str(value).lower()
+                        logger.info(f"Checking User-Agent: {value}")
                         if 'claude' in ua:
                             protocol_client_name = 'Claude Desktop'
                         elif 'cursor' in ua:
