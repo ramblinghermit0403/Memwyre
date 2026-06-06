@@ -22,7 +22,10 @@ from app.db.session import AsyncSessionLocal
 from app.models.chat import ChatMessage, ChatSession, MessageRole
 from app.services.llm_service import llm_service
 from app.services.vector_store import vector_store
-from app.services.retrieval_service import retrieval_service
+if settings.MEMORY_ENGINE_VERSION == "v2":
+    from app.services.retrieval_service_v2 import retrieval_service
+else:
+    from app.services.retrieval_service import retrieval_service
 from sqlalchemy.future import select
 
 logger = logging.getLogger(__name__)
@@ -327,7 +330,10 @@ class AgentService:
              
         async def search_memory_wrapper(query: str):
             """Search for relevant memories."""
-            from app.services.retrieval_service import retrieval_service
+            if settings.MEMORY_ENGINE_VERSION == "v2":
+                from app.services.retrieval_service_v2 import retrieval_service
+            else:
+                from app.services.retrieval_service import retrieval_service
             from app.db.session import AsyncSessionLocal
             
             async with AsyncSessionLocal() as db:
@@ -578,7 +584,7 @@ ADDITIONAL AGENT INSTRUCTIONS:
             # This runs in the background AFTER the response is ready
             # ---------------------------------------------------------
             try:
-                from app.worker import extract_chat_facts_task
+                from app.worker_router import extract_chat_facts_task
                 extract_chat_facts_task.delay(message, user_id)
                 logger.info(f"Dispatched fact extraction task for user {user_id}")
             except Exception as e:

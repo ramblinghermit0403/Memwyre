@@ -113,12 +113,12 @@ All paths lead to the same memory engine.
 
 ```bash
 cd backend
-python -m venv venv
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # Linux/Mac
+# Create environment and install dependencies
+uv venv
+uv pip install -r requirements.txt
 
-pip install -r requirements.txt
-python -m uvicorn app.main:app --reload
+# Run the server
+uv run uvicorn app.main:app --reload
 ```
 
 Backend runs at `http://localhost:8000`
@@ -129,9 +129,8 @@ Requires a running Redis instance.
 
 ```bash
 cd backend
-venv\Scripts\activate
-# Windows (requires -P solo)
-celery -A app.celery_app worker --loglevel=info -P solo
+# Run Celery background worker
+uv run celery -A app.celery_app worker --loglevel=info -P solo
 ```
 
 ### Frontend Setup
@@ -232,13 +231,27 @@ brain_vault/
 
 ## Configuration
 
-### API Keys
+### Environment Variables (.env)
 
-Set your LLM API keys in **Settings**:
-- OpenAI API Key (for GPT models)
-- Gemini API Key (for Gemini models)
+Set your configuration in `backend/.env`. To enable the **V2 Memory Engine** powered by Azure OpenAI and Pinecone, use the following:
 
-Keys are stored locally in browser `localStorage`.
+```env
+# 1. Activate the V2 Engine
+MEMORY_ENGINE_VERSION="v2"
+
+# 2. Azure OpenAI Credentials & Endpoints
+AZURE_OPENAI_API_KEY="your-azure-subscription-key"
+AZURE_OPENAI_ENDPOINT="https://memwyre.cognitiveservices.azure.com/"
+AZURE_OPENAI_API_VERSION="2024-12-01-preview"
+
+# Azure Deployments
+AZURE_OPENAI_DEPLOYMENT="gpt-4o-mini"
+AZURE_OPENAI_EMBEDDING_DEPLOYMENT="text-embedding-3-small"
+
+# 3. Pinecone (1536 dimensions for text-embedding-3-small)
+PINECONE_API_KEY="your-pinecone-key"
+PINECONE_HOST="https://your-new-1536-dimension-index-host.pinecone.io"
+```
 
 ### Database
 
@@ -246,7 +259,7 @@ SQLite database is created automatically at `backend/brain_vault.db`.
 
 ### Vector Store
 
-ChromaDB stores embeddings at `backend/chroma_db/`.
+Pinecone (cloud) stores embeddings by default. ChromaDB fallback stores locally at `backend/chroma_db/`.
 
 ## Testing
 
@@ -300,7 +313,4 @@ MIT License - feel free to use and modify.
 - Built with assistance from Antigravity AI
 - MCP specification by Anthropic
 - Inspired by personal knowledge management best practices
-
-## Run Celery Worker
-```bash
-uv run celery -A app.celery_app worker --loglevel=info -P threads --concurrency 5
+

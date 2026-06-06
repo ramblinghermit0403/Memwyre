@@ -20,9 +20,9 @@ class UserUpdate(BaseModel):
 class UserInDBBase(UserBase):
     id: int
     is_active: bool
-    is_verified: bool = False
-    onboarding_completed: bool = False
-    settings: Dict[str, Any] = {}
+    is_verified: Optional[bool] = False
+    onboarding_completed: Optional[bool] = False
+    settings: Optional[Dict[str, Any]] = {}
     created_at: datetime
 
     class Config:

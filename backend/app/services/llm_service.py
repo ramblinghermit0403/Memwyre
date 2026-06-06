@@ -494,4 +494,78 @@ Rules:
             print(f"Title generation failed: {e}")
             return "New Chat"
 
+    async def extract_plugin_signals(self, transcript: str, api_key: Optional[str] = None) -> list:
+        """
+        Extract high-signal memories (architectural decisions, bug fixes, library additions)
+        from a raw Claude Code terminal transcript.
+        """
+        if not transcript or len(transcript) < 50:
+            return []
+            
+        target_key = api_key or self.openai_api_key
+        
+        system_prompt = """You are an AI Archivist for a developer.
+Analyze the following terminal session transcript and extract ONLY high-value signals.
+Ignore syntax errors, routine file saves, typos, and trivial conversational chatter.
+
+Extract the following categories of signals:
+1. Architectural decisions or design patterns chosen.
+2. Successful bug fixes or root cause discoveries.
+3. New dependencies or libraries added and why.
+4. Explicit user preferences (e.g., "always use arrow functions").
+
+Return a valid JSON array of strings, where each string is a distinct memory to save.
+If there is nothing of long-term value, return an empty array `[]`.
+
+Example Output:
+[
+  "Decided to use Celery for background tasks instead of FastAPI BackgroundTasks due to horizontal scaling needs.",
+  "Fixed a bug where CORS blocked WebSockets by using allow_origin_regex instead of allow_origins=['*'].",
+  "User prefers using React functional components with Tailwind CSS."
+]
+"""
+        
+        user_message = f"Terminal Transcript:\n{transcript[:8000]}"
+        
+        try:
+            import json
+            import re
+            
+            # 1. Try Bedrock First
+            try:
+                llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0}, config=AWS_CONFIG)
+                messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
+                res = await llm.ainvoke(messages)
+                text = res.content
+            except Exception as e:
+                if not target_key: return []
+                
+                # Fallback to OpenAI/Gemini
+                if target_key.startswith("sk-"):
+                    llm = ChatOpenAI(api_key=target_key, model="gpt-4o-mini", temperature=0)
+                    messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
+                    res = await llm.ainvoke(messages)
+                    text = res.content
+                else:
+                    genai.configure(api_key=target_key)
+                    model = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json"})
+                    res = model.generate_content(f"{system_prompt}\n\n{user_message}")
+                    text = res.text
+
+            # Clean
+            text = text.replace("```json", "").replace("```", "").strip()
+            
+            try:
+                data = json.loads(text)
+                if isinstance(data, list):
+                    return [str(item) for item in data if isinstance(item, str)]
+            except json.JSONDecodeError:
+                match = re.search(r'\[.*\]', text, re.DOTALL)
+                if match:
+                    return json.loads(match.group())
+            return []
+        except Exception as e:
+            print(f"Signal extraction failed: {e}")
+            return []
+
 llm_service = LLMService()

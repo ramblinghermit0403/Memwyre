@@ -1,19 +1,21 @@
 from celery import Celery
 from app.core.config import settings
 
+worker_module = "app.worker_v2" if settings.MEMORY_ENGINE_VERSION == "v2" else "app.worker"
+
 celery_app = Celery(
     "brain_vault_worker",
     broker=settings.CELERY_BROKER_URL,
-    backend=settings.REDIS_URL, # Use separate Redis URL if configured, or default to broker
-    include=["app.worker"]
+    backend=settings.REDIS_URL,
+    include=[worker_module]
 )
-print(f"Celery App Initialized with broker: {settings.CELERY_BROKER_URL}")
+print(f"Celery App Initialized with broker: {settings.CELERY_BROKER_URL} (Engine: {worker_module})")
 
 celery_app.conf.task_routes = {
-    "app.worker.process_memory_metadata_task": "celery",
-    "app.worker.ingest_memory_task": "celery",
-    "app.worker.dedupe_memory_task": "celery",
-    "app.worker.extract_chat_facts_task": "celery",
+    f"{worker_module}.process_memory_metadata_task{'_v2' if settings.MEMORY_ENGINE_VERSION == 'v2' else ''}": "celery",
+    f"{worker_module}.ingest_memory_task{'_v2' if settings.MEMORY_ENGINE_VERSION == 'v2' else ''}": "celery",
+    f"{worker_module}.dedupe_memory_task{'_v2' if settings.MEMORY_ENGINE_VERSION == 'v2' else ''}": "celery",
+    f"{worker_module}.extract_chat_facts_task{'_v2' if settings.MEMORY_ENGINE_VERSION == 'v2' else ''}": "celery",
 }
 
 # Optional: Retry customization

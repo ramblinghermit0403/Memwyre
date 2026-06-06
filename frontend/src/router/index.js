@@ -195,6 +195,12 @@ export function createAppRouter({ ssr = false } = {}) {
                 meta: { requiresAuth: true }
             },
             {
+                path: '/integrations',
+                name: 'integrations',
+                component: () => import('../views/IntegrationsView.vue'),
+                meta: { requiresAuth: true }
+            },
+            {
                 path: '/editor/:id',
                 name: 'editor',
                 component: () => import('../views/EditorView.vue'),

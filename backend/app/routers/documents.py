@@ -18,7 +18,11 @@ from app.models.document import Document, Chunk
 from app.services.vector_store import vector_store
 from app.services.ingestion import ingestion_service
 from app.services.metadata_extraction import metadata_service
-from app.services.retrieval_service import retrieval_service
+from app.core.config import settings
+if settings.MEMORY_ENGINE_VERSION == "v2":
+    from app.services.retrieval_service_v2 import retrieval_service
+else:
+    from app.services.retrieval_service import retrieval_service
 from app.db.session import AsyncSessionLocal
 
 # Wrapper to run in background with fresh session
@@ -129,7 +133,7 @@ async def upload_document(
     
     # Offload Ingestion to Background Task
     try:
-        from app.worker import ingest_memory_task
+        from app.worker_router import ingest_memory_task
         print(f"Triggering background ingestion for document {document.id}")
         ingest_memory_task.delay(
             memory_id=document.id,
@@ -222,7 +226,7 @@ async def upload_youtube(
     
     # Offload Ingestion to Background Task
     try:
-        from app.worker import ingest_memory_task, process_memory_metadata_task
+        from app.worker_router import ingest_memory_task, process_memory_metadata_task
         print(f"Triggering background ingestion for YouTube Memory {memory.id}")
         
         # Metadata analysis
@@ -409,7 +413,7 @@ async def update_document(
     await db.commit()
     
     # Offload re-ingestion to background task
-    from app.worker import ingest_memory_task
+    from app.worker_router import ingest_memory_task
     ingest_memory_task.delay(
         memory_id=document.id,
         user_id=current_user.id,

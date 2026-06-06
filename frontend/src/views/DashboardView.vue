@@ -16,9 +16,43 @@
             </div>
           </div>
 
-          <div class="lg:col-span-4 min-h-0">
-            <div class="bg-white dark:bg-surface rounded-xl shadow-sm border border-gray-100 dark:border-border overflow-hidden h-[640px] lg:h-full min-h-0">
+          <div class="lg:col-span-4 min-h-0 flex flex-col gap-6">
+            <div class="bg-white dark:bg-surface rounded-xl shadow-sm border border-gray-100 dark:border-border overflow-hidden h-[400px] lg:flex-1 min-h-0">
               <DashboardInboxList />
+            </div>
+
+            <!-- Integration Suggestions -->
+            <div class="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 rounded-xl shadow-sm border border-primary/20 p-5 shrink-0">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <h3 class="text-sm font-bold text-gray-900 dark:text-white">Connect Integrations</h3>
+                  <p class="text-xs text-gray-500 dark:text-text-secondary mt-1">Supercharge your workflow by connecting your favorite tools.</p>
+                </div>
+                <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex flex-col gap-2 mt-4">
+                <router-link to="/integrations" class="group flex items-center justify-between p-3 bg-white dark:bg-surface rounded-lg border border-gray-100 dark:border-border hover:border-primary/50 transition-colors">
+                  <div class="flex items-center gap-3">
+                    <img src="https://unpkg.com/@lobehub/icons-static-svg@latest/icons/cursor.svg" class="w-5 h-5 dark:invert" />
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Cursor</span>
+                  </div>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </router-link>
+                <router-link to="/integrations" class="group flex items-center justify-between p-3 bg-white dark:bg-surface rounded-lg border border-gray-100 dark:border-border hover:border-primary/50 transition-colors">
+                  <div class="flex items-center gap-3">
+                    <img src="https://unpkg.com/@lobehub/icons-static-svg@latest/icons/claude-color.svg" class="w-5 h-5" />
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Claude Desktop</span>
+                  </div>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </router-link>
+                <router-link to="/integrations" class="text-xs font-semibold text-primary hover:text-primary-600 mt-2 text-center block">
+                  View all integrations &rarr;
+                </router-link>
+              </div>
             </div>
           </div>
         </div>

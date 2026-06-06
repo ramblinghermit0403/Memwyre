@@ -30,17 +30,22 @@ class IngestionService:
             length_function=len,
             separators=["\n\n", "\n", ". ", " ", ""]
         )
-        # Initialize semantic model
+        # Initialize Azure OpenAI Embeddings (matching V2 for consistency)
         try:
-            # Create a boto3 client with custom config
-            client = boto3.client("bedrock-runtime", region_name=os.getenv("AWS_REGION", "us-east-1"), config=AWS_CONFIG)
+            from langchain_openai import AzureOpenAIEmbeddings
+            from app.core.config import settings as cfg
             
-            self.bedrock_embeddings = BedrockEmbeddings(
-                model_id="amazon.titan-embed-text-v2:0",
-                client=client
+            embed_key = getattr(cfg, "AZURE_OPENAI_API_KEY", None) or getattr(cfg, "OPENAI_API_KEY", None)
+            
+            self.bedrock_embeddings = AzureOpenAIEmbeddings(
+                api_key=embed_key,
+                azure_endpoint=getattr(cfg, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
+                api_version=getattr(cfg, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
+                azure_deployment=getattr(cfg, "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small"),
+                dimensions=512
             )
         except Exception as e:
-            print(f"Warning: Failed to load Bedrock embeddings: {e}")
+            print(f"Warning: Failed to load Azure embeddings: {e}")
             self.bedrock_embeddings = None
     
     def chunk_text(self, text: str) -> List[str]:

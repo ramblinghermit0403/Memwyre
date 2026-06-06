@@ -8,7 +8,7 @@ from app.models.memory import Memory
 from app.services.vector_store import vector_store
 from app.services.ingestion import ingestion_service
 from app.services.websocket import manager
-from app.worker import ingest_memory_task
+from app.worker_router import ingest_memory_task
 import asyncio
 from pydantic import BaseModel
 

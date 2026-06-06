@@ -302,3 +302,50 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
             traceback.print_exc()
 
     run_async(_ingest())
+
+@celery_app.task(acks_late=True)
+def process_plugin_transcript_task(session_id: str, project_name: str, cwd: str, transcript: list, user_id: int):
+    """
+    Background task to process Claude Code transcripts and extract high-signal memories.
+    """
+    print(f"Worker: Starting transcript processing for session {session_id}")
+    
+    async def _process_transcript():
+        from app.services.llm_service import llm_service
+        from app.core.config import settings
+        import json
+        
+        try:
+            # Convert transcript list to string for LLM
+            transcript_str = json.dumps(transcript, indent=2)
+            
+            # Extract signals
+            signals = await llm_service.extract_plugin_signals(
+                transcript_str, 
+                getattr(settings, "GEMINI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None)
+            )
+            
+            if signals:
+                print(f"Worker: Extracted {len(signals)} signals from session {session_id}")
+                async with AsyncSessionLocal() as db:
+                    for signal_content in signals:
+                        # Create Memory Model
+                        # Adding [Plugin] prefix or similar context
+                        full_content = f"[{project_name}] {signal_content}"
+                        new_memory = Memory(
+                            user_id=user_id,
+                            content=full_content,
+                            project_id=None, # Or resolve project if needed
+                        )
+                        db.add(new_memory)
+                    await db.commit()
+                print(f"Worker: Saved {len(signals)} memories from plugin.")
+            else:
+                print(f"Worker: No high-value signals found in session {session_id}")
+                
+        except Exception as e:
+            print(f"Worker: Transcript processing failed: {e}")
+            import traceback
+            traceback.print_exc()
+
+    run_async(_process_transcript())

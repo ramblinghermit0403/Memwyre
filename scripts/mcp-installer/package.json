@@ -1,0 +1,14 @@
+{
+  "name": "@memwyre/mcp-installer",
+  "version": "1.0.0",
+  "description": "One-line installer for MemWyre MCP server across various AI clients.",
+  "main": "index.js",
+  "bin": {
+    "install-memwyre-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "MemWyre",
+  "license": "MIT"
+}

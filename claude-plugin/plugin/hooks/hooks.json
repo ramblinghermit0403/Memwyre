@@ -1,0 +1,27 @@
+{
+  "description": "Memwyre: Persistent autonomous memory",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/inject-memory.cjs\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/dist/capture-session.cjs\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

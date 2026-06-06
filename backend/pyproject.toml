@@ -50,4 +50,5 @@ dependencies = [
     "gunicorn>=22.0.0",
     "youtube-transcript-api>=1.2.0",
     "yt-dlp>=2024.0.0",
+    "sentence-transformers>=5.5.1",
 ]

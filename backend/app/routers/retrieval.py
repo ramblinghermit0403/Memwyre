@@ -34,7 +34,11 @@ async def search_documents(
     """
     print(f"DEBUG: Incoming Search Request top_k={request.top_k} query='{request.query}'")
     try:
-        from app.services.retrieval_service import retrieval_service
+        from app.core.config import settings
+        if settings.MEMORY_ENGINE_VERSION == "v2":
+            from app.services.retrieval_service_v2 import retrieval_service
+        else:
+            from app.services.retrieval_service import retrieval_service
         
         results = await retrieval_service.search_memories(
             query=request.query,

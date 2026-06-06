@@ -8,6 +8,10 @@
              <div class="mx-auto h-12 w-12 flex items-center justify-center mb-6">
                  <img src="/image.svg" alt="MemWyre" class="h-10 w-10 object-contain invert dark:invert-0 opacity-90" />
              </div>
+             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-semibold mb-4 border border-orange-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+                Coming Soon &amp; Under Maintenance
+             </div>
              <h2 class="text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
                 Log in to MemWyre
              </h2>
@@ -112,7 +116,7 @@ import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useRouter, useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
-import axios from 'axios'; // Ensure axios is imported or use api service
+import api from '../services/api';
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const email = ref('');
@@ -142,11 +146,50 @@ const router = useRouter();
 const route = useRoute();
 const toast = useToast();
 
+const handleSuccessfulLogin = async (defaultRedirect = '/dashboard') => {
+    toast.success(`Welcome back, ${authStore.user.name}!`);
+    
+    const redirectUri = route.query.redirect_uri;
+    const cliPort = route.query.cli_port;
+    const clientName = route.query.client || 'CLI Auto-Generated';
+    
+    if (redirectUri || cliPort) {
+        try {
+            // Generate a permanent API Key for the CLI
+            const res = await api.post('/user/api-keys', { name: clientName });
+            const newKey = res.data.key;
+            
+            // Redirect back to CLI
+            const targetUri = cliPort ? `http://localhost:${cliPort}/callback` : redirectUri;
+            window.location.href = `${targetUri}?token=${newKey}`;
+            return;
+        } catch (e) {
+            console.error("Failed to generate CLI token", e);
+            toast.error("Failed to authenticate CLI.");
+        }
+    }
+    
+    const redirectPath = route.query.redirect || defaultRedirect;
+    router.push(redirectPath);
+};
+
 const loginWithProvider = (provider) => {
     localStorage.setItem('lastProvider', provider);
     // Redirect to backend OAuth initiation
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
-    window.location.href = `${apiUrl}/auth/oauth/${provider}/login`;
+    let url = `${apiUrl}/auth/oauth/${provider}/login`;
+    
+    // Preserve CLI auth context by passing it as query parameters (requires backend support)
+    const queryParams = new URLSearchParams();
+    if (route.query.cli_port) queryParams.append('cli_port', route.query.cli_port);
+    if (route.query.redirect_uri) queryParams.append('redirect_uri', route.query.redirect_uri);
+    if (route.query.client) queryParams.append('client', route.query.client);
+    
+    if (queryParams.toString()) {
+        url += `?${queryParams.toString()}`;
+    }
+    
+    window.location.href = url;
 };
 
 
@@ -156,9 +199,7 @@ const handleLogin = async () => {
   try {
     await authStore.login(email.value, password.value, turnstileToken.value);
     localStorage.setItem('lastProvider', 'email'); 
-    toast.success(`Welcome back, ${authStore.user.name}!`);
-    const redirectPath = route.query.redirect || '/dashboard';
-    router.push(redirectPath);
+    await handleSuccessfulLogin();
   } catch (err) {
     if (err.response && err.response.data && err.response.data.detail) {
         error.value = err.response.data.detail;
@@ -192,10 +233,7 @@ const handleGoogleOneTapResponse = async (response) => {
         const data = await res.json();
         authStore.setTokens(data.access_token, data.refresh_token);
         localStorage.setItem('lastProvider', 'google');
-        toast.success(`Welcome back, ${authStore.user.name}!`);
-        
-        const redirectPath = route.query.redirect || '/dashboard';
-        router.push(redirectPath);
+        await handleSuccessfulLogin();
     } catch (e) {
         console.error("Google One Tap Error", e);
         // Fail silently or show toast
@@ -209,16 +247,15 @@ onMounted(() => {
     
     if (accessToken) {
         authStore.setTokens(accessToken, refreshToken);
-        toast.success(`Welcome back, ${authStore.user.name}!`);
         
-        // Remove tokens from URL
+        // We preserve redirect_uri and client in the query so handleSuccessfulLogin works
         const query = { ...route.query };
         delete query.access_token;
         delete query.refresh_token;
         router.replace({ query });
         
-        const redirectPath = query.redirect || '/dashboard';
-        router.push(redirectPath);
+        // Wait a tick for router to update
+        setTimeout(() => handleSuccessfulLogin(), 100);
         return;
     }
 

@@ -15,6 +15,7 @@
   "dependencies": {
     "@guolao/vue-monaco-editor": "^1.6.0",
     "@heroicons/vue": "^2.2.0",
+    "@lobehub/icons": "^5.10.0",
     "@milkdown/core": "^7.17.1",
     "@milkdown/ctx": "^7.17.1",
     "@milkdown/plugin-history": "^7.17.1",

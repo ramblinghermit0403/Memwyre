@@ -24,6 +24,11 @@
 
         <div class="lg:col-span-6 text-left -mt-28 sm:mt-0 lg:-mt-[130px] lg:ml-10 px-0 sm:px-4">
 
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-semibold mb-6 border border-orange-200 animate-fade-in-up">
+            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+            Coming Soon &amp; Under Maintenance
+          </div>
+
           <h1
             class="animate-fade-in-up hero-serif text-5xl sm:text-6xl lg:text-[70px] tracking-[-0.02em] leading-[1.1] lg:leading-[78px] text-[rgb(1,1,16)] max-w-4xl">
             Stop repeating <br class="hidden md:block" />

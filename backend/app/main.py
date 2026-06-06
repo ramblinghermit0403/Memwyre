@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing, admin, admin_bypass, bypass, projects, context, discovery
+from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing, admin, admin_bypass, bypass, projects, context, discovery, plugin
 from app.db.base import Base
 from app.db.session import engine
 import app.models # Register models
@@ -54,9 +54,6 @@ app = FastAPI(
 )
 
 # CORS Configuration
-# Note: allow_origins=["*"] + allow_credentials=True is invalid per CORS spec
-# and causes WebSocket upgrades to be rejected with 403.
-# When using wildcard, we use allow_origin_regex instead.
 if settings.cors_origin_list == ["*"]:
     app.add_middleware(
         CORSMiddleware,
@@ -81,7 +78,6 @@ from app.core.rate_limiter import init_rate_limiter
 init_rate_limiter(app)
 
 app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
-
 app.include_router(retrieval.router, prefix=f"{settings.API_V1_STR}/retrieval", tags=["retrieval"])
 app.include_router(llm.router, prefix=f"{settings.API_V1_STR}/llm", tags=["llm"])
 app.include_router(documents.router, prefix=f"{settings.API_V1_STR}/documents", tags=["documents"])
@@ -98,8 +94,10 @@ app.include_router(user_keys.router, prefix=f"{settings.API_V1_STR}/user", tags=
 app.include_router(user_settings.router, prefix=f"{settings.API_V1_STR}/user", tags=["user-settings"])
 app.include_router(feedback.router, prefix=f"{settings.API_V1_STR}/feedback", tags=["feedback"])
 app.include_router(chat_api.router, prefix=f"{settings.API_V1_STR}/chat", tags=["chat"])
+
 from app.routers import user_api_keys
 app.include_router(user_api_keys.router, prefix=f"{settings.API_V1_STR}/user", tags=["api-keys"])
+app.include_router(plugin.router, prefix=f"{settings.API_V1_STR}/plugin", tags=["plugin"])
 app.include_router(ws.router, prefix="/ws", tags=["websocket"])
 app.include_router(billing.router, prefix=f"{settings.API_V1_STR}/billing", tags=["billing"])
 app.include_router(admin.router, prefix=f"{settings.API_V1_STR}/admin", tags=["admin"])
@@ -135,13 +133,6 @@ async def root(request: Request):
         headers={"Link": link_header},
     )
 
-
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
-
-# MCP Server is now mounted in a dedicated service via mcp_server_app.py
-# to avoid Gunicorn multi-worker session state issues.
-
-
-

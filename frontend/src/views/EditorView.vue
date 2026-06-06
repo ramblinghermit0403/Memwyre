@@ -115,7 +115,8 @@
              <div class="w-full max-w-4xl bg-white dark:bg-surface shadow-sm border border-gray-100 dark:border-border rounded-xl min-h-[calc(100vh-8rem)] flex flex-col p-8 sm:p-12 relative h-fit mb-12">
                 <div
                   v-if="isViewMode"
-                  class="max-w-none rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-b from-gray-50/60 to-white dark:from-surface-2/40 dark:to-surface p-6 md:p-8"
+                  @click="handlePreviewClick"
+                  class="max-w-none rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-b from-gray-50/60 to-white dark:from-surface-2/40 dark:to-surface p-6 md:p-8 cursor-text"
                 >
                     <MarkdownPreview :content="content || ''" />
                 </div>
@@ -537,6 +538,25 @@ const fetchChunks = async (id) => {
 };
 
 const cursorPosition = ref(0);
+
+const handlePreviewClick = () => {
+    const selection = window.getSelection();
+    if (!selection || !selection.anchorNode) return;
+    
+    // Get the text of the clicked element (usually a text node within a paragraph)
+    let text = selection.anchorNode.textContent;
+    if (!text || text.trim().length === 0) return;
+    
+    // Clean up text and find the first occurrence in the raw markdown content
+    const searchString = text.trim();
+    if (content.value) {
+        const offset = content.value.indexOf(searchString);
+        if (offset !== -1) {
+            // Update the cursor position to trigger the activeChunk computed property
+            cursorPosition.value = offset;
+        }
+    }
+};
 
 const activeChunk = computed(() => {
     if (!chunks.value || chunks.value.length === 0) return null;

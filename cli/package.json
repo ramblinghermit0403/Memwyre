@@ -1,0 +1,22 @@
+{
+  "name": "install-memwyre",
+  "version": "1.0.3",
+  "description": "Zero-friction MCP installer for Memwyre",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "install-memwyre": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "@iarna/toml": "^2.2.5",
+    "express": "^4.19.2",
+    "open": "^10.1.0",
+    "picocolors": "^1.0.1"
+  },
+  "author": "",
+  "license": "ISC"
+}

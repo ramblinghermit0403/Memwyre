@@ -18,13 +18,6 @@
                   >
                       General
                   </button>
-                  <button 
-                    @click="activeTab = 'integration'"
-                    :class="activeTab === 'integration' ? 'border-[#D97757] text-[#D97757]' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
-                    class="whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm transition-colors"
-                  >
-                      Integrations
-                  </button>
               </nav>
           </div>
       </div>
@@ -97,166 +90,6 @@
                        </div>
                     </div>
                </div>
-          </div>
-
-          <!-- Integrations Tab -->
-          <div v-show="activeTab === 'integration'" class="bg-white dark:bg-surface shadow rounded-lg px-8 py-8 border border-gray-100 dark:border-border animate-fade-in">
-               <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-text-primary mb-2">Connected LLM Clients</h3>
-               <p class="text-sm text-gray-500 dark:text-text-secondary mb-6">Manage external LLM providers and their permissions.</p>
-               
-               <!-- Keys List -->
-               <div class="space-y-3 mb-8" v-if="keys.length > 0">
-                    <div v-for="key in keys" :key="key.id" class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
-                      <div class="flex items-center gap-3">
-                        <div class="p-2 bg-white dark:bg-gray-600 rounded-md shadow-sm">
-                            <svg class="w-5 h-5 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-medium text-gray-900 dark:text-text-primary capitalize">{{ key.provider }}</span>
-                            <div class="flex gap-2 mt-0.5">
-                                <span v-if="key.permissions.read" class="text-[10px] uppercase font-bold tracking-wider text-black dark:text-white">Read</span>
-                                <span v-if="key.permissions.write" class="text-[10px] uppercase font-bold tracking-wider text-black dark:text-white">Write</span>
-                            </div>
-                        </div>
-                      </div>
-                      <button @click="deleteKey(key.id)" class="text-gray-400 hover:text-red-600 dark:text-gray-500 dark:hover:text-red-400 p-2 transition-colors">
-                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                      </button>
-                    </div>
-               </div>
-               
-                   <!-- API Keys Management -->
-                   <div class="mb-8">
-                       <div class="flex items-center justify-between mb-4">
-                           <h4 class="text-sm font-medium text-gray-900 dark:text-text-primary">Your API Keys</h4>
-                           <div class="flex items-center gap-2">
-                               <button 
-                                    @click="handleConnectClientClick"
-                                    class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-sm"
-                               >
-                                   <svg class="w-4 h-4 mr-1.5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
-                                   Connect MCP Client
-                               </button>
-                               <button 
-                                    v-if="!showAddKeyForm"
-                                    @click="showAddKeyForm = true"
-                                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-[#D97757] hover:bg-[#C4654A] transition-colors shadow-sm"
-                               >
-                                   + Generate Key
-                               </button>
-                           </div>
-                       </div>
-
-                       <!-- Key Generation Form -->
-                       <div v-if="showAddKeyForm" class="mb-6 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600 animate-fade-in">
-                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Key Name (e.g. "VS Code")</label>
-                            <div class="flex gap-2">
-                                <input 
-                                    v-model="newKeyName" 
-                                    @keyup.enter="generateKey"
-                                    type="text" 
-                                    placeholder="Enter a name..." 
-                                    class="block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-[#D97757] focus:border-[#D97757] sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white py-2 px-3"
-                                />
-                                <button 
-                                    @click="generateKey"
-                                    :disabled="generatingKey || !newKeyName"
-                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#D97757] hover:bg-[#C4654A] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    <LoadingLogo v-if="generatingKey" size="sm" class="w-4 h-4" :isWhite="true" />
-                                    <span v-else>Generate</span>
-                                </button>
-                                <button 
-                                    @click="showAddKeyForm = false"
-                                    class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                       </div>
-
-                       <!-- NEW KEY DISPLAY (Important!) -->
-                       <div v-if="justGeneratedKey" class="mb-6 bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800 animate-fade-in">
-                           <div class="flex items-start">
-                               <div class="flex-shrink-0">
-                                   <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                                       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                   </svg>
-                               </div>
-                               <div class="ml-3 w-full">
-                                   <h3 class="text-sm font-medium text-green-800 dark:text-green-200">API Key Generated!</h3>
-                                   <div class="mt-2 text-sm text-green-700 dark:text-green-300">
-                                       <p class="mb-2">Please copy this key now. You won't be able to see it again.</p>
-                                       <div class="flex items-center gap-2">
-                                           <code class="block w-full bg-white dark:bg-black/20 p-2 rounded border border-green-200 dark:border-green-800 font-mono text-xs break-all select-all">{{ justGeneratedKey }}</code>
-                                           <button @click="copyGeneratedKey" class="p-2 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200">
-                                               <svg v-if="!keyCopied" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
-                                               <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-                                           </button>
-                                       </div>
-                                   </div>
-                               </div>
-                           </div>
-                           
-                           <McpConnectionGuide 
-                                v-if="showGuideForKey === justGeneratedKey" 
-                                :apiKey="justGeneratedKey" 
-                                @close="showGuideForKey = null"
-                           />
-                       </div>
-
-                       <!-- Empty State -->
-                       <div v-if="apiKeys.length === 0 && !showAddKeyForm" class="text-center py-8 bg-gray-50 dark:bg-gray-700/30 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600">
-                           <svg class="mx-auto h-10 w-10 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
-                           <h3 class="text-sm font-medium text-gray-900 dark:text-text-primary">No API Keys Found</h3>
-                           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-sm mx-auto mb-5">Generate an API key to connect Memwyre to external AI clients like Claude Desktop or Cursor.</p>
-                           <div class="flex justify-center gap-3">
-                               <button @click="showAddKeyForm = true" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#D97757] hover:bg-[#C4654A] transition-colors shadow-sm">
-                                   <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                                   Generate First Key
-                               </button>
-                           </div>
-                       </div>
-
-                       <!-- Global Connection Guide (used when handleConnectClientClick is called) -->
-                       <div v-if="showGlobalGuide" class="mb-6 animate-fade-in">
-                            <McpConnectionGuide 
-                                apiKey="<YOUR_API_KEY>" 
-                                @close="showGlobalGuide = false"
-                           />
-                       </div>
-
-                       <!-- List -->
-                       <div v-else class="space-y-3">
-                            <div v-for="key in apiKeys" :key="key.id" class="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm transition-all hover:shadow-md">
-                                <div class="flex items-center gap-3">
-                                    <div class="p-2 bg-gray-100 dark:bg-gray-600 rounded-md">
-                                        <svg class="w-5 h-5 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="font-medium text-gray-900 dark:text-text-primary">{{ key.name }}</span>
-                                            <span v-if="!key.is_active" class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300">REVOKED</span>
-                                        </div>
-                                        <div class="text-xs text-gray-500 dark:text-text-secondary font-mono mt-0.5 flex items-center gap-2">
-                                            <span>{{ key.prefix }} • Created {{ new Date(key.created_at).toLocaleDateString() }}</span>
-                                            <button @click="showGuideForKey = showGuideForKey === ('<existing_key>') ? null : ('<existing_key>')" class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline font-sans ml-2">Setup Guide</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button @click="revokeKeyConfirm(key.id)" class="text-gray-400 hover:text-red-600 dark:text-gray-500 dark:hover:text-red-400 p-2 transition-colors" title="Revoke Key">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                </button>
-                            </div>
-                            
-                            <McpConnectionGuide 
-                                v-if="showGuideForKey === '<existing_key>'" 
-                                apiKey="<YOUR_API_KEY>" 
-                                @close="showGuideForKey = null" 
-                                class="mt-4"
-                            />
-                       </div>
-                   </div>
 
                     <!-- Hidden Form -->
                     <div v-if="false">
@@ -361,6 +194,35 @@ const newKey = ref({
   permissions: { read: true, write: false, auto_save: false }
 });
 const tokenCopied = ref(false);
+
+const integrationCategories = ref([
+  {
+    name: 'MCP',
+    items: [
+      { id: 'cursor', name: 'Cursor', desc: 'One-click MCP install in Cursor', btnText: 'Connect', hasDocs: true, bgColor: 'bg-black dark:bg-black', icon: '/src/assets/cursor_CUBE_2D_DARK.svg', invert: true },
+      { id: 'claude-desktop', name: 'Claude Desktop', desc: 'Connect supermemory in Claude Desktop', btnText: 'Connect', hasDocs: true, bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: '/src/assets/claude-color.svg' },
+      { id: 'chatgpt', name: 'ChatGPT', desc: 'Apps via ChatGPT developer mode', btnText: 'Connect', hasDocs: true, bgColor: 'bg-[#10A37F]/10 dark:bg-white', icon: '/src/assets/openai.svg' },
+      { id: 'vscode', name: 'VS Code', desc: 'Native MCP support for VS Code', btnText: 'Connect', bgColor: 'bg-blue-500/10 dark:bg-blue-500/20' }
+    ]
+  },
+  {
+    name: 'Plugins',
+    items: [
+      { id: 'claude-code', name: 'Claude Code', isPro: true, desc: 'Remembers your conventions, decisions, and project context', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: '/src/assets/claude-color.svg' },
+      { id: 'codex', name: 'Codex', desc: 'Persistent memory for the Codex CLI — free on every plan', btnText: 'Connect', hasDocs: true, bgColor: 'bg-blue-500/10 dark:bg-blue-500/20' },
+      { id: 'opencode', name: 'OpenCode', isPro: true, desc: 'Long-term memory for your OpenCode sessions', btnText: 'Upgrade', isLightning: true, hasDocs: true, bgColor: 'bg-gray-200 dark:bg-gray-700' },
+      { id: 'openclaw', name: 'OpenClaw', isPro: true, desc: 'Add persistent memory to autonomous OpenClaw agent sessions', btnText: 'Upgrade', isLightning: true, hasDocs: true, bgColor: 'bg-[#FF3366]/10 dark:bg-[#FF3366]/20', icon: '/src/assets/openclaw-color.svg' }
+    ]
+  },
+  {
+    name: 'Knowledge bases',
+    items: [
+      { id: 'gdrive', name: 'Google Drive', isPro: true, desc: 'Sync Docs, Sheets and Slides into your memory', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-gray-100 dark:bg-white/10' },
+      { id: 'notion', name: 'Notion', isPro: true, desc: 'Import Notion pages and databases', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-white dark:bg-black', icon: '/src/assets/notion-svgrepo-com.svg' },
+      { id: 'onedrive', name: 'OneDrive', isPro: true, desc: 'Bring in Office documents from OneDrive', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-blue-500/10 dark:bg-blue-500/20' }
+    ]
+  }
+]);
 
 const resendingEmail = ref(false);
 

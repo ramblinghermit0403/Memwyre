@@ -21,14 +21,22 @@ class VectorStore:
         # We use the host provided in settings to connect to the specific index
         self.index = self.pc.Index(host=settings.PINECONE_HOST)
         
-        # Initialize Bedrock Embeddings Locally (Titan v2)
+        # Initialize Azure OpenAI Embeddings (matching V2 for consistency)
         try:
-            from langchain_aws import BedrockEmbeddings
-            self.bedrock_embeddings = BedrockEmbeddings(
-                model_id="amazon.titan-embed-text-v2:0",
-                region_name=os.getenv("AWS_REGION", "us-east-1")
+            from langchain_openai import AzureOpenAIEmbeddings
+            
+            embed_key = getattr(settings, "AZURE_OPENAI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None) or os.environ.get("AZURE_OPENAI_API_KEY")
+            if not embed_key:
+                logger.error("Missing Azure OpenAI API Key. Embeddings will fail.")
+            
+            self.bedrock_embeddings = AzureOpenAIEmbeddings(
+                api_key=embed_key,
+                azure_endpoint=getattr(settings, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
+                api_version=getattr(settings, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
+                azure_deployment=getattr(settings, "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small"),
+                dimensions=512
             )
-            logger.info("Initialized Bedrock Titan v2 Embeddings locally.")
+            logger.info("Initialized Azure OpenAI Embeddings (V1 compat).")
         except Exception as e:
             logger.error(f"Failed to load Bedrock embeddings: {e}")
             self.bedrock_embeddings = None

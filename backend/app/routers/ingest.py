@@ -7,7 +7,7 @@ from app.models.user import User
 from app.models.memory import Memory
 from app.services.web_ingestion import web_ingestion
 from app.services.websocket import manager
-from app.worker import ingest_memory_task, process_memory_metadata_task, dedupe_memory_task
+from app.worker_router import ingest_memory_task, process_memory_metadata_task, dedupe_memory_task
 import uuid
 
 router = APIRouter()

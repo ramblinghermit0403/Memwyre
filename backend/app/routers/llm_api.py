@@ -13,7 +13,7 @@ from app.services.context_builder import context_builder
 from app.services.dedupe_job import dedupe_service
 from app.services.metadata_extraction import metadata_service
 from app.db.session import AsyncSessionLocal
-from app.worker import process_memory_metadata_task, dedupe_memory_task, ingest_memory_task
+from app.worker_router import process_memory_metadata_task, dedupe_memory_task, ingest_memory_task
 import asyncio
 import json
 from datetime import datetime, timedelta

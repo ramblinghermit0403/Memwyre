@@ -15,7 +15,7 @@ from app.models.user import User
 from app.schemas.memory import Memory as MemorySchema, MemoryCreate, MemoryUpdate
 from app.services.memory_service import memory_service
 from app.services.vector_store import vector_store
-from app.worker import ingest_memory_task
+from app.worker_router import ingest_memory_task
 
 router = APIRouter()
 
@@ -235,10 +235,10 @@ async def read_memories(
             results.append(
                 {
                     "id": f"doc_{doc.id}",
-                    "title": doc.title,
+                    "title": doc.title or "Untitled Document",
                     "content": doc.content if doc.content else f"Uploaded Document: {doc.source} ({doc.file_type})",
                     "user_id": doc.user_id,
-                    "created_at": doc.created_at,
+                    "created_at": doc.created_at or datetime.now(),
                     "updated_at": None,
                     "source": doc.source,
                     "source_app": doc.source,
@@ -247,11 +247,20 @@ async def read_memories(
                     "project_name": None,
                     "doc_type": doc_type,
                     "type": doc_type,
-                    "tags": doc.tags,
+                    "tags": doc.tags if doc.tags is not None else [],
                 }
             )
 
-    results.sort(key=lambda x: x["created_at"], reverse=True)
+    def get_sort_key(x):
+        dt = x.get("created_at")
+        if not dt:
+            return 0
+        try:
+            return dt.timestamp()
+        except Exception:
+            return 0
+
+    results.sort(key=get_sort_key, reverse=True)
     return results[skip : skip + limit]
 
 

@@ -71,6 +71,11 @@ class Settings(BaseSettings):
 
     # LLM Keys
     OPENAI_API_KEY: Optional[str] = None
+    AZURE_OPENAI_API_KEY: Optional[str] = None
+    AZURE_OPENAI_ENDPOINT: Optional[str] = "https://memwyre.cognitiveservices.azure.com/"
+    AZURE_OPENAI_API_VERSION: str = "2024-12-01-preview"
+    AZURE_OPENAI_DEPLOYMENT: str = "gpt-4o-mini"
+    AZURE_OPENAI_EMBEDDING_DEPLOYMENT: str = "text-embedding-3-small"
     GOOGLE_API_KEY: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
 
@@ -88,6 +93,9 @@ class Settings(BaseSettings):
     
     # Dual Index Support
     PINECONE_SPARSE_HOST: Optional[str] = None
+
+    # Memory Engine Feature Flag
+    MEMORY_ENGINE_VERSION: str = "v1"
 
     # Dodo Payments
     DODO_PAYMENTS_API_KEY: Optional[str] = None
