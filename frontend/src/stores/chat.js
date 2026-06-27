@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useAuthStore } from './auth';
 import { useToast } from 'vue-toastification';
+import { useProjectStore } from './project';
 
 const STEP_ORDER = [
     'request_received',
@@ -198,7 +199,12 @@ export const useChatStore = defineStore('chat', () => {
         isLoading.value = true;
         try {
             const headers = await getAuthHeaders();
-            const response = await axios.get(`${API_URL}/chat/sessions`, headers);
+            const projectStore = useProjectStore();
+            const config = { ...headers };
+            if (projectStore.currentProjectId) {
+                config.params = { project_id: projectStore.currentProjectId };
+            }
+            const response = await axios.get(`${API_URL}/chat/sessions`, config);
             sessions.value = response.data;
         } catch (e) {
             error.value = e.message;
@@ -210,7 +216,12 @@ export const useChatStore = defineStore('chat', () => {
     async function createSession(title = "New Chat") {
         try {
             const headers = await getAuthHeaders();
-            const response = await axios.post(`${API_URL}/chat/sessions`, { title }, headers);
+            const projectStore = useProjectStore();
+            const payload = { title };
+            if (projectStore.currentProjectId) {
+                payload.project_id = projectStore.currentProjectId;
+            }
+            const response = await axios.post(`${API_URL}/chat/sessions`, payload, headers);
             sessions.value.unshift(response.data);
             currentSession.value = response.data;
             messages.value = [];

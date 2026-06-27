@@ -53,6 +53,9 @@
 import { ref } from 'vue';
 import api from '../services/api';
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
+import { useProjectStore } from '../stores/project';
+
+const projectStore = useProjectStore();
 
 const emit = defineEmits(['upload-complete']);
 
@@ -85,10 +88,15 @@ const uploadFile = async () => {
   formData.append('file', selectedFile.value);
 
   try {
+    const params = {};
+    if (projectStore.currentProjectId) {
+      params.project_id = projectStore.currentProjectId;
+    }
     const response = await api.post('/documents/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      params
     });
     success.value = true;
     message.value = '';

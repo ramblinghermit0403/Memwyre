@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel, HttpUrl
@@ -15,6 +16,7 @@ router = APIRouter()
 class UrlIngestRequest(BaseModel):
     url: HttpUrl
     tags: list[str] = []
+    project_id: Optional[int] = None
 
 @router.post("/url")
 async def ingest_url(
@@ -48,6 +50,8 @@ async def ingest_url(
     # Enforce Usage Limits
     await deps.verify_usage_limits(doc_type="memory", content_len=len(data["content"]), current_user=current_user, db=db)
     
+    project_id = await deps.resolve_project_id(db, current_user.id, request.project_id)
+
     # 3. Create Memory Record
     memory = Memory(
         title=data["title"],
@@ -60,7 +64,8 @@ async def ingest_url(
         tags=request.tags,
         embedding_id=str(uuid.uuid4()), # Placeholder
         status=initial_status,
-        show_in_inbox=show_in_inbox
+        show_in_inbox=show_in_inbox,
+        project_id=project_id
     )
     db.add(memory)
     await db.commit()

@@ -16,12 +16,17 @@ class SearchRequest(BaseModel):
     query: str
     top_k: int = 5
     view: str = "auto"
+    project_id: Optional[int] = None
 
 class SearchResult(BaseModel):
     text: str
     score: float
     metadata: Any
     chunk: Optional[ChunkSchema] = None
+
+class DebugSearchResult(BaseModel):
+    results: List[SearchResult]
+    debug_pipeline: Any
 
 @router.post("/search", response_model=List[SearchResult])
 async def search_documents(
@@ -40,12 +45,16 @@ async def search_documents(
         else:
             from app.services.retrieval_service import retrieval_service
         
+        # Resolve project_id to ensure workspace containerization
+        project_id = await deps.resolve_project_id(db, current_user.id, request.project_id)
+        
         results = await retrieval_service.search_memories(
             query=request.query,
             user_id=current_user.id,
             db=db,
             top_k=request.top_k,
-            view=request.view
+            view=request.view,
+            project_id=project_id
         )
         
         # Transform to response model
@@ -74,3 +83,60 @@ async def search_documents(
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+
+@router.post("/debug/search", response_model=DebugSearchResult)
+async def debug_search_documents(
+    request: SearchRequest,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Search for relevant document chunks with re-ranking and return full debug pipeline info.
+    """
+    print(f"DEBUG: Incoming Debug Search Request top_k={request.top_k} query='{request.query}'")
+    try:
+        from app.core.config import settings
+        if settings.MEMORY_ENGINE_VERSION == "v2":
+            from app.services.retrieval_service_v2 import retrieval_service
+        else:
+            raise HTTPException(status_code=400, detail="Debug visualizer requires MEMORY_ENGINE_VERSION='v2'")
+        
+        debug_dict = {}
+        # Resolve project_id to ensure workspace containerization
+        project_id = await deps.resolve_project_id(db, current_user.id, request.project_id)
+        
+        results = await retrieval_service.search_memories(
+            query=request.query,
+            user_id=current_user.id,
+            db=db,
+            top_k=request.top_k,
+            view=request.view,
+            project_id=project_id,
+            debug_info=debug_dict
+        )
+        
+        # Transform to response model
+        formatted_results = []
+        for res in results:
+            chunk_data = None
+            if res.get("chunk"):
+                try:
+                    chunk_data = ChunkSchema.model_validate(res.get("chunk"))
+                except Exception as val_err:
+                    pass
+
+            formatted_results.append(SearchResult(
+                text=res["text"],
+                score=res["score"],
+                metadata=res["metadata"],
+                chunk=chunk_data
+            ))
+            
+        return DebugSearchResult(
+            results=formatted_results,
+            debug_pipeline=debug_dict
+        )
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Debug search failed: {str(e)}")

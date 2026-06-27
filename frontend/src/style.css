@@ -42,67 +42,67 @@
 }
 
 :root {
-  /* Light Theme Default — Notion AI inspired */
+  /* Light Theme Default — Premium Minimalist (aligned with Landing Page) */
   --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-display: var(--font-body);
 
-  --bg-app: #FAF6F0;
-  --bg-surface: #FFFFFF;
-  --bg-surface-2: #F7F6F3;
+  --bg-app: #F9FAFB;       /* Clean Tailwind gray-50 */
+  --bg-surface: #FFFFFF;   /* Pure White */
+  --bg-surface-2: #F3F4F6; /* Clean gray-100 */
   --bg-elevated: #FFFFFF;
 
-  --primary: #D97757;
+  --primary: #D97757;      /* Brand Terracotta Orange */
   --primary-600: #C4654A;
   --accent: #D97757;
   --accent-600: #C4654A;
 
-  --success: #059669;
-  --warning: #D97706;
-  --danger: #DC2626;
-  --info: #D97757;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --info: #3B82F6;
 
-  --text-primary: #191919;
-  --text-secondary: #37352F99;
-  --text-muted: #37352F66;
+  --text-primary: #111827;   /* Clean gray-900 */
+  --text-secondary: #4B5563; /* Clean gray-600 */
+  --text-muted: #9CA3AF;     /* Clean gray-400 */
 
-  --border: rgba(25, 25, 25, 0.06);
-  --divider-strong: rgba(25, 25, 25, 0.09);
-  --backdrop: rgba(0, 0, 0, 0.4);
+  --border: rgba(17, 24, 39, 0.08);
+  --divider-strong: rgba(17, 24, 39, 0.12);
+  --backdrop: rgba(0, 0, 0, 0.5);
 
   --input-bg: #FFFFFF;
-  --input-border: rgba(25, 25, 25, 0.08);
-  --placeholder: #37352F66;
+  --input-border: rgba(17, 24, 39, 0.12);
+  --placeholder: #9CA3AF;
 }
 
 
 .dark {
-  /* Dark Theme */
-  --bg-app: #1A1918;
-  --bg-surface: #2D2B2A;
-  --bg-surface-2: #3A3836;
-  --bg-elevated: #3A3836;
+  /* Dark Theme — Premium Minimalist Dark (aligned with Landing Page dark elements) */
+  --bg-app: #0B0B0C;       /* Ultra deep neutral dark */
+  --bg-surface: #161618;   /* Clean dark gray */
+  --bg-surface-2: #222225; /* Medium dark gray */
+  --bg-elevated: #1E1E21;
 
-  --primary: #D97757;
+  --primary: #D97757;      /* Brand Terracotta Orange */
   --primary-600: #E8956E;
   --accent: #D97757;
   --accent-600: #E8956E;
 
-  --success: #34D399;
+  --success: #10B981;
   --warning: #FBBF24;
   --danger: #F87171;
-  --info: #D97757;
+  --info: #60A5FA;
 
-  --text-primary: #FAF6F0;
-  --text-secondary: #a3a3a3;
-  --text-muted: #737373;
+  --text-primary: #F3F4F6;   /* Clean gray-100 */
+  --text-secondary: #9CA3AF; /* Clean gray-400 */
+  --text-muted: #6B7280;     /* Clean gray-500 */
 
-  --border: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.08);
   --divider-strong: rgba(255, 255, 255, 0.15);
   --backdrop: rgba(0, 0, 0, 0.7);
 
-  --input-bg: #2D2B2A;
-  --input-border: rgba(255, 255, 255, 0.1);
-  --placeholder: #525252;
+  --input-bg: #161618;
+  --input-border: rgba(255, 255, 255, 0.12);
+  --placeholder: #6B7280;
 }
 
 
@@ -227,4 +227,9 @@ body {
     radial-gradient(circle at 12% 86%, rgba(149, 205, 255, 0.68), transparent 34%),
     radial-gradient(circle at 88% 91%, rgba(175, 220, 255, 0.62), transparent 32%),
     linear-gradient(115deg, #fff7ca 0%, #fffdf4 43%, #eff8ff 100%);
+}
+
+.hero-serif {
+  font-family: 'DM Serif Text', serif;
+  letter-spacing: -0.02em;
 }

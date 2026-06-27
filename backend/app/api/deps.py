@@ -157,3 +157,55 @@ async def verify_usage_limits(
                 )
     
     return True
+
+
+async def resolve_project_id(
+    db: AsyncSession, 
+    user_id: int, 
+    project_id: int | None = None, 
+    workspace_name: str | None = None
+) -> int:
+    """
+    Resolves project_id. If not found or not provided, falls back to the user's 'default' project.
+    Creates the 'default' project if it does not exist.
+    """
+    from app.models.project import Project
+    from sqlalchemy.future import select
+    
+    # 1. If project_id is provided, verify it belongs to user
+    if project_id:
+        result = await db.execute(select(Project).where(Project.id == project_id, Project.user_id == user_id))
+        proj = result.scalars().first()
+        if proj:
+            return proj.id
+
+    # 2. If workspace_name is provided, find or create it
+    if workspace_name:
+        result = await db.execute(select(Project).where(Project.user_id == user_id, Project.name == workspace_name))
+        proj = result.scalars().first()
+        if not proj:
+            proj = Project(
+                user_id=user_id, 
+                name=workspace_name, 
+                description=f"Auto-created workspace for {workspace_name}"
+            )
+            db.add(proj)
+            await db.commit()
+            await db.refresh(proj)
+        return proj.id
+
+    # 3. Fallback to default project
+    result = await db.execute(select(Project).where(Project.user_id == user_id, Project.name == "default"))
+    proj = result.scalars().first()
+    if not proj:
+        proj = Project(
+            user_id=user_id,
+            name="default",
+            description="Default workspace project",
+            color="#4f46e5"
+        )
+        db.add(proj)
+        await db.commit()
+        await db.refresh(proj)
+    return proj.id
+

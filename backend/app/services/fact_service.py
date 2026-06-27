@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import and_, update
@@ -20,7 +20,8 @@ class FactService:
         user_id: int, 
         memory_id: int, 
         chunk_id: int, 
-        db: AsyncSession
+        db: AsyncSession,
+        project_id: Optional[int] = None
     ):
         """
         Create facts concurrently (Phase 1) then write sequentially (Phase 2).
@@ -38,7 +39,7 @@ class FactService:
         # If "Supersede" decision is made, we return the Target ID.
         
         tasks = [
-            self._analyze_fact(f_data, user_id)
+            self._analyze_fact(f_data, user_id, project_id=project_id)
             for f_data in facts_data
         ]
         
@@ -49,6 +50,7 @@ class FactService:
         # Phase 2: Sequential Execution (DB Writes)
         from app.services.vector_store import vector_store
         
+        facts_to_index = []
         for i, decision_res in enumerate(decisions):
             f_data = facts_data[i]
             decision = decision_res.get("decision", "NEW")
@@ -85,7 +87,8 @@ class FactService:
                 confidence=confidence,
                 source_memory_id=memory_id,
                 source_chunk_id=chunk_id,
-                is_superseded=False
+                is_superseded=False,
+                project_id=project_id
             )
             
             if valid_from:
@@ -100,30 +103,36 @@ class FactService:
             db.add(new_fact)
             await db.flush() # Get ID
             
-            # Index immediately
+            # Queue for batch indexing
             if new_fact.id:
-                try:
-                    fact_text = f"{subject} {predicate} {obj}"
-                    meta = {
-                        "type": "fact",
-                        "fact_id": str(new_fact.id),
-                        "user_id": str(user_id),
-                        "valid_from": str(new_fact.valid_from),
-                        "source": "ingestion"
-                    }
-                    # We can't await vector store here individually if we want speed?
-                    # But vector store adds are fast-ish.
-                    # Or collect them and batch add at end?
-                    # Batch add is better.
-                    await vector_store.add_documents(
-                        ids=[f"fact_{new_fact.id}"],
-                        documents=[fact_text],
-                        metadatas=[meta]
-                    )
-                except Exception as e:
-                    print(f"Error indexing fact {new_fact.id}: {e}")
+                fact_text = f"{subject} {predicate} {obj}"
+                meta = {
+                    "type": "fact",
+                    "fact_id": str(new_fact.id),
+                    "user_id": str(user_id),
+                    "valid_from": str(new_fact.valid_from) if new_fact.valid_from else "",
+                    "source": "ingestion"
+                }
+                if project_id is not None:
+                    meta["project_id"] = str(project_id)
+                facts_to_index.append((f"fact_{new_fact.id}", fact_text, meta))
 
-    async def _analyze_fact(self, f_data, user_id):
+        # Batch write to vector store
+        if facts_to_index:
+            try:
+                ids = [item[0] for item in facts_to_index]
+                docs = [item[1] for item in facts_to_index]
+                metas = [item[2] for item in facts_to_index]
+                await vector_store.add_documents(
+                    ids=ids,
+                    documents=docs,
+                    metadatas=metas
+                )
+                print(f"FactService: Batched indexed {len(facts_to_index)} facts.")
+            except Exception as e:
+                print(f"Error batch indexing facts: {e}")
+
+    async def _analyze_fact(self, f_data, user_id, project_id: Optional[int] = None):
         """
         Analyze a fact to decide if it's new, duplicate, or superseding.
         NO DB WRITES. Returns Decision Dict.
@@ -141,10 +150,13 @@ class FactService:
         from langchain_core.messages import HumanMessage
         
         try:
+            where_dict = {"user_id": str(user_id), "type": "fact"}
+            if project_id is not None:
+                where_dict["project_id"] = str(project_id)
             results = await vector_store.query(
                 query_texts=fact_text,
                 n_results=3,
-                where={"user_id": str(user_id), "type": "fact"}
+                where=where_dict
             )
             
             existing_candidates = []
@@ -176,7 +188,8 @@ class FactService:
             Output JSON: {{"decision": "DUPLICATE" | "SUPERSEDE" | "NEW", "target_id": "fact_123"}}
             """
             
-            llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0}, config=AWS_CONFIG)
+            from app.services.llm_service_v2 import llm_service_v2
+            llm = llm_service_v2._get_openai_llm(temperature=0)
             res = await llm.ainvoke([HumanMessage(content=judge_prompt)])
             
             clean_json = res.content.replace("```json", "").replace("```", "").strip()
@@ -203,7 +216,7 @@ class FactService:
         return {"decision": "NEW"}
 
             
-    async def _supersede_old_facts(self, user_id: int, subject: str, predicate: str, db: AsyncSession):
+    async def _supersede_old_facts(self, user_id: int, subject: str, predicate: str, db: AsyncSession, project_id: Optional[int] = None):
         """
         Mark old facts as superseded (valid_until = now).
         """
@@ -213,7 +226,8 @@ class FactService:
             Fact.subject == subject,
             Fact.predicate == predicate,
             Fact.valid_until == None,
-            Fact.is_superseded == False
+            Fact.is_superseded == False,
+            Fact.project_id == project_id
         )
         result = await db.execute(stmt)
         old_facts = result.scalars().all()

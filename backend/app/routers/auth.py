@@ -86,6 +86,9 @@ async def register(
     await db.commit()
     await db.refresh(user)
 
+    # Create default workspace project for new user
+    await deps.resolve_project_id(db, user.id)
+
     # Auto-upgrade if domain is whitelisted
     bypassed = await check_and_apply_domain_whitelist(user, db)
 
@@ -324,6 +327,9 @@ async def oauth_callback(
             await db.commit()
             await db.refresh(user)
 
+            # Create default workspace project for new user
+            await deps.resolve_project_id(db, user.id)
+
             await check_and_apply_domain_whitelist(user, db)
             background_tasks.add_task(send_welcome_email, user.email, user.name)
         else:
@@ -395,6 +401,9 @@ async def google_one_tap_login(
             db.add(user)
             await db.commit()
             await db.refresh(user)
+
+            # Create default workspace project for new user
+            await deps.resolve_project_id(db, user.id)
 
             await check_and_apply_domain_whitelist(user, db)
             background_tasks.add_task(send_welcome_email, user.email, user.name)

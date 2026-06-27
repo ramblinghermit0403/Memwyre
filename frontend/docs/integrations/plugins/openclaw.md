@@ -17,11 +17,24 @@ Once configured, the OpenClaw agent can use the following Memwyre tools:
 
 ## Installation
 
-Install the plugin via the OpenClaw CLI:
+The plugin (Version **2.0.14**) can be installed globally or linked locally for custom development runs:
 
+### Option A: Standard CLI Install
 ```bash
-openclaw plugins install @memwyre/openclaw-plugin
+openclaw plugins install @memwyre/openclaw-plugin@2.0.14
 ```
+
+### Option B: Local Linking (Development)
+If modifying the plugin source, link the package manually:
+1. Navigate to the plugin folder:
+   ```bash
+   cd openclaw-plugin
+   npm install
+   ```
+2. Link the package to your local OpenClaw workspace:
+   ```bash
+   openclaw plugins install .
+   ```
 
 ## Configuration
 

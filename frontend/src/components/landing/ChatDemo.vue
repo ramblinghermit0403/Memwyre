@@ -32,10 +32,10 @@
                     <span class="text-sm sm:text-base">{{ typedInput }}</span>
                     <span v-if="showCursor"
                       class="inline-block w-[2px] h-[16px] sm:h-[18px] bg-gray-800 dark:bg-white ml-px align-middle animate-blink"></span>
-                    <span v-if="!typedInput && !showCursor" class="text-gray-400">Ask your MemWyre...</span>
+                    <span v-if="!typedInput && !showCursor" class="text-gray-400">Ask your memwyre...</span>
                   </div>
                   <div class="px-3 pb-1 flex justify-between items-center text-xs mt-1">
-                    <span class="text-gray-400 font-medium">MemWyre Pro</span>
+                    <span class="text-gray-400 font-medium">Memwyre Pro</span>
                     <button
                       class="p-1.5 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full w-8 h-8 flex items-center justify-center shadow-sm"
                       :class="{ 'opacity-40': !typedInput }">
@@ -111,7 +111,7 @@
                       here...
                     </div>
                     <div class="px-2 pb-1 flex justify-between items-center text-xs mt-1">
-                      <span class="text-gray-400 font-medium">MemWyre Pro</span>
+                      <span class="text-gray-400 font-medium">Memwyre Pro</span>
                       <button
                         class="p-1.5 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full w-7 h-7 flex items-center justify-center shadow-sm opacity-40">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

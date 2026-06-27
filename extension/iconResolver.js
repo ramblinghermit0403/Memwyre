@@ -20,6 +20,7 @@
     claude:       { type: 'img', content: 'https://www.google.com/s2/favicons?domain=claude.ai&sz=64' },
     gemini:       { type: 'img', content: 'https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64' },
     perplexity:   { type: 'img', content: 'https://www.google.com/s2/favicons?domain=perplexity.ai&sz=64' },
+    grok:         { type: 'img', content: 'https://www.google.com/s2/favicons?domain=grok.com&sz=64' },
     openclaw:     { type: 'img', content: 'https://www.google.com/s2/favicons?domain=openclaw.dev&sz=64' },
     antigravity:  { type: 'img', content: 'https://www.google.com/s2/favicons?domain=google.com&sz=64' },
     cursor:       { type: 'svg', content: SVG_CURSOR },
@@ -50,6 +51,8 @@
       if (src.includes('gemini') || src.includes('gemni') || src.includes('gemini.google.com')) return KNOWN.gemini;
       // Perplexity
       if (src.includes('perplexity')) return KNOWN.perplexity;
+      // Grok
+      if (src.includes('grok')) return KNOWN.grok;
       // Claude / Anthropic
       if (src.includes('claude') || src.includes('anthropic')) return KNOWN.claude;
       // Cursor

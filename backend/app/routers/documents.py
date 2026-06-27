@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Optional
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -71,6 +71,7 @@ def extract_text_from_file(file_path: str, file_type: str) -> str:
 async def upload_document(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
+    project_id: Optional[int] = None,
     db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
@@ -118,6 +119,8 @@ async def upload_document(
     except:
          pass
         
+    project_id = await deps.resolve_project_id(db, current_user.id, project_id)
+
     # Create Document Record
     document = Document(
         title=file.filename,
@@ -125,7 +128,8 @@ async def upload_document(
         source=file.filename,
         file_type=file_ext,
         doc_type="file",  # Mark as file upload
-        user_id=current_user.id
+        user_id=current_user.id,
+        project_id=project_id
     )
     db.add(document)
     await db.commit()
@@ -155,6 +159,7 @@ from app.services.youtube_service import youtube_service
 class YouTubeUpload(BaseModel):
     url: str
     tags: List[str] = []
+    project_id: Optional[int] = None
 
 @router.post("/upload-youtube", response_model=Any)
 async def upload_youtube(
@@ -210,6 +215,8 @@ async def upload_youtube(
     if "extension" in tags:
         show_in_inbox = True
     
+    project_id = await deps.resolve_project_id(db, current_user.id, request.project_id)
+
     memory = Memory(
         title=title,
         content=final_content,
@@ -218,7 +225,8 @@ async def upload_youtube(
         tags=tags,
         embedding_id=str(uuid.uuid4()),
         status="pending" if show_in_inbox else "approved", # If skipping inbox, it's approved
-        show_in_inbox=show_in_inbox
+        show_in_inbox=show_in_inbox,
+        project_id=project_id
     )
     db.add(memory)
     await db.commit()
@@ -299,6 +307,7 @@ class MemoryCreate(BaseModel):
     title: str
     content: str
     tags: List[str] = []
+    project_id: Optional[int] = None
 
 class MemoryUpdate(BaseModel):
     title: str
@@ -347,6 +356,7 @@ async def create_memory(
             show_in_inbox = True
     
     embedding_id = str(uuid.uuid4())
+    project_id = await deps.resolve_project_id(db, current_user.id, memory_in.project_id)
     
     memory = Memory(
         title=memory_in.title,
@@ -356,7 +366,8 @@ async def create_memory(
         embedding_id=embedding_id,
         status=initial_status,
         show_in_inbox=show_in_inbox,
-        source_llm="user-upload" # or extension
+        source_llm="user-upload", # or extension
+        project_id=project_id
     )
     db.add(memory)
     await db.commit()
@@ -364,9 +375,9 @@ async def create_memory(
 
     # Trigger Background Analysis (Auto-Tagging + Similarity)
     background_tasks.add_task(run_metadata_extraction, memory.id, current_user.id)
-    
     # Ingest only if approved
     if initial_status == "approved":
+        from app.worker_router import ingest_memory_task
         ingest_memory_task.delay(
             memory_id=memory.id,
             user_id=current_user.id,
@@ -379,6 +390,7 @@ async def create_memory(
         )
 
     # Trigger Dedupe Job (Background Celery)
+    from app.worker_router import dedupe_memory_task
     dedupe_memory_task.delay(memory.id)
 
     
@@ -431,6 +443,7 @@ async def update_document(
 class SearchRequest(BaseModel):
     query: str
     top_k: int = 5
+    project_id: Optional[int] = None
 
 @router.post("/search", response_model=Any)
 async def search_documents(
@@ -441,13 +454,15 @@ async def search_documents(
     """
     Semantic search over documents and memories.
     """
-    # Use retrieval service for smart search
-    # Use retrieval service for smart search
+    # Resolve project_id to ensure workspace containerization
+    project_id = await deps.resolve_project_id(db, current_user.id, request.project_id)
+    
     results = await retrieval_service.search_memories(
         query=request.query,
         user_id=current_user.id,
         db=db,
-        top_k=request.top_k
+        top_k=request.top_k,
+        project_id=project_id
     )
     
     # Filter out non-serializable objects (like SQLAlchemy models)

@@ -5,14 +5,14 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 console.log("======================================");
-console.log(" MemWyre MCP Universal Installer ");
+console.log(" Memwyre MCP Universal Installer ");
 console.log("======================================\n");
 
 // Dynamically resolve the absolute path to the backend directory
 const installerDir = __dirname;
 const backendDir = path.resolve(installerDir, '..', '..', 'backend');
 
-// Configuration payload for MemWyre MCP Server
+// Configuration payload for Memwyre MCP Server
 const memwyreConfig = {
     command: "uv",
     args: ["run", "mcp_server.py"],
@@ -85,7 +85,7 @@ if (USERPROFILE) configureFile("Antigravity Codex", path.join(USERPROFILE, '.gem
 console.log("Checking Claude Code (CLI)...");
 try {
     execSync("claude --version", { stdio: 'ignore' });
-    console.log("  Claude Code CLI detected. Adding MemWyre...");
+    console.log("  Claude Code CLI detected. Adding Memwyre...");
     // The '--' escapes args being passed directly to uv
     execSync(`claude mcp add memwyre uv -- run --directory "${backendDir}" mcp_server.py`, { stdio: 'inherit' });
     console.log(`  \x1b[32m\u2713 Successfully installed for Claude Code\x1b[0m\n`);

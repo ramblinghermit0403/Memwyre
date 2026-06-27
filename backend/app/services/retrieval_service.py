@@ -13,7 +13,8 @@ class RetrievalService:
         user_id: int, 
         db: AsyncSession, 
         top_k: int = 5,
-        view: str = "auto"
+        view: str = "auto",
+        project_id: Optional[int] = None
     ) -> List[Dict[str, Any]]:
         """
         Search for relevant artifacts using the specified View.
@@ -24,17 +25,17 @@ class RetrievalService:
         - auto: Hybrid (Logic to select best view, currently defaults to semantic+state)
         """
         if view == "state":
-            return await self._search_state(query, user_id, db, top_k)
+            return await self._search_state(query, user_id, db, top_k, project_id=project_id)
         elif view == "episodic":
-            return await self._search_episodic(query, user_id, db, top_k)
+            return await self._search_episodic(query, user_id, db, top_k, project_id=project_id)
         elif view == "semantic":
-            return await self._search_semantic(query, user_id, db, top_k)
+            return await self._search_semantic(query, user_id, db, top_k, project_id=project_id)
         else:
             # Auto: Unified Search (Single Vector Call)
             str_user_id = str(user_id)
             
             # Fetch candidates for both Facts and Memories in one go
-            unified_results = await self._search_unified(query, str_user_id, top_k=top_k)
+            unified_results = await self._search_unified(query, str_user_id, top_k=top_k, project_id=project_id)
             
             import asyncio
             # Pass pre-fetched candidates to ranking methods
@@ -45,15 +46,15 @@ class RetrievalService:
             # semantic_task = self._search_semantic(query, user_id, db, top_k=top_k, pre_fetched=unified_results["memories"])
             
             # fix: AsyncSession cannot be shared across concurrent tasks. Run sequentially.
-            state_results = await self._search_state(query, user_id, db, top_k=3, pre_fetched=unified_results["facts"])
-            semantic_results = await self._search_semantic(query, user_id, db, top_k=top_k, pre_fetched=unified_results["memories"])
+            state_results = await self._search_state(query, user_id, db, top_k=3, pre_fetched=unified_results["facts"], project_id=project_id)
+            semantic_results = await self._search_semantic(query, user_id, db, top_k=top_k, pre_fetched=unified_results["memories"], project_id=project_id)
             
             # results = await asyncio.gather(state_task, semantic_task)
             # state_results, semantic_results = results
             
             return state_results + semantic_results
 
-    async def _search_unified(self, query: str, user_id: str, top_k: int) -> Dict[str, Any]:
+    async def _search_unified(self, query: str, user_id: str, top_k: int, project_id: Optional[int] = None) -> Dict[str, Any]:
         """
         Single Vector Search for both Facts and Memories.
         Returns: {"facts": vector_results, "memories": vector_results}
@@ -61,15 +62,14 @@ class RetrievalService:
         # Fetch 10x to allow for MMR and filtering
         fetch_k = top_k * 10
         
+        where_dict = {"user_id": user_id}
+        if project_id is not None:
+            where_dict["project_id"] = str(project_id)
+            
         results = await vector_store.query(
             query,
             n_results=fetch_k,
-            where={
-                "user_id": user_id,
-                # Filter for chunks (memories) OR facts
-                # "type": {"$in": ["fact", "memory", "chunk"]} # Pinecone metadatas are flat, logic depends on store wrapper
-                # Assuming vector_store handles filtering or we filter post-fetch if store is limited
-            },
+            where=where_dict,
             include_values=True 
         )
         
@@ -92,7 +92,7 @@ class RetrievalService:
                 
         return {"facts": facts_res, "memories": mems_res}
 
-    async def _search_state(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None) -> List[Dict[str, Any]]:
+    async def _search_state(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None, project_id: Optional[int] = None) -> List[Dict[str, Any]]:
         """
         Search for current truths (Facts) using Hybrid Strategy:
         1. Semantic Search (Vector Store) -> Finds "parade" from "procession"
@@ -112,10 +112,13 @@ class RetrievalService:
                  vector_results = pre_fetched
              else:
                  # Fetch more candidates to allow for filtering
+                 where_dict = {"user_id": str(user_id), "type": "fact"}
+                 if project_id is not None:
+                     where_dict["project_id"] = str(project_id)
                  vector_results = await vector_store.query(
                      query_texts=query, 
                      n_results=top_k * 4, 
-                     where={"user_id": str(user_id), "type": "fact"} 
+                     where=where_dict
                  )
              
              if vector_results and vector_results.get("ids"):
@@ -146,7 +149,8 @@ class RetrievalService:
             Fact.user_id == user_id, 
             Fact.valid_until == None,
             Fact.is_superseded == False,
-            Fact.id.in_(semantic_fact_ids)
+            Fact.id.in_(semantic_fact_ids),
+            Fact.project_id == project_id
         ]
         
         # Fetch Facts with Eager Loading of Chunk for context
@@ -275,7 +279,7 @@ class RetrievalService:
 
         return results
 
-    async def _search_episodic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5) -> List[Dict[str, Any]]:
+    async def _search_episodic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, project_id: Optional[int] = None) -> List[Dict[str, Any]]:
         """
         Search Memories primarily by time/recency matching query constraints?
         For now: Keyword search on Memories, sorted by created_at DESC.
@@ -286,6 +290,7 @@ class RetrievalService:
         # Naive: Just simple LIKE query
         stmt = select(Memory).where(
             Memory.user_id == user_id, 
+            Memory.project_id == project_id,
             Memory.content.ilike(f"%{query}%")
         ).order_by(Memory.created_at.desc()).limit(top_k)
         
@@ -307,7 +312,7 @@ class RetrievalService:
             })
         return results
 
-    async def _search_semantic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None) -> List[Dict[str, Any]]:
+    async def _search_semantic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None, project_id: Optional[int] = None) -> List[Dict[str, Any]]:
         # 1. Fetch Candidates (or use pre-fetched)
         fetch_k = top_k * 10
         
@@ -315,10 +320,13 @@ class RetrievalService:
             results = pre_fetched
         else:
             # 2. Vector Search (with embeddings for MMR)
+            where_dict = {"user_id": user_id}
+            if project_id is not None:
+                where_dict["project_id"] = str(project_id)
             results = await vector_store.query(
                 query, 
                 n_results=fetch_k, 
-                where={"user_id": user_id},
+                where=where_dict,
                 include_values=True # Required for MMR
             )
         
@@ -426,11 +434,19 @@ class RetrievalService:
         top_ids = [candidate_ids[i] for i in selected_indices]
         
         # Async fetch with Eager Loading (Same as before)
+        from sqlalchemy import or_
         query_stmt = (
             select(Chunk)
             .options(selectinload(Chunk.memory), selectinload(Chunk.document))
             .where(Chunk.embedding_id.in_(top_ids))
         )
+        if project_id is not None:
+            query_stmt = query_stmt.where(
+                or_(
+                    Chunk.memory.has(project_id=project_id),
+                    Chunk.document.has(project_id=project_id)
+                )
+            )
         db_res = await db.execute(query_stmt)
         chunks = db_res.scalars().all()
         chunk_map = {c.embedding_id: c for c in chunks}

@@ -1,4 +1,4 @@
-name: Deploy MemWyre
+name: Deploy Memwyre
 
 on:
   push:

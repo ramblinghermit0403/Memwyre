@@ -64,7 +64,7 @@
                 </div>
               </transition>
 
-              <!-- Injected MemWyre Logo (Hover Target) -->
+              <!-- Injected Memwyre Logo (Hover Target) -->
               <div
                 class="w-8 h-8 sm:w-10 sm:h-10 rounded-[10px] border flex items-center justify-center transition-all duration-300 relative group cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                 :class="{ 'scale-[1.3] bg-[#444] shadow-[0_0_35px_rgba(255,255,255,0.4)] border-transparent': phase === 1 && subphase === 'click', 'bg-[#383838] scale-110 shadow-[0_0_25px_rgba(27,128,84,0.4)] border-[#1B8054]': phase === 1 && subphase === 'toast', 'bg-[#2A2B32] border-gray-600 hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]': phase === 1 && subphase !== 'click' && subphase !== 'toast' }">
@@ -73,7 +73,7 @@
                   stroke-linejoin="round">
                   <path d="M5 13l4 4L19 7" />
                 </svg>
-                <img v-else src="/image.svg" alt="MemWyre" class="w-5 h-5 sm:w-6 sm:h-6 transition-opacity" />
+                <img v-else src="/image.svg" alt="Memwyre" class="w-5 h-5 sm:w-6 sm:h-6 transition-opacity" />
               </div>
             </div>
           </div>
@@ -127,11 +127,11 @@
                 </div>
               </transition>
 
-              <!-- Injected MemWyre Button (Right Side) -->
+              <!-- Injected Memwyre Button (Right Side) -->
               <div
                 class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 relative group cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                 :class="{ 'bg-[#444] scale-[1.3] shadow-[0_0_35px_rgba(255,255,255,0.4)] border-transparent': phase === 2 && subphase === 'click', 'bg-[#383838] scale-110 shadow-[0_0_25px_rgba(27,128,84,0.4)] border-[#1B8054] border': phase === 2 && subphase === 'toast', 'bg-transparent hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.15)]': phase === 2 && subphase !== 'click' && subphase !== 'toast' }">
-                <!-- MemWyre Logo or Checkmark -->
+                <!-- Memwyre Logo or Checkmark -->
                 <svg v-if="phase === 2 && subphase === 'toast'" class="w-4 h-4 text-[#8b8b8b]" fill="none"
                   viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" stroke-linecap="round"
                   stroke-linejoin="round">
@@ -235,7 +235,7 @@ const triggerPhase1 = async () => {
   // Move to injected Memwyre icon
   cursorX.value = -10
   cursorY.value = 75
-  // Camera slowly tracks and zooms in on MemWyre button
+  // Camera slowly tracks and zooms in on Memwyre button
   focusCamera(-10, 70, 1.4, 600)
   await sleep(650)
 
@@ -299,7 +299,7 @@ const triggerPhase2 = async () => {
   await sleep(30)
   subphase.value = 'move'
 
-  // Move cursor to MemWyre Button (Right side)
+  // Move cursor to Memwyre Button (Right side)
   cursorX.value = 100
   cursorY.value = 15
   // Camera snaps forcefully to the action cluster on the far right

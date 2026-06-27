@@ -22,10 +22,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { useProjectStore } from '../stores/project';
 import NavBar from '../components/NavBar.vue';
 import ProjectSidebar from '../components/ProjectSidebar.vue';
 import AIInteractionTimeline from '../components/AIInteractionTimeline.vue';
 
-const selectedProjectId = ref(null);
+const projectStore = useProjectStore();
+const selectedProjectId = computed({
+  get: () => projectStore.currentProjectId,
+  set: (val) => projectStore.setCurrentProjectId(val)
+});
 </script>

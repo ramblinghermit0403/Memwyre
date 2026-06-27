@@ -36,7 +36,9 @@
         "https://gemini.google.com/*",
         "https://www.youtube.com/*",
         "https://www.perplexity.ai/*",
-        "https://perplexity.ai/*"
+        "https://perplexity.ai/*",
+        "https://grok.com/*",
+        "https://www.grok.com/*"
       ],
       "js": [
         "config.js",

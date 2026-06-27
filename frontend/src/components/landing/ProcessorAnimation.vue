@@ -7,7 +7,9 @@
 <script setup>
 import { computed } from 'vue';
 // Import the SVG raw content so we can inject it and target its internal IDs with CSS
-import rawSvg from '@/assets/motion/processsor.svg?raw';
+import rawSvg from '@/assets/motion/processor_orange.svg?raw';
+
+// Force HMR compile trigger: orange_processor_v4
 
 // Remove explicit width and height from the root SVG to make it responsive
 const processorSvg = computed(() => {

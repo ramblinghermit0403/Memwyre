@@ -54,7 +54,6 @@ with redirect_stdout_to_stderr():
     from app.models.memory import Memory
     # Import ChatSession to ensure relationship mapper works
     from app.models.chat import ChatSession
-    from app.services.context_builder import context_builder
     from app.services.memory_service import memory_service
     # Worker tasks imported lazily to avoid Celery/Redis connection at startup
 
@@ -71,7 +70,7 @@ logger.setLevel(logging.INFO)
 from mcp.server.transport_security import TransportSecuritySettings
 
 mcp = FastMCP(
-    "MemWyre",
+    "Memwyre",
     stateless_http=True,
     transport_security=TransportSecuritySettings(
         allowed_hosts=["server.memwyre.tech", "localhost", "127.0.0.1"],
@@ -145,7 +144,7 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
 
     # 2. Check Environment Variables (Stdio Mode / Single User)
     if not api_key:
-        api_key = os.environ.get("BRAIN_VAULT_API_KEY")
+        api_key = os.environ.get("MEMWYRE_API_KEY") or os.environ.get("BRAIN_VAULT_API_KEY")
 
     key_record_name = None
 
@@ -153,7 +152,7 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
     user = None
     if api_key:
         # A. Persistent API Key
-        if api_key.startswith("bv_sk_"):
+        if api_key.startswith("bv_sk_") or api_key.startswith("mw_sk_"):  # Support both bv_sk_ and mw_sk_ key prefixes
             hashed = hash_key(api_key)
             result = await db.execute(select(ApiKey).filter(ApiKey.key_hash == hashed, ApiKey.is_active == True))
             key_record = result.scalars().first()
@@ -187,12 +186,12 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
     # Only if NO API KEY was provided/found (to prevent accidental bypass)
     if not user and not api_key:
         # Fallback assume full access for local dev
-        user_email = os.environ.get("BRAIN_VAULT_USER_EMAIL")
+        user_email = os.environ.get("MEMWYRE_USER_EMAIL") or os.environ.get("BRAIN_VAULT_USER_EMAIL")
         if user_email:
             result = await db.execute(select(User).filter(User.email == user_email))
             user = result.scalars().first()
             
-        user_id = os.environ.get("BRAIN_VAULT_USER_ID")
+        user_id = os.environ.get("MEMWYRE_USER_ID") or os.environ.get("BRAIN_VAULT_USER_ID")
         if not user and user_id:
             result = await db.execute(select(User).filter(User.id == int(user_id)))
             user = result.scalars().first()
@@ -203,14 +202,53 @@ async def get_current_user(db, ctx: Context = None, required_scope: str = None):
 
 
 
-@mcp.tool()
-async def save_memory(text: str, ctx: Context, source: str = "mcp", tags: Optional[List[str]] = None) -> str:
+async def get_or_create_project(db, user_id: int, workspace_name: Optional[str] = None) -> Optional[int]:
     """
-    Save a new memory snippet to the MemWyre Vault. Use this tool when the user explicitly asks you to 'remember' something, 'save' a note, or when you encounter important information that should be persisted for future reference.
+    Look up project by workspace_name. If workspace_name is not provided, 
+    fall back to current working directory name. 
+    If project doesn't exist, create it.
+    """
+    project_name = workspace_name
+    if not project_name:
+        try:
+            cwd = os.getcwd()
+            project_name = os.path.basename(cwd)
+        except Exception:
+            project_name = "default"
+            
+    if not project_name:
+        project_name = "default"
+        
+    from app.models.project import Project
+    result = await db.execute(
+        select(Project).where(
+            Project.user_id == user_id,
+            Project.name == project_name
+        )
+    )
+    project = result.scalars().first()
+    if not project:
+        project = Project(
+            user_id=user_id,
+            name=project_name,
+            description=f"Auto-created workspace for {project_name}"
+        )
+        db.add(project)
+        await db.commit()
+        await db.refresh(project)
+        logger.info(f"Auto-created project: {project_name} (ID: {project.id})")
+        
+    return project.id
+
+@mcp.tool()
+async def save_memory(text: str, ctx: Context, source: str = "mcp", tags: Optional[List[str]] = None, workspace_name: Optional[str] = None) -> str:
+    """
+    Save a new memory snippet to the Memwyre Vault. Use this tool when the user explicitly asks you to 'remember' something, 'save' a note, or when you encounter important information that should be persisted for future reference.
     Args:
         text: The content of the memory.
         source: Source of memory (default 'mcp').
         tags: Optional list of tags.
+        workspace_name: Optional name of the workspace directory. Pass this so that memories are containerized in this project workspace.
     """
     async with AsyncSessionLocal() as db:
         try:
@@ -227,12 +265,14 @@ async def save_memory(text: str, ctx: Context, source: str = "mcp", tags: Option
             
             logger.info(f"Effective source: {effective_source} (identified source: {key_name})")
 
+            project_id = await get_or_create_project(db, user.id, workspace_name)
             memory = await memory_service.create_memory(
                 db=db,
                 user=user,
                 content=text,
                 source=effective_source,
-                tags=tags
+                tags=tags,
+                project_id=project_id
             )
             
             logger.info(f"Memory saved successfully: mem_{memory.id}")
@@ -242,13 +282,14 @@ async def save_memory(text: str, ctx: Context, source: str = "mcp", tags: Option
             return f"Error saving memory: {str(e)}"
 
 @mcp.tool()
-async def search_memwyre(query: str, ctx: Context, purpose: str = "general") -> str:
+async def search_memwyre(query: str, ctx: Context, purpose: str = "general", workspace_name: Optional[str] = None) -> str:
     """
-    The PRIMARY tool for searching the user's "MemWyre". Use this to retrieve relevant context, notes, code snippets, or past conversations from the MemWyre Vault.
+    The PRIMARY tool for searching the user's "Memwyre". Use this to retrieve relevant context, notes, code snippets, or past conversations from the Memwyre Vault.
     ALWAYS use this before answering questions that might require personal context.
     Args:
         query: The semantic search query (e.g., "python fastapi project structure", "notes on meeting with Bob", or "auth system specs").
         purpose: Optional hint for context formatting ("general", "code", "summary").
+        workspace_name: Optional name of the workspace directory. Pass this so that search is scoped strictly to this project workspace.
     """
     async with AsyncSessionLocal() as db:
         try:
@@ -256,16 +297,34 @@ async def search_memwyre(query: str, ctx: Context, purpose: str = "general") -> 
             if not user:
                 return "Error: No user found."
                 
-            # Context builder uses vector store (network/sync)
-            ctx = context_builder.build_context(query=query, user_id=user.id, limit_tokens=2000)
-            return ctx["text"]
+            from app.core.config import settings
+            if settings.MEMORY_ENGINE_VERSION == "v2":
+                from app.services.retrieval_service_v2 import retrieval_service
+            else:
+                from app.services.retrieval_service import retrieval_service
+                
+            project_id = await get_or_create_project(db, user.id, workspace_name)
+            results = await retrieval_service.search_memories(
+                query=query,
+                user_id=user.id,
+                db=db,
+                top_k=5,
+                project_id=project_id
+            )
+            
+            # Format using Memwyre standards
+            from app.services.agent_service import agent_service
+            context_text = agent_service._build_memwyre_context(results)
+            return context_text
         except Exception as e:
             return f"Error searching vault: {str(e)}"
 
 @mcp.tool()
-async def get_inbox(ctx: Context) -> str:
+async def get_inbox(ctx: Context, workspace_name: Optional[str] = None) -> str:
     """
-    Get list of pending memories in the MemWyre Inbox.
+    Get list of pending memories in the Memwyre Inbox.
+    Args:
+        workspace_name: Optional name of the workspace directory to filter inbox items.
     """
     async with AsyncSessionLocal() as db:
         try:
@@ -273,12 +332,15 @@ async def get_inbox(ctx: Context) -> str:
             if not user:
                 return "Error: No user found."
                 
-            result = await db.execute(
-                select(Memory).filter(
-                    Memory.user_id == user.id,
-                    Memory.status == "pending"
-                ).order_by(Memory.created_at.desc())
+            project_id = await get_or_create_project(db, user.id, workspace_name)
+            stmt = select(Memory).filter(
+                Memory.user_id == user.id,
+                Memory.status == "pending"
             )
+            if project_id is not None:
+                stmt = stmt.filter(Memory.project_id == project_id)
+            stmt = stmt.order_by(Memory.created_at.desc())
+            result = await db.execute(stmt)
             memories = result.scalars().all()
             
             if not memories:
@@ -399,7 +461,7 @@ async def discard_memory(memory_id: str, ctx: Context) -> str:
 @mcp.tool()
 async def get_document(doc_id: int, ctx: Context) -> str:
     """
-    Retrieve the full content of a specific document by ID from MemWyre.
+    Retrieve the full content of a specific document by ID from Memwyre.
     Args:
         doc_id: The ID of the document.
     """
@@ -426,12 +488,13 @@ async def get_document(doc_id: int, ctx: Context) -> str:
             return f"Error getting document: {str(e)}"
 
 @mcp.tool()
-async def generate_prompt(query: str, ctx: Context, template: str = "standard") -> str:
+async def generate_prompt(query: str, ctx: Context, template: str = "standard", workspace_name: Optional[str] = None) -> str:
     """
-    Generate a prompt with retrieved context from MemWyre.
+    Generate a prompt with retrieved context from Memwyre.
     Args:
         query: The user's question or request.
         template: The template to use ("standard", "code", "summary").
+        workspace_name: Optional name of the workspace directory. Pass this so that prompt context is scoped strictly to this project workspace.
     """
     async with AsyncSessionLocal() as db:
         try:
@@ -439,9 +502,11 @@ async def generate_prompt(query: str, ctx: Context, template: str = "standard") 
             if not user:
                 return "Error: No user found."
             
+            project_id = await get_or_create_project(db, user.id, workspace_name)
+            
             # 1. Retrieve Context using ContextBuilder (Standardized)
-            ctx = context_builder.build_context(query=query, user_id=user.id, limit_tokens=2000)
-            context_str = ctx["text"]
+            context_data = await context_builder.build_context(query=query, user_id=user.id, limit_tokens=2000, project_id=project_id)
+            context_str = context_data["text"]
             
             # 3. Apply Template
             if template == "code":
@@ -482,7 +547,7 @@ QUESTION:
 @mcp.tool()
 async def update_memory(memory_id: str, content: str, ctx: Context) -> str:
     """
-    Update the content of an existing memory in MemWyre.
+    Update the content of an existing memory in Memwyre.
     Args:
         memory_id: The ID of the memory (must start with 'mem_').
         content: The new content.
@@ -546,7 +611,7 @@ async def update_memory(memory_id: str, content: str, ctx: Context) -> str:
 @mcp.tool()
 async def delete_memory(memory_id: str, ctx: Context) -> str:
     """
-    Delete a memory or document by ID from MemWyre.
+    Delete a memory or document by ID from Memwyre.
     Args:
         memory_id: The ID of the item (e.g., 'mem_1' or 'doc_5').
     """
@@ -612,12 +677,13 @@ async def delete_memory(memory_id: str, ctx: Context) -> str:
             return f"Error deleting item: {str(e)}"
 
 @mcp.tool()
-async def list_memories(ctx: Context, limit: int = 10, offset: int = 0) -> str:
+async def list_memories(ctx: Context, limit: int = 10, offset: int = 0, workspace_name: Optional[str] = None) -> str:
     """
-    List recent memories and documents in MemWyre.
+    List recent memories and documents in Memwyre.
     Args:
         limit: Number of items to return (default 10).
         offset: Pagination offset (default 0).
+        workspace_name: Optional name of the workspace directory. Pass this so that items are filtered by this project workspace.
     """
     async with AsyncSessionLocal() as db:
         try:
@@ -625,15 +691,23 @@ async def list_memories(ctx: Context, limit: int = 10, offset: int = 0) -> str:
             if not user:
                 return "Error: No user found."
                 
+            project_id = await get_or_create_project(db, user.id, workspace_name)
+            
             # Fetch Memories
+            stmt_mem = select(Memory).filter(Memory.user_id == user.id)
+            if project_id is not None:
+                stmt_mem = stmt_mem.filter(Memory.project_id == project_id)
             result = await db.execute(
-                select(Memory).filter(Memory.user_id == user.id).order_by(Memory.created_at.desc()).limit(limit).offset(offset)
+                stmt_mem.order_by(Memory.created_at.desc()).limit(limit).offset(offset)
             )
             memories = result.scalars().all()
             
             # Fetch Documents (simple logic, separate query for now)
+            stmt_doc = select(Document).filter(Document.user_id == user.id)
+            if project_id is not None:
+                stmt_doc = stmt_doc.filter(Document.project_id == project_id)
             result_docs = await db.execute(
-                select(Document).filter(Document.user_id == user.id).order_by(Document.created_at.desc()).limit(limit).offset(offset)
+                stmt_doc.order_by(Document.created_at.desc()).limit(limit).offset(offset)
             )
             documents = result_docs.scalars().all()
             
@@ -674,7 +748,7 @@ async def get_inbox_resource() -> str:
             if not memories:
                 return "Inbox is empty."
                 
-            results = ["# MemWyre Inbox"]
+            results = ["# Memwyre Inbox"]
             for mem in memories:
                 results.append(f"- [ID: mem_{mem.id}] ({mem.source_llm}): {mem.content[:100]}...")
                 
@@ -686,24 +760,25 @@ async def get_inbox_resource() -> str:
 @mcp.prompt()
 def daily_briefing() -> str:
     """
-    Generate a briefing prompt based on recent memories from MemWyre.
+    Generate a briefing prompt based on recent memories from Memwyre.
     """
-    return "Please review my recent memories from MemWyre and provide a summary of what I've been working on and any outstanding tasks in my Inbox."
+    return "Please review my recent memories from Memwyre and provide a summary of what I've been working on and any outstanding tasks in my Inbox."
 
 @mcp.prompt()
 def project_context(project_name: str) -> str:
     """
-    Generate a prompt to focus on a specific project using MemWyre.
+    Generate a prompt to focus on a specific project using Memwyre.
     """
-    return f"Please search MemWyre for all information related to '{project_name}'. Summarize the key points, technical decisions, and current status."
+    return f"Please search Memwyre for all information related to '{project_name}'. Summarize the key points, technical decisions, and current status."
 
 @mcp.tool()
-async def search_by_date(start_date: str, ctx: Context, end_date: Optional[str] = None) -> str:
+async def search_by_date(start_date: str, ctx: Context, end_date: Optional[str] = None, workspace_name: Optional[str] = None) -> str:
     """
-    Find memories in MemWyre created within a specific date range.
+    Find memories in Memwyre created within a specific date range.
     Args:
         start_date: Start date in YYYY-MM-DD format.
         end_date: End date in YYYY-MM-DD format (optional, defaults to end of start_date).
+        workspace_name: Optional name of the workspace directory. Pass this so that items are filtered by this project workspace.
     """
     async with AsyncSessionLocal() as db:
         try:
@@ -711,6 +786,8 @@ async def search_by_date(start_date: str, ctx: Context, end_date: Optional[str] 
             if not user:
                 return "Error: No user found."
                 
+            project_id = await get_or_create_project(db, user.id, workspace_name)
+            
             from datetime import datetime, timedelta
             
             try:
@@ -722,13 +799,14 @@ async def search_by_date(start_date: str, ctx: Context, end_date: Optional[str] 
             except ValueError:
                 return "Error: Invalid date format. Use YYYY-MM-DD."
                 
-            result = await db.execute(
-                select(Memory).filter(
-                    Memory.user_id == user.id,
-                    Memory.created_at >= start,
-                    Memory.created_at < end
-                ).order_by(Memory.created_at.asc())
+            stmt = select(Memory).filter(
+                Memory.user_id == user.id,
+                Memory.created_at >= start,
+                Memory.created_at < end
             )
+            if project_id is not None:
+                stmt = stmt.filter(Memory.project_id == project_id)
+            result = await db.execute(stmt.order_by(Memory.created_at.asc()))
             memories = result.scalars().all()
             
             if not memories:
@@ -743,10 +821,12 @@ async def search_by_date(start_date: str, ctx: Context, end_date: Optional[str] 
             return f"Error searching by date: {str(e)}"
 
 @mcp.tool()
-async def get_all_tags(ctx: Context) -> str:
+async def get_all_tags(ctx: Context, workspace_name: Optional[str] = None) -> str:
     """
-    Get a list of all tags currently used in MemWyre. 
+    Get a list of all tags currently used in Memwyre. 
     Use this to understand the taxonomy of the user's knowledge.
+    Args:
+        workspace_name: Optional name of the workspace directory. Pass this so that tags are filtered by this project workspace.
     """
     async with AsyncSessionLocal() as db:
         try:
@@ -754,8 +834,13 @@ async def get_all_tags(ctx: Context) -> str:
             if not user:
                 return "Error: No user found."
             
-            # Inefficient but valid for MVP: Fetch all and aggregate
-            result = await db.execute(select(Memory).filter(Memory.user_id == user.id))
+            project_id = await get_or_create_project(db, user.id, workspace_name)
+            
+            # Fetch and aggregate
+            stmt = select(Memory).filter(Memory.user_id == user.id)
+            if project_id is not None:
+                stmt = stmt.filter(Memory.project_id == project_id)
+            result = await db.execute(stmt)
             memories = result.scalars().all()
             
             all_tags = set()

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
 import { useAuthStore } from './auth';
+import { useProjectStore } from './project';
 
 export const useInboxStore = defineStore('inbox', {
     state: () => ({
@@ -14,7 +15,12 @@ export const useInboxStore = defineStore('inbox', {
     actions: {
         async fetchInbox() {
             try {
-                const response = await api.get('/inbox/');
+                const projectStore = useProjectStore();
+                const params = {};
+                if (projectStore.currentProjectId) {
+                    params.project_id = projectStore.currentProjectId;
+                }
+                const response = await api.get('/inbox/', { params });
                 this.items = response.data;
                 this.count = this.items.length;
             } catch (error) {

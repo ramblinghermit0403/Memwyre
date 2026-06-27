@@ -218,8 +218,7 @@ const integrationCategories = ref([
     name: 'Knowledge bases',
     items: [
       { id: 'gdrive', name: 'Google Drive', isPro: true, desc: 'Sync Docs, Sheets and Slides into your memory', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-gray-100 dark:bg-white/10' },
-      { id: 'notion', name: 'Notion', isPro: true, desc: 'Import Notion pages and databases', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-white dark:bg-black', icon: '/src/assets/notion-svgrepo-com.svg' },
-      { id: 'onedrive', name: 'OneDrive', isPro: true, desc: 'Bring in Office documents from OneDrive', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-blue-500/10 dark:bg-blue-500/20' }
+      { id: 'notion', name: 'Notion', isPro: true, desc: 'Import Notion pages and databases', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-white dark:bg-black', icon: '/src/assets/notion-svgrepo-com.svg' }
     ]
   }
 ]);

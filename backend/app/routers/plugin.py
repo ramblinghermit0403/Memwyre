@@ -30,14 +30,24 @@ async def get_plugin_context(
     # In a fully fleshed out system, this would use semantic search on the vector DB.
     # For now, we do a basic ILIKE search in the DB to keep it fast.
     
-    stmt = select(Memory).where(
-        Memory.user_id == current_user.id
-    ).filter(
-        Memory.content.ilike(f"%{project}%")
-    ).order_by(Memory.created_at.desc()).limit(10)
+    from app.models.project import Project
     
-    result = await db.execute(stmt)
-    memories = result.scalars().all()
+    # Scope strictly by project workspace name
+    result_proj = await db.execute(
+        select(Project).where(Project.user_id == current_user.id, Project.name == project)
+    )
+    proj = result_proj.scalars().first()
+    
+    if proj:
+        stmt = select(Memory).where(
+            Memory.user_id == current_user.id,
+            Memory.project_id == proj.id
+        ).order_by(Memory.created_at.desc()).limit(10)
+        
+        result = await db.execute(stmt)
+        memories = result.scalars().all()
+    else:
+        memories = []
     
     # Format for the plugin
     formatted_memories = [

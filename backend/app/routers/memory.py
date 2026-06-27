@@ -75,6 +75,9 @@ async def create_memory(
         db=db,
     )
 
+    # Resolve project_id to ensure workspace containerization
+    project_id = await deps.resolve_project_id(db, current_user.id, memory_in.project_id)
+
     memory = await memory_service.create_memory(
         db=db,
         user=current_user,
@@ -83,7 +86,7 @@ async def create_memory(
         source="extension" if is_extension else "web-app",
         tags=memory_in.tags,
         created_at=memory_in.created_at,
-        project_id=memory_in.project_id,
+        project_id=project_id,
         interaction_type=memory_in.interaction_type,
         source_app=memory_in.source_app,
     )
@@ -355,7 +358,11 @@ async def update_memory(
     memory.title = memory_in.title
     memory.content = memory_in.content
     memory.tags = memory_in.tags
-    memory.project_id = memory_in.project_id
+    # Resolve project_id: use provided value, or keep existing, or fall back to default
+    if memory_in.project_id is not None:
+        memory.project_id = await deps.resolve_project_id(db, current_user.id, memory_in.project_id)
+    elif memory.project_id is None:
+        memory.project_id = await deps.resolve_project_id(db, current_user.id)
     memory.interaction_type = memory_in.interaction_type
     memory.source_app = memory_in.source_app or memory.source_app
     await db.commit()

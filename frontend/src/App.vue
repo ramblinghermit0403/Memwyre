@@ -3,6 +3,7 @@ import { RouterView } from 'vue-router'
 import { onMounted } from 'vue'
 import { useThemeStore } from './stores/theme'
 import { useAuthStore } from './stores/auth'
+import { useProjectStore } from './stores/project'
 
 // Initialize theme store to ensure dark mode preference persists on reload
 const isClient = typeof window !== 'undefined'
@@ -16,6 +17,8 @@ onMounted(async () => {
   if (!authStore || !authStore.isAuthenticated) return
   try {
     await authStore.fetchUser()
+    const projectStore = useProjectStore()
+    await projectStore.fetchProjects()
   } catch (e) {
     // Keep app usable even if profile sync fails.
   }

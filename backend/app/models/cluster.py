@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, JSON, Float
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from app.db.base import Base
 
 class MemoryCluster(Base):
@@ -7,6 +8,9 @@ class MemoryCluster(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=True, index=True)
+    
+    project = relationship("Project", backref="memory_clusters")
     
     # We store the IDs of memories in this cluster as a JSON list
     memory_ids = Column(JSON, nullable=False) 

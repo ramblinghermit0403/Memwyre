@@ -52,6 +52,11 @@ class FakeAsyncSession:
         self.committed = True
 
 
+class FakeBackgroundTasks:
+    def add_task(self, func, *args, **kwargs):
+        pass
+
+
 @pytest.mark.asyncio
 async def test_verify_email_success_returns_metadata_only():
     user = User(id=123, email="user@example.com", hashed_password="x", is_verified=False)
@@ -63,7 +68,11 @@ async def test_verify_email_success_returns_metadata_only():
     )
     db = FakeAsyncSession([token, user])
 
-    response = await verify_email_endpoint(VerifyEmailRequest(token="token-123"), db)
+    response = await verify_email_endpoint(
+        VerifyEmailRequest(token="token-123"),
+        background_tasks=FakeBackgroundTasks(),
+        db=db
+    )
 
     assert response["message"] == "Email verified successfully."
     assert "verified_at" in response
@@ -79,7 +88,11 @@ async def test_verify_email_invalid_token_raises_400():
     db = FakeAsyncSession([None])
 
     with pytest.raises(HTTPException) as exc:
-        await verify_email_endpoint(VerifyEmailRequest(token="missing"), db)
+        await verify_email_endpoint(
+            VerifyEmailRequest(token="missing"),
+            background_tasks=FakeBackgroundTasks(),
+            db=db
+        )
 
     assert exc.value.status_code == 400
     assert exc.value.detail == "Invalid or expired token"
@@ -97,7 +110,11 @@ async def test_verify_email_expired_token_raises_400():
     db = FakeAsyncSession([expired, user])
 
     with pytest.raises(HTTPException) as exc:
-        await verify_email_endpoint(VerifyEmailRequest(token="expired-token"), db)
+        await verify_email_endpoint(
+            VerifyEmailRequest(token="expired-token"),
+            background_tasks=FakeBackgroundTasks(),
+            db=db
+        )
 
     assert exc.value.status_code == 400
     assert exc.value.detail == "Token has expired"

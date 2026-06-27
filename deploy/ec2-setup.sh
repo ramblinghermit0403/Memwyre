@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# MemWyre EC2 Bootstrap Script
+# Memwyre EC2 Bootstrap Script
 # Run once on a fresh Ubuntu 22.04 EC2 instance:
 #   chmod +x ec2-setup.sh && sudo ./ec2-setup.sh
 # ============================================================

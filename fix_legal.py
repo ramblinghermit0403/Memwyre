@@ -4,8 +4,8 @@ def fix_file(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Fix MemWyre typo
-    content = content.replace('MemWyre', 'Memwyre')
+    # Fix Memwyre typo
+    content = content.replace('Memwyre', 'Memwyre')
 
     # Add LogoBgAnimation import if missing
     if 'import LogoBgAnimation' not in content:

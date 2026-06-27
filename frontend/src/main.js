@@ -1,10 +1,10 @@
 import './style.css'
-import { createMemWyreApp } from './app'
+import { createMemwyreApp } from './app'
 
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
-const { app } = createMemWyreApp()
+const { app } = createMemwyreApp()
 app.use(Toast, {
     position: "bottom-right",
     timeout: 3000,

@@ -13,10 +13,10 @@
                     Memwyre captures everything you do with AI—research, code, decisions—and turns it into persistent, accessible knowledge tailored to your workflow.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <router-link to="/signup" class="px-8 py-4 bg-primary text-white text-lg font-bold rounded-full hover:bg-primary-600 transition-colors text-center">
+                    <router-link to="/signup" class="px-8 py-4 bg-primary text-white text-lg font-bold rounded hover:bg-primary-600 transition-colors text-center">
                         See How It Works
                     </router-link>
-                    <a href="mailto:shivharehimansh@gmail.com" class="px-8 py-4 border border-primary/30 text-text-primary text-lg font-bold rounded-full hover:bg-primary/10 transition-colors text-center">
+                    <a href="mailto:shivharehimansh@gmail.com" class="px-8 py-4 border border-primary/30 text-text-primary text-lg font-bold rounded hover:bg-primary/10 transition-colors text-center">
                         Talk to Us
                     </a>
                 </div>
@@ -66,8 +66,8 @@
                 
                 <!-- Central Node: Memwyre -->
                 <div class="relative z-10 flex flex-col items-center justify-center transform group-hover:scale-105 transition-all duration-500">
-                    <img src="/image.svg" alt="MemWyre" class="w-20 h-20 mb-3" />
-                    <span class="text-lg font-bold tracking-tight text-text-primary">MemWyre</span>
+                    <img src="/image.svg" alt="Memwyre" class="w-20 h-20 mb-3" />
+                    <span class="text-lg font-bold tracking-tight text-text-primary">Memwyre</span>
                 </div>
 
                 <!-- Icons: alternating IN (close ~15%) / OUT (far ~2%) from edges -->
@@ -368,10 +368,10 @@
          <p class="text-2xl text-text-secondary mb-12">Make sure it actually remembers you.</p>
          
          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <router-link to="/signup" class="px-10 py-5 bg-primary text-white text-xl font-bold rounded-full hover:bg-primary-600 transition-colors shadow-xl">
+            <router-link to="/signup" class="px-10 py-5 bg-primary text-white text-xl font-bold rounded hover:bg-primary-600 transition-colors shadow-xl">
                 Start Building Your Brain
             </router-link>
-            <a href="mailto:shivharehimansh@gmail.com" class="px-10 py-5 border border-primary/30 text-text-primary text-xl font-bold rounded-full hover:bg-primary/10 transition-colors">
+            <a href="mailto:shivharehimansh@gmail.com" class="px-10 py-5 border border-primary/30 text-text-primary text-xl font-bold rounded hover:bg-primary/10 transition-colors">
                 Contact Sales
             </a>
         </div>

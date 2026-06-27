@@ -17,7 +17,7 @@ from app.worker_router import process_memory_metadata_task, dedupe_memory_task, 
 import asyncio
 import json
 from datetime import datetime, timedelta
-from app.services.llm_service import llm_service
+from app.services.llm_service_v2 import llm_service_v2 as llm_service
 
 router = APIRouter()
 
@@ -66,6 +66,18 @@ async def save_memory(
     # Enforce Usage Limits
     await deps.verify_usage_limits(doc_type="memory", content_len=len(memory_in.content), current_user=current_user, db=db)
         
+    # Resolve Project ID (centralized helper ensures default workspace exists)
+    workspace_name = memory_in.workspace_name
+    project_id_raw = memory_in.project_id
+    
+    # Fallback to metadata
+    if not project_id_raw and memory_in.metadata:
+        project_id_raw = memory_in.metadata.get("project_id")
+        if not workspace_name:
+            workspace_name = memory_in.metadata.get("workspace_name") or memory_in.metadata.get("project_name")
+            
+    project_id = await deps.resolve_project_id(db, current_user.id, project_id_raw, workspace_name)
+
     # 3. Create Memory
     memory = Memory(
         user_id=current_user.id,
@@ -76,7 +88,8 @@ async def save_memory(
         status=status,
         tags=memory_in.tags,
         show_in_inbox=show_in_inbox,
-        embedding_id=None # Will be updated if ingested
+        embedding_id=None, # Will be updated if ingested
+        project_id=project_id
     )
     
     db.add(memory)
@@ -213,16 +226,33 @@ async def retrieve_context(
     db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
-    ctx = await context_builder.build_context(
+    from app.core.config import settings
+    if settings.MEMORY_ENGINE_VERSION == "v2":
+        from app.services.retrieval_service_v2 import retrieval_service
+    else:
+        from app.services.retrieval_service import retrieval_service
+    
+    # Resolve project_id to ensure workspace containerization
+    project_id = await deps.resolve_project_id(db, current_user.id, request.project_id)
+    
+    results = await retrieval_service.search_memories(
         query=request.query,
         user_id=current_user.id,
-        limit_tokens=request.limit_tokens or 2000
+        db=db,
+        top_k=5,
+        project_id=project_id
     )
     
+    # Format context using Memwyre standards
+    from app.services.agent_service import agent_service
+    context_text = agent_service._build_memwyre_context(results)
+    snippets = [res["text"] for res in results]
+    token_count = len(context_text) // 4
+    
     return ContextResponse(
-        context_text=ctx["text"],
-        snippets=ctx["snippets"],
-        token_count=ctx["token_count"]
+        context_text=context_text,
+        snippets=snippets,
+        token_count=token_count
     )
 
 # Simple In-Memory Cache for insights (reset on restart is fine)

@@ -449,7 +449,7 @@ function New-PromoTile {
     $format.Alignment = [System.Drawing.StringAlignment]::Center
     $format.LineAlignment = [System.Drawing.StringAlignment]::Near
 
-    $graphics.DrawString("MemWyre", $nameFont, $nameBrush, [System.Drawing.RectangleF]::new(40, 174, 360, 44), $format)
+    $graphics.DrawString("Memwyre", $nameFont, $nameBrush, [System.Drawing.RectangleF]::new(40, 174, 360, 44), $format)
     $graphics.DrawString("", $taglineFont, $taglineBrush, [System.Drawing.RectangleF]::new(38, 220, 364, 28), $format)
 
     $format.Dispose()
@@ -576,7 +576,7 @@ $slides = @(
     },
     @{
         id = "05-ask-to-memwyre"
-        headline = "Ask MemWyre."
+        headline = "Ask Memwyre."
         support = "Get grounded answers from your saved context."
         image = "talk_to_knowledge.png"
         layout = "right"
@@ -707,7 +707,7 @@ $handoff = @"
 - Secondary crop: none
 
 5. 05-ask-to-memwyre
-- Headline: Ask MemWyre.
+- Headline: Ask Memwyre.
 - Support: Get grounded answers from your saved context.
 - Source: talk_to_knowledge.png
 - Primary card: x=566, y=168, w=648, h=540
@@ -796,7 +796,7 @@ $handoffJson = @{
         @{
             id = "05-ask-to-memwyre"
             source = "talk_to_knowledge.png"
-            headline = "Ask MemWyre."
+            headline = "Ask Memwyre."
             support = "Get grounded answers from your saved context."
             primary = @{ x = 566; y = 168; w = 648; h = 540 }
             secondary = $null

@@ -184,6 +184,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { useInboxStore } from '../stores/inbox';
 import { useAuthStore } from '../stores/auth';
+import { useProjectStore } from '../stores/project';
 import { useRouter, useRoute } from 'vue-router';
 import api from '../services/api';
 import NavBar from '../components/NavBar.vue';
@@ -196,6 +197,7 @@ import LoadingLogo from '@/components/common/LoadingLogo.vue';
 
 const store = useInboxStore();
 const authStore = useAuthStore();
+const projectStore = useProjectStore();
 const router = useRouter();
 const route = useRoute();
 const toast = useToast();
@@ -203,6 +205,14 @@ const selectedItem = ref(null);
 // Script addition for similarityData
 const similarityData = ref(null);
 const newTagInput = ref('');
+
+watch(() => projectStore.currentProjectId, async () => {
+  selectedItem.value = null;
+  await store.fetchInbox();
+  if (store.items.length > 0) {
+    selectedItem.value = store.items[0];
+  }
+});
 
 // Loading States
 const dismissing = ref(false);

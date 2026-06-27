@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing, admin, admin_bypass, bypass, projects, context, discovery, plugin
+from app.routers import auth, retrieval, llm, documents, memory, export, prompts, llm_api, inbox, user_keys, ws, settings as user_settings, feedback, chat_api, ingest, billing, admin, admin_bypass, bypass, projects, context, discovery, plugin, connectors
 from app.db.base import Base
 from app.db.session import engine
 import app.models # Register models
@@ -46,8 +46,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="MemWyre",
-    description="Backend API for MemWyre - Personal Knowledge Base",
+    title="Memwyre",
+    description="Backend API for Memwyre - Personal Knowledge Base",
     version="1.0.0",
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     lifespan=lifespan,
@@ -98,6 +98,7 @@ app.include_router(chat_api.router, prefix=f"{settings.API_V1_STR}/chat", tags=[
 from app.routers import user_api_keys
 app.include_router(user_api_keys.router, prefix=f"{settings.API_V1_STR}/user", tags=["api-keys"])
 app.include_router(plugin.router, prefix=f"{settings.API_V1_STR}/plugin", tags=["plugin"])
+app.include_router(connectors.router, prefix=f"{settings.API_V1_STR}", tags=["connectors"])
 app.include_router(ws.router, prefix="/ws", tags=["websocket"])
 app.include_router(billing.router, prefix=f"{settings.API_V1_STR}/billing", tags=["billing"])
 app.include_router(admin.router, prefix=f"{settings.API_V1_STR}/admin", tags=["admin"])
@@ -114,7 +115,7 @@ async def root(request: Request):
 
     if "text/markdown" in accept:
         md_content = (
-            "# MemWyre API\n\n"
+            "# Memwyre API\n\n"
             "Personal Knowledge Base & Memory Layer for AI Agents.\n\n"
             "## MCP Server\n\n"
             "Connect via Streamable HTTP at `https://server.memwyre.tech/mcp/`\n\n"
@@ -129,7 +130,7 @@ async def root(request: Request):
         )
 
     return JSONResponse(
-        content={"message": "Welcome to MemWyre API", "status": "running"},
+        content={"message": "Welcome to Memwyre API", "status": "running"},
         headers={"Link": link_header},
     )
 

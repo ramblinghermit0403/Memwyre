@@ -2,14 +2,14 @@
   <div class="py-16 sm:py-20 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
       <div class="space-y-8">
-        <h2 class="text-base font-bold uppercase tracking-widest text-text-muted mb-4">Why MemWyre</h2>
+        <h2 class="text-base font-bold uppercase tracking-widest text-text-muted mb-4">Why Memwyre</h2>
         <p
           class="hero-serif text-balance text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[1.08]">
           Your AI work scatters.<br>
-          <span class="text-primary">MemWyre compounds it.</span>
+          <span class="text-primary">Memwyre compounds it.</span>
         </p>
         <p class="text-xl sm:text-2xl text-text-secondary leading-relaxed max-w-xl text-balance">
-          MemWyre helps you capture everything you do with AI—research, code, decisions—and turns it into persistent,
+          Memwyre helps you capture everything you do with AI—research, code, decisions—and turns it into persistent,
           accessible knowledge tailored to your workflow.
         </p>
       </div>
@@ -79,8 +79,8 @@
         <!-- Central Node: Memwyre -->
         <div
           class="relative z-10 flex flex-col items-center justify-center transform group-hover:scale-105 transition-all duration-500">
-          <img src="/image.svg" alt="MemWyre" class="w-16 h-16 md:w-20 md:h-20 mb-3" />
-          <span class="text-base md:text-lg font-bold tracking-tight text-text-primary">MemWyre</span>
+          <img src="/image.svg" alt="Memwyre" class="w-16 h-16 md:w-20 md:h-20 mb-3" />
+          <span class="text-base md:text-lg font-bold tracking-tight text-text-primary">Memwyre</span>
         </div>
 
         <!-- Icons: 8 total distributed radially, alternating FAR/CLOSE -->

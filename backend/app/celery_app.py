@@ -16,6 +16,7 @@ celery_app.conf.task_routes = {
     f"{worker_module}.ingest_memory_task{'_v2' if settings.MEMORY_ENGINE_VERSION == 'v2' else ''}": "celery",
     f"{worker_module}.dedupe_memory_task{'_v2' if settings.MEMORY_ENGINE_VERSION == 'v2' else ''}": "celery",
     f"{worker_module}.extract_chat_facts_task{'_v2' if settings.MEMORY_ENGINE_VERSION == 'v2' else ''}": "celery",
+    f"{worker_module}.process_plugin_transcript_task{'_v2' if settings.MEMORY_ENGINE_VERSION == 'v2' else ''}": "celery",
 }
 
 # Optional: Retry customization

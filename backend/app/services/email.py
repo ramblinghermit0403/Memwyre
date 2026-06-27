@@ -51,7 +51,7 @@ async def send_email(to_email: str, subject: str, html_body: str) -> bool:
         logger.error("AWS_SES_SENDER_EMAIL is not configured.")
         return False
         
-    sender = f"MemWyre <{base_sender}>"
+    sender = f"Memwyre <{base_sender}>"
 
     loop = asyncio.get_event_loop()
     return await loop.run_in_executor(
@@ -62,7 +62,7 @@ async def send_email(to_email: str, subject: str, html_body: str) -> bool:
 
 async def send_verification_email(to_email: str, verify_url: str):
     """Sends the email verification link."""
-    subject = "Verify Your MemWyre Account"
+    subject = "Verify Your Memwyre Account"
     body = f"""
     <!DOCTYPE html>
     <html>
@@ -92,8 +92,8 @@ async def send_verification_email(to_email: str, verify_url: str):
             <div class="card">
                 <div class="header">
                     <div class="logo">
-                        <img src="https://memwyre.tech/image.svg" alt="MemWyre Logo" />
-                        <span>MemWyre</span>
+                        <img src="https://memwyre.tech/image.svg" alt="Memwyre Logo" />
+                        <span>Memwyre</span>
                     </div>
                 </div>
                 <div class="content">
@@ -111,7 +111,7 @@ async def send_verification_email(to_email: str, verify_url: str):
                 </div>
                 <div class="footer">
                     <p class="footer-text">If you didn't create an account, you can safely ignore this email.</p>
-                    <p class="footer-text" style="margin-top: 12px;">© MemWyre. All rights reserved.</p>
+                    <p class="footer-text" style="margin-top: 12px;">© Memwyre. All rights reserved.</p>
                 </div>
             </div>
         </div>
@@ -123,7 +123,7 @@ async def send_verification_email(to_email: str, verify_url: str):
 
 async def send_password_reset_email(to_email: str, reset_url: str):
     """Sends the password reset link."""
-    subject = "Reset Your MemWyre Password"
+    subject = "Reset Your Memwyre Password"
     body = f"""
     <!DOCTYPE html>
     <html>
@@ -153,13 +153,13 @@ async def send_password_reset_email(to_email: str, reset_url: str):
             <div class="card">
                 <div class="header">
                     <div class="logo">
-                        <img src="https://memwyre.tech/image.svg" alt="MemWyre Logo" />
-                        <span>MemWyre</span>
+                        <img src="https://memwyre.tech/image.svg" alt="Memwyre Logo" />
+                        <span>Memwyre</span>
                     </div>
                 </div>
                 <div class="content">
                     <h2 class="title">Reset your password</h2>
-                    <p class="text">We received a request to reset the password for your MemWyre account. Click the button below to choose a new password.</p>
+                    <p class="text">We received a request to reset the password for your Memwyre account. Click the button below to choose a new password.</p>
                     
                     <div class="btn-wrap">
                         <a href="{reset_url}" class="btn">Reset Password</a>
@@ -172,7 +172,7 @@ async def send_password_reset_email(to_email: str, reset_url: str):
                 </div>
                 <div class="footer">
                     <p class="footer-text">If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.</p>
-                    <p class="footer-text" style="margin-top: 12px;">© MemWyre. All rights reserved.</p>
+                    <p class="footer-text" style="margin-top: 12px;">© Memwyre. All rights reserved.</p>
                 </div>
             </div>
         </div>
@@ -184,7 +184,7 @@ async def send_password_reset_email(to_email: str, reset_url: str):
 
 async def send_otp_email(to_email: str, otp: str):
     """Sends a 6-digit OTP for email verification."""
-    subject = f"Your MemWyre verification code is {otp}"
+    subject = f"Your Memwyre verification code is {otp}"
     body = f"""
     <!DOCTYPE html>
     <html>
@@ -212,8 +212,8 @@ async def send_otp_email(to_email: str, otp: str):
             <div class="card">
                 <div class="header">
                     <div class="logo">
-                        <img src="https://memwyre.tech/image.svg" alt="MemWyre Logo" />
-                        <span>MemWyre</span>
+                        <img src="https://memwyre.tech/image.svg" alt="Memwyre Logo" />
+                        <span>Memwyre</span>
                     </div>
                 </div>
                 <div class="content">
@@ -226,7 +226,7 @@ async def send_otp_email(to_email: str, otp: str):
                 </div>
                 <div class="footer">
                     <p class="footer-text">Didn't request this? Please ignore this message.</p>
-                    <p class="footer-text" style="margin-top: 12px;">© MemWyre. All rights reserved.</p>
+                    <p class="footer-text" style="margin-top: 12px;">© Memwyre. All rights reserved.</p>
                 </div>
             </div>
         </div>
@@ -238,7 +238,7 @@ async def send_otp_email(to_email: str, otp: str):
 
 async def send_welcome_email(to_email: str, name: str):
     """Sends a welcome email to a new verified user."""
-    subject = "Welcome to MemWyre"
+    subject = "Welcome to Memwyre"
     display_name = name if name else "there"
     body = f"""
     <!DOCTYPE html>
@@ -274,8 +274,8 @@ async def send_welcome_email(to_email: str, name: str):
             <div class="card">
                 <div class="header">
                     <div class="logo">
-                        <img src="https://memwyre.tech/image.svg" alt="MemWyre Logo" />
-                        <span>MemWyre</span>
+                        <img src="https://memwyre.tech/image.svg" alt="Memwyre Logo" />
+                        <span>Memwyre</span>
                     </div>
                 </div>
                 <div class="content">
@@ -325,7 +325,7 @@ async def send_welcome_email(to_email: str, name: str):
                     </div>
                 </div>
                 <div class="footer">
-                    <p class="footer-text">© MemWyre. All rights reserved.</p>
+                    <p class="footer-text">© Memwyre. All rights reserved.</p>
                 </div>
             </div>
         </div>

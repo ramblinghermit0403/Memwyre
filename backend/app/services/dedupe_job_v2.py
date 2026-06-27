@@ -54,7 +54,10 @@ class DedupeService:
             print("Dedupe: Querying vector store for potential conflicts...")
             try:
                 # Query only against existing facts
-                results = await vector_store.query(memory.content, n_results=5, where={"user_id": str(memory.user_id), "type": "fact"})
+                where_dict = {"user_id": str(memory.user_id), "type": "fact"}
+                if memory.project_id is not None:
+                    where_dict["project_id"] = str(memory.project_id)
+                results = await vector_store.query(memory.content, n_results=5, where=where_dict)
                 num_matches = len(results.get('ids', [[]])[0]) if results.get('ids') else 0
                 print(f"Dedupe: Vector store returned {num_matches} candidate facts")
             except Exception as vs_e:

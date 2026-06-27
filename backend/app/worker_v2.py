@@ -11,18 +11,23 @@ from app.models.fact import Fact
 # Import ChatSession to ensure relationship mapper works
 from app.models.chat import ChatSession
 from sqlalchemy.future import select
+from typing import Optional
 import asyncio
 import json
 from datetime import datetime
 
 # Helper to run async code in sync Celery task
 def run_async(coro):
-    loop = asyncio.new_event_loop()
     try:
+        loop = asyncio.get_event_loop()
+        if loop.is_closed():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        return loop.run_until_complete(coro)
-    finally:
-        loop.close()
+        
+    return loop.run_until_complete(coro)
 
 @celery_app.task(acks_late=True)
 def process_memory_metadata_task_v2(memory_id: int, user_id: int):
@@ -51,7 +56,7 @@ def dedupe_memory_task_v2(memory_id: int):
     run_async(_dedupe())
 
 @celery_app.task(acks_late=True)
-def extract_chat_facts_task_v2(message: str, user_id: int):
+def extract_chat_facts_task_v2(message: str, user_id: int, project_id: int = None):
     """
     Background task for extracting facts from chat messages.
     This is deferred from the chat agent to reduce response latency.
@@ -82,6 +87,7 @@ def extract_chat_facts_task_v2(message: str, user_id: int):
                             object=f_data.get('object'),
                             confidence=f_data.get('confidence', 0.8),
                             source="user-chat",
+                            project_id=project_id,
                         )
                         if f_data.get("valid_from"):
                             try:
@@ -102,6 +108,27 @@ def extract_chat_facts_task_v2(message: str, user_id: int):
     run_async(_extract_facts())
 
 @celery_app.task(acks_late=True)
+def update_profiles_task_v2(entity_facts: dict, user_id: int, project_id: Optional[int] = None):
+    """
+    Background task for updating entity profiles.
+    """
+    print(f"Worker: Starting entity profile updates for entities: {list(entity_facts.keys())} under project {project_id}")
+    
+    async def _update_profiles():
+        from app.services.profile_service import profile_service
+        try:
+            async with AsyncSessionLocal() as db:
+                await profile_service.update_profiles(entity_facts, user_id, db, project_id=project_id)
+                await db.commit()
+                print(f"Worker: Profile update COMMITTED")
+        except Exception as e:
+            print(f"Worker: Profile update failed: {e}")
+            import traceback
+            traceback.print_exc()
+            
+    run_async(_update_profiles())
+
+@celery_app.task(acks_late=True)
 def ingest_memory_task_v2(memory_id: int, user_id: int, content: str, title: str, tags: list = None, source: str = None, doc_type: str = "memory", mode: str = "append"):
     """
     Background task for ingestion (Chunking + Vector Store).
@@ -112,8 +139,9 @@ def ingest_memory_task_v2(memory_id: int, user_id: int, content: str, title: str
     
     async def _ingest():
         try:
-            # Fetch Context Creation Date
+            # Fetch Context Creation Date and Project ID
             reference_date = None
+            project_id = None
             async with AsyncSessionLocal() as db:
                  if doc_type == "memory":
                      result = await db.execute(select(Memory).where(Memory.id == memory_id))
@@ -126,6 +154,7 @@ def ingest_memory_task_v2(memory_id: int, user_id: int, content: str, title: str
                      
                  if obj:
                      reference_date = obj.created_at
+                     project_id = getattr(obj, "project_id", None)
 
             # Handle Replacement (Delete old chunks)
             if mode == "replace":
@@ -161,18 +190,24 @@ def ingest_memory_task_v2(memory_id: int, user_id: int, content: str, title: str
                     await db.commit()
 
             # 1. Process Text (CPU bound / API bound)
-            ids, documents_content, enriched_chunk_texts, metadatas = await ingestion_service_v2.process_text(
+            metadata_dict = {
+                "user_id": str(user_id), 
+                f"{doc_type}_id": memory_id, # Stores memory_id or document_id
+                "tags": str(tags) if tags else "", 
+                "source": source,
+                "created_at": str(reference_date) if reference_date else ""
+            }
+            if project_id is not None:
+                metadata_dict["project_id"] = str(project_id)
+
+            ids, documents_content, enriched_chunk_texts, metadatas, all_facts_results = await ingestion_service_v2.process_text(
                 text=content,
                 document_id=memory_id,
                 title=title,
                 doc_type=doc_type,
-                metadata={
-                    "user_id": str(user_id), 
-                    f"{doc_type}_id": memory_id, # Stores memory_id or document_id
-                    "tags": str(tags) if tags else "", 
-                    "source": source,
-                    "created_at": str(reference_date) if reference_date else ""
-                }
+                metadata=metadata_dict,
+                extract_facts=True,
+                reference_date=reference_date
             )
             
             if ids:
@@ -190,23 +225,7 @@ def ingest_memory_task_v2(memory_id: int, user_id: int, content: str, title: str
                     print(f"Worker Error Adding to Vector Store: {e}")
                     return
 
-                # 3. Parallel Fact Extraction (Optimized with Semaphore)
-                from app.services.llm_service_v2 import llm_service_v2 as llm_service
-                from app.services.fact_service import fact_service
-                
-                print(f"Worker: Starting parallel fact extraction for {len(documents_content)} chunks...")
-                
-                # Limit concurrency to prevent OOM
-                sem = asyncio.Semaphore(3)
-
-                async def _bounded_extraction(txt, ref_dt):
-                    async with sem:
-                        return await llm_service.extract_facts_from_text(txt, reference_date=ref_dt)
-
-                extraction_tasks = [_bounded_extraction(text, reference_date) for text in documents_content]
-                all_facts_results = await asyncio.gather(*extraction_tasks, return_exceptions=True)
-
-                # 4. Update DB and Save Chunks
+                # 3. Update DB and Save Chunks
                 async with AsyncSessionLocal() as db:
                      # Update Parent Object with embedding_id if applicable
                      if doc_type == "memory":
@@ -255,31 +274,32 @@ def ingest_memory_task_v2(memory_id: int, user_id: int, content: str, title: str
 
                      # Parallel Fact Processing
                      async def _save_facts_safe(facts_res, c_id, u_id, m_id):
-                         async with sem: 
-                             async with AsyncSessionLocal() as local_db:
-                                 # Maps m_id to memory_id argument regardless of type? 
-                                 # fact_service.create_facts likely expects memory_id. 
-                                 # If it's a document, facts might not link correctly if table expects memory_id FK.
-                                 # We will pass memory_id as is, assuming facts schema supports it or we only extract facts for memories?
-                                 # User wants "ingest memory task for documents too".
-                                 # If Facts table requires valid memory_id FK, this will fail for Documents.
-                                 # Let's skip fact extraction for non-memories to be safe/consistent OR assuming poly-morphic.
-                                 # The prompt implies full ingestion.
-                                 # For safety, I will pass memory_id=None if doc_type != 'memory' unless Fact supports document_id.
-                                 # Let's verify Fact model later. For now, we try passing it if it was doing so before.
-                                 pass 
+                         from app.services.fact_service import fact_service
+                         async with AsyncSessionLocal() as local_db:
+                             # Maps m_id to memory_id argument regardless of type? 
+                             # fact_service.create_facts likely expects memory_id. 
+                             # If it's a document, facts might not link correctly if table expects memory_id FK.
+                             # We will pass memory_id as is, assuming facts schema supports it or we only extract facts for memories?
+                             # User wants "ingest memory task for documents too".
+                             # If Facts table requires valid memory_id FK, this will fail for Documents.
+                             # Let's skip fact extraction for non-memories to be safe/consistent OR assuming poly-morphic.
+                             # The prompt implies full ingestion.
+                             # For safety, I will pass memory_id=None if doc_type != 'memory' unless Fact supports document_id.
+                             # Let's verify Fact model later. For now, we try passing it if it was doing so before.
+                             pass 
 
-                                 # Only create facts if it's a memory or if we updated Fact model.
-                                 # Given scope, safer to only do Fact Extraction if doc_type == "memory"
-                                 if doc_type == "memory":
-                                     await fact_service.create_facts(
-                                         facts_data=facts_res,
-                                         user_id=u_id,
-                                         memory_id=m_id,
-                                         chunk_id=c_id,
-                                         db=local_db
-                                     )
-                                     await local_db.commit()
+                             # Only create facts if it's a memory or if we updated Fact model.
+                             # Given scope, safer to only do Fact Extraction if doc_type == "memory"
+                             if doc_type == "memory":
+                                 await fact_service.create_facts(
+                                     facts_data=facts_res,
+                                     user_id=u_id,
+                                     memory_id=m_id,
+                                     chunk_id=c_id,
+                                     db=local_db,
+                                     project_id=project_id
+                                 )
+                                 await local_db.commit()
 
                      fact_tasks = []
                      for i, chunk in enumerate(saved_chunks):
@@ -291,6 +311,59 @@ def ingest_memory_task_v2(memory_id: int, user_id: int, content: str, title: str
 
                      if fact_tasks:
                          await asyncio.gather(*fact_tasks)
+                     
+                     # Update Entity Profiles (Inline - runs immediately after fact extraction)
+                     if doc_type == "memory":
+                          try:
+                              entity_facts = {}
+                              
+                              # Stopwords and common nouns to ignore
+                              ignored_entities = {
+                                  "it", "he", "she", "they", "them", "him", "her", "we", "us", "you", "i",
+                                  "this", "that", "these", "those", "room", "music", "kids", "community",
+                                  "people", "nature", "blue", "picture", "posters", "boy", "girl", "man", "woman"
+                              }
+                              
+                              for facts in all_facts_results:
+                                  if isinstance(facts, list):
+                                      for f in facts:
+                                          subject = f.get("subject")
+                                          if subject:
+                                              entity_lower = subject.lower()
+                                              
+                                              # Strict filtering to avoid noise profiles
+                                              if entity_lower in ignored_entities:
+                                                  continue
+                                              if len(entity_lower) <= 2:
+                                                  continue
+                                              if len(subject.split()) > 2:
+                                                  continue
+                                              if "'" in subject or "’" in subject:
+                                                  continue
+                                                  
+                                              entity_name = subject.strip().capitalize()
+                                              if entity_name not in entity_facts:
+                                                  entity_facts[entity_name] = []
+                                                  
+                                              # Construct a clean fact representation
+                                              fact_str = f"{f.get('subject')} {f.get('predicate')} {f.get('object')}"
+                                              if f.get("location"):
+                                                  fact_str += f" ({f.get('location')})"
+                                              entity_facts[entity_name].append(fact_str)
+                              
+                              if entity_facts:
+                                  print(f"Worker: Updating entity profiles inline for memory {memory_id} with entities: {list(entity_facts.keys())} under project {project_id}")
+                                  from app.services.profile_service import profile_service
+                                  async with AsyncSessionLocal() as profile_db:
+                                      await profile_service.update_profiles(entity_facts, user_id, profile_db, project_id=project_id)
+                                      await profile_db.commit()
+                                  print(f"Worker: Entity profiles updated for memory {memory_id}")
+                              else:
+                                  print(f"Worker: No entities found for profile update (memory {memory_id})")
+                          except Exception as profile_e:
+                              print(f"Worker: Profile update failed: {profile_e}")
+                              import traceback
+                              traceback.print_exc()
                      
                      print(f"Worker: Ingestion complete for {doc_type} {memory_id}")
             else:
@@ -328,14 +401,26 @@ def process_plugin_transcript_task_v2(session_id: str, project_name: str, cwd: s
             if signals:
                 print(f"Worker: Extracted {len(signals)} signals from session {session_id}")
                 async with AsyncSessionLocal() as db:
+                    from app.models.project import Project
+                    resolved_project_name = project_name or (os.path.basename(cwd) if cwd else "default")
+                    result_proj = await db.execute(select(Project).where(Project.user_id == user_id, Project.name == resolved_project_name))
+                    proj = result_proj.scalars().first()
+                    if not proj:
+                        proj = Project(user_id=user_id, name=resolved_project_name, description=f"Workspace project for {resolved_project_name}")
+                        db.add(proj)
+                        await db.commit()
+                        await db.refresh(proj)
+                    
+                    project_id = proj.id
+
                     for signal_content in signals:
                         # Create Memory Model
                         # Adding [Plugin] prefix or similar context
-                        full_content = f"[{project_name}] {signal_content}"
+                        full_content = f"[{resolved_project_name}] {signal_content}"
                         new_memory = Memory(
                             user_id=user_id,
                             content=full_content,
-                            project_id=None, # Or resolve project if needed
+                            project_id=project_id,
                         )
                         db.add(new_memory)
                     await db.commit()

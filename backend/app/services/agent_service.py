@@ -20,7 +20,7 @@ from langgraph.prebuilt import create_react_agent
 from app.core.config import settings
 from app.db.session import AsyncSessionLocal
 from app.models.chat import ChatMessage, ChatSession, MessageRole
-from app.services.llm_service import llm_service
+from app.services.llm_service_v2 import llm_service_v2 as llm_service
 from app.services.vector_store import vector_store
 if settings.MEMORY_ENGINE_VERSION == "v2":
     from app.services.retrieval_service_v2 import retrieval_service
@@ -200,13 +200,25 @@ class AgentService:
 
     def _build_memwyre_context(self, results: List[Dict[str, Any]]) -> str:
         """
-        Format retrieved context using MemWyre standards (Time-Aware).
-        Ported from frontend TS logic.
+        Format retrieved context using Memwyre standards (Time-Aware).
+        Separates Entity Profiles from regular chunks/facts.
         """
-        snippets = []
-        for i, r in enumerate(results):
+        profile_snippets = []
+        result_snippets = []
+        result_counter = 0
+        
+        for r in results:
             meta = r.get("metadata", {})
-            chunk = r.get("chunk", None) # Chunk object if available
+            result_type = meta.get("type", "")
+            
+            # Entity Profiles go into a separate section
+            if result_type == "profile":
+                entity_name = meta.get("entity_name", "Unknown")
+                profile_snippets.append(f"[{entity_name}]\n{r.get('text', '')}")
+                continue
+            
+            result_counter += 1
+            chunk = r.get("chunk", None)
             
             # Extract Temporal Signals
             valid_from = meta.get("valid_from")
@@ -228,18 +240,20 @@ class AgentService:
             
             # Content Construction
             content = r.get("text", "")
-            # If we have chunk object with separate text, adhere to TS logic:
-            # "Fact: {r.text}\nChunk: {r.chunk.text}"
-            # But specific "chunk" object access might differ in python dict
-            # In retrieval_service, 'chunk' key holds the SQL model. 
             if chunk:
-               # chunk is SQL model, so chunk.text
                if hasattr(chunk, 'text') and chunk.text and chunk.text != content:
                    content = f"Fact: {content}\nChunk: {chunk.text}"
             
-            snippets.append(f"[Result {i + 1}] ({date_str.strip()})\nContent: {content}")
-            
-        return "\n\n---\n\n".join(snippets)
+            result_snippets.append(f"[Result {result_counter}] ({date_str.strip()})\nContent: {content}")
+        
+        # Assemble final context string
+        sections = []
+        if profile_snippets:
+            sections.append("=== ENTITY PROFILES ===\n" + "\n\n".join(profile_snippets))
+        if result_snippets:
+            sections.append("=== RETRIEVED FACTS & MEMORIES ===\n" + "\n\n---\n\n".join(result_snippets))
+        
+        return "\n\n".join(sections)
         
     async def process_message(
         self, 
@@ -257,6 +271,14 @@ class AgentService:
         # 1. Setup Chat History
         chat_history = SQLChatMessageHistory(session_id=str(session_id), user_id=user_id)
 
+        # Get project_id from ChatSession
+        project_id = None
+        async with AsyncSessionLocal() as db:
+            result_sess = await db.execute(select(ChatSession).where(ChatSession.id == session_id))
+            session_obj = result_sess.scalars().first()
+            if session_obj:
+                project_id = getattr(session_obj, "project_id", None)
+
         async def emit_progress(step: str, status: str, meta: Optional[Dict[str, Any]] = None):
             if not progress_callback:
                 return
@@ -269,6 +291,7 @@ class AgentService:
         llm = None
         
         def get_llm(model_name):
+            from app.services.llm_service_v2 import llm_service_v2
             google_key = settings.GEMINI_API_KEY
             
             if "gemini" in model_name.lower():
@@ -276,8 +299,8 @@ class AgentService:
                     return ChatGoogleGenerativeAI(
                         google_api_key=google_key, 
                         model=model_name,
-                        temperature=temperature, # New param
-                        max_output_tokens=max_tokens # New param
+                        temperature=temperature,
+                        max_output_tokens=max_tokens
                     )
                 raise ValueError("Google API Key not configured.")
             elif "gpt" in model_name.lower():
@@ -285,30 +308,13 @@ class AgentService:
                     return ChatOpenAI(
                         api_key=settings.OPENAI_API_KEY, 
                         model=model_name,
-                        temperature=temperature, # New param
-                        max_tokens=max_tokens # New param
+                        temperature=temperature,
+                        max_tokens=max_tokens
                     )
                 raise ValueError("OpenAI API Key not configured.")
-            elif "nova" in model_name.lower() or "bedrock" in model_name.lower():
-                return ChatBedrock(
-                    model_id=model_name if "nova" in model_name else "apac.amazon.nova-pro-v1:0",
-                    model_kwargs={"temperature": temperature, "maxTokens": max_tokens},
-                    config=settings.AWS_CONFIG if hasattr(settings, "AWS_CONFIG") else None
-                )
             else:
-                if settings.OPENAI_API_KEY: return ChatOpenAI(api_key=settings.OPENAI_API_KEY, model="gpt-4o", temperature=temperature, max_tokens=max_tokens)
-                if google_key: return ChatGoogleGenerativeAI(google_api_key=google_key, model="gemini-1.5-flash", temperature=temperature, max_output_tokens=max_tokens)
-                # Fallback: Default to Nova Pro (Bedrock)
-                # This assumes AWS Credentials are present in the environment
-                try:
-                    return ChatBedrock(
-                        model_id="apac.amazon.nova-pro-v1:0", 
-                        model_kwargs={"temperature": temperature, "maxTokens": max_tokens},
-                        config=settings.AWS_CONFIG if hasattr(settings, "AWS_CONFIG") else None
-                    )
-                except Exception as e:
-                    # Only raise if Bedrock also fails
-                    raise ValueError(f"No LLM keys configured and Bedrock default failed: {e}")
+                # Default to Azure OpenAI (o4-mini)
+                return llm_service_v2._get_openai_llm(temperature=temperature)
 
         try:
             llm = get_llm(model)
@@ -341,7 +347,8 @@ class AgentService:
                     query=query,
                     user_id=user_id,
                     db=db,
-                    top_k=5
+                    top_k=5,
+                    project_id=project_id
                 )
 
             # Fix #7: Log hop mismatches
@@ -411,10 +418,11 @@ class AgentService:
                     query=message,
                     user_id=user_id,
                     db=db,
-                    top_k=3
+                    top_k=3,
+                    project_id=project_id
                 )
                 if results:
-                    # Use MemWyre Context Builder
+                    # Use Memwyre Context Builder
                     formatted_ctx_str = self._build_memwyre_context(results)
                     context_str = formatted_ctx_str
             await emit_progress("memory_search_completed", "completed", {"result_count": len(results)})
@@ -428,7 +436,13 @@ class AgentService:
         # The task is dispatched AFTER the agent responds (see below).
         # ---------------------------------------------------------
 
-        # Define System Instruction (MemWyre Prompt Logic)
+        # ---------------------------------------------------------
+        # 5.2 SIDE-CAR FACT EXTRACTION (DEFERRED TO BACKGROUND)
+        # Moved to Celery worker to reduce response latency.
+        # The task is dispatched AFTER the agent responds (see below).
+        # ---------------------------------------------------------
+
+        # Define System Instruction (Memwyre Prompt Logic)
         question_date_str = datetime.now().strftime('%Y-%m-%d')
         
         instruction = f"""You are a question-answering system. Based on the retrieved context below, answer the question.
@@ -440,10 +454,13 @@ Retrieved Context:
 {context_str}
 
 **Understanding the Context:**
-The context contains search results from a memory system. Each result has multiple components you can use:
+The context has two sections:
 
-1. **Snippet Result**: The text content found in relevant documents or memories.
-2. **Dates & Timing**:
+1. **ENTITY PROFILES** (if present): High-level structured summaries of known people, places, or things. These profiles contain aggregated knowledge (demographics, hobbies, relationships, career info, etc.) about each entity. Use profiles to get a broad overview of an entity and to cross-reference details that individual facts may not cover alone.
+
+2. **RETRIEVED FACTS & MEMORIES**: Granular search results with specific dates and details. Each result has:
+   - **Content**: The text content found in relevant documents or memories.
+   - **Dates & Timing**:
    - **Event Date**: This is the **PRE-RESOLVED Absolute Date** of the event (derived from 'valid_from').
      * **Start Date Rule**: If the text suggests a duration (e.g. "last week", "camping trip", "picnic week"), treat this date as the **START** of that period.
      * **Timezone Tolerance**: Stored dates are in UTC. If your calculated answer seems off by 1 day (e.g. June 1st vs June 2nd), acknowledge that the event likely occurred **around** this date or **starting** this week.
@@ -460,10 +477,15 @@ The context contains search results from a memory system. Each result has multip
 3. **Address Mismatches**:
    - If the Question expects a range ("When did she...") and facts are broad, use a Range.
    - **Missing by a Day**: If the date falls on a boundary (e.g. 1st vs 30th), be inclusive. "The week before X" often implies the week *ending* on X or *starting* 7 days prior. If your date is June 1st and target is June 9th, "Week of June 1st" is the right answer.
+4. **Multi-Hop Reasoning (CRITICAL)**:
+   - If the question asks about a relationship that requires bridging multiple facts (e.g., "Where does the person who owns a dog work?"), you MUST trace the entities step-by-step.
+   - Fact 1: [Person] owns [Dog]. Fact 2: [Person] works at [Company].
+   - Combine these facts to form a single coherent answer. Do not get confused by irrelevant facts.
 
 Instructions:
 - First, think through the problem step by step. Show your reasoning process.
 - **Explicitly cite the dates** found.
+- **Trace entities carefully** for multi-hop questions.
 - **Prioritize Ranges/Periods** over single dates for broad events.
 - When answering "when" questions, if specific date references (e.g., "The week before 9 June 2023", "The Friday before 15 July 2023") are found in the context, return them directly along with the date in the answer.
 - If you find references like "last week" or "two weekends ago" while resolving temporal context, return them as "week before ${{questionDate || "the conversation date"}}" or "2 weekends before ${{questionDate || "the conversation date"}}".
@@ -585,8 +607,8 @@ ADDITIONAL AGENT INSTRUCTIONS:
             # ---------------------------------------------------------
             try:
                 from app.worker_router import extract_chat_facts_task
-                extract_chat_facts_task.delay(message, user_id)
-                logger.info(f"Dispatched fact extraction task for user {user_id}")
+                extract_chat_facts_task.delay(message, user_id, project_id=project_id)
+                logger.info(f"Dispatched fact extraction task for user {user_id} with project_id {project_id}")
             except Exception as e:
                 # Non-critical: log and continue
                 logger.warning(f"Failed to dispatch fact extraction task: {e}")

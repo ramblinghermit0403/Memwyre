@@ -13,7 +13,9 @@ class RetrievalService:
         user_id: int, 
         db: AsyncSession, 
         top_k: int = 5,
-        view: str = "auto"
+        view: str = "auto",
+        project_id: Optional[int] = None,
+        debug_info: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         """
         Search for relevant artifacts using the specified View.
@@ -23,18 +25,21 @@ class RetrievalService:
         - episodic: Time-based Memory Log
         - auto: Hybrid (Logic to select best view, currently defaults to semantic+state)
         """
+        top_k = max(10, top_k)
+        injected_profiles = []
+        
         if view == "state":
-            return await self._search_state(query, user_id, db, top_k)
+            return await self._search_state(query, user_id, db, top_k, project_id=project_id, debug_info=debug_info)
         elif view == "episodic":
-            return await self._search_episodic(query, user_id, db, top_k)
+            return await self._search_episodic(query, user_id, db, top_k, project_id=project_id)
         elif view == "semantic":
-            return await self._search_semantic(query, user_id, db, top_k)
+            return await self._search_semantic(query, user_id, db, top_k, project_id=project_id, debug_info=debug_info)
         else:
             # Auto: Unified Search (Single Vector Call)
             str_user_id = str(user_id)
             
             # Fetch candidates for both Facts and Memories in one go
-            unified_results = await self._search_unified(query, str_user_id, top_k=top_k)
+            unified_results = await self._search_unified(query, str_user_id, top_k=top_k, project_id=project_id, debug_info=debug_info)
             
             import asyncio
             # Pass pre-fetched candidates to ranking methods
@@ -45,15 +50,28 @@ class RetrievalService:
             # semantic_task = self._search_semantic(query, user_id, db, top_k=top_k, pre_fetched=unified_results["memories"])
             
             # fix: AsyncSession cannot be shared across concurrent tasks. Run sequentially.
-            state_results = await self._search_state(query, user_id, db, top_k=3, pre_fetched=unified_results["facts"])
-            semantic_results = await self._search_semantic(query, user_id, db, top_k=top_k, pre_fetched=unified_results["memories"])
-            
-            # results = await asyncio.gather(state_task, semantic_task)
-            # state_results, semantic_results = results
+            state_results = await self._search_state(query, user_id, db, top_k=max(15, top_k), pre_fetched=unified_results["facts"], project_id=project_id, debug_info=debug_info)
+            semantic_results = await self._search_semantic(query, user_id, db, top_k=top_k, pre_fetched=unified_results["memories"], project_id=project_id, debug_info=debug_info)
             
             results = state_results + semantic_results
+            
+            # STRIP SEMANTIC PROFILES
+            # Semantic search pulls in all the garbage profiles from the vector store.
+            # We filter them out entirely here so ONLY the deterministically injected 
+            # profiles make it to the LLM context.
+            results = [r for r in results if r.get("metadata", {}).get("type") != "profile"]
 
-        # PHASE 1: CROSS-ENCODER RERANKING
+            # DETERMINISTIC ENTITY PROFILE INJECTION
+            # Hold profiles separately — they bypass reranking entirely
+            injected_profiles = []
+            try:
+                injected_profiles = await self._inject_entity_profiles(query, user_id, db, project_id=project_id)
+                if injected_profiles:
+                    print(f"RetrievalV2: Injected {len(injected_profiles)} entity profile(s) deterministically")
+            except Exception as profile_e:
+                print(f"RetrievalV2: Entity profile injection failed: {profile_e}")
+
+        # PHASE 1: CROSS-ENCODER RERANKING (profiles excluded)
         if results and len(results) > 1:
             try:
                 from sentence_transformers import CrossEncoder
@@ -61,23 +79,148 @@ class RetrievalService:
                     print("RetrievalV2: Loading CrossEncoder model (ms-marco-MiniLM-L-6-v2)...")
                     self.reranker = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2', max_length=512)
                 
+                import math
+                def sigmoid(x):
+                    # Use temperature scaling (e.g., T=3.0) to prevent 
+                    # the logits from compressing too hard at 1.0
+                    return 1 / (1 + math.exp(-x / 3.0))
+
                 pairs = [[query, r["text"]] for r in results]
                 scores = self.reranker.predict(pairs)
                 
+                # Overwrite score with cross-encoder logit for final sorting
                 for i, r in enumerate(results):
-                    r["rerank_score"] = float(scores[i])
+                    r["rerank_score"] = float(sigmoid(scores[i]))
                     r["original_score"] = r.get("score", 0.0)
-                    # Overwrite score with cross-encoder logit for final sorting
                     r["score"] = r["rerank_score"]
-                
+                    
                 # Sort by the new rerank score
                 results.sort(key=lambda x: x["score"], reverse=True)
+
+                if debug_info is not None:
+                    rerank_debug = []
+                    for i, r in enumerate(results):
+                        is_dropped = i >= top_k
+                        rerank_debug.append({
+                            "text": r["text"][:100] + "..." if len(r["text"]) > 100 else r["text"],
+                            "type": r.get("metadata", {}).get("type", "unknown"),
+                            "original_score": r["original_score"],
+                            "rerank_score": r["rerank_score"],
+                            "is_dropped": is_dropped
+                        })
+                    debug_info["reranking"] = rerank_debug
+                    
             except Exception as e:
                 print(f"RetrievalV2 Reranking failed: {e}")
+        
+        # Prepend profiles AFTER reranking — they always sit at the top
+        if injected_profiles:
+            results = injected_profiles + results
+            
+            if debug_info is not None:
+                if "reranking" not in debug_info:
+                    debug_info["reranking"] = []
+                
+                # Prepend the profiles to the debug visualization
+                profile_debug = []
+                for p in injected_profiles:
+                    profile_debug.append({
+                        "text": p["text"][:100] + "..." if len(p["text"]) > 100 else p["text"],
+                        "type": "profile",
+                        "original_score": 1.0,
+                        "rerank_score": 1.0,
+                        "is_dropped": False
+                    })
+                debug_info["reranking"] = profile_debug + debug_info["reranking"]
                 
         return results[:top_k]
 
-    async def _search_unified(self, query: str, user_id: str, top_k: int) -> Dict[str, Any]:
+    async def _inject_entity_profiles(self, query: str, user_id: int, db: AsyncSession, project_id: Optional[int] = None) -> List[Dict[str, Any]]:
+        """
+        Deterministic entity profile injection.
+        Instead of relying on semantic search, directly match entity names
+        mentioned in the query against the entity_profiles table.
+        """
+        import json
+        from app.models.entity_profile import EntityProfile
+        
+        # 1. Fetch all entity names for this user and project (fast — typically < 50 entities)
+        stmt = select(EntityProfile).where(EntityProfile.user_id == user_id)
+        if project_id is not None:
+            stmt = stmt.where(EntityProfile.project_id == project_id)
+        result = await db.execute(stmt)
+        all_profiles = result.scalars().all()
+        
+        if not all_profiles:
+            return []
+        
+        # 2. Case-insensitive match: check if any entity name appears in the query
+        query_lower = query.lower()
+        matched_profiles = []
+        
+        # Stopwords and common nouns to ignore if they ended up as profiles
+        ignored_entities = {
+            "it", "he", "she", "they", "them", "him", "her", "we", "us", "you", "i",
+            "this", "that", "these", "those", "room", "music", "kids", "community",
+            "people", "nature", "blue", "picture", "posters", "boy", "girl", "man", "woman"
+        }
+        
+        for profile in all_profiles:
+            entity_name = profile.entity_name
+            entity_lower = entity_name.lower()
+            
+            # --- STRICT FILTERING FOR GARBAGE ENTITIES ---
+            # Reject pronouns and common words
+            if entity_lower in ignored_entities:
+                continue
+            
+            # Reject short abbreviations
+            if len(entity_lower) <= 2:
+                continue
+                
+            # Reject long descriptive phrases (e.g., "Taking a break from pottery")
+            if len(entity_name.split()) > 2:
+                continue
+                
+            # Reject possessives and compound descriptions (e.g., "Melanie's buddy", "Caroline's courage")
+            if "'" in entity_name or "’" in entity_name:
+                continue
+
+            # Check for the entity name as a substring with word boundaries
+            import re
+            pattern = r'\b' + re.escape(entity_lower) + r'\b'
+            if re.search(pattern, query_lower):
+                matched_profiles.append(profile)
+        
+        if not matched_profiles:
+            return []
+        
+        # 3. Convert matched profiles to retrieval result format
+        profile_results = []
+        for profile in matched_profiles:
+            profile_data = profile.profile_data or {}
+            
+            # Build a readable text representation
+            profile_text = f"{profile.entity_name} Profile:\n"
+            for k, v in profile_data.items():
+                profile_text += f"  {k}: {json.dumps(v)}\n"
+            
+            profile_results.append({
+                "text": profile_text,
+                "score": 1.0,  # Maximum score — deterministic match
+                "metadata": {
+                    "type": "profile",
+                    "entity_name": profile.entity_name,
+                    "user_id": str(user_id),
+                    "profile_id": str(profile.id),
+                },
+                "chunk": None
+            })
+            print(f"RetrievalV2: Entity profile matched for '{profile.entity_name}'")
+        
+        return profile_results
+
+    async def _search_unified(self, query: str, user_id: str, top_k: int, project_id: Optional[int] = None, debug_info: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Single Vector Search for both Facts and Memories.
         Returns: {"facts": vector_results, "memories": vector_results}
@@ -85,15 +228,14 @@ class RetrievalService:
         # Fetch 10x to allow for MMR and filtering
         fetch_k = top_k * 10
         
+        where_dict = {"user_id": user_id}
+        if project_id is not None:
+            where_dict["project_id"] = str(project_id)
+            
         results = await vector_store.query(
             query,
             n_results=fetch_k,
-            where={
-                "user_id": user_id,
-                # Filter for chunks (memories) OR facts
-                # "type": {"$in": ["fact", "memory", "chunk"]} # Pinecone metadatas are flat, logic depends on store wrapper
-                # Assuming vector_store handles filtering or we filter post-fetch if store is limited
-            },
+            where=where_dict,
             include_values=True 
         )
         
@@ -114,9 +256,38 @@ class RetrievalService:
                 if results["documents"]: target["documents"][0].append(results["documents"][0][i])
                 target["metadatas"][0].append(metadata)
                 
+        if debug_info is not None:
+            raw_facts = []
+            if facts_res["ids"][0]:
+                for i, fid in enumerate(facts_res["ids"][0]):
+                    raw_facts.append({
+                        "id": fid,
+                        "text": facts_res["documents"][0][i] if facts_res.get("documents") and facts_res["documents"][0] and i < len(facts_res["documents"][0]) else facts_res["metadatas"][0][i].get("text", ""),
+                        "score": facts_res["distances"][0][i] if facts_res.get("distances") and facts_res["distances"][0] else 0,
+                        "type": "fact"
+                    })
+                    
+            raw_memories = []
+            if mems_res["ids"][0]:
+                for i, mid in enumerate(mems_res["ids"][0]):
+                    raw_memories.append({
+                        "id": mid,
+                        "text": mems_res["documents"][0][i] if mems_res.get("documents") and mems_res["documents"][0] and i < len(mems_res["documents"][0]) else mems_res["metadatas"][0][i].get("text", ""),
+                        "score": mems_res["distances"][0][i] if mems_res.get("distances") and mems_res["distances"][0] else 0,
+                        "type": "memory"
+                    })
+
+            debug_info["unified_search"] = {
+                "fetch_k": fetch_k,
+                "facts_fetched": len(facts_res["ids"][0]) if facts_res["ids"][0] else 0,
+                "memories_fetched": len(mems_res["ids"][0]) if mems_res["ids"][0] else 0,
+                "raw_facts": raw_facts,
+                "raw_memories": raw_memories
+            }
+                
         return {"facts": facts_res, "memories": mems_res}
 
-    async def _search_state(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None) -> List[Dict[str, Any]]:
+    async def _search_state(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None, project_id: Optional[int] = None, debug_info: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """
         Search for current truths (Facts) using Hybrid Strategy:
         1. Semantic Search (Vector Store) -> Finds "parade" from "procession"
@@ -136,10 +307,13 @@ class RetrievalService:
                  vector_results = pre_fetched
              else:
                  # Fetch more candidates to allow for filtering
+                 where_dict = {"user_id": str(user_id), "type": "fact"}
+                 if project_id is not None:
+                     where_dict["project_id"] = str(project_id)
                  vector_results = await vector_store.query(
                      query_texts=query, 
                      n_results=top_k * 4, 
-                     where={"user_id": str(user_id), "type": "fact"} 
+                     where=where_dict
                  )
              
              if vector_results and vector_results.get("ids"):
@@ -173,9 +347,10 @@ class RetrievalService:
         # We ONLY fetch what Vector Store found. No fuzzy keyword search.
         filters = [
             Fact.user_id == user_id, 
-            Fact.valid_until == None,
-            Fact.is_superseded == False,
-            Fact.id.in_(semantic_fact_ids)
+            # Fact.valid_until == None,
+            # Fact.is_superseded == False,
+            Fact.id.in_(semantic_fact_ids),
+            Fact.project_id == project_id
         ]
         
         # Fetch Facts with Eager Loading of Chunk for context
@@ -238,11 +413,24 @@ class RetrievalService:
         from app.models.fact import Fact
         from sqlalchemy import update
 
+        state_debug = []
+        dropped_debug = []
+        
+        # Track facts that failed SQL hydration (superseded or deleted)
+        if debug_info is not None:
+            hydrated_ids = {f.id for f in facts}
+            for fid in semantic_fact_ids:
+                if fid not in hydrated_ids:
+                    dropped_debug.append({
+                        "fact_id": fid,
+                        "text": f"[ID: {fid}] (Failed SQL Hydration)",
+                        "reason": "Superseded or Inactive in SQL"
+                    })
         results = []
         seen_facts = [] # List of {'text': str, 'valid_from': datetime}
         facts_to_supersede = []
         
-        for f, score in ranked_facts[:top_k * 2]:
+        for f, score in ranked_facts:
             text = f"{f.subject} {f.predicate} {f.object}"
             norm_text = text.lower().strip()
             
@@ -254,16 +442,19 @@ class RetrievalService:
             # Fuzzy Deduplication Check
             is_duplicate = False
             for seen in seen_facts:
-                # Check 1: Exact Date Match (as requested)
                 if seen['valid_from'] == f.valid_from:
-                    # Check 2: Content Match > 90%
                     similarity = SequenceMatcher(None, norm_text, seen['norm_text']).ratio()
-                    if similarity > 0.9:
+                    if similarity > 0.95:
                         is_duplicate = True
                         facts_to_supersede.append(f.id)
                         break
             
             if is_duplicate:
+                dropped_debug.append({
+                    "fact_id": f.id,
+                    "text": text,
+                    "reason": "Duplicate"
+                })
                 continue
                 
             seen_facts.append({
@@ -273,11 +464,20 @@ class RetrievalService:
             })
             
             if len(results) >= top_k:
-                # If we filled the quota, subsequent items are just dropped, NOT superseded (we haven't compared them fully)
-                # Actually, duplicate detection relies on seeing the "better" one first.
-                # Since we sorted by Score, we kept the best.
-                # Remaining items in ranked_facts (beyond loop) are ignored.
-                break
+                dropped_debug.append({
+                    "fact_id": f.id,
+                    "text": text,
+                    "reason": "Out of top_k capacity"
+                })
+                continue
+
+            state_debug.append({
+                "fact_id": f.id,
+                "text": text,
+                "score": score,
+                "confidence": f.confidence,
+                "semantic_match": f.id in semantic_fact_ids
+            })
 
             results.append({
                 "text": text,
@@ -302,9 +502,15 @@ class RetrievalService:
              except Exception as e:
                  print(f"Cleanup Failed: {e}")
 
+        if debug_info is not None:
+            debug_info["state_search"] = {
+                "selected": state_debug,
+                "dropped": dropped_debug
+            }
+
         return results
 
-    async def _search_episodic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5) -> List[Dict[str, Any]]:
+    async def _search_episodic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, project_id: Optional[int] = None) -> List[Dict[str, Any]]:
         """
         Search Memories primarily by time/recency matching query constraints?
         For now: Keyword search on Memories, sorted by created_at DESC.
@@ -315,6 +521,7 @@ class RetrievalService:
         # Naive: Just simple LIKE query
         stmt = select(Memory).where(
             Memory.user_id == user_id, 
+            Memory.project_id == project_id,
             Memory.content.ilike(f"%{query}%")
         ).order_by(Memory.created_at.desc()).limit(top_k)
         
@@ -336,7 +543,7 @@ class RetrievalService:
             })
         return results
 
-    async def _search_semantic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None) -> List[Dict[str, Any]]:
+    async def _search_semantic(self, query: str, user_id: int, db: AsyncSession, top_k: int = 5, pre_fetched: Dict = None, project_id: Optional[int] = None, debug_info: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         # 1. Fetch Candidates (or use pre-fetched)
         fetch_k = top_k * 10
         
@@ -344,10 +551,13 @@ class RetrievalService:
             results = pre_fetched
         else:
             # 2. Vector Search (with embeddings for MMR)
+            where_dict = {"user_id": user_id}
+            if project_id is not None:
+                where_dict["project_id"] = str(project_id)
             results = await vector_store.query(
                 query, 
                 n_results=fetch_k, 
-                where={"user_id": user_id},
+                where=where_dict,
                 include_values=True # Required for MMR
             )
         
@@ -459,11 +669,19 @@ class RetrievalService:
         top_ids = [candidate_ids[i] for i in selected_indices]
         
         # Async fetch with Eager Loading (Same as before)
+        from sqlalchemy import or_
         query_stmt = (
             select(Chunk)
             .options(selectinload(Chunk.memory), selectinload(Chunk.document))
             .where(Chunk.embedding_id.in_(top_ids))
         )
+        if project_id is not None:
+            query_stmt = query_stmt.where(
+                or_(
+                    Chunk.memory.has(project_id=project_id),
+                    Chunk.document.has(project_id=project_id)
+                )
+            )
         db_res = await db.execute(query_stmt)
         chunks = db_res.scalars().all()
         chunk_map = {c.embedding_id: c for c in chunks}
@@ -534,6 +752,35 @@ class RetrievalService:
                 
         # Sort by final score desc
         formatted_results.sort(key=lambda x: x["score"], reverse=True)
+        
+        if debug_info is not None:
+            raw_selected = []
+            raw_dropped = []
+            
+            for i in selected_indices:
+                 raw_selected.append({
+                     "id": candidate_ids[i],
+                     "text": candidate_docs[i],
+                     "score": float(relevance_scores[i])
+                 })
+                 
+            dropped_indices = [i for i in range(N) if i not in selected_indices]
+            for i in dropped_indices:
+                 reason = "Hard Gated (Score < 0.2)" if relevance_scores[i] < 0.2 else ("Duplicate Text" if not mask_valid[i] else "MMR Filtered")
+                 raw_dropped.append({
+                     "id": candidate_ids[i],
+                     "text": candidate_docs[i],
+                     "score": float(relevance_scores[i]),
+                     "reason": reason
+                 })
+
+            debug_info["semantic_search"] = {
+                "candidates_considered": N,
+                "items_selected": len(formatted_results),
+                "top_scores": [r["score"] for r in formatted_results],
+                "raw_selected": raw_selected,
+                "raw_dropped": raw_dropped
+            }
         
         return formatted_results
 

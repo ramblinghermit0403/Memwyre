@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# MemWyre Compose-Up Wrapper
+# Memwyre Compose-Up Wrapper
 # Prunes dead containers/networks then starts services.
 # Usage: bash scripts/compose-up.sh [extra docker compose args]
 # ============================================================

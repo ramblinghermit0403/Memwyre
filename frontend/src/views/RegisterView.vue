@@ -7,7 +7,7 @@
         <div v-if="!showOtp" key="register" class="space-y-8">
           <div class="text-center">
             <div class="mx-auto h-12 w-12 flex items-center justify-center mb-6">
-              <img src="/image.svg" alt="MemWyre" class="h-10 w-10 object-contain invert dark:invert-0 opacity-90" />
+              <img src="/image.svg" alt="Memwyre" class="h-10 w-10 object-contain invert dark:invert-0 opacity-90" />
             </div>
             <h2 class="text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">
               Create an account
@@ -331,7 +331,7 @@ const handleVerifyOtp = async () => {
     authStore.setTokens(data.access_token, data.refresh_token);
     try { await authStore.fetchUser(); } catch (e) { /* use token claims */ }
 
-    toast.success('Email verified! Welcome to MemWyre 🎉');
+    toast.success('Email verified! Welcome to Memwyre 🎉');
     router.push('/dashboard');
   } catch (err) {
     otpError.value = err.message || 'Verification failed. Please try again.';

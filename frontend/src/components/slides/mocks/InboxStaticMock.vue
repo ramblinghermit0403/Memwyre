@@ -20,7 +20,7 @@
                 </div>
                 <span class="text-xs text-gray-600 dark:text-gray-400 truncate max-w-[140px] font-mono">claude</span>
               </div>
-              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black w-fit bg-green-500/10 text-green-500 border border-green-500/20 uppercase tracking-widest">Approved</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold w-fit bg-emerald-950/30 text-emerald-300 border border-emerald-900/40 uppercase tracking-widest">Approved</span>
             </div>
             <span class="text-[10px] font-bold text-gray-500">3d ago</span>
           </div>
@@ -37,7 +37,7 @@
                 </div>
                 <span class="text-xs text-gray-600 dark:text-gray-400 truncate max-w-[140px] font-mono">antigravity</span>
               </div>
-              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black w-fit bg-green-500/10 text-green-500 border border-green-500/20 uppercase tracking-widest">Approved</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold w-fit bg-emerald-950/30 text-emerald-300 border border-emerald-900/40 uppercase tracking-widest">Approved</span>
             </div>
             <span class="text-[10px] font-bold text-gray-500">3d ago</span>
           </div>
@@ -54,7 +54,7 @@
                 </div>
                 <span class="text-xs text-gray-600 dark:text-gray-400 truncate max-w-[140px] font-mono">chatgpt</span>
               </div>
-              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black w-fit bg-green-500/10 text-green-500 border border-green-500/20 uppercase tracking-widest">Approved</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold w-fit bg-emerald-950/30 text-emerald-300 border border-emerald-900/40 uppercase tracking-widest">Approved</span>
             </div>
             <span class="text-[10px] font-bold text-gray-500">6d ago</span>
           </div>
@@ -75,7 +75,7 @@
                 </div>
                 <span class="text-xs text-gray-600 dark:text-gray-400 truncate max-w-[140px] font-mono">web observer</span>
               </div>
-              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black w-fit bg-green-500/10 text-green-500 border border-green-500/20 uppercase tracking-widest">Approved</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold w-fit bg-emerald-950/30 text-emerald-300 border border-emerald-900/40 uppercase tracking-widest">Approved</span>
             </div>
             <span class="text-[10px] font-bold text-gray-500">15d ago</span>
           </div>

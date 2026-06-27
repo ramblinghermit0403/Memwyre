@@ -41,9 +41,9 @@ Agent Bridge is a powerful AI agent platform that connects LangChain agents with
       '/projects/memwyre/memwyre-5.png'
     ],
     longDescription: `
-MemWyre is a universal memory layer for AI—designed to capture, organize, and retrieve your knowledge across tools, conversations, and large language models.
+Memwyre is a universal memory layer for AI—designed to capture, organize, and retrieve your knowledge across tools, conversations, and large language models.
 
-Instead of losing context every time you switch between ChatGPT, Gemini, Claude, editors, or agents, MemWyre becomes the persistent brain that follows you everywhere.
+Instead of losing context every time you switch between ChatGPT, Gemini, Claude, editors, or agents, Memwyre becomes the persistent brain that follows you everywhere.
 
 ### Key Features
 - **Unified Memory Vault**: Store chat outputs, documents, web research, and notes in one place.

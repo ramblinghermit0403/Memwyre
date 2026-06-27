@@ -17,7 +17,7 @@ function getStorage() {
 }
 
 // --- Extension Token Relay ---
-// Broadcasts auth state to the MemWyre browser extension via postMessage.
+// Broadcasts auth state to the Memwyre browser extension via postMessage.
 // auth_relay.js (content script) catches these and relays to the background script.
 function broadcastToExtension(type, token, refreshToken, user) {
     if (typeof window === 'undefined') return;

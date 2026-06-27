@@ -13,7 +13,7 @@
       <div class="flex-1 overflow-y-auto min-h-0 pr-2 custom-scrollbar">
           <div class="bg-white dark:bg-surface shadow rounded-lg px-8 py-8 border border-gray-100 dark:border-border animate-fade-in">
                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-text-primary mb-2">Integrations Ecosystem</h3>
-               <p class="text-sm text-gray-500 dark:text-text-secondary mb-8">Connect MemWyre with your favorite tools and agents.</p>
+               <p class="text-sm text-gray-500 dark:text-text-secondary mb-8">Connect Memwyre with your favorite tools and agents.</p>
                
                <!-- Integrations Showcase Grid -->
                <div v-for="category in integrationCategories" :key="category.name" class="mb-10">
@@ -32,14 +32,20 @@
                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                        <div v-for="item in category.items" :key="item.id" class="flex flex-col bg-gray-50 dark:bg-[#1C1F26] rounded-xl p-5 border border-gray-100 dark:border-gray-800 relative transition-transform hover:scale-[1.02] hover:shadow-md cursor-pointer">
                            <!-- Docs Badge -->
-                           <div v-if="item.hasDocs" class="absolute top-4 right-4 flex items-center text-gray-500 dark:text-gray-400 text-xs font-medium">
-                               <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                               Docs
-                           </div>
+                           <a 
+                              v-if="item.docsLink" 
+                              :href="item.docsLink"
+                              target="_blank"
+                              @click.stop
+                              class="absolute top-4 right-4 flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-xs font-medium z-10"
+                            >
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                                Docs
+                            </a>
                            
                            <!-- Logo -->
-                           <div class="h-10 w-10 mb-4 flex items-center justify-center rounded-lg" :class="item.bgColor || 'bg-gray-200 dark:bg-gray-800'">
-                               <img v-if="item.icon" :src="item.icon" class="w-6 h-6 object-contain" :class="{'invert dark:invert-0': item.invert}" />
+                           <div class="h-10 w-10 mb-4 flex items-center justify-center rounded-lg overflow-hidden" :class="item.bgColor || 'bg-gray-200 dark:bg-gray-800'">
+                               <img v-if="item.icon" :src="item.icon" :class="[item.fullIcon ? 'w-full h-full' : 'w-6 h-6 object-contain', {'invert': item.invert, 'dark:invert': item.darkInvert}]" />
                                <svg v-else class="w-6 h-6 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                            </div>
                            
@@ -54,17 +60,24 @@
                                {{ item.desc }}
                            </p>
                            
-                           <!-- Action Button -->
-                           <div class="flex justify-end mt-auto">
-                               <button 
-                                 class="px-4 py-1.5 rounded-full text-xs font-medium transition-colors flex items-center shadow-sm"
-                                 :class="item.btnText === 'Connect' ? 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700' : 'bg-[#0F172A] dark:bg-black border border-transparent text-white hover:bg-gray-800 dark:hover:bg-gray-900'"
-                                 @click.stop="handleConnectClientClick(item)"
-                               >
-                                   <svg v-if="item.isLightning" class="w-3.5 h-3.5 mr-1 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" /></svg>
-                                   {{ item.btnText }}
-                               </button>
-                           </div>
+                            <!-- Action Button -->
+                            <div class="flex justify-end items-center gap-2 mt-auto">
+                                <button 
+                                  v-if="item.showDisconnect"
+                                  class="px-3 py-1.5 text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400 font-medium transition-colors"
+                                  @click.stop="handleDisconnectConnector(item)"
+                                >
+                                  Disconnect
+                                </button>
+                                <button 
+                                  class="px-4 py-1.5 rounded-full text-xs font-medium transition-colors flex items-center shadow-sm"
+                                  :class="(item.btnText === 'Connect' || item.btnText === 'Sync Now') ? 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700' : 'bg-[#0F172A] dark:bg-black border border-transparent text-white hover:bg-gray-800 dark:hover:bg-gray-900'"
+                                  @click.stop="handleConnectClientClick(item)"
+                                >
+                                    <svg v-if="item.isLightning && item.btnText !== 'Sync Now'" class="w-3.5 h-3.5 mr-1 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" /></svg>
+                                    {{ item.btnText }}
+                                </button>
+                            </div>
                        </div>
                    </div>
                </div>
@@ -166,8 +179,8 @@
         <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-fade-in">
             <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
                 <div class="flex items-center gap-3">
-                    <div class="h-8 w-8 flex items-center justify-center rounded-lg" :class="selectedIntegration?.bgColor || 'bg-gray-200'">
-                        <img v-if="selectedIntegration?.icon" :src="selectedIntegration?.icon" class="w-5 h-5 object-contain" :class="{'invert dark:invert-0': selectedIntegration?.invert}" />
+                    <div class="h-8 w-8 flex items-center justify-center rounded-lg overflow-hidden" :class="selectedIntegration?.bgColor || 'bg-gray-200'">
+                        <img v-if="selectedIntegration?.icon" :src="selectedIntegration?.icon" :class="[selectedIntegration?.fullIcon ? 'w-full h-full' : 'w-5 h-5 object-contain', {'invert dark:invert-0': selectedIntegration?.invert}]" />
                     </div>
                     <div>
                         <h3 class="text-base font-semibold text-gray-900 dark:text-white">Connect to {{ selectedIntegration?.name }}</h3>
@@ -239,27 +252,26 @@ const integrationCategories = ref([
   {
     name: 'MCP Client Connections',
     items: [
-      { id: 'cursor', name: 'Cursor', desc: 'One-click MCP install in Cursor', btnText: 'Connect', hasDocs: true, bgColor: 'bg-black dark:bg-black', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/cursor.svg', invert: true },
-      { id: 'claude-desktop', name: 'Claude Desktop', desc: 'Connect supermemory in Claude Desktop', btnText: 'Connect', hasDocs: true, bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/claude-color.svg' },
-      { id: 'vscode', name: 'VS Code', desc: 'Native MCP support for VS Code', btnText: 'Connect', bgColor: 'bg-blue-500/10 dark:bg-blue-500/20', icon: '/src/assets/vscode.svg' },
-      { id: 'antigravity', name: 'Antigravity', desc: 'Integrate directly into the Antigravity system', btnText: 'Connect', hasDocs: true, bgColor: 'bg-white dark:bg-white', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/antigravity-color.svg' },
-      { id: 'codex', name: 'Codex', desc: 'Persistent memory for the Codex CLI — free on every plan', btnText: 'Connect', hasDocs: true, bgColor: 'bg-[#10A37F]/10 dark:bg-[#10A37F]/20', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/codex-color.svg' }
+      { id: 'cursor', name: 'Cursor', desc: 'One-click MCP install in Cursor', btnText: 'Connect', docsLink: '/docs/integrations/mcp-server/cursor', bgColor: 'bg-black dark:bg-black', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/cursor.svg', invert: true },
+      { id: 'claude-desktop', name: 'Claude Desktop', desc: 'Connect supermemory in Claude Desktop', btnText: 'Connect', docsLink: '/docs/integrations/mcp-server/claude', bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/claude-color.svg' },
+      { id: 'vscode', name: 'VS Code', desc: 'Native MCP support for VS Code', btnText: 'Connect', docsLink: '/docs/integrations/mcp-server/vscode', bgColor: 'bg-blue-50 text-blue-700 border-blue-200/60 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-900/40', icon: '/src/assets/vscode.svg' },
+      { id: 'antigravity', name: 'Antigravity', desc: 'Integrate directly into the Antigravity system', btnText: 'Connect', docsLink: '/docs/integrations/mcp-server', bgColor: 'bg-white dark:bg-white', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/antigravity-color.svg' },
+      { id: 'codex', name: 'Codex', desc: 'Persistent memory for the Codex CLI — free on every plan', btnText: 'Connect', docsLink: '/docs/integrations/cli-installer', bgColor: 'bg-transparent dark:bg-transparent', fullIcon: true, icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/codex-color.svg' }
     ]
   },
   {
     name: 'Plugins',
     items: [
-      { id: 'claude-code', name: 'Claude Code', isPro: true, desc: 'Remembers your conventions, decisions, and project context', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: '/src/assets/claude-color.svg' },
-      { id: 'opencode', name: 'OpenCode', isPro: true, desc: 'Long-term memory for your OpenCode sessions', btnText: 'Upgrade', isLightning: true, hasDocs: true, bgColor: 'bg-gray-200 dark:bg-gray-700', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/opencode.svg' },
-      { id: 'openclaw', name: 'OpenClaw', isPro: true, desc: 'Add persistent memory to autonomous OpenClaw agent sessions', btnText: 'Upgrade', isLightning: true, hasDocs: true, bgColor: 'bg-[#FF3366]/10 dark:bg-[#FF3366]/20', icon: '/src/assets/openclaw-color.svg' }
+      { id: 'claude-code', name: 'Claude Code', isPro: true, desc: 'Remembers your conventions, decisions, and project context', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/plugins/claude', bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: '/src/assets/claudecode-color.svg' },
+      { id: 'opencode', name: 'OpenCode', isPro: true, desc: 'Long-term memory for your OpenCode sessions', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/mcp-server', bgColor: 'bg-gray-200 dark:bg-gray-700', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/opencode.svg' },
+      { id: 'openclaw', name: 'OpenClaw', isPro: true, desc: 'Add persistent memory to autonomous OpenClaw agent sessions', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/plugins/openclaw', bgColor: 'bg-[#FF3366]/10 dark:bg-[#FF3366]/20', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openclaw-color.svg' }
     ]
   },
   {
     name: 'Knowledge bases',
     items: [
-      { id: 'gdrive', name: 'Google Drive', isPro: true, desc: 'Sync Docs, Sheets and Slides into your memory', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-gray-100 dark:bg-white/10', icon: '/src/assets/google-drive.svg' },
-      { id: 'notion', name: 'Notion', isPro: true, desc: 'Import Notion pages and databases', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-white dark:bg-black', icon: '/src/assets/notion-svgrepo-com.svg' },
-      { id: 'onedrive', name: 'OneDrive', isPro: true, desc: 'Bring in Office documents from OneDrive', btnText: 'Upgrade', isLightning: true, bgColor: 'bg-blue-500/10 dark:bg-blue-500/20', icon: '/src/assets/onedrive.svg' }
+      { id: 'gdrive', name: 'Google Drive', isPro: true, desc: 'Sync Docs, Sheets and Slides into your memory', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/connectors', bgColor: 'bg-gray-100 dark:bg-white/10', icon: '/src/assets/google-drive.svg' },
+      { id: 'notion', name: 'Notion', isPro: true, desc: 'Import Notion pages and databases', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/connectors', bgColor: 'bg-white dark:bg-black', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/notion.svg', darkInvert: true }
     ]
   }
 ]);
@@ -296,7 +308,95 @@ const mapIntegrationToTab = (id) => {
     return 'claude';
 };
 
+const connectionsStatus = ref({
+  notion: { connected: false, workspace_name: null, last_synced_at: null, workspace_icon: null },
+  gdrive: { connected: false, workspace_name: null, last_synced_at: null, workspace_icon: null }
+});
+
+const loadConnectionsStatus = async () => {
+  try {
+    const res = await api.get('/connectors/status');
+    connectionsStatus.value = res.data;
+    updateNotionGDriveItems();
+  } catch (err) {
+    console.error("Failed to load connectors status", err);
+  }
+};
+
+const updateNotionGDriveItems = () => {
+  const kbCategory = integrationCategories.value.find(c => c.name === 'Knowledge bases');
+  if (!kbCategory) return;
+  
+  const notionItem = kbCategory.items.find(i => i.id === 'notion');
+  if (notionItem) {
+    const status = connectionsStatus.value.notion;
+    if (status && status.connected) {
+      notionItem.btnText = 'Sync Now';
+      notionItem.desc = `Connected: "${status.workspace_name}". Last synced: ${status.last_synced_at ? new Date(status.last_synced_at).toLocaleString() : 'Never'}`;
+      notionItem.isPro = false;
+      notionItem.showDisconnect = true;
+    } else {
+      notionItem.btnText = 'Connect';
+      notionItem.desc = 'Import Notion pages and databases';
+      notionItem.isPro = false;
+      notionItem.showDisconnect = false;
+    }
+  }
+};
+
+const handleDisconnectConnector = async (item) => {
+  try {
+    await api.delete(`/connectors/${item.id}`);
+    toast.success(`${item.name} disconnected`);
+    await loadConnectionsStatus();
+  } catch (err) {
+    toast.error(`Failed to disconnect ${item.name}`);
+  }
+};
+
+const handleNotionConnect = () => {
+  const width = 600;
+  const height = 700;
+  const left = window.screen.width / 2 - width / 2;
+  const top = window.screen.height / 2 - height / 2;
+  
+  const baseUrl = api.defaults.baseURL || 'http://localhost:8000/api/v1';
+  const authUrl = `${baseUrl}/connectors/notion/auth?token=${authStore.token}`;
+  
+  const popup = window.open(
+    authUrl,
+    "Connect Notion",
+    `width=${width},height=${height},left=${left},top=${top},status=no,location=no,toolbar=no,menubar=no`
+  );
+  
+  const messageListener = async (event) => {
+    if (event.data === "notion_connected") {
+      toast.success("Notion Workspace Connected!");
+      await loadConnectionsStatus();
+      window.removeEventListener("message", messageListener);
+    }
+  };
+  window.addEventListener("message", messageListener);
+};
+
 const handleConnectClientClick = async (item) => {
+    if (item.id === 'notion') {
+        const status = connectionsStatus.value.notion;
+        if (status && status.connected) {
+            try {
+                toast.info("Starting Notion sync...");
+                await api.post('/connectors/notion/sync');
+                toast.success("Notion sync started in background!");
+                await loadConnectionsStatus();
+            } catch (err) {
+                toast.error("Failed to start Notion sync");
+            }
+        } else {
+            handleNotionConnect();
+        }
+        return;
+    }
+
     selectedIntegration.value = item;
     
     const existingKey = apiKeys.value.find(k => k.name.toLowerCase() === item.name.toLowerCase() && k.is_active);
@@ -408,6 +508,7 @@ const copyToken = async () => {
 // Initial load
 loadKeys();
 loadApiKeys();
+loadConnectionsStatus();
 </script>
 
 <style scoped>

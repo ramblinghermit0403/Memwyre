@@ -6,7 +6,7 @@
       <!-- Header -->
       <div class="mb-10">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-text-primary">Billing</h1>
-        <p class="mt-2 text-sm text-gray-500 dark:text-text-secondary">Manage your MemWyre Pro subscription.</p>
+        <p class="mt-2 text-sm text-gray-500 dark:text-text-secondary">Manage your Memwyre Pro subscription.</p>
       </div>
 
       <!-- Success/Cancel Banner -->

@@ -1,7 +1,7 @@
 {
     "name": "@memwyre/openclaw-plugin",
     "version": "2.0.14",
-    "description": "OpenClaw plugin for MemWyre persistent memory.",
+    "description": "OpenClaw plugin for Memwyre persistent memory.",
     "type": "module",
     "main": "dist/index.js",
     "files": [

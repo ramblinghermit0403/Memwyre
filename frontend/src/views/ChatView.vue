@@ -3,6 +3,7 @@ import { computed, ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useChatStore } from '../stores/chat';
 import { useAuthStore } from '../stores/auth';
+import { useProjectStore } from '../stores/project';
 import NavBar from '../components/NavBar.vue';
 import ConfirmationModal from '../components/ConfirmationModal.vue';
 import AgentProgressRail from '../components/chat/AgentProgressRail.vue';
@@ -11,19 +12,13 @@ import { useToast } from 'vue-toastification';
 
 const chatStore = useChatStore();
 const authStore = useAuthStore();
+const projectStore = useProjectStore();
 const router = useRouter();
 const toast = useToast();
 
 const inputContent = ref('');
 const messagesContainer = ref(null);
-const storedTemperature = Number(localStorage.getItem('chat-temperature'));
-const storedMaxTokens = Number(localStorage.getItem('chat-max-tokens'));
-const modelTemperature = ref(Number.isFinite(storedTemperature) ? storedTemperature : 0.8);
-const maxTokens = ref(
-  Number.isFinite(storedMaxTokens)
-    ? (storedMaxTokens === 2048 ? 8000 : storedMaxTokens)
-    : 8000
-);
+
 const showHistory = ref(window.innerWidth >= 768);
 const showControls = ref(true);
 const showDeleteModal = ref(false);
@@ -36,6 +31,9 @@ const waitingForFirstStep = computed(() => chatStore.thinking && activeThinkingS
 onMounted(async () => {
   await chatStore.fetchSessions();
   chatStore.connectWebSocket();
+  if (chatStore.sessions.length > 0 && !chatStore.currentSession) {
+    await chatStore.selectSession(chatStore.sessions[0].id);
+  }
 });
 
 onUnmounted(() => {
@@ -46,29 +44,18 @@ watch(() => chatStore.messages.length, () => nextTick(scrollToBottom));
 watch(() => activeThinkingSteps.value.map((s) => `${s.step}:${s.status}:${s.timestamp}`).join('|'), () => nextTick(scrollToBottom));
 watch(() => chatStore.thinking, () => nextTick(scrollToBottom));
 
-const clampTemperature = (value) => {
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return 0.8;
-  return Math.min(1, Math.max(0, parsed));
-};
+watch(() => projectStore.currentProjectId, async () => {
+  await chatStore.fetchSessions();
+  if (chatStore.sessions.length > 0) {
+    await chatStore.selectSession(chatStore.sessions[0].id);
+  } else {
+    chatStore.currentSession = null;
+    chatStore.messages = [];
+    chatStore.currentContext = [];
+  }
+});
 
-const clampMaxTokens = (value) => {
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return 8000;
-  return Math.round(Math.min(8192, Math.max(128, parsed)));
-};
 
-watch(modelTemperature, (value) => {
-  const clamped = clampTemperature(value);
-  if (clamped !== value) modelTemperature.value = clamped;
-  localStorage.setItem('chat-temperature', String(clamped));
-}, { immediate: true });
-
-watch(maxTokens, (value) => {
-  const clamped = clampMaxTokens(value);
-  if (clamped !== value) maxTokens.value = clamped;
-  localStorage.setItem('chat-max-tokens', String(clamped));
-}, { immediate: true });
 
 function toggleThinkingTurn(turnId) {
   if (!turnId) return;
@@ -116,7 +103,7 @@ async function handleSend() {
   }
 
   inputContent.value = '';
-  await chatStore.sendMessage(content, clampTemperature(modelTemperature.value), clampMaxTokens(maxTokens.value));
+  await chatStore.sendMessage(content, 0.8, 8000);
 }
 
 function handleClearHistory() {
@@ -288,7 +275,7 @@ function handleOpenSource(source) {
               <textarea
                 v-model="inputContent"
                 @keydown.enter.prevent="handleSend"
-                placeholder="Ask your MemWyre..."
+                placeholder="Ask your Memwyre..."
                 rows="1"
                 class="w-full bg-transparent border-0 focus:border-0 focus:ring-0 outline-none focus:outline-none rounded-2xl px-6 py-4 text-lg text-gray-900 dark:text-white resize-none min-h-[80px] placeholder-gray-400"
               ></textarea>
@@ -331,23 +318,6 @@ function handleOpenSource(source) {
 
           <div class="p-6 space-y-8 overflow-y-auto">
             <div>
-              <div class="flex justify-between items-center mb-2">
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Model Temperature</label>
-                <span class="text-xs font-mono bg-gray-100 dark:bg-surface-2 px-2 py-0.5 rounded text-gray-600">{{ modelTemperature }}</span>
-              </div>
-              <input type="range" min="0" max="1" step="0.1" v-model.number="modelTemperature" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#D97757]">
-              <p class="text-xs text-gray-400 mt-2">Higher values make usage more creative.</p>
-            </div>
-
-            <div>
-              <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Max Tokens</label>
-              <input type="number" min="128" max="8192" step="1" v-model.number="maxTokens" class="w-full px-3 py-2 border border-gray-200 dark:border-border rounded-lg text-sm bg-gray-50 dark:bg-surface-2 focus:ring-1 focus:ring-[#D97757] focus:border-[#D97757]">
-              <p class="text-xs text-gray-400 mt-1">{{ maxTokens }} tokens</p>
-            </div>
-
-            <hr class="border-gray-100 dark:border-border">
-
-            <div>
               <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Current Document / Context</h4>
 
               <div v-if="chatStore.currentContext.length > 0" class="space-y-2">
@@ -359,7 +329,7 @@ function handleOpenSource(source) {
                   <button
                     v-if="source.id"
                     @click="router.push({ name: 'editor', params: { id: source.id } })"
-                    class="shrink-0 text-xs bg-white dark:border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded hover:bg-gray-50 dark:hover:bg-surface transition-colors"
+                    class="shrink-0 text-xs px-2.5 py-1 rounded-md border border-gray-200 dark:border-border bg-white dark:bg-surface text-gray-600 dark:text-text-secondary hover:bg-gray-50 dark:hover:bg-surface-2 hover:text-gray-900 dark:hover:text-text-primary transition-colors font-medium cursor-pointer"
                   >
                     Open
                   </button>

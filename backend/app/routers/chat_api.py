@@ -1,4 +1,4 @@
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Optional
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -13,7 +13,7 @@ from app.models.chat import ChatSession, ChatMessage, MessageRole
 from app.services.agent_service import agent_service
 from app.db.session import AsyncSessionLocal
 from app.core.config import settings
-from app.services.llm_service import llm_service
+from app.services.llm_service_v2 import llm_service_v2 as llm_service
 from app.services.websocket import manager
 
 router = APIRouter()
@@ -42,10 +42,12 @@ async def update_chat_title_task(session_id: int, context: str):
 # Schemas
 class ChatSessionCreate(BaseModel):
     title: str = "New Chat"
+    project_id: Optional[int] = None
 
 class ChatSessionResponse(BaseModel):
     id: int
     title: str
+    project_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
 
@@ -61,7 +63,7 @@ class Source(BaseModel):
 
 class ChatMessageCreate(BaseModel):
     content: str
-    model: str = "apac.amazon.nova-pro-v1:0" # Default to Nova Pro
+    model: str = "gpt-4o-mini"
     temperature: float = 0.7
     max_tokens: int = 2800
     client_turn_id: str | None = None
@@ -84,9 +86,13 @@ async def create_session(
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """Create a new chat session."""
+    # Resolve project_id to ensure workspace containerization
+    project_id = await deps.resolve_project_id(db, current_user.id, session_in.project_id)
+    
     session = ChatSession(
         user_id=current_user.id,
-        title=session_in.title
+        title=session_in.title,
+        project_id=project_id
     )
     db.add(session)
     await db.commit()
@@ -98,17 +104,16 @@ async def create_session(
 async def get_sessions(
     skip: int = 0,
     limit: int = 50,
+    project_id: Optional[int] = None,
     db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
-    """List user's chat sessions."""
-    result = await db.execute(
-        select(ChatSession)
-        .where(ChatSession.user_id == current_user.id)
-        .order_by(ChatSession.updated_at.desc())
-        .offset(skip)
-        .limit(limit)
-    )
+    """Get all chat sessions for user."""
+    stmt = select(ChatSession).where(ChatSession.user_id == current_user.id)
+    if project_id is not None:
+        stmt = stmt.where(ChatSession.project_id == project_id)
+    stmt = stmt.order_by(ChatSession.updated_at.desc()).offset(skip).limit(limit)
+    result = await db.execute(stmt)
     return result.scalars().all()
 
 

@@ -1,5 +1,5 @@
 {
-  "name": "MemWyre",
+  "name": "Memwyre",
   "description": "Personal Knowledge Base & Memory Layer for AI Agents. Save, search, and retrieve memories, documents, and contextual knowledge across any LLM.",
   "version": "1.0.0",
   "homepage": "https://memwyre.tech",
@@ -13,7 +13,7 @@
   },
   "authentication": {
     "type": "bearer",
-    "description": "Generate an API key from your MemWyre dashboard at https://memwyre.tech/dashboard/settings. Pass it as a Bearer token in the Authorization header.",
+    "description": "Generate an API key from your Memwyre dashboard at https://memwyre.tech/dashboard/settings. Pass it as a Bearer token in the Authorization header.",
     "token_prefix": "bv_sk_"
   },
   "capabilities": {
@@ -28,7 +28,7 @@
     },
     {
       "name": "save_memory",
-      "description": "Save a new memory snippet to your MemWyre Vault."
+      "description": "Save a new memory snippet to your Memwyre Vault."
     },
     {
       "name": "list_memories",

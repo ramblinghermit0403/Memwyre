@@ -18,6 +18,8 @@ class Document(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
 
     user = relationship("User", backref="documents")
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=True, index=True)
+    project = relationship("Project", backref="documents")
     chunks = relationship("Chunk", back_populates="document", cascade="all, delete-orphan")
 
 class Chunk(Base):

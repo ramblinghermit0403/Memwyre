@@ -15,13 +15,13 @@ class PromptGenerationRequest(BaseModel):
     template_id: str = "standard"
     context_size: int = 2000 # Token limit for context
     include_pii: bool = False
+    project_id: Optional[int] = None
 
 class PromptGenerationResponse(BaseModel):
     prompt: str
     context_used: List[str]
     token_count: int
 
-@router.post("/generate", response_model=PromptGenerationResponse)
 @router.post("/generate", response_model=PromptGenerationResponse)
 async def generate_prompt(
     request: PromptGenerationRequest,
@@ -33,7 +33,11 @@ async def generate_prompt(
     """
     # 1. Retrieve Context
     # We use a higher top_k to get enough candidates, then filter/truncate
-    results = await vector_store.query(request.query, n_results=10, where={"user_id": current_user.id})
+    # Resolve project_id to ensure workspace containerization
+    project_id = await deps.resolve_project_id(db, current_user.id, request.project_id)
+    where_dict = {"user_id": str(current_user.id), "project_id": str(project_id)}
+        
+    results = await vector_store.query(request.query, n_results=10, where=where_dict)
     
     retrieved_texts = []
     if results["documents"]:

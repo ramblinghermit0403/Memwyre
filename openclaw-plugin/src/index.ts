@@ -1,10 +1,10 @@
 /**
- * MemWyre Plugin for OpenClaw
+ * Memwyre Plugin for OpenClaw
  * Provides persistent memory and context retrieval tools.
  *
  * Tools:
- *   - save_memory:    Save a note/memory to the MemWyre Vault.
- *   - search_memwyre: Search the MemWyre Vault for relevant context.
+ *   - save_memory:    Save a note/memory to the Memwyre Vault.
+ *   - search_memwyre: Search the Memwyre Vault for relevant context.
  */
 
 import { readFileSync } from "node:fs";
@@ -43,18 +43,18 @@ function sanitize(raw: string): string {
 
 const memwyrePlugin = {
     id: "openclaw-plugin",
-    name: "MemWyre",
-    description: "Persistent memory and context retrieval for OpenClaw, powered by MemWyre.",
+    name: "Memwyre",
+    description: "Persistent memory and context retrieval for OpenClaw, powered by Memwyre.",
     configSchema: {
         type: "object",
         properties: {
             apiKey: {
                 type: "string",
-                description: "Your MemWyre API Key (starts with bv_sk_)",
+                description: "Your Memwyre API Key (starts with bv_sk_)",
             },
             hostUrl: {
                 type: "string",
-                description: "MemWyre server URL",
+                description: "Memwyre server URL",
                 default: "https://server.memwyre.tech",
             },
         },
@@ -83,7 +83,7 @@ const memwyrePlugin = {
                 name: "save_memory",
                 label: "Save Memory",
                 description:
-                    "Save a new memory snippet to the MemWyre Vault. " +
+                    "Save a new memory snippet to the Memwyre Vault. " +
                     "Use when the user asks you to 'remember' something, " +
                     "'save' a note, or when you encounter important information " +
                     "that should be persisted for future reference.",
@@ -99,7 +99,7 @@ const memwyrePlugin = {
                 async execute(_id: string, params: Record<string, unknown>) {
                     if (!apiKey) {
                         return toolResult(
-                            "MemWyre plugin is not configured. " +
+                            "Memwyre plugin is not configured. " +
                             "Set your apiKey under plugins.entries.openclaw-plugin.config in openclaw.json.",
                         );
                     }
@@ -125,7 +125,7 @@ const memwyrePlugin = {
                         }
 
                         const data = (await res.json()) as { id?: string };
-                        return toolResult(`Memory saved to MemWyre Inbox (ID: ${data.id || "unknown"}).`);
+                        return toolResult(`Memory saved to Memwyre Inbox (ID: ${data.id || "unknown"}).`);
                     } catch {
                         return toolResult("Network error while saving memory. Move on to the next step.");
                     }
@@ -140,9 +140,9 @@ const memwyrePlugin = {
         api.registerTool(
             (ctx) => ({
                 name: "search_memwyre",
-                label: "Search MemWyre",
+                label: "Search Memwyre",
                 description:
-                    "Search MemWyre for context or previous memories. " +
+                    "Search Memwyre for context or previous memories. " +
                     "Use this to retrieve notes, project specs, or personal context " +
                     "before answering questions that may require prior knowledge.",
                 parameters: Type.Object({
@@ -154,7 +154,7 @@ const memwyrePlugin = {
                 async execute(_id: string, params: Record<string, unknown>) {
                     if (!apiKey) {
                         return toolResult(
-                            "MemWyre plugin is not configured. " +
+                            "Memwyre plugin is not configured. " +
                             "Set your apiKey under plugins.entries.openclaw-plugin.config in openclaw.json.",
                         );
                     }
@@ -177,7 +177,7 @@ const memwyrePlugin = {
 
                         if (!res.ok) {
                             return toolResult(
-                                `Failed to search MemWyre (HTTP ${res.status}). ` +
+                                `Failed to search Memwyre (HTTP ${res.status}). ` +
                                 "Stop searching and inform the user.",
                             );
                         }
@@ -187,13 +187,13 @@ const memwyrePlugin = {
 
                         const raw = data.context_text?.trim();
                         if (!raw) {
-                            return toolResult("No relevant memories found in MemWyre for this query.");
+                            return toolResult("No relevant memories found in Memwyre for this query.");
                         }
 
-                        return toolResult(`Found in MemWyre:\n${sanitize(raw)}`);
+                        return toolResult(`Found in Memwyre:\n${sanitize(raw)}`);
                     } catch {
                         return toolResult(
-                            "Network error while searching MemWyre. Stop searching and inform the user.",
+                            "Network error while searching Memwyre. Stop searching and inform the user.",
                         );
                     }
                 }
@@ -201,7 +201,7 @@ const memwyrePlugin = {
             { name: "search_memwyre" }
         );
 
-        api.logger.info(`[MemWyre] plugin v${pluginVersion} initialised (host: ${hostUrl})`);
+        api.logger.info(`[Memwyre] plugin v${pluginVersion} initialised (host: ${hostUrl})`);
     },
 };
 

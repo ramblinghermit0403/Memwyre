@@ -132,6 +132,60 @@ export function createAppRouter({ ssr = false } = {}) {
                         name: 'pricing',
                         component: () => import('../views/PricingView.vue'),
                         meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/pricing'] }
+                    },
+                    {
+                        path: 'connectors',
+                        name: 'connectors',
+                        component: () => import('../views/products/ConnectorsView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/connectors'] }
+                    },
+                    {
+                        path: 'mcp',
+                        name: 'mcp',
+                        component: () => import('../views/products/McpView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/mcp'] }
+                    },
+                    {
+                        path: 'plugins',
+                        name: 'plugins',
+                        component: () => import('../views/products/PluginsView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/plugins'] }
+                    },
+                    {
+                        path: 'rag',
+                        name: 'rag',
+                        component: () => import('../views/products/RagView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/rag'] }
+                    },
+                    {
+                        path: 'memory-graph',
+                        name: 'memory-graph',
+                        component: () => import('../views/products/MemoryGraphView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/memory-graph'] }
+                    },
+                    {
+                        path: 'personal',
+                        name: 'personal',
+                        component: () => import('../views/products/PersonalAppView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/personal'] }
+                    },
+                    {
+                        path: 'extension',
+                        name: 'extension',
+                        component: () => import('../views/products/ExtensionView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/extension'] }
+                    },
+                    {
+                        path: 'blog',
+                        name: 'blog',
+                        component: () => import('../views/BlogListView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/blog'] }
+                    },
+                    {
+                        path: 'blog/:slug',
+                        name: 'blog-post',
+                        component: () => import('../views/BlogPostView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/blog/:slug'] }
                     }
                 ]
             },
@@ -248,6 +302,12 @@ export function createAppRouter({ ssr = false } = {}) {
                 meta: { requiresAuth: true }
             },
             {
+                path: '/retrieval-visualizer',
+                name: 'retrieval-visualizer',
+                component: () => import('../views/RetrievalVisualizerView.vue'),
+                meta: { requiresAuth: true }
+            },
+            {
                 path: '/redeem',
                 name: 'redeem',
                 component: () => import('../views/RedeemView.vue')
@@ -317,7 +377,7 @@ export function createAppRouter({ ssr = false } = {}) {
             authStore.user &&
             authStore.user.is_verified &&
             authStore.hasCompletedOnboarding === false &&
-            !['dashboard', 'editor', 'admin-insights', 'admin-bypass'].includes(to.name)
+            !['dashboard', 'editor', 'admin-insights', 'admin-bypass', 'retrieval-visualizer'].includes(to.name)
         ) {
             next('/dashboard');
         }

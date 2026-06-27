@@ -43,5 +43,7 @@ class Fact(Base):
 
     # Relationships
     user = relationship("User", backref="facts")
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=True, index=True)
+    project = relationship("Project", backref="facts")
     memory = relationship("Memory", backref="facts")
     chunk = relationship("Chunk", backref="facts")

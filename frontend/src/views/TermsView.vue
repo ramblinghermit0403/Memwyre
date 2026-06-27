@@ -127,9 +127,7 @@
             For Your AI.
           </span>
         </h2>
-        <p class="text-gray-600 text-xl sm:text-2xl mb-14 max-w-3xl mx-auto font-medium leading-relaxed">
-          A persistent knowledge vault that works everywhere you use AI.
-        </p>
+
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
           <router-link to="/signup"
             class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105">
@@ -181,7 +179,7 @@
           <p class="text-xs text-black/30 font-medium">© 2026 Memwyre. Crafted for clarity.</p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-12 sm:gap-24 w-full md:w-auto">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-12 sm:gap-16 w-full md:w-auto">
           <div class="flex flex-col gap-4">
             <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Product</h4>
             <a href="/#features"
@@ -189,6 +187,17 @@
             <a href="/pricing" class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Pricing</a>
             <a href="/#ecosystem"
               class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Ecosystem</a>
+          </div>
+          <div class="flex flex-col gap-4">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Products</h4>
+            <router-link to="/extension"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Chrome Extension</router-link>
+            <router-link to="/mcp"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">MCP</router-link>
+            <router-link to="/plugins"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Plugins</router-link>
+            <router-link to="/personal"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Personal App</router-link>
           </div>
           <div class="flex flex-col gap-4">
             <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support</h4>

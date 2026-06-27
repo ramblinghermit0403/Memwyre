@@ -11,11 +11,13 @@
       </div>
       <button 
         @click="inboxStore.fetchInbox" 
-        class="text-sm text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white font-medium flex items-center gap-1"
+        class="inline-flex items-center justify-center p-1.5 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface text-gray-500 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
         :disabled="loading"
+        title="Refresh Inbox"
       >
-        <span v-if="loading">Loading...</span>
-        <span v-else>Refresh</span>
+        <svg class="w-3.5 h-3.5" :class="{ 'animate-spin': loading }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4v5h.582M20 20v-5h-.581M5.582 9A7.97 7.97 0 0112 4a8 8 0 017.446 5.032M18.418 15A7.97 7.97 0 0112 20a8 8 0 01-7.446-5.032" />
+        </svg>
       </button>
     </div>
 

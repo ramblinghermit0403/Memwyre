@@ -1,6 +1,6 @@
 {
   "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
-  "name": "MemWyre",
+  "name": "Memwyre",
   "description": "Personal Knowledge Base & Memory Layer for AI Agents",
   "url": "https://memwyre.tech",
   "skills": [

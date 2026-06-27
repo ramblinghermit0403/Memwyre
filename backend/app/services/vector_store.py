@@ -4,6 +4,7 @@ import asyncio
 from typing import List, Dict, Any
 from pinecone import Pinecone
 from app.core.config import settings
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -41,20 +42,18 @@ class VectorStore:
             logger.error(f"Failed to load Bedrock embeddings: {e}")
             self.bedrock_embeddings = None
         
+    @retry(stop=stop_after_attempt(4), wait=wait_exponential(multiplier=1, min=2, max=10))
     async def _async_get_embeddings(self, texts: List[str]) -> List[List[float]]:
         """
-        Generate embeddings locally using Bedrock (Parallel).
+        Generate embeddings locally using Azure OpenAI (Batched to save RPM).
         """
-        import asyncio
         if not self.bedrock_embeddings:
             raise Exception("Bedrock embeddings not initialized")
             
         try:
-            # Parallel execution for Titan v2
-            tasks = [self.bedrock_embeddings.aembed_query(t) for t in texts]
-            return await asyncio.gather(*tasks)
+            return await self.bedrock_embeddings.aembed_documents(texts)
         except Exception as e:
-            logger.error(f"Bedrock Async Embedding Failed: {e}")
+            logger.error(f"Azure Async Embedding Failed: {e}")
             # Fallback
             return self.bedrock_embeddings.embed_documents(texts)
 

@@ -3,7 +3,7 @@ import asyncio
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
-from langchain_aws import ChatBedrock
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 import google.generativeai as genai
@@ -25,6 +25,19 @@ class LLMService:
         self.openai_api_key = getattr(settings, "OPENAI_API_KEY", None)
         self.azure_api_key = getattr(settings, "AZURE_OPENAI_API_KEY", None)
         self.api_key = self.azure_api_key or self.openai_api_key
+        self._semaphores = {}
+
+    @property
+    def semaphore(self):
+        try:
+            loop = asyncio.get_running_loop()
+            loop_id = id(loop)
+        except RuntimeError:
+            return asyncio.Semaphore(10)
+            
+        if loop_id not in self._semaphores:
+            self._semaphores[loop_id] = asyncio.Semaphore(10)
+        return self._semaphores[loop_id]
 
     def _get_openai_llm(self, temperature: float = 0, target_key: Optional[str] = None):
         key = target_key or self.api_key
@@ -45,19 +58,16 @@ class LLMService:
         return ChatOpenAI(api_key=key, model="gpt-4o-mini", temperature=temperature)
         
     async def generate_response(self, query: str, context: List[str], provider: str = "openai", api_key: Optional[str] = None, user_id: Optional[int] = None) -> str:
-        # if not api_key:
-        #    return "Error: API Key is required."
-        # Allow missing key to fall through to provider defaults (e.g. Bedrock env vars)
-        pass
+        # Fallback to defaults
         provider = "openai"
         api_key = api_key or self.api_key
             
         if not context:
-            return "I couldn't find any relevant information in your MemWyre to answer that. Please try adding more memories or documents related to your specific question."
+            return "I couldn't find any relevant information in your Memwyre to answer that. Please try adding more memories or documents related to your specific question."
 
         context_str = "\n\n".join(context)
         system_prompt = (
-            "You are the MemWyre AI, a personal knowledge assistant. "
+            "You are the Memwyre AI, a personal knowledge assistant. "
             "Use ONLY the following Context to answer the user's question. "
             "If the answer is not explicitly supported by the Context, state that you do not have enough information. "
             "Do not hallucinate or use outside knowledge unless it is general definitions to help explain the context.\n\n"
@@ -69,33 +79,30 @@ class LLMService:
             f"Context:\n{context_str}"
         )
         
-        if provider == "openai":
-            if not api_key:
-                # Fallback to Bedrock if OpenAI key missing but user just used default provider
-                provider = "bedrock"
-            else:
-                try:
-                    llm = self._get_openai_llm(temperature=0.7, target_key=api_key)
-                    messages = [
-                        SystemMessage(content=system_prompt),
-                        HumanMessage(content=query)
-                    ]
+        if provider == "openai" or not provider:
+            try:
+                llm = self._get_openai_llm(temperature=0.7, target_key=api_key)
+                messages = [
+                    SystemMessage(content=system_prompt),
+                    HumanMessage(content=query)
+                ]
+                async with self.semaphore:
                     response = await llm.ainvoke(messages)
-                    
-                    # Track Usage
-                    if user_id:
-                         tokens_in = count_tokens(system_prompt + query)
-                         tokens_out = count_tokens(response.content)
-                         await usage_service.track_usage(user_id, "openai", "gpt-4o-mini", tokens_in, tokens_out)
-                         
-                    return response.content
-                except Exception as e:
-                    return f"OpenAI Error: {str(e)}"
+                
+                # Track Usage
+                if user_id:
+                     tokens_in = count_tokens(system_prompt + query)
+                     tokens_out = count_tokens(response.content)
+                     await usage_service.track_usage(user_id, "openai", "gpt-4o-mini", tokens_in, tokens_out)
+                     
+                return response.content
+            except Exception as e:
+                return f"OpenAI Error: {str(e)}"
         
-        # Check 'gemini' block...
         if provider == "gemini":
              if not api_key:
-                 provider = "bedrock" # Fallback
+                 # Default to openai if gemini key is missing
+                 return await self.generate_response(query, context, provider="openai", api_key=None, user_id=user_id)
              else:
                 try:
                     genai.configure(api_key=api_key)
@@ -116,31 +123,6 @@ class LLMService:
                 except Exception as e:
                      return f"Gemini Error: {str(e)}"
 
-        if provider == "bedrock" or "nova" in provider:
-            try:
-                # Default to Nova Pro (APAC) if not specified
-                model_id = "apac.amazon.nova-pro-v1:0" 
-                llm = ChatBedrock(
-                    model_id=model_id,
-                    model_kwargs={"temperature": 0.7},
-                    config=AWS_CONFIG
-                )
-                messages = [
-                    SystemMessage(content=system_prompt),
-                    HumanMessage(content=query)
-                ]
-                response = await llm.ainvoke(messages)
-                
-                # Track Usage
-                if user_id:
-                     tokens_in = count_tokens(system_prompt + query)
-                     tokens_out = count_tokens(response.content)
-                     await usage_service.track_usage(user_id, "bedrock", model_id, tokens_in, tokens_out)
-
-                return response.content
-            except Exception as e:
-                return f"Bedrock Error: {str(e)}"
-
         elif provider == "claude":
             # Placeholder for Claude integration
             return "Claude integration not yet implemented."
@@ -158,7 +140,7 @@ class LLMService:
         if len(content) < 3:
             return {"title": "Short Note", "tags": [], "summary": content}
             
-        # Check for user key, but allow Fallback to Bedrock (System Credentials)
+        # Check for user key, but allow Fallback to Azure OpenAI (System Credentials)
         target_key = api_key 
 
         import json
@@ -169,7 +151,7 @@ class LLMService:
         if len(existing_tags) > 50:
             tag_context_str += "..."
         
-        system_instruction = f"""You are the 'MemWyre' AI archivist.
+        system_instruction = f"""You are the 'Memwyre' AI archivist.
 Analyze the user's content and extract structured metadata.
 
 Required Output (JSON):
@@ -206,7 +188,8 @@ Existing Tags Context:
                  SystemMessage(content=system_instruction),
                  HumanMessage(content=user_message)
              ]
-             res = await llm.ainvoke(messages)
+             async with self.semaphore:
+                 res = await llm.ainvoke(messages)
              text = res.content
         else:
              return {}
@@ -263,7 +246,8 @@ Rules:
         if target_key:
              llm = self._get_openai_llm(temperature=0, target_key=target_key)
              messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
-             res = await llm.ainvoke(messages)
+             async with self.semaphore:
+                 res = await llm.ainvoke(messages)
              text = res.content
         else:
              raise ValueError("No valid API Key found for chunk enrichment")
@@ -349,7 +333,8 @@ Rules:
             if target_key:
                 llm = self._get_openai_llm(temperature=0, target_key=target_key)
                 messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
-                res = await llm.ainvoke(messages)
+                async with self.semaphore:
+                    res = await llm.ainvoke(messages)
                 text_response = res.content
             else:
                 return []
@@ -408,7 +393,8 @@ Rules:
             if target_key:
                 llm = self._get_openai_llm(temperature=0.7, target_key=target_key)
                 messages = [SystemMessage(content=system_prompt), HumanMessage(content=conversation_context)]
-                res = await llm.ainvoke(messages)
+                async with self.semaphore:
+                    res = await llm.ainvoke(messages)
                 return clean_title(res.content)
             else:
                 return "New Chat"
@@ -456,7 +442,8 @@ Example Output:
             if target_key:
                 llm = self._get_openai_llm(temperature=0, target_key=target_key)
                 messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
-                res = await llm.ainvoke(messages)
+                async with self.semaphore:
+                    res = await llm.ainvoke(messages)
                 text = res.content
             else:
                 return []
@@ -513,7 +500,8 @@ Example:
         try:
             llm = self._get_openai_llm(temperature=0, target_key=target_key)
             messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
-            res = await llm.ainvoke(messages)
+            async with self.semaphore:
+                res = await llm.ainvoke(messages)
             text = res.content
             
             import json

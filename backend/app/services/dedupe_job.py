@@ -58,7 +58,13 @@ class DedupeService:
             # Ensure we are not blocking if possible, but vector_store is sync for now.
             try:
                 # Ensure user_id is string to match ingestion
-                results = await vector_store.query(memory.content, n_results=5, where={"user_id": str(memory.user_id)})
+                where_dict = {"user_id": str(memory.user_id)}
+                # Always apply project_id filter for workspace containerization
+                if memory.project_id is not None:
+                    where_dict["project_id"] = str(memory.project_id)
+                else:
+                    print(f"Dedupe: WARNING - Memory {memory_id} has no project_id, skipping containerization filter")
+                results = await vector_store.query(memory.content, n_results=5, where=where_dict)
                 print(f"Dedupe: Vector store returned {len(results.get('ids', []))} matches")
             except Exception as vs_e:
                 print(f"Dedupe: Vector store query failed: {vs_e}")
@@ -156,6 +162,7 @@ class DedupeService:
                 if similar_ids:
                     cluster = MemoryCluster(
                         user_id=memory.user_id,
+                        project_id=memory.project_id,
                         memory_ids=json.dumps(similar_ids + [memory.id]),
                         representative_text=f"Cluster centered on: {memory.title}",
                         status="pending"

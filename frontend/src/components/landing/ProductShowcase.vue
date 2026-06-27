@@ -69,7 +69,7 @@
                 </div>
               </div>
               <div class="p-4 rounded-xl border border-gray-200 bg-white">
-                <h4 class="font-semibold text-gray-900 mb-2 text-sm leading-snug">MemWyre Launches Universal AI
+                <h4 class="font-semibold text-gray-900 mb-2 text-sm leading-snug">Memwyre Launches Universal AI
                   Memory</h4>
                 <div class="flex justify-between items-end">
                   <div class="flex flex-col gap-2">
@@ -170,8 +170,8 @@
             class="flex flex-col bg-white rounded-t-2xl shadow-xl border border-black/5 border-b-0 overflow-hidden h-full">
             <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-[#F7F6F3]/80">
               <div>
-                <h3 class="text-base font-semibold text-gray-900">Recent AI Work</h3>
-                <p class="text-[11px] text-gray-400 mt-0.5">Your interaction timeline across AI tools.</p>
+                <h3 class="text-base font-semibold text-gray-900">Recent Memories</h3>
+                <p class="text-[11px] text-gray-400 mt-0.5">Your interaction timeline across memories.</p>
               </div>
               <div class="flex items-center gap-2">
                 <span class="text-xs border border-gray-200 rounded-md px-2.5 py-1 bg-white text-gray-600">All

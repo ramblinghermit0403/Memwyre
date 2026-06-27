@@ -56,6 +56,7 @@ const props = defineProps({
 
 const emit = defineEmits(['saved', 'cancelled']);
 import { useToast } from 'vue-toastification';
+import { useProjectStore } from '../stores/project';
 const toast = useToast();
 
 const form = ref({
@@ -89,7 +90,12 @@ const save = async () => {
       await api.put(`/documents/${props.document.id}`, form.value);
     } else {
       // Create new memory
-      await api.post('/documents/memory', form.value);
+      const payload = { ...form.value };
+      const projectStore = useProjectStore();
+      if (projectStore.currentProjectId) {
+        payload.project_id = projectStore.currentProjectId;
+      }
+      await api.post('/documents/memory', payload);
     }
     
     emit('saved');

@@ -9,7 +9,7 @@ from typing import List, Optional
 BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "MemWyre"
+    PROJECT_NAME: str = "Memwyre"
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = "YOUR_SECRET_KEY_HERE"  # Change in production
     ALGORITHM: str = "HS256"
@@ -84,6 +84,8 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: Optional[str] = None
     GITHUB_CLIENT_ID: Optional[str] = None
     GITHUB_CLIENT_SECRET: Optional[str] = None
+    NOTION_CLIENT_ID: Optional[str] = None
+    NOTION_CLIENT_SECRET: Optional[str] = None
     FRONTEND_URL: str = "http://localhost:5173"
     BACKEND_URL: str = "http://localhost:8000"
 

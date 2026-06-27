@@ -9,6 +9,8 @@ class LLMMemoryCreate(BaseModel):
     url: Optional[str] = None
     tags: Optional[List[str]] = []
     metadata: Optional[Dict[str, Any]] = {}
+    project_id: Optional[int] = None
+    workspace_name: Optional[str] = None
 
 class LLMMemoryUpdate(BaseModel):
     content: Optional[str] = None
@@ -25,6 +27,7 @@ class ContextRequest(BaseModel):
     task_type: Optional[str] = "general" # "code", "creative", "fact-check"
     limit_tokens: Optional[int] = 2000
     compression_level: Optional[str] = "medium" # "low", "medium", "high"
+    project_id: Optional[int] = None
 
 class ContextResponse(BaseModel):
     context_text: str

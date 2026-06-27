@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from app.services.vector_store import vector_store
 from app.core.config import settings
 
@@ -6,16 +6,20 @@ class ContextBuilder:
     def __init__(self):
         pass
 
-    async def build_context(self, query: str, user_id: int, limit_tokens: int = 2000) -> Dict[str, Any]:
+    async def build_context(self, query: str, user_id: int, limit_tokens: int = 2000, project_id: Optional[int] = None) -> Dict[str, Any]:
         """
         Retrieve and format context. 
         TODO: Implement advanced compression/deduplication.
         """
+        where_dict = {"user_id": str(user_id)}
+        if project_id is not None:
+            where_dict["project_id"] = str(project_id)
+            
         # 1. Retrieve
         results = await vector_store.query(
             query, 
             n_results=5, 
-            where={"user_id": user_id}
+            where=where_dict
         )
         
         snippets = []

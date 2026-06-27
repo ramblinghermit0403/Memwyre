@@ -205,7 +205,7 @@
 
             <!-- Right Actions -->
             <div class="relative flex-none flex items-center gap-4 pl-3">
-              <!-- Injected MemWyre Button -->
+              <!-- Injected Memwyre Button -->
               <div class="w-8 h-8 flex items-center justify-center">
                 <img src="/image.svg" class="w-5 h-5" />
               </div>

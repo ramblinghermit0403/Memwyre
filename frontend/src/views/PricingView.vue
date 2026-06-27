@@ -4,7 +4,9 @@
       <div id="pricing" class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center mb-16">
           <h2 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4">Pricing</h2>
-          <p class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-balance text-gray-900">AI that works where your team works.</p>
+          <p class="hero-serif text-4xl sm:text-5xl tracking-tight text-gray-900 leading-[1.1]">
+            AI that works where <span class="italic font-medium">your team <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">works.</span></span>
+          </p>
           <p class="mt-6 text-lg text-text-secondary max-w-2xl mx-auto">
             Simple, transparent pricing for individuals and teams.
           </p>
@@ -23,7 +25,7 @@
             <p class="text-text-secondary mb-6">A great way to get started with building your personal memory vault.</p>
 
             <router-link to="/signup"
-              class="inline-flex w-full items-center justify-center rounded-xl bg-gray-50 text-gray-900 border border-gray-200 px-4 py-3.5 text-sm font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-[1.02]">
+              class="inline-flex w-full items-center justify-center rounded bg-gray-50 text-gray-900 border border-gray-200 px-4 py-3.5 text-sm font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-[1.02]">
               Get Started for Free
             </router-link>
 
@@ -77,17 +79,18 @@
             </p>
 
             <router-link to="/signup"
-              class="inline-flex w-full items-center justify-center rounded-xl bg-gray-900 text-white px-4 py-3.5 text-sm font-bold shadow-[0_4px_14px_0_rgb(0,0,0,0.2)] hover:bg-gray-800 transition-all duration-300 hover:scale-[1.02]">
+              class="inline-flex w-full items-center justify-center rounded bg-gray-900 text-white px-4 py-3.5 text-sm font-bold shadow-[0_4px_14px_0_rgb(0,0,0,0.2)] hover:bg-gray-800 transition-all duration-300 hover:scale-[1.02]">
               Start Building Your Brain
             </router-link>
 
             <div class="mt-6 flex flex-wrap items-center gap-2">
               <span class="text-xs font-semibold uppercase tracking-widest text-text-muted mr-2">Integrations</span>
-              <img src="@/assets/openai.svg" alt="ChatGPT" class="w-5 h-5" />
-              <img src="@/assets/perplexity-color.svg" alt="Perplexity" class="w-5 h-5" />
-              <img src="@/assets/chrome-logo-svgrepo-com.svg" alt="Chrome" class="w-5 h-5" />
-              <img src="@/assets/notion-svgrepo-com.svg" alt="Notion" class="w-5 h-5" />
-              <img src="/image.svg" alt="MemWyre" class="w-5 h-5 rounded" />
+              <img src="@/assets/vscode.svg" alt="VS Code" class="w-5 h-5" title="VS Code" />
+              <img src="@/assets/google-drive.svg" alt="Google Drive" class="w-5 h-5" title="Google Drive" />
+              <img src="@/assets/notion-svgrepo-com.svg" alt="Notion" class="w-5 h-5" title="Notion" />
+              <img src="@/assets/claude-color.svg" alt="Claude Desktop" class="w-5 h-5" title="Claude Desktop" />
+              <img src="@/assets/claudecode-color.svg" alt="Claude Code" class="w-5 h-5" title="Claude Code" />
+              <img src="@/assets/openclaw-color.svg" alt="OpenClaw" class="w-5 h-5" title="OpenClaw" />
             </div>
 
             <ul class="mt-4 space-y-3 text-sm text-text-secondary">
@@ -96,66 +99,35 @@
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                Unlimited memories & documents
+                Unlimited memories &amp; documents
               </li>
               <li class="flex items-start gap-3">
                 <svg class="w-5 h-5 text-[#D97757] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                Extended daily AI chat quota
+                Google Drive &amp; Notion sync
               </li>
               <li class="flex items-start gap-3">
                 <svg class="w-5 h-5 text-[#D97757] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                PDF &amp; web page ingestion <span class="text-xs text-text-muted">(YouTube coming soon)</span>
+                Claude Code, OpenCode &amp; OpenClaw plugins
               </li>
               <li class="flex items-start gap-3">
                 <svg class="w-5 h-5 text-[#D97757] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                <div class="flex flex-wrap items-center gap-2">
-                  <span>MCP Server for IDE integration</span>
-                  <span class="inline-flex items-center gap-1.5 ml-1">
-                    <span
-                      class="inline-flex items-center justify-center w-6 h-6"
-                      title="VS Code">
-                      <svg class="w-4 h-4" viewBox="0 0 256 254" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path fill="#007ACC"
-                          d="M246.201 33.592 196.63 9.915a19.547 19.547 0 0 0-21.58 3.41L78.94 101.334 40.746 72.36a13.02 13.02 0 0 0-16.69 1.025L4.022 91.46a13.02 13.02 0 0 0-.17 19.365l30.96 30.01-30.96 30.01a13.02 13.02 0 0 0 .17 19.365l20.034 18.074a13.02 13.02 0 0 0 16.69 1.025l38.194-28.974 96.11 88.009a19.547 19.547 0 0 0 21.58 3.41l49.571-23.677A19.547 19.547 0 0 0 256 225.513V55.671a19.547 19.547 0 0 0-9.799-22.079zM196.923 188.82l-73.09-60.33 73.09-60.33z" />
-                      </svg>
-                    </span>
-                    <span
-                      class="inline-flex items-center justify-center w-6 h-6"
-                      title="Cursor">
-                      <img src="@/assets/cursor_CUBE_2D_LIGHT.svg" alt="Cursor" class="w-4 h-4 object-contain" />
-                    </span>
-                  </span>
-                </div>
+                Browser Extension &amp; MCP IDE Server
               </li>
               <li class="flex items-start gap-3">
                 <svg class="w-5 h-5 text-[#D97757] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                Browser Extension (Chrome &amp; Edge)
-              </li>
-              <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-[#D97757] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                OpenClaw agent plugin access
-              </li>
-              <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-[#D97757] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Priority support
+                Extended daily AI chat quota &amp; support
               </li>
             </ul>
           </div>
@@ -170,8 +142,8 @@
             </div>
             <p class="text-text-secondary mb-6">Tailored deployments for teams that need dedicated infrastructure, SSO, and volume pricing.</p>
 
-            <a href="mailto:shivharehimansh@gmail.com?subject=MemWyre%20Enterprise%20Inquiry"
-              class="inline-flex w-full items-center justify-center rounded-xl bg-gray-50 text-gray-900 border border-gray-200 px-4 py-3.5 text-sm font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-[1.02]">
+            <a href="mailto:shivharehimansh@gmail.com?subject=Memwyre%20Enterprise%20Inquiry"
+              class="inline-flex w-full items-center justify-center rounded bg-gray-50 text-gray-900 border border-gray-200 px-4 py-3.5 text-sm font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-[1.02]">
               Contact Sales
             </a>
 
@@ -234,16 +206,14 @@
             For Your AI.
           </span>
         </h2>
-        <p class="text-gray-600 text-xl sm:text-2xl mb-14 max-w-3xl mx-auto font-medium leading-relaxed">
-          A persistent knowledge vault that works everywhere you use AI.
-        </p>
+
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
           <router-link to="/signup"
-            class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105">
-            Get Started — It's Free
+            class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105">
+            Get Started
           </router-link>
           <router-link to="/pricing"
-            class="w-full sm:w-auto px-10 py-4 bg-white text-black font-bold rounded-xl border border-black/10 hover:bg-black/5 transition-all duration-300 hover:border-black/20">
+            class="w-full sm:w-auto px-10 py-4 bg-white text-black font-bold rounded border border-black/10 hover:bg-black/5 transition-all duration-300 hover:border-black/20">
             Compare Plans
           </router-link>
         </div>
@@ -261,7 +231,7 @@
                   d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
               </svg>
             </a>
-            <a href="https://twitter.com/MemWyre" target="_blank"
+            <a href="https://twitter.com/Memwyre" target="_blank"
               class="text-black hover:text-gray-500 transition-all duration-300 transform hover:scale-110">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -278,7 +248,7 @@
           </div>
 
           <div class="flex items-center gap-2">
-            <img src="/image.svg" alt="MemWyre" class="w-6 h-6 rounded" />
+            <img src="/image.svg" alt="Memwyre" class="w-6 h-6 rounded" />
             <span class="font-medium text-2xl text-black tracking-tight"
               style="font-family: 'Inter', system-ui, sans-serif;">Memwyre</span>
           </div>
@@ -288,7 +258,7 @@
           <p class="text-xs text-black/30 font-medium">© 2026 Memwyre. Crafted for clarity.</p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-12 sm:gap-24 w-full md:w-auto">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-12 sm:gap-16 w-full md:w-auto">
           <div class="flex flex-col gap-4">
             <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Product</h4>
             <router-link to="/#features"
@@ -298,10 +268,21 @@
               class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Ecosystem</router-link>
           </div>
           <div class="flex flex-col gap-4">
+            <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Products</h4>
+            <router-link to="/extension"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Chrome Extension</router-link>
+            <router-link to="/mcp"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">MCP</router-link>
+            <router-link to="/plugins"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Plugins</router-link>
+            <router-link to="/personal"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Personal App</router-link>
+          </div>
+          <div class="flex flex-col gap-4">
             <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support</h4>
             <a href="mailto:shivharehimansh@gmail.com"
               class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Contact Us</a>
-            <a href="https://x.com/MemWyre" target="_blank"
+            <a href="https://x.com/Memwyre" target="_blank"
               class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Twitter</a>
           </div>
           <div class="flex flex-col gap-4">

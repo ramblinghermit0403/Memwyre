@@ -1,7 +1,7 @@
 """
 Discovery endpoints for agent-readiness.
 
-Serves .well-known metadata so AI agents can discover MemWyre's
+Serves .well-known metadata so AI agents can discover Memwyre's
 API catalog and MCP server capabilities without manual configuration.
 """
 
@@ -40,11 +40,11 @@ async def api_catalog():
 @router.get("/.well-known/mcp/server-cards.json")
 async def mcp_server_card():
     """
-    MCP Server Card — advertises MemWyre's MCP capabilities, tools,
+    MCP Server Card — advertises Memwyre's MCP capabilities, tools,
     transport type, and authentication requirements.
     """
     return JSONResponse(content={
-        "name": "MemWyre",
+        "name": "Memwyre",
         "description": (
             "Personal Knowledge Base & Memory Layer for AI Agents. "
             "Save, search, and retrieve memories, documents, and "
@@ -63,7 +63,7 @@ async def mcp_server_card():
         "authentication": {
             "type": "bearer",
             "description": (
-                "Generate an API key from your MemWyre dashboard at "
+                "Generate an API key from your Memwyre dashboard at "
                 "https://memwyre.tech/dashboard/settings. "
                 "Pass it as a Bearer token in the Authorization header."
             ),
@@ -76,7 +76,7 @@ async def mcp_server_card():
         },
         "tools": [
             {"name": "search_memwyre", "description": "Semantic search across your saved memories, documents, and notes."},
-            {"name": "save_memory", "description": "Save a new memory snippet to your MemWyre Vault."},
+            {"name": "save_memory", "description": "Save a new memory snippet to your Memwyre Vault."},
             {"name": "list_memories", "description": "List recent memories and documents."},
             {"name": "get_document", "description": "Retrieve the full content of a specific document by ID."},
             {"name": "get_inbox", "description": "Get list of pending memories in the Inbox."},
@@ -93,7 +93,7 @@ async def mcp_server_card():
 async def oauth_authorization_server():
     """
     RFC 8414 — OAuth 2.0 Authorization Server Metadata.
-    Describes MemWyre's auth endpoints so agents know how to authenticate.
+    Describes Memwyre's auth endpoints so agents know how to authenticate.
     """
     return JSONResponse(content={
         "issuer": "https://server.memwyre.tech",
@@ -122,7 +122,7 @@ async def oauth_authorization_server():
 async def openid_configuration():
     """
     OpenID Connect Discovery — minimal OIDC metadata.
-    MemWyre delegates identity to Google; this document helps agents
+    Memwyre delegates identity to Google; this document helps agents
     understand the auth flow.
     """
     return JSONResponse(content={
@@ -158,11 +158,11 @@ async def oauth_protected_resource():
 async def agent_skills_index():
     """
     Agent Skills Discovery (Cloudflare RFC v0.2.0).
-    Lists MemWyre's capabilities as discoverable agent skills.
+    Lists Memwyre's capabilities as discoverable agent skills.
     """
     return JSONResponse(content={
         "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
-        "name": "MemWyre",
+        "name": "Memwyre",
         "description": "Personal Knowledge Base & Memory Layer for AI Agents",
         "url": "https://memwyre.tech",
         "skills": [

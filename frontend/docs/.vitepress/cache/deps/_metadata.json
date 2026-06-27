@@ -1,38 +1,47 @@
 {
-  "hash": "56969bc8",
-  "configHash": "8546579e",
-  "lockfileHash": "c1d21196",
-  "browserHash": "9197ec8f",
+  "hash": "355606f2",
+  "configHash": "188adb3d",
+  "lockfileHash": "c327507c",
+  "browserHash": "0555c074",
   "optimized": {
     "vue": {
       "src": "../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
       "file": "vue.js",
-      "fileHash": "3d33aa37",
+      "fileHash": "1edeb494",
       "needsInterop": false
     },
     "vitepress > @vue/devtools-api": {
       "src": "../../../../node_modules/@vue/devtools-api/dist/index.js",
       "file": "vitepress___@vue_devtools-api.js",
-      "fileHash": "c7e2ee99",
+      "fileHash": "bc9eabee",
       "needsInterop": false
     },
     "vitepress > @vueuse/core": {
       "src": "../../../../node_modules/vitepress/node_modules/@vueuse/core/index.mjs",
       "file": "vitepress___@vueuse_core.js",
-      "fileHash": "9842c660",
+      "fileHash": "fd8f39f7",
       "needsInterop": false
     },
-    "@theme/index": {
-      "src": "../../../../node_modules/vitepress/dist/client/theme-default/index.js",
-      "file": "@theme_index.js",
-      "fileHash": "199d1432",
+    "vitepress > @vueuse/integrations/useFocusTrap": {
+      "src": "../../../../node_modules/@vueuse/integrations/useFocusTrap.mjs",
+      "file": "vitepress___@vueuse_integrations_useFocusTrap.js",
+      "fileHash": "67925e62",
+      "needsInterop": false
+    },
+    "vitepress > mark.js/src/vanilla.js": {
+      "src": "../../../../node_modules/mark.js/src/vanilla.js",
+      "file": "vitepress___mark__js_src_vanilla__js.js",
+      "fileHash": "2590f8d3",
+      "needsInterop": false
+    },
+    "vitepress > minisearch": {
+      "src": "../../../../node_modules/minisearch/dist/es/index.js",
+      "file": "vitepress___minisearch.js",
+      "fileHash": "813e4c04",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-SMHOW2GZ": {
-      "file": "chunk-SMHOW2GZ.js"
-    },
     "chunk-SFNBNC2X": {
       "file": "chunk-SFNBNC2X.js"
     }

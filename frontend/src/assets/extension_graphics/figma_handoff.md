@@ -51,7 +51,7 @@
 - Secondary crop: none
 
 5. 05-ask-to-memwyre
-- Headline: Ask MemWyre.
+- Headline: Ask Memwyre.
 - Support: Get grounded answers from your saved context.
 - Source: talk_to_knowledge.png
 - Primary card: x=566, y=168, w=648, h=540

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core App Pages -->
   <url>
     <loc>https://memwyre.tech/</loc>
   </url>
@@ -14,5 +15,101 @@
   </url>
   <url>
     <loc>https://memwyre.tech/terms</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/connectors</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/mcp</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/plugins</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/rag</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/memory-graph</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/personal</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/extension</loc>
+  </url>
+
+  <!-- Documentation Pages -->
+  <url>
+    <loc>https://memwyre.tech/docs/</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/use-cases</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/self-hosting</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/how-it-works</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/rag-vs-memory</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/benchmarks</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/security</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/browser-extension</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/cli-installer</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/connectors</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/mcp-server</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/mcp-server/claude</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/mcp-server/cursor</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/mcp-server/vscode</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/plugins/claude</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/docs/integrations/plugins/openclaw</loc>
+  </url>
+  <!-- Programmatic SEO Blogs -->
+  <url>
+    <loc>https://memwyre.tech/blog/</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/blog/mcp-persistent-memory</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/blog/cursor-vs-claude-code-context</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/blog/rag-vs-memory-long-term-knowledge</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/blog/vscode-mcp-persistent-memory</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/blog/claude-code-memory-ingestion</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/blog/openclaw-autonomous-memory</loc>
   </url>
 </urlset>

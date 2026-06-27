@@ -43,22 +43,18 @@ class VectorStore:
             logger.error(traceback.format_exc())
             self.embeddings = None
         
+    from tenacity import retry, stop_after_attempt, wait_exponential
+    
+    @retry(stop=stop_after_attempt(4), wait=wait_exponential(multiplier=1, min=2, max=10))
     async def _async_get_embeddings(self, texts: List[str]) -> List[List[float]]:
         """
-        Generate embeddings locally using Bedrock (Parallel).
+        Generate embeddings locally using Azure OpenAI (Batched to save RPM).
         """
-        import asyncio
         if not self.embeddings:
             raise Exception("Azure embeddings not initialized")
             
-        try:
-            # Parallel execution for Titan v2
-            tasks = [self.embeddings.aembed_query(t) for t in texts]
-            return await asyncio.gather(*tasks)
-        except Exception as e:
-            logger.error(f"Azure Async Embedding Failed: {e}")
-            # Fallback
-            return self.embeddings.embed_documents(texts)
+        # Use batched documents embedding (1 API request instead of N)
+        return await self.embeddings.aembed_documents(texts)
 
     async def add_documents(self, ids: List[str], documents: List[str], metadatas: List[Dict[str, Any]]):
         if not documents:
@@ -97,9 +93,7 @@ class VectorStore:
             if not self.embeddings:
                  return {"ids": [[]], "distances": [[]], "metadatas": [[]], "documents": [[]], "embeddings": [[]]}
 
-            # Bedrock embedding is synchronous call usually fast or we can async it too?
-            # embed_query is sync in BedrockEmbeddings? Titan v2 client is sync here?
-            # Actually self.embeddings.embed_query is blocking too if it uses boto3 sync client!
+            # Azure OpenAI embedding is synchronous call usually fast or we can async it too?
             # Let's wrap it just in case, or use aembed_query if available.
             # aembed_query was used above.
             

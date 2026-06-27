@@ -15,4 +15,6 @@ from .invite import InviteToken
 from .token import VerificationToken
 
 from .project import Project
+from .entity_profile import EntityProfile
+from .workspace_connection import WorkspaceConnection
 

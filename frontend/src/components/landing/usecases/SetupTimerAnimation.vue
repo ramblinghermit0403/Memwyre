@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full flex items-center justify-center p-4">
-    <div class="relative w-full max-w-[280px] bg-gray-900 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden border border-gray-700/50 font-mono scale-[1.05]">
+  <div class="w-full flex items-center justify-center p-2 sm:p-4">
+    <div class="relative w-full max-w-[480px] bg-gray-900 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden border border-gray-700/50 font-mono scale-[1.1] sm:scale-100 origin-center">
       <!-- Terminal Header -->
       <div class="flex items-center gap-2 px-3 py-2 bg-gray-800/80 border-b border-gray-700/50">
         <div class="flex gap-1.5">
@@ -12,8 +12,8 @@
       </div>
       
       <!-- Terminal Body -->
-      <div class="p-4 text-xs h-[170px] flex flex-col justify-start relative pt-6">
-         <div class="text-green-400 mb-3">> <span class="text-white">{{ commandText }}</span><span v-if="showCursor" class="animate-pulse">_</span></div>
+      <div class="p-5 sm:p-6 text-sm h-[250px] flex flex-col justify-start relative pt-6">
+         <div class="text-green-400 mb-3 text-base">> <span class="text-white">{{ commandText }}</span><span v-if="showCursor" class="animate-pulse">_</span></div>
          
          <transition name="fade">
            <div v-if="step >= 1" class="text-gray-400 mb-1.5 truncate">Resolving dependencies...</div>
@@ -25,10 +25,10 @@
          
          <transition name="pop">
            <div v-if="step >= 3" class="mt-2 flex items-center gap-2 bg-green-500/10 text-green-400 p-2.5 rounded-lg border border-green-500/20 w-max shadow-[0_0_15px_rgba(34,197,94,0.1)]">
-             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
              </svg>
-             <span class="font-bold tracking-wide text-sm">Setup Complete (0.8s)</span>
+             <span class="font-bold tracking-wide text-base">Setup Complete (0.8s)</span>
            </div>
          </transition>
       </div>

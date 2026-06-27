@@ -32,18 +32,21 @@ class InboxAction(BaseModel):
 
 @router.get("/", response_model=List[InboxItem])
 async def get_inbox(
+    project_id: Optional[int] = None,
     db: AsyncSession = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user)
 ) -> Any:
     """
     List pending memories.
     """
-    result = await db.execute(
-        select(Memory).where(
-            Memory.user_id == current_user.id,
-            Memory.show_in_inbox == True
-        ).order_by(Memory.created_at.desc())
+    stmt = select(Memory).where(
+        Memory.user_id == current_user.id,
+        Memory.show_in_inbox == True
     )
+    if project_id is not None:
+        stmt = stmt.where(Memory.project_id == project_id)
+    stmt = stmt.order_by(Memory.created_at.desc())
+    result = await db.execute(stmt)
     memories = result.scalars().all()
     
     results = []
@@ -248,6 +251,7 @@ class AgentDropPayload(BaseModel):
     confidence: Optional[float] = 0.0
     job_id: Optional[str] = None
     metadata: Optional[AgentDropMetadata] = None
+    project_id: Optional[int] = None
 
 
 
@@ -285,6 +289,9 @@ async def agent_drop(
     if not clean_content.strip():
          raise HTTPException(status_code=400, detail="Content cannot be empty after stripping HTML")
 
+    # Resolve project_id to ensure workspace containerization
+    project_id = await deps.resolve_project_id(db, user.id, payload.project_id)
+
     # 5. Create Inbox Item (Memory object with pending status)
     new_memory = Memory(
         user_id=user.id,
@@ -294,7 +301,8 @@ async def agent_drop(
         status="pending",
         show_in_inbox=True,
         trusted=False,
-        task_type=payload.job_id # Reuse task_type for job_id if needed
+        task_type=payload.job_id, # Reuse task_type for job_id if needed
+        project_id=project_id
     )
     
     db.add(new_memory)

@@ -1,7 +1,7 @@
 """
 Ingestion Service: Handle text chunking and embedding generation
 """
-from typing import List, Dict
+from typing import List, Dict, Any
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import uuid
 import numpy as np
@@ -63,8 +63,10 @@ class IngestionService:
         title: str, 
         doc_type: str = "memory",
         metadata: Dict = None,
-        enrich: bool = True
-    ) -> tuple[List[str], List[str], List[str], List[Dict]]:
+        enrich: bool = True,
+        extract_facts: bool = False,
+        reference_date = None
+    ) -> tuple[List[str], List[str], List[str], List[Dict], List[Any]]:
         """
         Process text into chunks with metadata for vector store.
         Uses Semantic Chunking and LLM Enrichment.
@@ -86,17 +88,43 @@ class IngestionService:
         if metadata:
             base_metadata.update(metadata)
         
-        # 2. Enrichment (Batched to prevent OOM)
-        ENRICHMENT_BATCH_SIZE = 3
+        # 2. Enrichment & Fact Extraction (Fully concurrent, managed by global semaphore)
         enrichment_results = []
-        if enrich:
-            for batch_start in range(0, len(chunks), ENRICHMENT_BATCH_SIZE):
-                batch = chunks[batch_start:batch_start + ENRICHMENT_BATCH_SIZE]
-                batch_tasks = [llm_service.generate_chunk_enrichment(chunk_text) for chunk_text in batch]
-                batch_results = await asyncio.gather(*batch_tasks, return_exceptions=True)
-                enrichment_results.extend(batch_results)
+        fact_results = []
+        
+        if enrich or extract_facts:
+            from app.services.llm_service_v2 import llm_service_v2 as llm_service
+            all_tasks = []
+            
+            # Queue enrichment tasks
+            if enrich:
+                for chunk_text in chunks:
+                    all_tasks.append(llm_service.generate_chunk_enrichment(chunk_text))
+            
+            # Queue fact extraction tasks
+            if extract_facts:
+                for chunk_text in chunks:
+                    all_tasks.append(llm_service.extract_facts_from_text(chunk_text, reference_date=reference_date))
+                    
+            # Run everything concurrently (controlled by the global semaphore)
+            results = await asyncio.gather(*all_tasks, return_exceptions=True)
+            
+            # Separate the results back into enrichment and facts
+            if enrich:
+                enrichment_results = results[:len(chunks)]
+                if extract_facts:
+                    fact_results = results[len(chunks):]
+                else:
+                    fact_results = [None] * len(chunks)
+            else:
+                enrichment_results = [None] * len(chunks)
+                if extract_facts:
+                    fact_results = results
+                else:
+                    fact_results = [None] * len(chunks)
         else:
             enrichment_results = [None] * len(chunks)
+            fact_results = [None] * len(chunks)
 
         embedding_ids = []
         chunk_texts = []
@@ -154,7 +182,7 @@ class IngestionService:
             enriched_chunk_texts.append(enriched_text)
             metadatas.append(chunk_metadata)
         
-        return embedding_ids, chunk_texts, enriched_chunk_texts, metadatas
+        return embedding_ids, chunk_texts, enriched_chunk_texts, metadatas, fact_results
 
     async def semantic_chunk_text(self, text: str, threshold: float = 0.5) -> List[str]:
         """
@@ -174,8 +202,7 @@ class IngestionService:
             embeddings = []
             for batch_start in range(0, len(sentences), EMBED_BATCH_SIZE):
                 batch = sentences[batch_start:batch_start + EMBED_BATCH_SIZE]
-                batch_tasks = [self.embeddings.aembed_query(s) for s in batch]
-                batch_results = await asyncio.gather(*batch_tasks)
+                batch_results = await self.embeddings.aembed_documents(batch)
                 embeddings.extend(batch_results)
         except Exception as e:
             print(f"Azure Batched Embedding failed: {e}")

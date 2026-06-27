@@ -6,14 +6,14 @@
       <div v-if="!lastKnownUser" class="space-y-8">
           <div class="text-center">
              <div class="mx-auto h-12 w-12 flex items-center justify-center mb-6">
-                 <img src="/image.svg" alt="MemWyre" class="h-10 w-10 object-contain invert dark:invert-0 opacity-90" />
+                 <img src="/image.svg" alt="Memwyre" class="h-10 w-10 object-contain invert dark:invert-0 opacity-90" />
              </div>
              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-semibold mb-4 border border-orange-200">
                 <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
                 Coming Soon &amp; Under Maintenance
              </div>
              <h2 class="text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-                Log in to MemWyre
+                Log in to Memwyre
              </h2>
           </div>
 

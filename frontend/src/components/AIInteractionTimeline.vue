@@ -2,8 +2,8 @@
   <div class="h-full flex flex-col">
     <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between gap-4">
       <div>
-        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Recent AI Work</h3>
-        <p class="text-xs text-gray-400 mt-1">Your interaction timeline across AI tools.</p>
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Recent Memories</h3>
+        <p class="text-xs text-gray-400 mt-1">Your interaction timeline across memories.</p>
       </div>
       <div class="flex items-center gap-2">
         <div class="relative source-selector">
@@ -27,22 +27,35 @@
             {{ option.label }}
           </option>
         </select>
-        <button @click="fetchTimeline" class="text-xs px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700">Refresh</button>
+        <button
+          @click="fetchTimeline"
+          :disabled="loading"
+          class="inline-flex items-center justify-center p-1.5 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface text-gray-500 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+          title="Refresh Timeline"
+        >
+          <svg class="w-3.5 h-3.5" :class="{ 'animate-spin': loading }" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4v5h.582M20 20v-5h-.581M5.582 9A7.97 7.97 0 0112 4a8 8 0 017.446 5.032M18.418 15A7.97 7.97 0 0112 20a8 8 0 01-7.446-5.032" />
+          </svg>
+        </button>
       </div>
     </div>
 
     <div v-if="loading" class="flex-1 flex items-center justify-center text-sm text-gray-400">Loading timeline...</div>
 
-    <div v-else class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
-      <div v-if="Object.keys(groupedItems).length === 0" class="text-sm text-gray-500">
-        No AI interactions yet. Save your first interaction to start building your timeline.
-      </div>
+    <!-- Empty state: animated feature carousel (fills the full card body) -->
+    <div v-else-if="filteredItems.length === 0" class="flex-1 relative overflow-hidden">
+      <EmptyStateCarousel />
+    </div>
 
-      <div v-for="(dayItems, dayKey) in groupedItems" :key="dayKey" class="space-y-3">
-        <h4 class="text-xs uppercase tracking-wider text-gray-500 font-bold">{{ dayLabel(dayKey) }}</h4>
-
-        <ul class="divide-y divide-gray-200 dark:divide-gray-700 border-t border-b border-gray-200 dark:border-gray-700">
-          <li v-for="item in dayItems" :key="item.id" class="py-4">
+    <!-- Timeline list -->
+    <div v-else class="flex-1 overflow-y-auto custom-scrollbar p-6">
+      <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+        <li
+          v-for="item in paginatedItems"
+          :key="item.id"
+          @click="$emit('open-item', item)"
+          class="py-4 px-3 -mx-3 hover:bg-gray-50/70 dark:hover:bg-zinc-800/30 cursor-pointer transition-all duration-200 group"
+        >
             <div class="flex items-start justify-between gap-3 px-1">
               <div class="min-w-0 flex-1">
                 <div class="flex items-start gap-3">
@@ -66,36 +79,15 @@
                   <div class="min-w-0">
                     <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ item.title || 'Untitled AI Interaction' }}</p>
                     <p class="text-xs text-gray-500 mt-1">
-                      {{ displaySource(item.source_app) }} | {{ displayInteractionType(item.interaction_type) }} | {{ formatTime(item.created_at) }}
+                      {{ displaySource(item.source_app) }} | {{ displayInteractionType(item.interaction_type) }} | {{ formatDateTime(item.created_at) }}
                     </p>
                     <p class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">{{ item.content }}</p>
-                    <div class="mt-2 flex items-center gap-2">
-                      <div class="relative project-selector">
-                        <button
-                          @click.stop="toggleProjectMenu(item)"
-                          :ref="(el) => setProjectButtonRef(item.id, el)"
-                          class="inline-flex items-center justify-between gap-1.5 min-w-[120px] text-[10px] px-2 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface hover:bg-gray-50 dark:hover:bg-gray-800"
-                        >
-                          <span>{{ projectLabel(item) }}</span>
-                          <svg class="w-2.5 h-2.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="flex items-center gap-2 shrink-0">
-                <button @click="$emit('open-item', item)" class="inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3h7m0 0v7m0-7L10 14"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7v12h12"></path>
-                  </svg>
-                  <span>Open</span>
-                </button>
-                <details class="relative">
+                <details class="relative" @click.stop>
                   <summary class="list-none cursor-pointer inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l1.6 3.4L17 8l-3.4 1.6L12 13l-1.6-3.4L7 8l3.4-1.6L12 3z"></path>
@@ -115,9 +107,13 @@
                       <img :src="claudeIcon" alt="Claude" class="w-4 h-4" />
                       Continue in Claude
                     </button>
-                    <button @click="handoff(item, 'gemini')" class="w-full text-left text-xs px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded flex items-center gap-2">
-                      <img :src="geminiIcon" alt="Gemini" class="w-4 h-4" />
-                      Continue in Gemini
+                    <button @click="handoff(item, 'grok')" class="w-full text-left text-xs px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded flex items-center gap-2">
+                      <img :src="grokIcon" alt="Grok" class="w-4 h-4 dark:invert" />
+                      Continue in Grok
+                    </button>
+                    <button @click="handoff(item, 'perplexity')" class="w-full text-left text-xs px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded flex items-center gap-2">
+                      <img :src="perplexityIcon" alt="Perplexity" class="w-4 h-4" />
+                      Continue in Perplexity
                     </button>
                     <button @click="copyOnly(item)" class="w-full text-left text-xs px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded flex items-center gap-2">
                       <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +129,29 @@
           </li>
         </ul>
       </div>
-    </div>
+
+      <!-- Pagination -->
+      <div v-if="filteredItems.length > 0" class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-surface select-none">
+        <span class="text-xs text-gray-500 dark:text-gray-400">
+          Page {{ currentPage }} of {{ totalPages }} ({{ filteredItems.length }} memories)
+        </span>
+        <div class="flex gap-2">
+          <button
+            @click="currentPage--"
+            :disabled="currentPage === 1"
+            class="px-3 py-1.5 text-xs rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-gray-200 dark:border-gray-700"
+          >
+            Previous
+          </button>
+          <button
+            @click="currentPage++"
+            :disabled="currentPage === totalPages"
+            class="px-3 py-1.5 text-xs rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-gray-200 dark:border-gray-700"
+          >
+            Next
+          </button>
+        </div>
+      </div>
 
     <Teleport to="body">
       <div
@@ -203,7 +221,9 @@ import { listProjects } from '../services/projects';
 import { getIconForSource } from '../utils/iconResolver';
 import openaiIcon from '../assets/openai.svg';
 import claudeIcon from '../assets/claude-color.svg';
-import geminiIcon from '../assets/gemini-color.svg';
+import grokIcon from '../assets/grok-color.svg';
+import perplexityIcon from '../assets/perplexity-color.svg';
+import EmptyStateCarousel from './EmptyStateCarousel.vue';
 
 const props = defineProps({
   projectId: { type: [Number, String], default: null },
@@ -212,7 +232,7 @@ const props = defineProps({
 
 const emit = defineEmits(['open-item']);
 const toast = useToast();
-const loading = ref(false);
+const loading = ref(true);
 const items = ref([]);
 const activeSource = ref('');
 const activeType = ref('');
@@ -248,30 +268,30 @@ const formatDateKey = (dateLike) => {
   return d.toISOString().slice(0, 10);
 };
 
-const groupedItems = computed(() => {
-  const filtered = props.focusToday
+const filteredItems = computed(() => {
+  return props.focusToday
     ? items.value.filter((item) => formatDateKey(item.created_at) === formatDateKey(new Date()))
     : items.value;
-
-  return filtered.reduce((acc, item) => {
-    const key = item.timeline_group || formatDateKey(item.created_at);
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {});
 });
 
-const dayLabel = (key) => {
-  const today = formatDateKey(new Date());
-  const yesterday = formatDateKey(new Date(Date.now() - 86400000));
-  if (key === today) return 'Today';
-  if (key === yesterday) return 'Yesterday';
-  return new Date(key).toLocaleDateString();
-};
+const itemsPerPage = 15;
+const currentPage = ref(1);
 
-const formatTime = (dt) => {
+const totalPages = computed(() => {
+  return Math.ceil(filteredItems.value.length / itemsPerPage);
+});
+
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return filteredItems.value.slice(start, start + itemsPerPage);
+});
+
+const formatDateTime = (dt) => {
   const d = new Date(dt);
-  return Number.isNaN(d.getTime()) ? '' : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  if (Number.isNaN(d.getTime())) return '';
+  const dateStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return `${dateStr}, ${timeStr}`;
 };
 
 const displaySource = (source) => {
@@ -425,6 +445,7 @@ const fetchProjects = async () => {
 
 const fetchTimeline = async () => {
   loading.value = true;
+  currentPage.value = 1;
   try {
     const params = { view: 'timeline', limit: 300 };
     if (props.projectId !== null && props.projectId !== undefined && props.projectId !== '') {
@@ -497,7 +518,8 @@ const providerUrl = (provider, text) => {
   const encoded = encodeURIComponent(text || '');
   if (provider === 'chatgpt') return `https://chatgpt.com/?prompt=${encoded}`;
   if (provider === 'claude') return `https://claude.ai/new?q=${encoded}`;
-  if (provider === 'gemini') return `https://gemini.google.com/app?q=${encoded}`;
+  if (provider === 'grok') return `https://grok.com/?q=${encoded}`;
+  if (provider === 'perplexity') return `https://www.perplexity.ai/?q=${encoded}`;
   return null;
 };
 
@@ -505,8 +527,7 @@ const handoff = async (item, provider) => {
   try {
     const payload = await composeContext({ itemIds: [item.id], maxChars: 2800 });
     const contextText = payload?.context_text || item.content || '';
-    const prefillText = provider === 'gemini' ? contextText.slice(0, 1500) : contextText;
-    const url = providerUrl(provider, prefillText);
+    const url = providerUrl(provider, contextText);
 
     // Always copy to clipboard first — reliable fallback regardless of popup state
     const copied = await copyText(contextText);
@@ -518,8 +539,10 @@ const handoff = async (item, provider) => {
         toast.error('Popup blocked. Context copied — paste in your AI tool with Ctrl+V.');
         return;
       }
-      if (provider === 'gemini') {
-        toast.success(copied ? 'Opened Gemini. If prompt is empty, paste with Ctrl+V.' : 'Opened Gemini. Prompt prefill may vary by browser/account.');
+      if (provider === 'grok') {
+        toast.success(copied ? 'Opened Grok. Context copied — paste in chat with Ctrl+V.' : 'Opened Grok.');
+      } else if (provider === 'perplexity') {
+        toast.success(copied ? 'Opened Perplexity. Prompt prefill may vary.' : 'Opened Perplexity.');
       } else {
         toast.success(copied ? 'Opened AI tool. Context copied as fallback.' : 'Opened AI tool.');
       }

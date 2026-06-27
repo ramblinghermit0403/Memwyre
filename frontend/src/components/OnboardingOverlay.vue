@@ -12,7 +12,7 @@
                   <i class="fa-solid fa-wand-magic-sparkles text-xl text-blue-600"></i>
                 </div>
                 <div class="mt-4 text-center sm:ml-5 sm:mt-0 sm:text-left">
-                  <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-white" id="modal-title">Welcome to MemWyre</h3>
+                  <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-white" id="modal-title">Welcome to Memwyre</h3>
                   <div class="mt-2">
                     <p class="text-sm text-gray-500 dark:text-gray-400">Save your first AI interaction to get started.</p>
                   </div>
@@ -63,7 +63,7 @@
 
                 <div class="flex flex-col items-center justify-center text-center py-10 gap-6">
                   <i class="fa-brands fa-chrome text-7xl text-gray-300 dark:text-gray-600"></i>
-                  <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm">The MemWyre Chrome extension lets you capture web pages, articles, and AI chats directly to your vault.</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm">The Memwyre Chrome extension lets you capture web pages, articles, and AI chats directly to your vault.</p>
                   <a href="#" target="_blank" class="inline-flex justify-center items-center gap-2 rounded-lg bg-white dark:bg-gray-700 px-8 py-3 text-sm font-bold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                     <i class="fa-brands fa-chrome"></i>
                     Add to Chrome

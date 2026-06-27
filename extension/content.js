@@ -434,6 +434,20 @@ function createInjectButton(getInputAreaFn) {
 // ============================================================================
 
 const ADAPTERS = {
+    grok: {
+        name: 'grok',
+        match: (host) => host === 'grok.com' || host === 'www.grok.com',
+        selectors: {
+            inputArea: [
+                'textarea[placeholder*="Grok"]',
+                'textarea[placeholder*="message"]',
+                'textarea',
+                'div[contenteditable="true"][role="textbox"]'
+            ]
+        },
+        async injectSaveButtons() {},
+        async injectContextButton() {}
+    },
     chatgpt: {
         name: 'chatgpt',
         match: (host) => host === 'chatgpt.com' || host === 'www.chatgpt.com',
@@ -995,3 +1009,47 @@ const observer = new MutationObserver((mutations) => {
 
 if (document.body) observer.observe(document.body, { childList: true, subtree: true });
 setTimeout(() => runInjections(), 2000);
+
+// Auto-fill query parameter on load
+async function handleQueryParamOnLoad() {
+    if (!adapter) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q') || urlParams.get('prompt');
+    if (!query) return;
+
+    // We have a query! Let's wait for the input area to be available
+    const maxAttempts = 100;
+    let attempts = 0;
+    
+    const interval = setInterval(() => {
+        const inputArea = queryWithFallback(adapter.selectors.inputArea);
+        if (inputArea) {
+            clearInterval(interval);
+            
+            // Set value
+            if (inputArea.tagName === 'TEXTAREA') {
+                inputArea.value = query;
+            } else {
+                inputArea.textContent = query;
+            }
+            
+            // Trigger input events so the site's React/Vue framework updates its internal state
+            inputArea.dispatchEvent(new Event('input', { bubbles: true }));
+            inputArea.dispatchEvent(new Event('change', { bubbles: true }));
+            
+            // Focus the input area
+            inputArea.focus();
+
+            // Clear the query parameter from the URL to prevent re-triggering on refresh
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({ path: newUrl }, '', newUrl);
+        }
+        
+        attempts++;
+        if (attempts >= maxAttempts) {
+            clearInterval(interval);
+        }
+    }, 100);
+}
+
+handleQueryParamOnLoad();

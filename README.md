@@ -1,10 +1,10 @@
-# MemWyre
+# Memwyre
 
 Your Second Brain, Supercharged.
 
-MemWyre is a universal memory layer for AI—designed to capture, organize, and retrieve your knowledge across tools, conversations, and large language models.
+Memwyre is a universal memory layer for AI—designed to capture, organize, and retrieve your knowledge across tools, conversations, and large language models.
 
-Instead of losing context every time you switch between ChatGPT, Gemini, Claude, editors, or agents, MemWyre becomes the persistent brain that follows you everywhere.
+Instead of losing context every time you switch between ChatGPT, Gemini, Claude, editors, or agents, Memwyre becomes the persistent brain that follows you everywhere.
 
 ## Demo
 
@@ -21,16 +21,16 @@ Users are forced to re-explain themselves endlessly
 Existing tools solve storage or note-taking, but not memory continuity for AI.
 AI forgot. Again.
 
-## What MemWyre Solves
+## What Memwyre Solves
 
-MemWyre introduces a shared, intelligent memory system that sits outside any single LLM and works with all of them.
+Memwyre introduces a shared, intelligent memory system that sits outside any single LLM and works with all of them.
 
 It enables:
 Long-term memory for AI workflows
 Cross-LLM knowledge reuse
 Contextual retrieval grounded in your own data
-A clean separation between thinking (LLMs) and remembering (MemWyre)
-MemWyre doesn’t replace AI tools—it augments them.
+A clean separation between thinking (LLMs) and remembering (Memwyre)
+Memwyre doesn’t replace AI tools—it augments them.
 
 ## Key Features
 ### Unified Memory Vault
@@ -47,7 +47,7 @@ All content is automatically processed, chunked, embedded, and indexed for seman
 
 ### Smart Memory (Not Just Storage)
 
-MemWyre goes beyond dumping files:
+Memwyre goes beyond dumping files:
 Semantic chunking
 Auto-generated embeddings
 Metadata & source tracking
@@ -68,7 +68,7 @@ Works as a standalone search or as context injected into LLM prompts.
 
 ### LLM-Agnostic by Design
 
-MemWyre is not tied to any single model.
+Memwyre is not tied to any single model.
 It integrates via:
 API-based LLM connectors
 MCP servers (for editors & agents)
@@ -80,7 +80,7 @@ Your memory works across ChatGPT, Gemini, Claude, local models, and future agent
 ### Intelligent Memory Inbox
 
 Not all memory should be saved blindly.
-MemWyre introduces an Inbox model
+Memwyre introduces an Inbox model
 Review before committing to long-term memory
 Auto-approve trusted sources
 Manual control where it matters
@@ -313,4 +313,4 @@ MIT License - feel free to use and modify.
 - Built with assistance from Antigravity AI
 - MCP specification by Anthropic
 - Inspired by personal knowledge management best practices
-
+

@@ -19,10 +19,10 @@
           @click="handleAction(action)"
           class="flex items-center gap-3 px-4 py-2 bg-white dark:bg-surface text-gray-700 dark:text-gray-200 rounded-lg shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border border-gray-100 dark:border-gray-700 whitespace-nowrap group"
         >
-          <span class="text-sm font-medium">{{ action.label }}</span>
           <div class="p-2 rounded-full text-gray-700 dark:text-gray-200">
              <component :is="action.icon" class="w-5 h-5" />
           </div>
+          <span class="text-sm font-medium">{{ action.label }}</span>
         </button>
       </div>
     </transition>

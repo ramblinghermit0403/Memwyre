@@ -16,40 +16,56 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: '/image.svg',
-    siteTitle: 'Memwyre',
+    logo: '/logo.png',
+    siteTitle: false,
 
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Features', link: '/features/web-ingestion' },
-      { text: 'Integrations', link: '/integrations/' },
-      { text: 'GitHub', link: 'https://github.com/ramblinghermit0403/Memwyre' },
-      { text: '← Back to App', link: 'https://memwyre.tech/' }
+      { text: '← Dashboard', link: 'https://memwyre.tech/dashboard' },
+      { text: 'Blog', link: 'https://memwyre.tech/blog/' }
     ],
 
-    sidebar: [
-      {
-        text: 'Getting Started',
-        items: [
-          { text: 'Overview', link: '/' },
-          { text: 'Introduction', link: '/introduction' }
-        ]
-      },
-      {
-        text: 'Platform Features',
-        items: [
-          { text: 'Web Page Ingestion', link: '/features/web-ingestion' }
-        ]
-      },
-      {
-        text: 'Integrations',
-        items: [
-          { text: 'Browser Extension', link: '/integrations/browser-extension' },
-          { text: 'IDEs & Agents (MCP)', link: '/integrations/mcp-server' },
-          { text: 'OpenClaw Plugin', link: '/integrations/openclaw-plugin' }
-        ]
-      }
-    ],
+    sidebar: {
+      '/integrations/mcp-server': [
+        {
+          text: 'MCP Server',
+          items: [
+            { text: 'Overview', link: '/integrations/mcp-server' },
+            { text: 'CLI Auto-Installer', link: '/integrations/cli-installer' },
+            { text: 'Claude Desktop', link: '/integrations/mcp-server/claude' },
+            { text: 'Cursor', link: '/integrations/mcp-server/cursor' },
+            { text: 'VS Code', link: '/integrations/mcp-server/vscode' }
+          ]
+        }
+      ],
+      '/integrations/plugins': [
+        {
+          text: 'Plugins',
+          items: [
+            { text: 'OpenClaw Plugin', link: '/integrations/plugins/openclaw' },
+            { text: 'Claude Code Plugin', link: '/integrations/plugins/claude' }
+          ]
+        }
+      ],
+      '/': [
+        {
+          text: 'Getting Started',
+          items: [
+            { text: 'Overview', link: '/' },
+            { text: 'Use Cases', link: '/use-cases' },
+            { text: 'Self-Hosting', link: '/self-hosting' }
+          ]
+        },
+        {
+          text: 'Concepts',
+          items: [
+            { text: 'How It Works', link: '/how-it-works' },
+            { text: 'RAG vs. Memory', link: '/rag-vs-memory' },
+            { text: 'Benchmarks', link: '/benchmarks' },
+            { text: 'Security & Privacy', link: '/security' }
+          ]
+        }
+      ]
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/ramblinghermit0403/Memwyre' }

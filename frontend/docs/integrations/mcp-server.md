@@ -14,23 +14,43 @@ Before you begin, make sure you have:
 - Your **`MEMWYRE_API_KEY`** — generate one from **Settings → API Keys** in the Memwyre web app.
 - The `mcp_server.py` script downloaded to a permanent location on your hard drive.
 
-## Setup
+## Connection Protocols
 
-### Step 1 — Download the Server Script
+Memwyre supports two connection protocols for Model Context Protocol (MCP):
+1. **Remote HTTP Tunneling (Recommended)**: Utilizes the `mcp-remote` utility to tunnel commands to our secure cloud endpoint (`https://server.memwyre.tech/mcp`).
+2. **Local Python Execution**: Runs the `mcp_server.py` file locally on your machine using Python, executing local SQLite vector updates.
 
-Download `mcp_server.py` from your [Memwyre dashboard](https://memwyre.tech) and save it somewhere stable (e.g. `~/memwyre/mcp_server.py`).
+---
 
-### Step 2 — Configure Claude Desktop
+## Setup Configurations
 
-Add the following block to your Claude Desktop config file:
-
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+### 1. Claude Desktop (Remote)
+Add this server block to your Claude configuration file:
+* **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+* **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "memwyre": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://server.memwyre.tech/mcp", "--header", "Authorization:Bearer your_token_here"]
+    }
+  }
+}
+```
+
+### 2. VS Code & Cursor (Remote)
+In your IDE settings panel, register the MCP server as:
+* **Command**: `npx`
+* **Args**: `["-y", "mcp-remote", "https://server.memwyre.tech/mcp", "--header", "Authorization:Bearer your_token_here"]`
+
+### 3. Local Python Script Setup
+If running fully self-hosted, download `mcp_server.py` and invoke it directly:
+```json
+{
+  "mcpServers": {
+    "memwyre-local": {
       "command": "python",
       "args": ["/absolute/path/to/mcp_server.py"],
       "env": {
@@ -41,30 +61,20 @@ Add the following block to your Claude Desktop config file:
 }
 ```
 
-> Replace `/absolute/path/to/mcp_server.py` with the actual path where you saved the file.
-
-### Step 3 — Configure VS Code or Cursor
-
-In your IDE's MCP client settings, add a new server entry pointing to the script:
-
-```bash
-python /absolute/path/to/mcp_server.py
-```
-
-Set `MEMWYRE_API_KEY` in the environment variables section of your IDE's MCP configuration panel.
+---
 
 ## Available Tools
 
-Once connected, your IDE or agent will have access to the following tools. Click on a tool to see its details and parameters:
+Once connected, your IDE or agent will have access to the following tools:
 
 <details>
 <summary><b><code>search_memwyre</code></b> (Primary Search)</summary>
 
-The most important tool for retrieving context. It performs a semantic vector search across your entire vault.
+The most important tool for retrieving context. It performs a semantic search across your entire vault.
 
 - **Parameters:**
   - `query` (Required): Your search terms or question.
-  - `purpose` (Optional): Hint for formatting results. Options: `general`, `code`, or `summary`.
+  - `purpose` (Optional): Hint for context formatting. Options: `general`, `code`, or `summary`.
 </details>
 
 <details>
@@ -76,6 +86,24 @@ Save new information or notes directly into your Memwyre Inbox.
   - `text` (Required): The content you want to save.
   - `tags` (Optional): A list of tags to categorize the memory (e.g. `["project-x", "todo"]`).
   - `source` (Optional): Origin of the memory (defaults to `mcp`).
+</details>
+
+<details>
+<summary><b><code>approve_memory</code></b> (Approve Ingestion)</summary>
+
+Approve a pending memory in the Inbox and begin its ingestion process.
+
+- **Parameters:**
+  - `memory_id` (Required): The ID of the memory, starting with `mem_` (e.g. `mem_123`).
+</details>
+
+<details>
+<summary><b><code>discard_memory</code></b> (Discard from Inbox)</summary>
+
+Discard a pending memory from the Inbox.
+
+- **Parameters:**
+  - `memory_id` (Required): The ID of the memory, starting with `mem_` (e.g. `mem_123`).
 </details>
 
 <details>
@@ -148,10 +176,12 @@ Find memories created within a specific timeframe.
 Retrieve a comprehensive list of all tags currently used across your entire memory vault.
 </details>
 
+---
+
 ## Troubleshooting
 
 **Claude Desktop doesn't show the Memwyre tools.**  
-Check that the `command` path resolves correctly — try `python3` instead of `python` on macOS/Linux.
+Check that the `command` path resolves correctly — try `python3` instead of `python` on macOS/Linux if deploying local scripts, or confirm your `npx` command executes correctly in your shell.
 
 **`MEMWYRE_API_KEY` environment variable not found.**  
-Make sure the key is set inside the `env` block of your config file, not as a system environment variable.
+For local server python deployments, ensure the key is set inside the `env` block of your config file, not as a system environment variable. For remote instances, ensure your Bearer token in the header argument is valid.

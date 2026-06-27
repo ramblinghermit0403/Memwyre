@@ -7,7 +7,7 @@ from sqlalchemy.future import select
 from app.api import deps
 from app.models.user import User
 from app.services.vector_store import vector_store
-from app.services.llm_service import llm_service
+from app.services.llm_service_v2 import llm_service_v2 as llm_service
 from app.services.usage_service import usage_service
 from app.core.guardrails import guardrails
 
@@ -153,12 +153,9 @@ async def suggest_tags(
         try:
             api_key = encryption_service.decrypt(client.encrypted_api_key)
         except:
-             # Log warning but continue, maybe Bedrock works
              pass
     
-    # We no longer strictly raise HTTPException if client is missing, 
-    # because the system might be using Bedrock (Nova Pro) credentials from the environment.
-        
+    from app.services.llm_service_v2 import llm_service_v2 as llm_service
     metadata = await llm_service.extract_metadata(
         content=request.content,
         existing_tags=request.existing_tags,

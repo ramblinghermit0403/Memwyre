@@ -1,10 +1,10 @@
-# MemWyre — Your Digital Brain for AI
+# Memwyre — Your Digital Brain for AI
 
-MemWyre is a **personal knowledge base and memory layer** that works across every AI tool you use — Claude, ChatGPT, Gemini, Copilot, and more.
+Memwyre is a **personal knowledge base and memory layer** that works across every AI tool you use — Claude, ChatGPT, Gemini, Copilot, and more.
 
-## What is MemWyre?
+## What is Memwyre?
 
-MemWyre captures, organizes, and retrieves your knowledge so AI agents can use your personal context to give better answers.
+Memwyre captures, organizes, and retrieves your knowledge so AI agents can use your personal context to give better answers.
 
 ### Key Features
 
@@ -20,7 +20,7 @@ MemWyre captures, organizes, and retrieves your knowledge so AI agents can use y
 
 ## For AI Agents
 
-MemWyre exposes an [MCP Server](https://memwyre.tech/.well-known/mcp.json) with the following tools:
+Memwyre exposes an [MCP Server](https://memwyre.tech/.well-known/mcp.json) with the following tools:
 
 | Tool | Description |
 |---|---|

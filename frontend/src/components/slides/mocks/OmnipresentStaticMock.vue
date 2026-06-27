@@ -27,7 +27,7 @@
               Saved to Memwyre!
             </div>
 
-            <!-- Injected MemWyre Logo (Static Target) -->
+            <!-- Injected Memwyre Logo (Static Target) -->
             <div class="w-10 h-10 rounded-full bg-[#111111] shadow-[0_0_35px_rgba(27,128,84,0.4)] border border-[#1B8054] flex items-center justify-center scale-110">
               <img src="/image.svg" alt="Memwyre" class="w-6 h-6 object-contain" />
             </div>

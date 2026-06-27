@@ -113,13 +113,12 @@
         <!-- Main Document Container - Absolutely Centered -->
         <div class="w-full h-full overflow-y-auto flex justify-center p-4 sm:p-8">
              <div class="w-full max-w-4xl bg-white dark:bg-surface shadow-sm border border-gray-100 dark:border-border rounded-xl min-h-[calc(100vh-8rem)] flex flex-col p-8 sm:p-12 relative h-fit mb-12">
-                <div
+                <MarkdownPreview
                   v-if="isViewMode"
+                  :content="content || ''"
+                  class="cursor-text"
                   @click="handlePreviewClick"
-                  class="max-w-none rounded-2xl border border-gray-200 dark:border-gray-700 bg-gradient-to-b from-gray-50/60 to-white dark:from-surface-2/40 dark:to-surface p-6 md:p-8 cursor-text"
-                >
-                    <MarkdownPreview :content="content || ''" />
-                </div>
+                />
                 <vue-monaco-editor
                   v-else
                   v-model:value="content"
@@ -253,11 +252,13 @@ import ConfirmationModal from '../components/ConfirmationModal.vue';
 import EnrichmentSidebar from '../components/EnrichmentSidebar.vue';
 import LoadingLogo from '@/components/common/LoadingLogo.vue';
 import MarkdownPreview from '../components/common/MarkdownPreview.vue';
+import { useProjectStore } from '../stores/project';
 
 const route = useRoute();
 const router = useRouter();
 const themeStore = useThemeStore();
 const toast = useToast();
+const projectStore = useProjectStore();
 
 const isInboxItem = ref(false);
 
@@ -710,7 +711,7 @@ watch(
       title.value = '';
       content.value = '';
       tags.value = '';
-      selectedProjectId.value = null;
+      selectedProjectId.value = projectStore.currentProjectId || null;
       docMetadata.value = {};
       if (interactionType.value === 'prompt') title.value = 'New Prompt';
       else if (interactionType.value === 'conversation') title.value = 'New Conversation';

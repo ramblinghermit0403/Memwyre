@@ -51,7 +51,7 @@ def dedupe_memory_task(memory_id: int):
     run_async(_dedupe())
 
 @celery_app.task(acks_late=True)
-def extract_chat_facts_task(message: str, user_id: int):
+def extract_chat_facts_task(message: str, user_id: int, project_id: int = None):
     """
     Background task for extracting facts from chat messages.
     This is deferred from the chat agent to reduce response latency.
@@ -59,7 +59,7 @@ def extract_chat_facts_task(message: str, user_id: int):
     print(f"Worker: Starting fact extraction from chat message for user {user_id}")
     
     async def _extract_facts():
-        from app.services.llm_service import llm_service
+        from app.services.llm_service_v2 import llm_service_v2 as llm_service
         from app.core.config import settings
         
         try:
@@ -82,6 +82,7 @@ def extract_chat_facts_task(message: str, user_id: int):
                             object=f_data.get('object'),
                             confidence=f_data.get('confidence', 0.8),
                             source="user-chat",
+                            project_id=project_id,
                         )
                         if f_data.get("valid_from"):
                             try:
@@ -112,8 +113,9 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
     
     async def _ingest():
         try:
-            # Fetch Context Creation Date
+            # Fetch Context Creation Date and Project ID
             reference_date = None
+            project_id = None
             async with AsyncSessionLocal() as db:
                  if doc_type == "memory":
                      result = await db.execute(select(Memory).where(Memory.id == memory_id))
@@ -126,6 +128,7 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
                      
                  if obj:
                      reference_date = obj.created_at
+                     project_id = getattr(obj, "project_id", None)
 
             # Handle Replacement (Delete old chunks)
             if mode == "replace":
@@ -161,18 +164,22 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
                     await db.commit()
 
             # 1. Process Text (CPU bound / API bound)
+            metadata_dict = {
+                "user_id": str(user_id), 
+                f"{doc_type}_id": memory_id, # Stores memory_id or document_id
+                "tags": str(tags) if tags else "", 
+                "source": source,
+                "created_at": str(reference_date) if reference_date else ""
+            }
+            if project_id is not None:
+                metadata_dict["project_id"] = str(project_id)
+
             ids, documents_content, enriched_chunk_texts, metadatas = await ingestion_service.process_text(
                 text=content,
                 document_id=memory_id,
                 title=title,
                 doc_type=doc_type,
-                metadata={
-                    "user_id": str(user_id), 
-                    f"{doc_type}_id": memory_id, # Stores memory_id or document_id
-                    "tags": str(tags) if tags else "", 
-                    "source": source,
-                    "created_at": str(reference_date) if reference_date else ""
-                }
+                metadata=metadata_dict
             )
             
             if ids:
@@ -191,7 +198,7 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
                     return
 
                 # 3. Parallel Fact Extraction (Optimized with Semaphore)
-                from app.services.llm_service import llm_service
+                from app.services.llm_service_v2 import llm_service_v2 as llm_service
                 from app.services.fact_service import fact_service
                 
                 print(f"Worker: Starting parallel fact extraction for {len(documents_content)} chunks...")
@@ -266,18 +273,14 @@ def ingest_memory_task(memory_id: int, user_id: int, content: str, title: str, t
                                  # Let's skip fact extraction for non-memories to be safe/consistent OR assuming poly-morphic.
                                  # The prompt implies full ingestion.
                                  # For safety, I will pass memory_id=None if doc_type != 'memory' unless Fact supports document_id.
-                                 # Let's verify Fact model later. For now, we try passing it if it was doing so before.
-                                 pass 
-
-                                 # Only create facts if it's a memory or if we updated Fact model.
-                                 # Given scope, safer to only do Fact Extraction if doc_type == "memory"
                                  if doc_type == "memory":
                                      await fact_service.create_facts(
                                          facts_data=facts_res,
                                          user_id=u_id,
                                          memory_id=m_id,
                                          chunk_id=c_id,
-                                         db=local_db
+                                         db=local_db,
+                                         project_id=project_id
                                      )
                                      await local_db.commit()
 
@@ -311,7 +314,7 @@ def process_plugin_transcript_task(session_id: str, project_name: str, cwd: str,
     print(f"Worker: Starting transcript processing for session {session_id}")
     
     async def _process_transcript():
-        from app.services.llm_service import llm_service
+        from app.services.llm_service_v2 import llm_service_v2 as llm_service
         from app.core.config import settings
         import json
         
@@ -328,14 +331,26 @@ def process_plugin_transcript_task(session_id: str, project_name: str, cwd: str,
             if signals:
                 print(f"Worker: Extracted {len(signals)} signals from session {session_id}")
                 async with AsyncSessionLocal() as db:
+                    from app.models.project import Project
+                    resolved_project_name = project_name or (os.path.basename(cwd) if cwd else "default")
+                    result_proj = await db.execute(select(Project).where(Project.user_id == user_id, Project.name == resolved_project_name))
+                    proj = result_proj.scalars().first()
+                    if not proj:
+                        proj = Project(user_id=user_id, name=resolved_project_name, description=f"Workspace project for {resolved_project_name}")
+                        db.add(proj)
+                        await db.commit()
+                        await db.refresh(proj)
+                    
+                    project_id = proj.id
+
                     for signal_content in signals:
                         # Create Memory Model
                         # Adding [Plugin] prefix or similar context
-                        full_content = f"[{project_name}] {signal_content}"
+                        full_content = f"[{resolved_project_name}] {signal_content}"
                         new_memory = Memory(
                             user_id=user_id,
                             content=full_content,
-                            project_id=None, # Or resolve project if needed
+                            project_id=project_id,
                         )
                         db.add(new_memory)
                     await db.commit()

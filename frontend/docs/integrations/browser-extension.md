@@ -4,7 +4,16 @@ Connect your second brain directly to your browser. The Memwyre browser extensio
 
 ## Installation
 
-The Memwyre extension is currently distributed as a standalone ZIP file. Install it manually using Chrome or Edge's built-in Developer Mode (no Chrome Web Store account required).
+The Memwyre extension is built on **Manifest V3** and distributed as a standalone ZIP file. Install it manually using Chrome or Edge's built-in Developer Mode (no Chrome Web Store account required).
+
+### Manifest Specifications (Version 1.1.1)
+* **API Version**: Manifest V3
+* **Required Permissions**:
+  * `activeTab`: To read context from the currently open browser tab.
+  * `storage`: To securely cache authentication tokens and settings locally.
+  * `sidePanel`: Exposes the sidebar interface for search and vault discovery.
+  * `contextMenus`: Adds right-click triggers like "Save to Memwyre".
+* **Host Permissions**: Limited to `https://server.memwyre.tech/*` and `https://memwyre.tech/*` to preserve user privacy.
 
 ### Step 1 — Download & Extract
 
@@ -37,7 +46,8 @@ Once installed and authenticated, you get:
 
 | Feature | Description |
 |---|---|
-| **AI Site Integration** | Works out-of-the-box on `chatgpt.com`, `claude.ai`, and `gemini.google.com`. |
+| **AI Site Integration** | Native adapters inject memory into `chatgpt.com`, `claude.ai`, `gemini.google.com`, and **`perplexity.ai`**. |
+| **Turndown Serialization** | Integrates **`turndown.min.js`** to convert HTML page scopes into clean, formatted Markdown on the client-side before sync. |
 | **One-Click Capture** | Highlight any text, right-click, and select **"Save to Memwyre"**. |
 | **Side Panel Search** | Search your vault or review your Inbox directly from the sidebar. |
 

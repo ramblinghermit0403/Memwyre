@@ -52,7 +52,7 @@ async def compose_context(
     memories = result.scalars().all()
 
     if not memories:
-        return ContextComposeResponse(context_text="", suggested_title="MemWyre Context", sources=[])
+        return ContextComposeResponse(context_text="", suggested_title="Memwyre Context", sources=[])
 
     source_rows = []
     chunks: List[str] = []
@@ -92,7 +92,7 @@ async def compose_context(
             break
 
     context_text = "\n\n".join(chunks)
-    suggested_title = memories[0].title or "MemWyre Context"
+    suggested_title = memories[0].title or "Memwyre Context"
 
     return ContextComposeResponse(
         context_text=context_text,

@@ -14,7 +14,7 @@ export const createTour = () => {
             {
                 element: '#tour-welcome',
                 popover: {
-                    title: 'Welcome to MemWyre',
+                    title: 'Welcome to Memwyre',
                     description: 'This is your dashboard home for daily AI work.',
                     side: "bottom",
                     align: 'start'

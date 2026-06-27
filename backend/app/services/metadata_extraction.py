@@ -3,7 +3,7 @@ from sqlalchemy.future import select
 from app.models.memory import Memory
 from app.models.client import AIClient
 from app.core.encryption import encryption_service
-from app.services.llm_service import llm_service
+from app.services.llm_service_v2 import llm_service_v2 as llm_service
 from app.core.config import settings
 import asyncio
 
@@ -73,7 +73,13 @@ class MetadataExtractionService:
             # 3. Get Existing Tags (for context)
             existing_tags = []
             try:
-                result = await db.execute(select(Memory.tags).where(Memory.user_id == user_id).limit(100))
+                project_id = getattr(record, "project_id", None)
+                stmt = select(Memory.tags).where(Memory.user_id == user_id)
+                if project_id is not None:
+                    stmt = stmt.where(Memory.project_id == project_id)
+                else:
+                    stmt = stmt.where(Memory.project_id.is_(None))
+                result = await db.execute(stmt.limit(100))
                 all_mem_tags = result.all()
                 tag_set = set()
                 for m in all_mem_tags:
