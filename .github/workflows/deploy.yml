@@ -127,7 +127,7 @@ jobs:
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --distribution-id E33X26FANBG9K9 \
             --paths "/index.html" "/docs/*" "/image.svg" "/robots.txt" "/sitemap.xml"
 
   # ─────────────────────────────────────────────
