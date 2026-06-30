@@ -193,15 +193,17 @@
             <!-- Premium Video Wrapper -->
             <div class="rounded overflow-hidden shadow-xl border border-gray-200 relative aspect-[16/10] bg-black">
               <video
-                :key="activeTab"
-                ref="activeVideoRef"
+                v-for="(tab, index) in tabs"
+                :key="index"
+                :ref="el => { if (el) videoRefs[index] = el }"
+                v-show="activeTab === index"
                 class="w-full h-full object-cover"
-                autoplay
                 muted
                 playsinline
+                preload="auto"
                 @ended="onVideoEnded"
               >
-                <source :src="tabs[activeTab].videoSrc" type="video/mp4" />
+                <source :src="tab.videoSrc" type="video/mp4" />
               </video>
             </div>
 
@@ -1614,6 +1616,83 @@
     <!-- Section Divider -->
     <div class="w-full h-px bg-gray-300/80 pointer-events-none select-none relative z-30"></div>
 
+    <!-- Blogs Section -->
+    <div id="blog-section" data-theme="light" class="pt-16 pb-16 bg-white relative z-25">
+      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
+        <!-- Badge -->
+        <div class="inline-flex items-center justify-center px-3 py-1 rounded border border-gray-200 text-xs font-semibold text-gray-800 bg-white shadow-sm font-mono tracking-wider mb-6">
+          Blogs
+        </div>
+        
+        <!-- Heading -->
+        <h2 class="hero-serif text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mb-12">
+          Latest from the <span class="italic font-medium">Memwyre <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">Blog</span></span>
+        </h2>
+        
+        <!-- Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 text-left">
+          
+          <!-- Blog Card 1 -->
+          <router-link to="/blog/mcp-persistent-memory" class="group flex flex-col">
+            <div class="w-full aspect-[16/10] rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
+              <img 
+                src="/blog-covers/mcp-persistent-memory.png" 
+                alt="How to Give Claude Desktop Persistent Memory using MCP" 
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                @error="$event.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'"
+              />
+            </div>
+            <h3 class="text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 mt-5 mb-2 font-sans">
+              How to Give Claude Desktop Persistent Memory using MCP
+            </h3>
+            <div class="text-xs text-gray-500 font-sans">
+              June 15, 2026 &nbsp;&bull;&nbsp; MCP Server
+            </div>
+          </router-link>
+
+          <!-- Blog Card 2 -->
+          <router-link to="/blog/vscode-mcp-persistent-memory" class="group flex flex-col">
+            <div class="w-full aspect-[16/10] rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
+              <img 
+                src="/blog-covers/vscode-mcp-persistent-memory.png" 
+                alt="How to Enable Persistent Codebase Memory in VS Code with MCP and Cline" 
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                @error="$event.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'"
+              />
+            </div>
+            <h3 class="text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 mt-5 mb-2 font-sans">
+              How to Enable Persistent Codebase Memory in VS Code with MCP and Cline
+            </h3>
+            <div class="text-xs text-gray-500 font-sans">
+              June 02, 2026 &nbsp;&bull;&nbsp; MCP Server
+            </div>
+          </router-link>
+
+          <!-- Blog Card 3 -->
+          <router-link to="/blog/claude-code-memory-ingestion" class="group flex flex-col">
+            <div class="w-full aspect-[16/10] rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
+              <img 
+                src="/blog-covers/claude-code-memory-ingestion.png" 
+                alt="Building Persistent Terminal Sessions: Claude Code Memory Ingestion" 
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                @error="$event.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'"
+              />
+            </div>
+            <h3 class="text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 mt-5 mb-2 font-sans">
+              Building Persistent Terminal Sessions: Claude Code Memory Ingestion
+            </h3>
+            <div class="text-xs text-gray-500 font-sans">
+              May 18, 2026 &nbsp;&bull;&nbsp; CLI Plugins
+            </div>
+          </router-link>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Divider -->
+    <div class="w-full h-px bg-gray-300/80 pointer-events-none select-none relative z-30"></div>
+
     <div id="faq" data-theme="light" class="pt-6 pb-12 sm:pt-8 sm:pb-16 bg-white relative z-25">
       <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         
@@ -1868,7 +1947,8 @@ const fewerTokensPercent = ref(40);
 // --- Auto-rotating Feature Showcase State & Logic ---
 const activeTab = ref(0);
 const progressWidth = ref(0);
-const activeVideoRef = ref(null);
+const videoRefs = ref([]);
+const activeVideoRef = computed(() => videoRefs.value[activeTab.value]);
 const showcaseContainer = ref(null);
 let showcaseObserver = null;
 const isVisible = ref(false);
@@ -1936,13 +2016,29 @@ const stopProgressLoop = () => {
   progressWidth.value = 0;
 };
 
+const playActiveVideo = (reset = false) => {
+  videoRefs.value.forEach((vid, i) => {
+    if (vid) {
+      if (i === activeTab.value) {
+        if (reset) {
+          vid.currentTime = 0;
+        }
+        if (isVisible.value) {
+          vid.play().catch(() => {});
+        }
+      } else {
+        vid.pause();
+        vid.currentTime = 0;
+      }
+    }
+  });
+};
+
 const onVideoEnded = () => {
   activeTab.value = (activeTab.value + 1) % tabs.value.length;
   nextTick(() => {
     startProgressLoop();
-    if (isVisible.value && activeVideoRef.value) {
-      activeVideoRef.value.play().catch(() => {});
-    }
+    playActiveVideo(true);
   });
 };
 
@@ -1951,9 +2047,7 @@ const selectTab = (index) => {
   progressWidth.value = 0;
   nextTick(() => {
     startProgressLoop();
-    if (isVisible.value && activeVideoRef.value) {
-      activeVideoRef.value.play().catch(() => {});
-    }
+    playActiveVideo(true);
   });
 };
 
@@ -1965,9 +2059,7 @@ const setupShowcaseObserver = () => {
           isVisible.value = true;
           startProgressLoop();
           nextTick(() => {
-            if (activeVideoRef.value) {
-              activeVideoRef.value.play().catch(() => {});
-            }
+            playActiveVideo(false);
           });
         } else {
           isVisible.value = false;

@@ -51,6 +51,10 @@
   font-size: 1.05rem !important;
 }
 
+.VPNavBarTitle .logo {
+  height: 35px !important;
+}
+
 /* ── Sidebar ── */
 .VPSidebarItem .text {
   font-size: 0.875rem !important;

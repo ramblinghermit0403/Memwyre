@@ -89,7 +89,7 @@ watch(() => route.path, () => {
       <div class="flex justify-between items-center h-16">
         <router-link to="/" class="flex items-center group">
           <img src="/logo.png" alt="Memwyre"
-            class="h-[32px] w-auto dark:invert transition-transform duration-300 group-hover:scale-[1.02]" />
+            class="h-[35px] w-auto dark:invert transition-transform duration-300 group-hover:scale-[1.02]" />
         </router-link>
 
         <div class="hidden md:flex items-center gap-1">
@@ -144,7 +144,6 @@ watch(() => route.path, () => {
           <template v-for="link in [
             { name: 'Features', to: '/#features' },
             { name: 'Ecosystem', to: '/#ecosystem' },
-            { name: 'Use Cases', to: '/#use-cases' },
             { name: 'Pricing', to: '/#pricing' }
           ]" :key="link.name">
             <router-link :to="link.to"

@@ -1,5 +1,7 @@
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+
+let shouldRestoreDarkClass = false;
 import { useRoute, useRouter } from 'vue-router';
 import { Marked } from 'marked';
 import mermaid from 'mermaid';
@@ -133,6 +135,10 @@ const loadPost = async (slug) => {
 };
 
 onMounted(() => {
+  shouldRestoreDarkClass = document.documentElement.classList.contains('dark');
+  document.documentElement.classList.remove('dark');
+  document.documentElement.style.colorScheme = 'light';
+
   try {
     mermaid.initialize({
       startOnLoad: false,
@@ -147,6 +153,15 @@ onMounted(() => {
     console.error('Mermaid initialization failed:', initError);
   }
   loadPost(route.params.slug);
+});
+
+onUnmounted(() => {
+  document.documentElement.style.colorScheme = '';
+  if (shouldRestoreDarkClass) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
 });
 
 // Reload post when route parameter slug changes
