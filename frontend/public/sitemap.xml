@@ -37,6 +37,36 @@
   <url>
     <loc>https://memwyre.tech/extension</loc>
   </url>
+  <url>
+    <loc>https://memwyre.tech/what-is-ai-memory</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/ai-memory-benchmark-locomo</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/research</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/memwyre-vs-mem0</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/memwyre-vs-supermemory</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/memwyre-vs-zep</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/chatgpt-memory</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/claude-memory</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/cursor-memory</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/mcp-memory</loc>
+  </url>
 
   <!-- Documentation Pages -->
   <url>
@@ -111,5 +141,8 @@
   </url>
   <url>
     <loc>https://memwyre.tech/blog/openclaw-autonomous-memory</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/blog/state-of-ai-memory-2026</loc>
   </url>
 </urlset>

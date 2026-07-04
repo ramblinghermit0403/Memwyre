@@ -22,7 +22,7 @@
               <div class="text-4xl font-extrabold tracking-tight text-gray-900">$0</div>
               <div class="text-sm text-gray-500 mb-1">forever</div>
             </div>
-            <p class="text-text-secondary mb-6">A great way to get started with building your personal memory vault.</p>
+            <p class="text-text-secondary mb-6">A great way to get started with building your persistent AI memory layer.</p>
 
             <router-link to="/signup"
               class="inline-flex w-full items-center justify-center rounded bg-gray-50 text-gray-900 border border-gray-200 px-4 py-3.5 text-sm font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-[1.02]">
@@ -80,7 +80,7 @@
 
             <router-link to="/signup"
               class="inline-flex w-full items-center justify-center rounded bg-gray-900 text-white px-4 py-3.5 text-sm font-bold shadow-[0_4px_14px_0_rgb(0,0,0,0.2)] hover:bg-gray-800 transition-all duration-300 hover:scale-[1.02]">
-              Start Building Your Brain
+              Get Started with Pro Memory
             </router-link>
 
             <div class="mt-6 flex flex-wrap items-center gap-2">

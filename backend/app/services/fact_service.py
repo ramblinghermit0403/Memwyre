@@ -189,7 +189,7 @@ class FactService:
             """
             
             from app.services.llm_service_v2 import llm_service_v2
-            llm = llm_service_v2._get_openai_llm(temperature=0)
+            llm = llm_service_v2._get_default_llm(temperature=0)
             res = await llm.ainvoke([HumanMessage(content=judge_prompt)])
             
             clean_json = res.content.replace("```json", "").replace("```", "").strip()

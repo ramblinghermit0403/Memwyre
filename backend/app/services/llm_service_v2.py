@@ -3,7 +3,7 @@ import asyncio
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
-
+from langchain_aws import ChatBedrockConverse
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 import google.generativeai as genai
@@ -57,6 +57,22 @@ class LLMService:
         # Default to standard OpenAI for chat
         return ChatOpenAI(api_key=key, model="gpt-4o-mini", temperature=temperature)
         
+    def _get_bedrock_llm(self, temperature: float = 0):
+        # We use ChatBedrockConverse with Moonshot Kimi K2.5
+        # Credentials are automatically loaded from AWS_CONFIG/environment
+        return ChatBedrockConverse(
+            model_id="moonshotai.kimi-k2.5",
+            region_name="us-west-2",
+            temperature=temperature
+        )
+
+    def _get_default_llm(self, temperature: float = 0, target_key: Optional[str] = None):
+        provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()
+        if provider == "bedrock":
+            return self._get_bedrock_llm(temperature=temperature)
+        else:
+            return self._get_openai_llm(temperature=temperature, target_key=target_key)
+        
     async def generate_response(self, query: str, context: List[str], provider: str = "openai", api_key: Optional[str] = None, user_id: Optional[int] = None) -> str:
         # Fallback to defaults
         provider = "openai"
@@ -79,9 +95,9 @@ class LLMService:
             f"Context:\n{context_str}"
         )
         
-        if provider == "openai" or not provider:
+        if provider == "openai" or provider == "bedrock" or not provider:
             try:
-                llm = self._get_openai_llm(temperature=0.7, target_key=api_key)
+                llm = self._get_default_llm(temperature=0.7, target_key=api_key)
                 messages = [
                     SystemMessage(content=system_prompt),
                     HumanMessage(content=query)
@@ -182,8 +198,9 @@ Existing Tags Context:
         # Generate
         text = ""
         
-        if target_key: # OpenAI preferred
-             llm = self._get_openai_llm(temperature=0, target_key=target_key)
+        provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()
+        if target_key or provider == "bedrock":
+             llm = self._get_default_llm(temperature=0, target_key=target_key)
              messages = [
                  SystemMessage(content=system_instruction),
                  HumanMessage(content=user_message)
@@ -243,8 +260,9 @@ Rules:
 
         user_message = f"Chunk Content:\n{content[:2000]}"
         
-        if target_key:
-             llm = self._get_openai_llm(temperature=0, target_key=target_key)
+        provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()
+        if target_key or provider == "bedrock":
+             llm = self._get_default_llm(temperature=0, target_key=target_key)
              messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
              async with self.semaphore:
                  res = await llm.ainvoke(messages)
@@ -330,8 +348,9 @@ Rules:
         user_message = f"Text to Analyze:\n{text[:2000]}"
         
         try:
-            if target_key:
-                llm = self._get_openai_llm(temperature=0, target_key=target_key)
+            provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()
+            if target_key or provider == "bedrock":
+                llm = self._get_default_llm(temperature=0, target_key=target_key)
                 messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
                 async with self.semaphore:
                     res = await llm.ainvoke(messages)
@@ -390,8 +409,9 @@ Rules:
                 text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
                 return text.strip()
 
-            if target_key:
-                llm = self._get_openai_llm(temperature=0.7, target_key=target_key)
+            provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()
+            if target_key or provider == "bedrock":
+                llm = self._get_default_llm(temperature=0.7, target_key=target_key)
                 messages = [SystemMessage(content=system_prompt), HumanMessage(content=conversation_context)]
                 async with self.semaphore:
                     res = await llm.ainvoke(messages)
@@ -439,8 +459,9 @@ Example Output:
             import json
             import re
             
-            if target_key:
-                llm = self._get_openai_llm(temperature=0, target_key=target_key)
+            provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()
+            if target_key or provider == "bedrock":
+                llm = self._get_default_llm(temperature=0, target_key=target_key)
                 messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
                 async with self.semaphore:
                     res = await llm.ainvoke(messages)
@@ -498,7 +519,7 @@ Example:
         user_message = f"NEW FACT:\n{new_fact}\n\nEXISTING FACTS:\n{facts_list_str}"
         
         try:
-            llm = self._get_openai_llm(temperature=0, target_key=target_key)
+            llm = self._get_default_llm(temperature=0, target_key=target_key)
             messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
             async with self.semaphore:
                 res = await llm.ainvoke(messages)

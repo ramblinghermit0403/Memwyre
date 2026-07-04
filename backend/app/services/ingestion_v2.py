@@ -7,7 +7,6 @@ import uuid
 import numpy as np
 import numpy as np
 import os
-from langchain_openai import AzureOpenAIEmbeddings
 import re
 import json
 import asyncio
@@ -36,16 +35,14 @@ class IngestionService:
             api_key = getattr(settings, "AZURE_OPENAI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None) or os.environ.get("AZURE_OPENAI_API_KEY")
             
             if not api_key:
-                print("Warning: Missing Azure OpenAI API Key. Semantic chunking will fallback to standard chunking.")
-                self.embeddings = None
-            else:
-                self.embeddings = AzureOpenAIEmbeddings(
-                    api_key=api_key,
-                    azure_endpoint=getattr(settings, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
-                    api_version=getattr(settings, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
-                    azure_deployment=getattr(settings, "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small"),
-                    dimensions=512
-                )
+                print("Warning: Missing API Key for fallback.")
+            
+            from langchain_aws import BedrockEmbeddings
+            self.embeddings = BedrockEmbeddings(
+                model_id="amazon.titan-embed-text-v2:0",
+                region_name="us-west-2",
+                model_kwargs={"dimensions": 512, "normalize": True}
+            )
         except Exception as e:
             print(f"Warning: Failed to load Azure embeddings: {e}")
             self.embeddings = None

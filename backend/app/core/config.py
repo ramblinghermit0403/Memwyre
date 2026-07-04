@@ -49,6 +49,9 @@ class Settings(BaseSettings):
 
     # YouTube Proxy (for bypassing IP bans on cloud servers)
     YOUTUBE_PROXY_URL: Optional[str] = None
+    
+    # LLM Provider
+    DEFAULT_LLM_PROVIDER: str = "bedrock"
 
     # Database
     # Default to sqlite if not set in .env

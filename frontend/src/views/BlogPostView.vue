@@ -78,6 +78,13 @@ const recentPosts = [
     fullDate: 'April 22, 2026'
   },
   {
+    slug: 'state-of-ai-memory-2026',
+    title: 'State of AI Memory 2026: The Shift from Stateless to Stateful Agent Networks',
+    category: 'Architecture',
+    author: 'Himansh Shivhare',
+    fullDate: 'April 18, 2026'
+  },
+  {
     slug: 'rag-vs-memory-long-term-knowledge',
     title: 'RAG vs. AI Memory: Choosing the Right Approach for Long-Term Knowledge',
     category: 'Architecture',
@@ -290,8 +297,13 @@ watch(() => route.params.slug, (newSlug) => {
 
 /* Force dark text for mermaid node labels in both dark/light mode for readability */
 .markdown-content .mermaid-container text,
-.markdown-content .mermaid-container .node *,
-.markdown-content .mermaid-container .edgeLabel * {
+.markdown-content .mermaid-container text *,
+.markdown-content .mermaid-container .node text,
+.markdown-content .mermaid-container .node span,
+.markdown-content .mermaid-container .node .label,
+.markdown-content .mermaid-container .node .label *,
+.markdown-content .mermaid-container .edgeLabel text,
+.markdown-content .mermaid-container .edgeLabel span {
   color: #111827 !important;
   fill: #111827 !important;
 }

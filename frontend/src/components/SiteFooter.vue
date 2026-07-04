@@ -29,40 +29,65 @@
         <p class="text-xs text-black/30 font-medium">© 2026 Memwyre. Crafted for clarity.</p>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-12 sm:gap-16 w-full md:w-auto">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-12 sm:gap-16 w-full md:w-auto text-left">
         <div class="flex flex-col gap-4">
-          <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Product</h4>
+          <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Core Product</h4>
           <router-link to="/#features"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Features</router-link>
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Features</router-link>
           <router-link to="/pricing"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Pricing</router-link>
-          <router-link to="/#ecosystem"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Ecosystem</router-link>
-        </div>
-        <div class="flex flex-col gap-4">
-          <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Products</h4>
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Pricing</router-link>
+          <router-link to="/use-cases"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Use Cases</router-link>
           <router-link to="/extension"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Chrome Extension</router-link>
-          <router-link to="/mcp"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">MCP</router-link>
-          <router-link to="/plugins"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Plugins</router-link>
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Extension</router-link>
           <router-link to="/personal"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Personal App</router-link>
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Personal App</router-link>
         </div>
         <div class="flex flex-col gap-4">
-          <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support</h4>
+          <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Integrations</h4>
+          <router-link to="/mcp"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">MCP Server</router-link>
+          <router-link to="/plugins"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">IDE Plugins</router-link>
+          <router-link to="/chatgpt-memory"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">ChatGPT</router-link>
+          <router-link to="/claude-memory"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Claude</router-link>
+          <router-link to="/cursor-memory"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Cursor AI</router-link>
+          <router-link to="/mcp-memory"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Universal MCP</router-link>
+        </div>
+        <div class="flex flex-col gap-4">
+          <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Research</h4>
+          <router-link to="/research"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Research Hub</router-link>
+          <router-link to="/ai-memory-benchmark-locomo"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">LoCoMo Report</router-link>
+          <router-link to="/what-is-ai-memory"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">What is Memory?</router-link>
+          <router-link to="/blog"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Blog</router-link>
+        </div>
+        <div class="flex flex-col gap-4">
+          <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Comparisons</h4>
+          <router-link to="/memwyre-vs-mem0"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">vs Mem0</router-link>
+          <router-link to="/memwyre-vs-supermemory"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">vs Supermemory</router-link>
+          <router-link to="/memwyre-vs-zep"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">vs Zep</router-link>
+        </div>
+        <div class="flex flex-col gap-4">
+          <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support &amp; Legal</h4>
+          <a href="/docs/"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Documentation</a>
           <a href="mailto:shivharehimansh@gmail.com"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Contact Us</a>
-          <a href="https://x.com/Memwyre" target="_blank"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Twitter</a>
-        </div>
-        <div class="flex flex-col gap-4">
-          <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Legal</h4>
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Contact Us</a>
           <router-link to="/privacy-policy"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Privacy</router-link>
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Privacy Policy</router-link>
           <router-link to="/terms"
-            class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Terms</router-link>
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Terms of Service</router-link>
         </div>
       </div>
     </div>

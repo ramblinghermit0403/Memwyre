@@ -151,6 +151,10 @@ watch(() => route.path, () => {
               {{ link.name }}
             </router-link>
           </template>
+          <router-link to="/research"
+            class="px-3 py-1.5 text-sm font-normal transition-all duration-200 rounded-md text-black hover:bg-black/5">
+            Research
+          </router-link>
           <router-link to="/blog"
             class="px-3 py-1.5 text-sm font-normal transition-all duration-200 rounded-md text-black hover:bg-black/5">
             Blog

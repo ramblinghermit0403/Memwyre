@@ -16,7 +16,7 @@ class ProfileService:
         if not entity_facts:
             return
             
-        llm = llm_service_v2._get_openai_llm(temperature=0)
+        llm = llm_service_v2._get_default_llm(temperature=0)
         
         # Normalize keys/names (capitalize)
         normalized_entity_facts = {}

@@ -1,19 +1,19 @@
 <template>
-  <div class="relative w-full h-full min-h-[350px] flex items-center justify-center p-4 overflow-visible group scale-75 sm:scale-90 lg:scale-100">
+  <div class="relative w-full h-full min-h-[160px] flex items-center justify-center p-2 overflow-visible group">
     <!-- Unified Large Triple-Icon Row (No Labels) -->
-    <div class="relative z-10 flex items-center justify-center gap-8">
+    <div class="relative z-10 flex items-center justify-center gap-6">
       <!-- Gemini -->
-      <div class="w-32 h-32 rounded-3xl bg-white flex items-center justify-center p-4 shadow-2xl">
+      <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center p-4.5 shadow-lg animate-float-1">
         <img src="@/assets/gemini-color.svg" alt="Gemini" class="w-full h-full object-contain" />
       </div>
 
       <!-- ChatGPT -->
-      <div class="w-32 h-32 rounded-3xl bg-white flex items-center justify-center p-4 shadow-2xl">
+      <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center p-4.5 shadow-lg animate-float-2">
         <img src="@/assets/openai.svg" alt="ChatGPT" class="w-full h-full object-contain" />
       </div>
 
       <!-- Claude -->
-      <div class="w-32 h-32 rounded-3xl bg-white flex items-center justify-center p-4 shadow-2xl">
+      <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center p-4.5 shadow-lg animate-float-3">
         <img src="@/assets/claude-color.svg" alt="Claude" class="w-full h-full object-contain" />
       </div>
     </div>

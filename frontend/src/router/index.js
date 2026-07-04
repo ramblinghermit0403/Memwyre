@@ -186,6 +186,66 @@ export function createAppRouter({ ssr = false } = {}) {
                         name: 'blog-post',
                         component: () => import('../views/BlogPostView.vue'),
                         meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/blog/:slug'] }
+                    },
+                    {
+                        path: 'what-is-ai-memory',
+                        name: 'what-is-ai-memory',
+                        component: () => import('../views/WhatIsAiMemoryView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/what-is-ai-memory'] }
+                    },
+                    {
+                        path: 'ai-memory-benchmark-locomo',
+                        name: 'locomo-benchmark',
+                        component: () => import('../views/LocomoBenchmarkView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/ai-memory-benchmark-locomo'] }
+                    },
+                    {
+                        path: 'research',
+                        name: 'research-hub',
+                        component: () => import('../views/ResearchHubView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/research'] }
+                    },
+                    {
+                        path: 'memwyre-vs-mem0',
+                        name: 'memwyre-vs-mem0',
+                        component: () => import('../views/comparisons/MemwyreVsMem0.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/memwyre-vs-mem0'] }
+                    },
+                    {
+                        path: 'memwyre-vs-supermemory',
+                        name: 'memwyre-vs-supermemory',
+                        component: () => import('../views/comparisons/MemwyreVsSupermemory.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/memwyre-vs-supermemory'] }
+                    },
+                    {
+                        path: 'memwyre-vs-zep',
+                        name: 'memwyre-vs-zep',
+                        component: () => import('../views/comparisons/MemwyreVsZep.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/memwyre-vs-zep'] }
+                    },
+                    {
+                        path: 'chatgpt-memory',
+                        name: 'chatgpt-memory',
+                        component: () => import('../views/integrations/ChatgptMemoryView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/chatgpt-memory'] }
+                    },
+                    {
+                        path: 'claude-memory',
+                        name: 'claude-memory',
+                        component: () => import('../views/integrations/ClaudeMemoryView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/claude-memory'] }
+                    },
+                    {
+                        path: 'cursor-memory',
+                        name: 'cursor-memory',
+                        component: () => import('../views/integrations/CursorMemoryView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/cursor-memory'] }
+                    },
+                    {
+                        path: 'mcp-memory',
+                        name: 'mcp-memory',
+                        component: () => import('../views/integrations/McpMemoryView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/mcp-memory'] }
                     }
                 ]
             },

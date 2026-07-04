@@ -21,25 +21,19 @@ class VectorStore:
         # We use the host provided in settings to connect to the specific index
         self.index = self.pc.Index(host=settings.PINECONE_HOST)
         
-        # Initialize Azure Embeddings Locally
+        # Initialize Embeddings Locally
         try:
-            from langchain_openai import AzureOpenAIEmbeddings
+            from langchain_aws import BedrockEmbeddings
             
-            api_key = getattr(settings, "AZURE_OPENAI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None) or os.environ.get("AZURE_OPENAI_API_KEY")
-            if not api_key:
-                logger.error("Missing Azure OpenAI API Key. Embeddings will fail.")
-            
-            self.embeddings = AzureOpenAIEmbeddings(
-                api_key=api_key,
-                azure_endpoint=getattr(settings, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
-                api_version=getattr(settings, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
-                azure_deployment=getattr(settings, "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small"),
-                dimensions=512
+            self.embeddings = BedrockEmbeddings(
+                model_id="amazon.titan-embed-text-v2:0",
+                region_name="us-west-2",
+                model_kwargs={"dimensions": 512, "normalize": True}
             )
-            logger.info("Initialized Azure OpenAI Embeddings locally.")
+            logger.info("Initialized Bedrock Titan V2 Embeddings locally.")
         except Exception as e:
             import traceback
-            logger.error(f"Failed to load Azure embeddings: {e}")
+            logger.error(f"Failed to load Titan embeddings: {e}")
             logger.error(traceback.format_exc())
             self.embeddings = None
         

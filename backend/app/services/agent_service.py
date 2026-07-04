@@ -292,6 +292,11 @@ class AgentService:
         
         def get_llm(model_name):
             from app.services.llm_service_v2 import llm_service_v2
+            
+            provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()
+            if provider == "bedrock":
+                return llm_service_v2._get_default_llm(temperature=temperature)
+                
             google_key = settings.GEMINI_API_KEY
             
             if "gemini" in model_name.lower():
@@ -313,8 +318,7 @@ class AgentService:
                     )
                 raise ValueError("OpenAI API Key not configured.")
             else:
-                # Default to Azure OpenAI (o4-mini)
-                return llm_service_v2._get_openai_llm(temperature=temperature)
+                return llm_service_v2._get_default_llm(temperature=temperature)
 
         try:
             llm = get_llm(model)
