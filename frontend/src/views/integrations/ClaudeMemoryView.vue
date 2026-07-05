@@ -86,10 +86,7 @@
   "mcpServers": {
     "memwyre-memory": {
       "command": "npx",
-      "args": ["-y", "@memwyre/mcp-server"],
-      "env": {
-        "MEMWYRE_API_KEY": "YOUR_MEMWYRE_KEY"
-      }
+      "args": ["-y", "mcp-remote", "https://server.memwyre.tech/mcp", "--header", "Authorization:Bearer YOUR_MEMWYRE_KEY"]
     }
   }
 }</code></pre>

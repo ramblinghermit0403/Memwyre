@@ -1,5 +1,7 @@
 # Persistent Memory for Autonomous Agents: OpenClaw and Memwyre Integration
 
+> **TL;DR:** Autonomous coding agents (like OpenClaw) lose context across runs, resulting in cost explosion and repeat debugging. By integrating the Memwyre OpenClaw Plugin, you equip the agent with tools (`search_memwyre`, `save_memory`) and a temporal forgetting curve, enabling it to recall past debugging sessions, codebase patterns, and workspace instructions.
+
 Autonomous coding agents are shifting from simple prompt-based assistants to goal-driven systems that execute multiple files, run tests, and self-correct. **OpenClaw** is a prominent open-source autonomous agent framework that excels at executing complex, multi-step workflows.
 
 However, because autonomous agents run in isolated sessions, they suffer from a major limitation: **they operate with short-term amnesia**. Every time you launch a new OpenClaw task, the agent has no memory of past runs, previously discovered codebase patterns, or bugs it already fixed.
@@ -21,13 +23,12 @@ If an agent relies on pure conversational history (short-term memory), its conte
 ### The Memory Solution: Recency-Aware Scoring
 Instead of loading the entire log history, Memwyre enables OpenClaw to run a background tool loop that retrieves only the exact facts relevant to the active sub-task.
 
-To prevent stale context from overwhelming the agent, the plugin ranks memories using a temporal decay function:
-\[ S = \text{Similarity} \times e^{-\lambda t} \]
+To prevent stale context from overwhelming the agent, the plugin ranks memories using a temporal decay function: `S = Similarity · e^(-λt)`
 
 Where:
-- \(\text{Similarity}\) is the cosine similarity between the query embedding and the memory record.
-- \(\lambda\) is the decay rate (regulating how quickly old memories fade).
-- \(t\) is the elapsed time (number of days or sessions since the memory was last updated or accessed).
+- `Similarity` is the cosine similarity between the query embedding and the memory record.
+- `λ` (lambda) is the decay rate (regulating how quickly old memories fade).
+- `t` is the elapsed time (number of days or sessions since the memory was last updated or accessed).
 
 This guarantees that if the agent queries for "database credentials," recent staging updates automatically rank higher than deprecated local docker profiles.
 
@@ -72,17 +73,17 @@ Allows the agent to write a new finding or guideline back to the database.
   "parameters": {
     "type": "object",
     "properties": {
-      "content": {
+      "text": {
         "type": "string",
         "description": "The exact fact or guideline to store."
       },
-      "importance": {
-        "type": "integer",
-        "description": "An importance rating from 1 to 5 (5 being critical, e.g. credentials or syntax rules).",
-        "default": 3
+      "tags": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Optional list of tags."
       }
     },
-    "required": ["content"]
+    "required": ["text"]
   }
 }
 ```

@@ -124,8 +124,7 @@ m.get_all(user_id="alice")</code></pre>
   "mcpServers": {
     "memwyre": {
       "command": "npx",
-      "args": ["-y", "@memwyre/mcp-server"],
-      "env": { "MEMWYRE_API_KEY": "KEY" }
+      "args": ["-y", "mcp-remote", "https://server.memwyre.tech/mcp", "--header", "Authorization:Bearer KEY"]
     }
   }
 }</code></pre>

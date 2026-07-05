@@ -1,5 +1,7 @@
 # How to Give Claude Desktop Persistent Memory using MCP
 
+> **TL;DR:** To give Claude Desktop persistent, cross-session memory, connect Memwyre as a local Model Context Protocol (MCP) server. This article provides a step-by-step setup guide for configuring `claude_desktop_config.json` on Windows/macOS, enabling Claude to automatically save, search, and recall your project preferences, files, and debugging context across chats.
+
 Model Context Protocol (MCP) is a standard protocol created by Anthropic that allows local LLMs and AI clients like Claude Desktop to connect directly to external tools, databases, and APIs. However, out of the box, Claude Desktop remains **stateless**. The moment you close your active chat window or start a new thread, Claude forgets all the context, architecture details, formatting guidelines, and debugging notes from yesterday.
 
 By connecting **Memwyre** as a secure MCP server, you can give Claude Desktop a persistent, self-improving memory layer that compiles and compounds context across all your chat sessions.
@@ -83,7 +85,7 @@ If the file does not exist, create a new text file named `claude_desktop_config.
 3. Create a new token and copy it to your clipboard.
 
 ### 3. Add the Memwyre Server Connection
-Open your configuration file in an editor and configure the `mcpServers` parameter. Add the `@memwyre/mcp-server` package using `npx`:
+Open your configuration file in an editor and configure the `mcpServers` parameter. Add the Memwyre server using `npx mcp-remote`:
 
 ```json
 {
@@ -92,11 +94,11 @@ Open your configuration file in an editor and configure the `mcpServers` paramet
       "command": "npx",
       "args": [
         "-y",
-        "@memwyre/mcp-server"
-      ],
-      "env": {
-        "MEMWYRE_API_KEY": "YOUR_MEMWYRE_API_TOKEN"
-      }
+        "mcp-remote",
+        "https://server.memwyre.tech/mcp",
+        "--header",
+        "Authorization:Bearer YOUR_MEMWYRE_API_TOKEN"
+      ]
     }
   }
 }

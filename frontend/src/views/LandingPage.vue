@@ -3,12 +3,12 @@
     class="force-light relative min-h-[100svh] bg-white text-text-primary transition-colors duration-300 font-sans overflow-x-hidden selection:bg-primary selection:text-white *:selection:bg-primary *:selection:text-white">
 
     <!-- Global Vertical Grid Lines -->
-    <div class="absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-300/80 pointer-events-none select-none z-30"></div>
-    <div class="absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-300/80 pointer-events-none select-none z-30"></div>
+    <div class="hidden sm:block absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-300/80 pointer-events-none select-none z-30"></div>
+    <div class="hidden sm:block absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-300/80 pointer-events-none select-none z-30"></div>
 
     <!-- Hero Section -->
     <div data-theme="light"
-      class="hero-wash relative z-10 pt-8 sm:pt-10 lg:pt-12 pb-16 sm:pb-20 overflow-hidden min-h-[calc(100svh-88px)] flex items-center">
+      class="hero-wash relative z-10 pt-16 sm:pt-24 lg:pt-12 pb-10 sm:pb-20 overflow-hidden min-h-[calc(100svh-88px)] flex items-start md:items-center">
 
       <div class="absolute inset-0 z-0 hero-grain pointer-events-none"></div>
 
@@ -24,27 +24,27 @@
         <div class="absolute bottom-[90px] left-0 right-0 h-px bg-gray-300/80"></div>
 
         <!-- Intersecting crosshairs at boundary coordinates -->
-        <div class="absolute top-[88px] left-6 sm:left-8 lg:left-[calc(50%-640px)] w-4 h-4 -translate-x-1/2 -translate-y-1/2">
+        <div class="hidden sm:block absolute top-[88px] left-6 sm:left-8 lg:left-[calc(50%-640px)] w-4 h-4 -translate-x-1/2 -translate-y-1/2">
           <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
           <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
         </div>
-        <div class="absolute top-[88px] right-6 sm:right-8 lg:right-[calc(50%-640px)] w-4 h-4 translate-x-1/2 -translate-y-1/2">
+        <div class="hidden sm:block absolute top-[88px] right-6 sm:right-8 lg:right-[calc(50%-640px)] w-4 h-4 translate-x-1/2 -translate-y-1/2">
           <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
           <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
         </div>
-        <div class="absolute top-[55%] left-6 sm:left-8 lg:left-[calc(50%-640px)] w-4 h-4 -translate-x-1/2 -translate-y-1/2">
+        <div class="hidden sm:block absolute top-[55%] left-6 sm:left-8 lg:left-[calc(50%-640px)] w-4 h-4 -translate-x-1/2 -translate-y-1/2">
           <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
           <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
         </div>
-        <div class="absolute top-[55%] right-6 sm:right-8 lg:right-[calc(50%-640px)] w-4 h-4 translate-x-1/2 -translate-y-1/2">
+        <div class="hidden sm:block absolute top-[55%] right-6 sm:right-8 lg:right-[calc(50%-640px)] w-4 h-4 translate-x-1/2 -translate-y-1/2">
           <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
           <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
         </div>
-        <div class="absolute bottom-[90px] left-6 sm:left-8 lg:left-[calc(50%-640px)] w-4 h-4 -translate-x-1/2 -translate-y-1/2">
+        <div class="hidden sm:block absolute bottom-[90px] left-6 sm:left-8 lg:left-[calc(50%-640px)] w-4 h-4 -translate-x-1/2 -translate-y-1/2">
           <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
           <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
         </div>
-        <div class="absolute bottom-[90px] right-6 sm:right-8 lg:right-[calc(50%-640px)] w-4 h-4 translate-x-1/2 -translate-y-1/2">
+        <div class="hidden sm:block absolute bottom-[90px] right-6 sm:right-8 lg:right-[calc(50%-640px)] w-4 h-4 translate-x-1/2 -translate-y-1/2">
           <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
           <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
         </div>
@@ -64,7 +64,7 @@
       <div
         class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10 w-full">
 
-        <div class="lg:col-span-6 text-left pt-20 sm:pt-28 lg:pt-0 lg:mt-[20px] lg:ml-10 px-0 sm:px-4">
+        <div class="lg:col-span-6 text-left pt-16 sm:pt-28 lg:pt-0 lg:mt-[20px] lg:ml-10 px-0 sm:px-4">
 
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold mb-6 border border-emerald-200 animate-fade-in-up">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -72,7 +72,7 @@
           </div>
 
           <h1
-            class="animate-fade-in-up hero-serif text-5xl sm:text-6xl lg:text-[70px] tracking-[-0.02em] leading-[1.1] lg:leading-[78px] text-[rgb(1,1,16)] max-w-4xl">
+            class="animate-fade-in-up hero-serif text-4xl sm:text-6xl lg:text-[70px] tracking-[-0.02em] leading-[1.1] lg:leading-[78px] text-[rgb(1,1,16)] max-w-4xl">
             Your AI should <br class="hidden md:block" />
             <span class="block text-[rgb(1,1,16)] italic font-medium">remember <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">everything.</span></span>
           </h1>
@@ -129,43 +129,43 @@
     
 
     <!-- Why AI Forgets Problem Framing Section -->
-    <div id="problem-framing" data-theme="light" class="relative z-20 pt-16 pb-16 bg-white">
+    <div id="problem-framing" data-theme="light" class="relative z-20 pt-10 pb-10 md:pt-16 md:pb-16 bg-white">
       <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
           <div>/ THE PROBLEM</div>
           <div>[1/9]</div>
         </div>
-        <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-300/80 pointer-events-none select-none mb-12"></div>
+        <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-300/80 pointer-events-none select-none mb-6 md:mb-12"></div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           <div class="lg:col-span-5 text-left">
-            <h2 class="hero-serif text-4xl sm:text-5xl lg:text-[56px] tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mb-6">
+            <h2 class="hero-serif text-3xl sm:text-5xl lg:text-[56px] tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mb-4 md:mb-6">
               Why your <span class="italic font-medium">AI has <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">amnesia.</span></span>
             </h2>
-            <p class="text-base text-gray-500 leading-relaxed font-normal mb-8">
+            <p class="text-base text-gray-500 leading-relaxed font-normal mb-6 md:mb-8">
               Every time you open a new chat tab, you start from zero. Your AI forgets your style guides, database schemas, API keys, and coding conventions.
             </p>
           </div>
-          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="p-6 bg-white border border-dashed border-gray-300 shadow-sm rounded text-left">
+          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+            <div class="p-5 md:p-6 bg-white border border-dashed border-gray-300 shadow-sm rounded text-left">
               <div class="text-[#D97757] font-bold text-lg mb-2">The Copy-Paste Tax</div>
               <p class="text-xs text-gray-500 leading-relaxed font-normal">
                 Developers waste hours pasting markdown guidelines and code context over and over again to keep tools aligned.
               </p>
             </div>
-            <div class="p-6 bg-white border border-dashed border-gray-300 shadow-sm rounded text-left">
+            <div class="p-5 md:p-6 bg-white border border-dashed border-gray-300 shadow-sm rounded text-left">
               <div class="text-[#D97757] font-bold text-lg mb-2">Context Window Noise</div>
               <p class="text-xs text-gray-500 leading-relaxed font-normal">
                 Feeding massive files into prompts is expensive, introduces latency, and dilutes the model's attention, causing hallucinations.
               </p>
             </div>
-            <div class="p-6 bg-white border border-dashed border-gray-300 shadow-sm rounded text-left">
+            <div class="p-5 md:p-6 bg-white border border-dashed border-gray-300 shadow-sm rounded text-left">
               <div class="text-[#D97757] font-bold text-lg mb-2">Stateless Silos</div>
               <p class="text-xs text-gray-500 leading-relaxed font-normal">
                 Your browser chat doesn't talk to your IDE, and your terminal agent doesn't know what you discussed 10 minutes ago.
               </p>
             </div>
-            <div class="p-6 bg-white border border-dashed border-gray-300 shadow-sm rounded text-left">
+            <div class="p-5 md:p-6 bg-white border border-dashed border-gray-300 shadow-sm rounded text-left">
               <div class="text-[#D97757] font-bold text-lg mb-2">Memwyre's Shared Layer</div>
               <p class="text-xs text-gray-500 leading-relaxed font-normal">
                 A single memory layer securely sits between you and all your AI models, retrieving only the exact facts needed.
@@ -181,16 +181,16 @@
 
 
     <!-- Works with every LLM & Tool Section -->
-    <div id="llm-compatibility" data-theme="light" class="relative z-20 pt-16 pb-0 bg-white">
+    <div id="llm-compatibility" data-theme="light" class="relative z-20 pt-10 pb-0 md:pt-16 bg-white">
       <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
           <div>/ PLATFORM COMPATIBILITY</div>
           <div>[2/9]</div>
         </div>
-        <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-300/80 pointer-events-none select-none mb-12"></div>
+        <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-300/80 pointer-events-none select-none mb-6 md:mb-12"></div>
 
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="hero-serif text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mb-6">
+        <div class="text-center max-w-3xl mx-auto mb-8 md:mb-16">
+          <h2 class="hero-serif text-2xl sm:text-4xl md:text-5xl tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mb-4 md:mb-6">
             One memory layer. <span class="italic font-medium">Every tool <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">connected.</span></span>
           </h2>
           <p class="text-base text-gray-500 leading-relaxed font-normal">
@@ -199,47 +199,47 @@
         </div>
 
         <!-- Horizontal Logo Grid -->
-        <div class="-mx-6 sm:-mx-8 lg:-mx-12 border-t border-b border-gray-300/80 bg-white relative z-20 mb-16">
-          <div class="grid grid-cols-7 divide-x divide-gray-300/80">
+        <div class="-mx-6 sm:-mx-8 lg:-mx-12 border-t border-b border-gray-300/80 bg-white relative z-20 mb-8 md:mb-16">
+          <div class="flex overflow-x-auto no-scrollbar md:grid md:grid-cols-7 divide-x divide-gray-300/80 scrollbar-none snap-x snap-mandatory">
             
             <!-- Claude Desktop -->
-            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer">
+            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer w-[110px] md:w-auto shrink-0 md:shrink snap-center">
               <img src="@/assets/claude-color.svg" alt="Claude" class="w-6 h-6 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
               <span class="text-[9px] sm:text-xs font-semibold text-gray-700 group-hover:text-gray-900 transition-colors text-center truncate w-full">Claude Desktop</span>
             </div>
 
             <!-- VS Code -->
-            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer">
+            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer w-[110px] md:w-auto shrink-0 md:shrink snap-center">
               <img src="@/assets/vscode.svg" alt="VS Code" class="w-6 h-6 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
               <span class="text-[9px] sm:text-xs font-semibold text-gray-700 group-hover:text-gray-900 transition-colors text-center truncate w-full">VS Code</span>
             </div>
 
             <!-- Windsurf -->
-            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer">
+            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer w-[110px] md:w-auto shrink-0 md:shrink snap-center">
               <img src="@/assets/windsurf.ico" alt="Windsurf" class="w-6 h-6 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
               <span class="text-[9px] sm:text-xs font-semibold text-gray-700 group-hover:text-gray-900 transition-colors text-center truncate w-full">Windsurf</span>
             </div>
 
             <!-- OpenClaw -->
-            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer">
+            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer w-[110px] md:w-auto shrink-0 md:shrink snap-center">
               <img src="@/assets/openclaw-color.svg" alt="OpenClaw" class="w-6 h-6 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
               <span class="text-[9px] sm:text-xs font-semibold text-gray-700 group-hover:text-gray-900 transition-colors text-center truncate w-full">OpenClaw</span>
             </div>
 
             <!-- Claude Code -->
-            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer">
+            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer w-[110px] md:w-auto shrink-0 md:shrink snap-center">
               <img src="@/assets/claudecode-color.svg" alt="Claude Code" class="w-6 h-6 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
               <span class="text-[9px] sm:text-xs font-semibold text-gray-700 group-hover:text-gray-900 transition-colors text-center truncate w-full">Claude Code</span>
             </div>
 
             <!-- ChatGPT -->
-            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer">
+            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer w-[110px] md:w-auto shrink-0 md:shrink snap-center">
               <img src="@/assets/openai.svg" alt="ChatGPT" class="w-6 h-6 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
               <span class="text-[9px] sm:text-xs font-semibold text-gray-700 group-hover:text-gray-900 transition-colors text-center truncate w-full">ChatGPT</span>
             </div>
 
             <!-- Cursor AI -->
-            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer">
+            <div class="flex flex-col items-center justify-center gap-2 sm:gap-3 p-3 sm:p-5 bg-white min-h-[90px] sm:min-h-[100px] transition-all duration-300 hover:bg-gray-50/50 group cursor-pointer w-[110px] md:w-auto shrink-0 md:shrink snap-center">
               <img src="@/assets/cursor_CUBE_2D_LIGHT.svg" alt="Cursor AI" class="w-6 h-6 sm:w-8 sm:h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
               <span class="text-[9px] sm:text-xs font-semibold text-gray-700 group-hover:text-gray-900 transition-colors text-center truncate w-full">Cursor AI</span>
             </div>
@@ -252,7 +252,7 @@
           <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-300/80">
             
             <!-- Column 1: IDE Integration -->
-            <div class="p-6 sm:p-8 flex flex-col justify-between min-h-[440px] text-left">
+            <div class="p-5 sm:p-8 flex flex-col justify-between min-h-[380px] md:min-h-[440px] text-left">
               <div>
                 <div class="text-xs font-bold text-[#D97757] tracking-widest uppercase mb-3 font-mono">01 / IDE INTEGRATION</div>
                 <h3 class="font-display text-xl font-extrabold text-gray-900 mb-3 tracking-tight">Native IDE Memory</h3>
@@ -260,15 +260,15 @@
                   Connect your IDE directly via MCP. Past bug fixes, configuration choices, and API schemas become instantly searchable context inside Cursor, VS Code, or Windsurf.
                 </p>
               </div>
-              <div class="mt-6 -mx-6 sm:-mx-8 -mb-6 sm:-mb-8 flex justify-center h-56 overflow-hidden border-t border-gray-200/80 bg-gray-50 relative">
-                <div class="scale-[0.7] origin-top pt-4 w-full flex justify-center">
+              <div class="mt-6 -mx-6 sm:-mx-8 -mb-6 sm:-mb-8 flex justify-center h-44 md:h-56 overflow-hidden border-t border-gray-200/80 bg-gray-50 relative">
+                <div class="scale-[0.6] md:scale-[0.7] origin-top pt-4 w-full flex justify-center">
                   <EngineerMinAnimation />
                 </div>
               </div>
             </div>
             
             <!-- Column 2: Terminal Agents -->
-            <div class="p-6 sm:p-8 flex flex-col justify-between min-h-[440px] text-left">
+            <div class="p-5 sm:p-8 flex flex-col justify-between min-h-[380px] md:min-h-[440px] text-left">
               <div>
                 <div class="text-xs font-bold text-[#D97757] tracking-widest uppercase mb-3 font-mono">02 / TERMINAL AGENTS</div>
                 <h3 class="font-display text-xl font-extrabold text-gray-900 mb-3 tracking-tight">DevOps &amp; Code Agents</h3>
@@ -276,15 +276,15 @@
                   Empower terminal tools like Claude Code and OpenClaw. Agents save debug results and project conventions, building cumulative operational memory.
                 </p>
               </div>
-              <div class="mt-6 -mx-6 sm:-mx-8 -mb-6 sm:-mb-8 flex justify-center h-56 overflow-hidden border-t border-gray-200/80 bg-gray-50 relative">
-                <div class="scale-[0.7] origin-top pt-4 w-full flex justify-center">
+              <div class="mt-6 -mx-6 sm:-mx-8 -mb-6 sm:-mb-8 flex justify-center h-44 md:h-56 overflow-hidden border-t border-gray-200/80 bg-gray-50 relative">
+                <div class="scale-[0.6] md:scale-[0.7] origin-top pt-4 w-full flex justify-center">
                   <DevOpsMinAnimation />
                 </div>
               </div>
             </div>
 
             <!-- Column 3: Multi-Model -->
-            <div class="p-6 sm:p-8 flex flex-col justify-between min-h-[440px] text-left">
+            <div class="p-5 sm:p-8 flex flex-col justify-between min-h-[380px] md:min-h-[440px] text-left">
               <div>
                 <div class="text-xs font-bold text-[#D97757] tracking-widest uppercase mb-3 font-mono">03 / MULTI-MODEL</div>
                 <h3 class="font-display text-xl font-extrabold text-gray-900 mb-3 tracking-tight">Works With Every LLM</h3>
@@ -292,8 +292,8 @@
                   One shared memory layer across Claude, ChatGPT, and Gemini. If you explain a code pattern in ChatGPT, your Cursor agent retrieves it instantly when you ask.
                 </p>
               </div>
-              <div class="mt-6 -mx-6 sm:-mx-8 -mb-6 sm:-mb-8 flex justify-center h-56 overflow-hidden border-t border-gray-200/80 bg-gray-50 relative">
-                <div class="scale-100 origin-top pt-4 w-full flex justify-center">
+              <div class="mt-6 -mx-6 sm:-mx-8 -mb-6 sm:-mb-8 flex justify-center h-44 md:h-56 overflow-hidden border-t border-gray-200/80 bg-gray-50 relative">
+                <div class="scale-[0.8] md:scale-100 origin-top pt-4 w-full flex justify-center">
                   <ScatteredWorkMinAnimation />
                 </div>
               </div>
@@ -308,7 +308,7 @@
     <div class="w-full h-px bg-gray-300/80 pointer-events-none select-none relative z-30"></div>
 
 <!-- Comparison Section (WHITE) -->
-    <div id="comparison" data-theme="light" class="pt-6 pb-0 bg-white relative z-25">
+    <div id="comparison" data-theme="light" class="pt-6 md:pt-10 pb-0 bg-white relative z-25">
       <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         
         <!-- Section Header breadcrumb and details (Supermemory Style) -->
@@ -318,12 +318,12 @@
         </div>
 
         <!-- Divider Line below Breadcrumb -->
-        <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-300/80 pointer-events-none select-none mb-6 sm:mb-8"></div>
+        <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-300/80 pointer-events-none select-none mb-4 sm:mb-8"></div>
 
         <!-- Header Row (Title and Description) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-10 sm:mb-12 items-start lg:items-center">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 mb-6 sm:mb-12 items-start lg:items-center">
           <div>
-            <h2 class="hero-serif text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)]">
+            <h2 class="hero-serif text-2xl sm:text-4xl md:text-5xl tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)]">
               Context for humans, <span class="italic font-medium">not just <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">databases.</span></span>
             </h2>
           </div>
@@ -335,7 +335,7 @@
         </div>
 
         <!-- Comparison Table Container -->
-        <div class="w-auto -mx-6 sm:-mx-8 lg:-mx-12 overflow-x-auto border-t border-b sm:border-l sm:border-r border-gray-300/80 bg-white relative z-20">
+        <div class="hidden md:block w-auto -mx-6 sm:-mx-8 lg:-mx-12 overflow-x-auto border-t border-b sm:border-l sm:border-r border-gray-300/80 bg-white relative z-20">
           <table class="w-full min-w-[800px] border-collapse text-left">
             <thead>
               <tr class="border-b border-gray-300/80">
@@ -571,8 +571,100 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Mobile Comparison Table (visible on mobile only) -->
+        <div class="block md:hidden mt-6 -mx-1 overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="border-b border-gray-200">
+                <th class="py-3 pr-3 text-[10px] uppercase font-bold tracking-wider text-gray-400 font-mono w-[44%]">Feature</th>
+                <th class="py-3 px-2 text-center w-[19%] bg-[#D97757]/8 relative">
+                  <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#D97757] text-white text-[7px] font-extrabold tracking-widest px-2 py-0.5 rounded-full uppercase whitespace-nowrap">BEST</div>
+                  <img src="/logo.png" alt="Memwyre" class="h-4 w-auto mx-auto mt-1" />
+                </th>
+                <th class="py-3 px-2 text-center text-gray-500 font-bold w-[19%]">Mem0</th>
+                <th class="py-3 px-2 text-center text-gray-500 font-bold w-[18%]">Zep</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <!-- Primary Customer -->
+              <tr>
+                <td class="py-3 pr-3 text-gray-700 font-medium">Consumer / Dev Focus</td>
+                <td class="py-3 px-2 text-center bg-[#D97757]/8">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold">✓</span>
+                </td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+              </tr>
+              <!-- Core Product Interface -->
+              <tr>
+                <td class="py-3 pr-3 text-gray-700 font-medium">Desktop / Browser Interface</td>
+                <td class="py-3 px-2 text-center bg-[#D97757]/8">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold">✓</span>
+                </td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+              </tr>
+              <!-- Setup < 5 Minutes -->
+              <tr>
+                <td class="py-3 pr-3 text-gray-700 font-medium">Setup &lt; 5 Minutes</td>
+                <td class="py-3 px-2 text-center bg-[#D97757]/8">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold">✓</span>
+                </td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+              </tr>
+              <!-- Cross-Tool Memory Sync -->
+              <tr>
+                <td class="py-3 pr-3 text-gray-700 font-medium">Cross-Tool Memory Sync</td>
+                <td class="py-3 px-2 text-center bg-[#D97757]/8">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold">✓</span>
+                </td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+              </tr>
+              <!-- Workspace Connectors -->
+              <tr>
+                <td class="py-3 pr-3 text-gray-700 font-medium">Workspace Connectors</td>
+                <td class="py-3 px-2 text-center bg-[#D97757]/8">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold">✓</span>
+                </td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+              </tr>
+              <!-- MCP Client Support -->
+              <tr>
+                <td class="py-3 pr-3 text-gray-700 font-medium">MCP Client Support</td>
+                <td class="py-3 px-2 text-center bg-[#D97757]/8">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold">✓</span>
+                </td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+              </tr>
+              <!-- Agent CLI Plugins -->
+              <tr>
+                <td class="py-3 pr-3 text-gray-700 font-medium">Agent CLI Plugins</td>
+                <td class="py-3 px-2 text-center bg-[#D97757]/8">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold">✓</span>
+                </td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+              </tr>
+              <!-- Self-Hostable -->
+              <tr>
+                <td class="py-3 pr-3 text-gray-700 font-medium">Self-Hostable</td>
+                <td class="py-3 px-2 text-center bg-[#D97757]/8">
+                  <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#D97757] text-white text-[10px] font-bold">✓</span>
+                </td>
+                <td class="py-3 px-2 text-center text-gray-600 text-base font-bold">✓</td>
+                <td class="py-3 px-2 text-center text-gray-300 text-base font-bold">✗</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
+
     <!-- Section Divider -->
     <div class="w-full h-px bg-gray-300/80 pointer-events-none select-none relative z-30"></div>
 
@@ -595,7 +687,7 @@
             <!-- Divider Line below Breadcrumb -->
             <div class="-mx-6 sm:-mx-8 lg:-mx-12 lg:-mr-0 h-px bg-gray-300/80 pointer-events-none select-none mb-8"></div>
 
-            <h2 class="hero-serif text-4xl sm:text-5xl lg:text-[56px] tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mb-6 px-1">
+            <h2 class="hero-serif text-3xl sm:text-5xl lg:text-[56px] tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mb-4 md:mb-6 px-1">
               All the tools to <span class="italic font-medium">make AI <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">remember.</span></span>
             </h2>
             <p class="text-base text-gray-500 leading-relaxed font-normal mb-8 px-1">
@@ -1075,7 +1167,7 @@
                 <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
               </div>
 
-              <div class="p-4 sm:p-8 relative w-full bg-white border border-gray-250 rounded shadow-sm">
+              <div class="hidden md:block p-4 sm:p-8 relative w-full bg-white border border-gray-250 rounded shadow-sm">
                 <!-- Horizontal dashed gridlines -->
                 <div class="absolute inset-x-8 sm:inset-x-12 top-4 bottom-20 flex flex-col justify-between pointer-events-none z-0">
                   <div class="w-full border-t border-dashed border-gray-200"></div>
@@ -1210,6 +1302,100 @@
                 </div>
 
               </div>
+
+              <!-- Mobile horizontal chart version (visible on mobile only) -->
+              <div class="block md:hidden p-5 relative w-full bg-white border border-gray-250 rounded shadow-sm text-left">
+                <h4 class="text-xs uppercase font-bold tracking-wider text-gray-400 font-mono mb-4">/ Accuracy Metrics</h4>
+                
+                <div class="space-y-4">
+                  <!-- Category 1: Single-hop -->
+                  <div class="space-y-1.5">
+                    <div class="flex justify-between items-center text-xs font-semibold text-gray-800">
+                      <span>Single-hop</span>
+                      <span class="font-mono text-[10px] text-gray-400">Old: 53.0% / <span class="text-[#D97757] font-bold">New: 80.0%</span></span>
+                    </div>
+                    <div class="space-y-1">
+                      <!-- Old Bar -->
+                      <div class="w-full bg-gray-150 h-2.5 rounded overflow-hidden relative">
+                        <div class="bg-zinc-300 h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '53.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.1) 6px, rgba(0, 0, 0, 0.1) 7px);"></div>
+                      </div>
+                      <!-- New Bar -->
+                      <div class="w-full bg-[#D97757]/10 h-2.5 rounded overflow-hidden relative">
+                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '80.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Category 2: Multi-hop -->
+                  <div class="space-y-1.5">
+                    <div class="flex justify-between items-center text-xs font-semibold text-gray-800">
+                      <span>Multi-hop</span>
+                      <span class="font-mono text-[10px] text-gray-400">Old: 24.0% / <span class="text-[#D97757] font-bold">New: 45.0%</span></span>
+                    </div>
+                    <div class="space-y-1">
+                      <!-- Old Bar -->
+                      <div class="w-full bg-gray-150 h-2.5 rounded overflow-hidden relative">
+                        <div class="bg-zinc-300 h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '24.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.1) 6px, rgba(0, 0, 0, 0.1) 7px);"></div>
+                      </div>
+                      <!-- New Bar -->
+                      <div class="w-full bg-[#D97757]/10 h-2.5 rounded overflow-hidden relative">
+                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '45.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Category 3: Open-domain -->
+                  <div class="space-y-1.5">
+                    <div class="flex justify-between items-center text-xs font-semibold text-gray-800">
+                      <span>Open-domain</span>
+                      <span class="font-mono text-[10px] text-gray-400">Old: 50.0% / <span class="text-[#D97757] font-bold">New: 76.0%</span></span>
+                    </div>
+                    <div class="space-y-1">
+                      <!-- Old Bar -->
+                      <div class="w-full bg-gray-150 h-2.5 rounded overflow-hidden relative">
+                        <div class="bg-zinc-300 h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '50.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.1) 6px, rgba(0, 0, 0, 0.1) 7px);"></div>
+                      </div>
+                      <!-- New Bar -->
+                      <div class="w-full bg-[#D97757]/10 h-2.5 rounded overflow-hidden relative">
+                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '76.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Category 4: Temporal -->
+                  <div class="space-y-1.5">
+                    <div class="flex justify-between items-center text-xs font-semibold text-gray-800">
+                      <span>Temporal</span>
+                      <span class="font-mono text-[10px] text-gray-400">Old: 48.0% / <span class="text-[#D97757] font-bold">New: 74.0%</span></span>
+                    </div>
+                    <div class="space-y-1">
+                      <!-- Old Bar -->
+                      <div class="w-full bg-gray-150 h-2.5 rounded overflow-hidden relative">
+                        <div class="bg-zinc-300 h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '48.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.1) 6px, rgba(0, 0, 0, 0.1) 7px);"></div>
+                      </div>
+                      <!-- New Bar -->
+                      <div class="w-full bg-[#D97757]/10 h-2.5 rounded overflow-hidden relative">
+                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '74.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mobile Legend -->
+                <div class="flex justify-between items-center mt-6 text-[10px] font-bold uppercase tracking-wider text-gray-400 font-mono">
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 bg-zinc-300 rounded-sm"></span>
+                      <span>Old</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-2.5 h-2.5 bg-[#D97757] rounded-sm"></span>
+                      <span>New</span>
+                    </div>
+                  </div>
+                  <span>LOCOMO</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1249,7 +1435,7 @@
               <h3 class="text-2xl sm:text-3xl font-bold tracking-tight mb-1 text-gray-900 font-display">Memory vs RAG</h3>
               <p class="text-gray-500 text-xs sm:text-sm font-medium mb-3">Latency (seconds)</p>
               
-              <div class="relative w-full h-44 sm:h-56 mt-1 flex pb-6">
+              <div class="relative w-full h-36 sm:h-56 mt-1 flex pb-6">
                 <!-- Y-Axis Labels -->
                 <div class="flex flex-col justify-between h-full text-[10px] sm:text-xs font-mono text-gray-400 pr-4 select-none">
                   <span>40</span>
@@ -1410,7 +1596,7 @@
                 <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
                 <div class="absolute left-1 top-0 h-full w-px bg-gray-400"></div>
               </div>
-              $ npx -y @memwyre/mcp-server
+              $ npx -y mcp-remote https://server.memwyre.tech/mcp
             </div>
           </div>
 
@@ -1517,10 +1703,10 @@
 
         <!-- 3-Column Bordered Grid matching "How It Works" Section -->
         <div class="border-y border-gray-300 rounded-none bg-white relative z-20 -mx-6 sm:-mx-8 lg:-mx-12">
-          <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-300 items-stretch">
+          <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-300 items-stretch gap-y-4 md:gap-y-0 px-6 sm:px-0 py-4 md:py-0">
             
             <!-- Free Plan -->
-            <div class="pt-8 px-8 pb-5 sm:pt-10 sm:px-10 sm:pb-5 flex flex-col justify-between h-full bg-white">
+            <div class="pt-6 px-5 pb-5 sm:pt-10 sm:px-10 sm:pb-5 flex flex-col justify-between h-full bg-white border border-gray-200 rounded-lg md:border-0 md:rounded-none">
               <div>
                 <div class="text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-6">01 . FREE</div>
                 <div class="mb-4">
@@ -1574,7 +1760,7 @@
             </div>
 
             <!-- Pro Plan (Recommended) -->
-            <div class="pt-8 px-8 pb-5 sm:pt-10 sm:px-10 sm:pb-5 flex flex-col justify-between h-full bg-orange-50/10 relative">
+            <div class="pt-6 px-5 pb-5 sm:pt-10 sm:px-10 sm:pb-5 flex flex-col justify-between h-full bg-orange-50/10 relative border border-[#D97757]/30 rounded-lg md:border-0 md:rounded-none">
               <div>
                 <div class="flex justify-between items-center mb-6">
                   <div class="text-xs tracking-wider uppercase font-bold font-mono text-[#D97757]">02 . PRO</div>
@@ -1671,7 +1857,7 @@
             </div>
 
             <!-- Enterprise Plan -->
-            <div class="pt-8 px-8 pb-5 sm:pt-10 sm:px-10 sm:pb-5 flex flex-col justify-between h-full bg-white">
+            <div class="pt-6 px-5 pb-5 sm:pt-10 sm:px-10 sm:pb-5 flex flex-col justify-between h-full bg-white border border-gray-200 rounded-lg md:border-0 md:rounded-none">
               <div>
                 <div class="text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-6">03 . ENTERPRISE</div>
                 <div class="mb-4">
@@ -1740,11 +1926,11 @@
         </h2>
         
         <!-- Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 text-left">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-12 text-left">
           
           <!-- Blog Card 1 -->
-          <router-link to="/blog/mcp-persistent-memory" class="group flex flex-col">
-            <div class="w-full aspect-[16/10] rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
+          <router-link to="/blog/mcp-persistent-memory" class="group flex flex-row md:flex-col items-start md:items-stretch gap-4 md:gap-0">
+            <div class="w-24 h-16 md:w-full md:aspect-[16/10] shrink-0 rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
               <img 
                 src="/blog-covers/mcp-persistent-memory.png" 
                 alt="How to Give Claude Desktop Persistent Memory using MCP" 
@@ -1752,17 +1938,19 @@
                 @error="$event.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'"
               />
             </div>
-            <h3 class="text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 mt-5 mb-2 font-sans">
-              How to Give Claude Desktop Persistent Memory using MCP
-            </h3>
-            <div class="text-xs text-gray-500 font-sans">
-              June 15, 2026 &nbsp;&bull;&nbsp; MCP Server
+            <div class="flex-1">
+              <h3 class="text-sm md:text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 md:mt-5 md:mb-2 font-sans">
+                How to Give Claude Desktop Persistent Memory using MCP
+              </h3>
+              <div class="text-[10px] md:text-xs text-gray-500 font-sans mt-1 md:mt-0">
+                June 15, 2026 &nbsp;&bull;&nbsp; MCP Server
+              </div>
             </div>
           </router-link>
 
           <!-- Blog Card 2 -->
-          <router-link to="/blog/vscode-mcp-persistent-memory" class="group flex flex-col">
-            <div class="w-full aspect-[16/10] rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
+          <router-link to="/blog/vscode-mcp-persistent-memory" class="group flex flex-row md:flex-col items-start md:items-stretch gap-4 md:gap-0">
+            <div class="w-24 h-16 md:w-full md:aspect-[16/10] shrink-0 rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
               <img 
                 src="/blog-covers/vscode-mcp-persistent-memory.png" 
                 alt="How to Enable Persistent Codebase Memory in VS Code with MCP and Cline" 
@@ -1770,17 +1958,19 @@
                 @error="$event.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'"
               />
             </div>
-            <h3 class="text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 mt-5 mb-2 font-sans">
-              How to Enable Persistent Codebase Memory in VS Code with MCP and Cline
-            </h3>
-            <div class="text-xs text-gray-500 font-sans">
-              June 02, 2026 &nbsp;&bull;&nbsp; MCP Server
+            <div class="flex-1">
+              <h3 class="text-sm md:text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 md:mt-5 md:mb-2 font-sans">
+                How to Enable Persistent Codebase Memory in VS Code with MCP and Cline
+              </h3>
+              <div class="text-[10px] md:text-xs text-gray-500 font-sans mt-1 md:mt-0">
+                June 02, 2026 &nbsp;&bull;&nbsp; MCP Server
+              </div>
             </div>
           </router-link>
 
           <!-- Blog Card 3 -->
-          <router-link to="/blog/claude-code-memory-ingestion" class="group flex flex-col">
-            <div class="w-full aspect-[16/10] rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
+          <router-link to="/blog/claude-code-memory-ingestion" class="group flex flex-row md:flex-col items-start md:items-stretch gap-4 md:gap-0">
+            <div class="w-24 h-16 md:w-full md:aspect-[16/10] shrink-0 rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
               <img 
                 src="/blog-covers/claude-code-memory-ingestion.png" 
                 alt="Building Persistent Terminal Sessions: Claude Code Memory Ingestion" 
@@ -1788,11 +1978,13 @@
                 @error="$event.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'"
               />
             </div>
-            <h3 class="text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 mt-5 mb-2 font-sans">
-              Building Persistent Terminal Sessions: Claude Code Memory Ingestion
-            </h3>
-            <div class="text-xs text-gray-500 font-sans">
-              May 18, 2026 &nbsp;&bull;&nbsp; CLI Plugins
+            <div class="flex-1">
+              <h3 class="text-sm md:text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 md:mt-5 md:mb-2 font-sans">
+                Building Persistent Terminal Sessions: Claude Code Memory Ingestion
+              </h3>
+              <div class="text-[10px] md:text-xs text-gray-500 font-sans mt-1 md:mt-0">
+                May 18, 2026 &nbsp;&bull;&nbsp; CLI Plugins
+              </div>
             </div>
           </router-link>
 
@@ -2677,6 +2869,85 @@ html {
     min-height: 330px;
   }
 }
+
+/* Optimization for short mobile viewports / 16:9 portrait phone screens */
+@media (max-width: 640px) and (max-height: 720px) {
+  .hero-wash {
+    padding-top: 3rem !important;
+    padding-bottom: 2rem !important;
+    min-height: calc(100svh - 64px) !important;
+  }
+
+  .hero-wash .pt-20 {
+    padding-top: 1.5rem !important;
+  }
+
+  .hero-wash h1 {
+    font-size: 2.25rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .hero-wash h1 br {
+    display: none !important;
+  }
+
+  .hero-wash p {
+    margin-top: 0.75rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .hero-wash .relative.inline-flex.p-3 {
+    margin-top: 1rem !important;
+    padding: 0.375rem !important;
+  }
+
+  /* Compact padding for sections to reduce scroll depth */
+  #problem-framing,
+  #llm-compatibility,
+  #comparison,
+  #features,
+  #how-it-works,
+  #benchmark,
+  #ecosystem,
+  #pricing,
+  #blog-section,
+  #faq {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  /* Compact section headings */
+  #problem-framing h2,
+  #llm-compatibility h2,
+  #comparison h2,
+  #features h2,
+  #how-it-works h2,
+  #benchmark h2,
+  #ecosystem h2,
+  #pricing h2,
+  #blog-section h2,
+  #faq h2 {
+    font-size: 1.75rem !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Reduce margins on division lines */
+  #problem-framing .mb-12,
+  #llm-compatibility .mb-12,
+  #comparison .mb-8,
+  #features .mb-12,
+  #how-it-works .mb-12,
+  #benchmark .mb-8,
+  #ecosystem .mb-16,
+  #pricing .mb-12,
+  #blog-section .mb-12,
+  #faq .mb-16 {
+    margin-bottom: 1.25rem !important;
+  }
+}
+
 
 .force-light,
 .force-light * {

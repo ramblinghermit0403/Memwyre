@@ -1,5 +1,7 @@
 # RAG vs. AI Memory: Choosing the Right Approach for Long-Term Knowledge
 
+> **TL;DR:** While traditional vector RAG works well for static, read-only documents, it fails in active coding workflows due to chunk fragmentation, lack of temporal decay, and missing write-back feedback loops. An AI Memory Layer (like Memwyre) uses recency-aware hybrid ranking and dynamic graph connections to continuously ingest, prune, and relate code context as developers work.
+
 Retrieval-Augmented Generation (RAG) is the default architectural pattern for connecting Large Language Models (LLMs) to custom data. In developer workflows, RAG is used to feed project documentation, codebases, and API specs into AI prompts.
 
 However, developers using standard RAG tools frequently encounter issues: the AI pulls irrelevant chunks of code, gets confused by outdated documentation, and fails to connect related entities.
@@ -79,13 +81,11 @@ Unlike read-only RAG, Memwyre continuously runs an ingestion loop on the convers
 - **Deduplication and Conflict Resolution**: When a new fact is extracted, Memwyre checks for existing semantic matches. If the new fact contradicts a stored record, the system updates the memory, deprecates the old statement, and logs the change.
 
 ### 2. Recency-Aware Ranking
-To prevent outdated instructions from corrupting prompts, Memwyre ranks memories using a hybrid scoring algorithm:
-\[ \text{Score} = (0.4 \times \text{Similarity}) + (0.35 \times \text{Recency}) + (0.25 \times \text{Importance}) \]
+To prevent outdated instructions from corrupting prompts, Memwyre ranks memories using a hybrid scoring algorithm: `Score = (0.4 × Similarity) + (0.35 × Recency) + (0.25 × Importance)`
 
 Where:
 - **Similarity**: The cosine distance between the query embedding and the memory.
-- **Recency**: A time-decay factor that reduces the weight of older entries:
-  \[ R = e^{-\lambda t} \]
+- **Recency**: A time-decay factor that reduces the weight of older entries: `R = e^(-λt)`
 - **Importance**: A rating (1 to 5) determined by an LLM during extraction (e.g., security credentials or API routes get an importance rating of 5, while casual styling choices get a 2).
 
 This ensures that critical, recently updated guidelines always take precedence.

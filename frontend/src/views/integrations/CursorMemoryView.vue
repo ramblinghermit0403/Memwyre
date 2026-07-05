@@ -89,10 +89,9 @@
                 <ul class="list-disc pl-4 mt-1 space-y-1">
                   <li><strong>Name</strong>: <code>memwyre</code></li>
                   <li><strong>Type</strong>: <code>command</code></li>
-                  <li><strong>Command</strong>: <code class="bg-gray-100 p-0.5 rounded">npx -y @memwyre/mcp-server</code></li>
+                  <li><strong>Command</strong>: <code class="bg-gray-100 p-0.5 rounded">npx -y mcp-remote https://server.memwyre.tech/mcp --header "Authorization:Bearer YOUR_KEY"</code></li>
                 </ul>
               </li>
-              <li>Add environment variable: <code>MEMWYRE_API_KEY</code> with your key.</li>
             </ol>
 
             <div class="pt-4 border-t border-gray-200 font-mono text-[11px] text-gray-500 leading-relaxed">

@@ -24,22 +24,11 @@ class VectorStore:
         
         # Initialize Azure OpenAI Embeddings (matching V2 for consistency)
         try:
-            from langchain_openai import AzureOpenAIEmbeddings
-            
-            embed_key = getattr(settings, "AZURE_OPENAI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None) or os.environ.get("AZURE_OPENAI_API_KEY")
-            if not embed_key:
-                logger.error("Missing Azure OpenAI API Key. Embeddings will fail.")
-            
-            self.bedrock_embeddings = AzureOpenAIEmbeddings(
-                api_key=embed_key,
-                azure_endpoint=getattr(settings, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
-                api_version=getattr(settings, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
-                azure_deployment=getattr(settings, "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small"),
-                dimensions=512
-            )
-            logger.info("Initialized Azure OpenAI Embeddings (V1 compat).")
+            from app.core.rate_limiter import get_embeddings_instance
+            self.bedrock_embeddings = get_embeddings_instance()
+            logger.info("Initialized Embeddings (V1 compat) with Rate Limiter.")
         except Exception as e:
-            logger.error(f"Failed to load Bedrock embeddings: {e}")
+            logger.error(f"Failed to load embeddings: {e}")
             self.bedrock_embeddings = None
         
     @retry(stop=stop_after_attempt(4), wait=wait_exponential(multiplier=1, min=2, max=10))

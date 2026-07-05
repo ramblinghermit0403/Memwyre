@@ -120,7 +120,7 @@
             <div class="text-emerald-600 font-mono text-xs uppercase font-bold">Studies &bull; Experimental</div>
             <h3 class="hero-serif text-2xl text-gray-900 font-bold">Retrieval &amp; Pruning Studies</h3>
             <p class="text-sm text-gray-500 leading-relaxed">
-              Experimental results validating our mathematical decay functions: \(I(t) = I_0 \cdot e^{-\lambda t}\). Analyzing the correlation of memory reinforcement against query speed.
+              Experimental results validating our mathematical decay functions: I(t) = I₀ · e^(-λt). Analyzing the correlation of memory reinforcement against query speed.
             </p>
           </div>
           <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">

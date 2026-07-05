@@ -32,18 +32,8 @@ class IngestionService:
         )
         # Initialize Azure OpenAI Embeddings (matching V2 for consistency)
         try:
-            from langchain_openai import AzureOpenAIEmbeddings
-            from app.core.config import settings as cfg
-            
-            embed_key = getattr(cfg, "AZURE_OPENAI_API_KEY", None) or getattr(cfg, "OPENAI_API_KEY", None)
-            
-            self.bedrock_embeddings = AzureOpenAIEmbeddings(
-                api_key=embed_key,
-                azure_endpoint=getattr(cfg, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
-                api_version=getattr(cfg, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
-                azure_deployment=getattr(cfg, "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small"),
-                dimensions=512
-            )
+            from app.core.rate_limiter import get_embeddings_instance
+            self.bedrock_embeddings = get_embeddings_instance()
         except Exception as e:
             print(f"Warning: Failed to load Azure embeddings: {e}")
             self.bedrock_embeddings = None

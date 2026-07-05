@@ -1,5 +1,7 @@
 # Cursor AI vs Claude Code: Managing Context and Memory in IDEs
 
+> **TL;DR:** Cursor AI relies on static codebase vector indexing, while Claude Code CLI focuses on dynamic terminal command loops. Both are stateless across chats and sessions. By connecting both tools to a unified Memwyre memory vault (using MCP for Cursor and lifecycle hooks for Claude Code), you can synchronize project context, styling guidelines, and debugging histories across both environments.
+
 AI-assisted coding is shifting from basic autocomplete to agentic systems that can read entire workspaces, run tests, and write complex files. The two leading tools in this category are **Cursor AI** (the popular VS Code fork) and **Claude Code** (Anthropic's new command-line agent).
 
 While both utilize state-of-the-art models like Claude 3.5 Sonnet, they approach **context management** and **memory retention** differently. In this guide, we compare their context strategies and show how to extend both with a persistent memory layer using **Memwyre**.
@@ -83,14 +85,13 @@ To add persistent memory to Cursor:
 3. Configure the server:
    - **Name**: `memwyre-memory`
    - **Type**: `command`
-   - **Command**: `npx -y @memwyre/mcp-server`
-4. Add the environment variable: `MEMWYRE_API_KEY` set to your Memwyre API token.
+   - **Command**: `npx -y mcp-remote https://server.memwyre.tech/mcp --header "Authorization:Bearer YOUR_MEMWYRE_API_TOKEN"`
 
 ### 2. Connecting Memwyre to Claude Code
 To add persistent memory to Claude Code, register the Memwyre server using the built-in MCP configuration command:
 
 ```bash
-claude mcp add memwyre-memory npx -y @memwyre/mcp-server --env MEMWYRE_API_KEY=YOUR_MEMWYRE_API_TOKEN
+claude mcp add memwyre-memory -- npx -y mcp-remote https://server.memwyre.tech/mcp --header "Authorization:Bearer YOUR_MEMWYRE_API_TOKEN"
 ```
 
 *Replace `YOUR_MEMWYRE_API_TOKEN` with your actual Memwyre token.*

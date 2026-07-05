@@ -59,9 +59,16 @@ function handler(event) {
     }
 
     // --- 4. Directory Index Rewrite ---
-    // If URI ends with '/', append index.html for S3 serving
-    if (request.uri.charAt(request.uri.length - 1) === '/') {
-        request.uri += 'index.html';
+    // If the URI does not contain a file extension, append index.html so S3 serves the pre-rendered file
+    var lastSegment = request.uri.substring(request.uri.lastIndexOf('/') + 1);
+    var hasExtension = lastSegment.indexOf('.') !== -1;
+
+    if (!hasExtension) {
+        if (request.uri.charAt(request.uri.length - 1) === '/') {
+            request.uri += 'index.html';
+        } else {
+            request.uri += '/index.html';
+        }
     }
 
     return request;

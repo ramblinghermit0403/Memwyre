@@ -11,6 +11,7 @@ from app.core.config import settings
 from app.core.aws_config import AWS_CONFIG
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from app.services.usage_service import usage_service
+from app.core.rate_limiter import wrap_llm_with_rate_limit
 import tiktoken
 
 def count_tokens(text: str, model: str = "gpt-4o-mini") -> int:
@@ -42,29 +43,42 @@ class LLMService:
     def _get_openai_llm(self, temperature: float = 0, target_key: Optional[str] = None):
         key = target_key or self.api_key
         
-        # Use Azure for Chat only if standard OPENAI_API_KEY is missing but Azure key is present
+        # 1. Custom OpenAI-compatible endpoint (e.g. Kimi K2.6 via NVIDIA NIM)
+        if getattr(settings, "LLM_API_BASE", None):
+            llm = ChatOpenAI(
+                base_url=settings.LLM_API_BASE,
+                api_key=settings.LLM_API_KEY or key,
+                model=getattr(settings, "LLM_MODEL_NAME", "moonshotai/kimi-k2.6"),
+                temperature=temperature
+            )
+            return wrap_llm_with_rate_limit(llm)
+
+        # 2. Use Azure for Chat only if standard OPENAI_API_KEY is missing but Azure key is present
         use_azure_chat = getattr(settings, "AZURE_OPENAI_API_KEY", None) and not getattr(settings, "OPENAI_API_KEY", None)
         
         if use_azure_chat:
             # o4-mini is a reasoning model — does not support 'temperature'
-            return AzureChatOpenAI(
+            llm = AzureChatOpenAI(
                 api_key=key,
                 azure_endpoint=getattr(settings, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
                 api_version=getattr(settings, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
                 azure_deployment=getattr(settings, "AZURE_OPENAI_DEPLOYMENT", "o4-mini"),
             )
+            return wrap_llm_with_rate_limit(llm)
         
         # Default to standard OpenAI for chat
-        return ChatOpenAI(api_key=key, model="gpt-4o-mini", temperature=temperature)
+        llm = ChatOpenAI(api_key=key, model="gpt-4o-mini", temperature=temperature)
+        return wrap_llm_with_rate_limit(llm)
         
     def _get_bedrock_llm(self, temperature: float = 0):
         # We use ChatBedrockConverse with Moonshot Kimi K2.5
         # Credentials are automatically loaded from AWS_CONFIG/environment
-        return ChatBedrockConverse(
+        llm = ChatBedrockConverse(
             model_id="moonshotai.kimi-k2.5",
             region_name="us-west-2",
             temperature=temperature
         )
+        return wrap_llm_with_rate_limit(llm)
 
     def _get_default_llm(self, temperature: float = 0, target_key: Optional[str] = None):
         provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()

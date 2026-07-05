@@ -82,6 +82,20 @@ class Settings(BaseSettings):
     GOOGLE_API_KEY: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
 
+    # Custom OpenAI-compatible endpoints (default: Kimi K2.6 + NVIDIA NIM)
+    # Both LLM and embeddings route through NVIDIA's integrate API
+    EMBEDDING_API_BASE: Optional[str] = "https://integrate.api.nvidia.com/v1"
+    EMBEDDING_API_KEY: Optional[str] = None
+    EMBEDDING_MODEL_NAME: Optional[str] = "nvidia/nv-embedqa-e5-v5"
+
+    LLM_API_BASE: Optional[str] = "https://integrate.api.nvidia.com/v1"
+    LLM_API_KEY: Optional[str] = None
+    LLM_MODEL_NAME: Optional[str] = "moonshotai/kimi-k2.6"
+
+    # Rate Limiting
+    EMBEDDING_RATE_LIMIT_RPM: int = 40
+    LLM_RATE_LIMIT_RPM: int = 40
+
     # OAuth
     GOOGLE_CLIENT_ID: Optional[str] = None
     GOOGLE_CLIENT_SECRET: Optional[str] = None

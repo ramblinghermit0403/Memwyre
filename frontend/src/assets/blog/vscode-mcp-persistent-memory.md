@@ -1,5 +1,7 @@
 # How to Enable Persistent Codebase Memory in VS Code with MCP and Cline
 
+> **TL;DR:** To give VS Code coding agents (like Cline, Roo-Code, or Devins) persistent long-term memory, configure Memwyre's remote MCP gateway in your `cline_mcp_settings.json`. This guide shows you how to connect the memory layer, allowing agents to retain codebase architectures, styling rules, and debugging solutions across workspace sessions instead of starting from scratch.
+
 AI-assisted coding in VS Code has evolved rapidly from simple inline autocomplete (like GitHub Copilot) to powerful, agentic systems that can read entire workspaces, execute commands, run tests, and write complex files. Extensions like **Cline**, **Roo-Code**, and **Devins** lead this revolution.
 
 However, these autonomous agents share a common bottleneck: **they are stateless across sessions**. When you reset a conversation, close VS Code, or start working in a new workspace, the agent forgets all the context, research notes, and debugging discoveries you made.
@@ -72,11 +74,11 @@ Edit the JSON file to define the `memwyre` server using the remote WebSocket gat
       "command": "npx",
       "args": [
         "-y",
-        "@memwyre/mcp-server"
-      ],
-      "env": {
-        "MEMWYRE_API_KEY": "YOUR_MEMWYRE_API_TOKEN"
-      }
+        "mcp-remote",
+        "https://server.memwyre.tech/mcp",
+        "--header",
+        "Authorization:Bearer YOUR_MEMWYRE_API_TOKEN"
+      ]
     }
   }
 }

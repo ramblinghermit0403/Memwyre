@@ -46,7 +46,7 @@ function replaceJsonLd(html, jsonLd) {
     );
 }
 
-function withSeoAndContent(template, seo, appHtml) {
+function withSeoAndContent(template, seo, appHtml, injectedScript = '') {
     let html = template;
 
     html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(seo.title)}</title>`);
@@ -67,6 +67,10 @@ function withSeoAndContent(template, seo, appHtml) {
     html = replaceMetaTag(html, 'name', 'twitter:description', seo.twitterDescription);
     html = replaceMetaTag(html, 'name', 'twitter:image', seo.twitterImage);
     html = replaceJsonLd(html, seo.jsonLd);
+
+    if (injectedScript) {
+        html = html.replace('<!--app-html-->', `${injectedScript}<!--app-html-->`);
+    }
 
     return html.replace('<!--app-html-->', appHtml);
 }
@@ -104,7 +108,21 @@ async function prerender() {
     for (const route of PRERENDER_ROUTES) {
         const { appHtml } = await render(route);
         const seo = getSeoForPath(route);
-        const routeHtml = withSeoAndContent(template, seo, appHtml);
+
+        let injectedScript = '';
+        if (route.startsWith('/blog/') && route !== '/blog') {
+            const slug = route.substring('/blog/'.length);
+            const mdPath = path.join(frontendDir, 'src', 'assets', 'blog', `${slug}.md`);
+            try {
+                const content = await readFile(mdPath, 'utf-8');
+                const escapedContent = JSON.stringify({ slug, content });
+                injectedScript = `<script id="pre-rendered-data">window.__BLOG_POST_DATA__ = ${escapedContent};</script>`;
+            } catch (err) {
+                console.error(`Failed to read markdown file for route ${route}:`, err);
+            }
+        }
+
+        const routeHtml = withSeoAndContent(template, seo, appHtml, injectedScript);
 
         const outputPath = route === '/'
             ? path.join(distDir, 'index.html')

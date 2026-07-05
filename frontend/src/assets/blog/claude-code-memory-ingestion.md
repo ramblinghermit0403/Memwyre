@@ -1,5 +1,7 @@
 # Building Persistent Terminal Sessions: Claude Code Memory Ingestion
 
+> **TL;DR:** To bypass Claude Code's local limits (200-line history / 25KB `MEMORY.md` cap) and enable persistent cross-session terminal memory, integrate the Memwyre Claude Plugin. Using life-cycle hooks defined in `hooks.json`, Memwyre automatically injects relevant context on startup and ingests terminal chat transcripts on exit.
+
 Anthropic's **Claude Code** is a revolutionary command-line agent that allows developers to run terminal commands, write code, search files, and fix errors directly from their shell. It is fast, lightweight, and incredibly capable. 
 
 However, Claude Code has a major limitation: **it is completely stateless**. When you close a terminal session or exit the agent, all of Claude's contextual understanding of your debugging history, directory layout, and architectural decisions is wiped clean. When you launch it again, you start from scratch.
@@ -67,7 +69,7 @@ graph LR
 Install the Memwyre Claude memory bridge globally using npm:
 
 ```bash
-npm install -g @memwyre/claude-memwyre
+npm install -g claude-memwyre
 ```
 
 ### 2. Configure Claude Code Hooks
@@ -82,7 +84,7 @@ Create or edit your local Claude configuration hooks file at `~/.claude/hooks.js
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/path/to/global/node_modules/@memwyre/claude-memwyre/dist/inject-memory.cjs\"",
+            "command": "node \"/path/to/global/node_modules/claude-memwyre/dist/inject-memory.cjs\"",
             "timeout": 30
           }
         ]
@@ -93,7 +95,7 @@ Create or edit your local Claude configuration hooks file at `~/.claude/hooks.js
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/path/to/global/node_modules/@memwyre/claude-memwyre/dist/capture-session.cjs\"",
+            "command": "node \"/path/to/global/node_modules/claude-memwyre/dist/capture-session.cjs\"",
             "timeout": 30
           }
         ]

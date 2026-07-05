@@ -16,7 +16,7 @@ from app.core.config import settings
 from datetime import timedelta
 
 # Configuration
-API_URL = "http://localhost:8000/api/v1/retrieval/search"
+API_URL = "http://127.0.0.1:8000/api/v1/retrieval/search"
 DATASET_PATH = Path(__file__).parent.parent / "tests" / "data" / "rag_gold_dataset.json"
 TOP_K = 10
 

@@ -31,10 +31,10 @@ const processorSvg = computed(() => {
 
 .svg-wrapper {
   position: absolute;
-  width: 180%;
-  max-width: 180%;
+  width: 220%;
+  max-width: 220%;
   height: auto;
-  transform: translate(5%, calc(5% + 150px));
+  transform: translate(4%, calc(5% + 100px));
   opacity: 1; /* Fully visible / unfaded on mobile view */
   transition: all 0.5s ease-in-out;
 }
@@ -54,6 +54,15 @@ const processorSvg = computed(() => {
     max-width: 180%;
     transform: translate(calc(5% - 300px), 5%);
     opacity: 1; /* Fully visible on large screens */
+  }
+}
+
+@media (max-width: 640px) and (max-height: 720px) {
+  .svg-wrapper {
+    width: 160%;
+    max-width: 160%;
+    transform: translate(4%, calc(5% + 180px));
+    opacity: 0.5; /* Slightly faded to avoid blocking readability on short screen */
   }
 }
 </style>

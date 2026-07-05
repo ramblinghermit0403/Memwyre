@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, watch, nextTick, onServerPrefetch } from 'vue';
 
 let shouldRestoreDarkClass = false;
 import { useRoute, useRouter } from 'vue-router';
@@ -95,6 +95,27 @@ const recentPosts = [
 
 const markdownFiles = import.meta.glob('../assets/blog/*.md', { query: '?raw', import: 'default' });
 
+const renderMermaid = async () => {
+  if (typeof window === 'undefined') return;
+  const containers = document.querySelectorAll('.mermaid-container');
+  for (let i = 0; i < containers.length; i++) {
+    const el = containers[i];
+    const b64 = el.getAttribute('data-mermaid');
+    if (el.querySelector('svg')) continue; // Already rendered
+    if (b64) {
+      try {
+        const text = decodeURIComponent(escape(window.atob(b64)));
+        const id = `mermaid-svg-${Date.now()}-${i}`;
+        const { svg } = await mermaid.render(id, text);
+        el.innerHTML = svg;
+      } catch (mermaidError) {
+        console.error('Mermaid render error:', mermaidError);
+        el.innerHTML = '<span class="text-red-500 text-sm">Failed to render diagram. Check console.</span>';
+      }
+    }
+  }
+};
+
 const loadPost = async (slug) => {
   isLoading.value = true;
   error.value = null;
@@ -107,7 +128,11 @@ const loadPost = async (slug) => {
       rawContent.value = rawMd;
       
       // Strip title heading (# Title) from raw markdown to display it in a custom header section instead
-      const cleanedMd = rawMd.replace(/^#\s+.+$/m, '');
+      const lines = rawMd.split(/\r?\n/);
+      if (lines[0] && lines[0].startsWith('# ')) {
+        lines.shift();
+      }
+      const cleanedMd = lines.join('\n');
       parsedHtml.value = marked.parse(cleanedMd);
     } catch (err) {
       console.error(err);
@@ -115,31 +140,50 @@ const loadPost = async (slug) => {
     } finally {
       isLoading.value = false;
       
-      // Render Mermaid diagrams after DOM updates are completely flushed
-      setTimeout(async () => {
-        const containers = document.querySelectorAll('.mermaid-container');
-        for (let i = 0; i < containers.length; i++) {
-          const el = containers[i];
-          const b64 = el.getAttribute('data-mermaid');
-          if (b64) {
-            try {
-              const text = decodeURIComponent(escape(window.atob(b64)));
-              const id = `mermaid-svg-${Date.now()}-${i}`;
-              const { svg } = await mermaid.render(id, text);
-              el.innerHTML = svg;
-            } catch (mermaidError) {
-              console.error('Mermaid render error:', mermaidError);
-              el.innerHTML = '<span class="text-red-500 text-sm">Failed to render diagram. Check console.</span>';
-            }
-          }
-        }
-      }, 50);
+      // Render Mermaid diagrams after DOM updates are completely flushed on client
+      if (typeof window !== 'undefined') {
+        setTimeout(async () => {
+          await renderMermaid();
+        }, 50);
+      }
     }
   } else {
     error.value = 'Article not found.';
     isLoading.value = false;
   }
 };
+
+// Initial state load check: handle server vs client hydration
+const isServer = typeof window === 'undefined';
+let preRenderedContent = '';
+
+if (!isServer && window.__BLOG_POST_DATA__ && window.__BLOG_POST_DATA__.slug === route.params.slug) {
+  preRenderedContent = window.__BLOG_POST_DATA__.content;
+}
+
+if (preRenderedContent) {
+  rawContent.value = preRenderedContent;
+  const lines = preRenderedContent.split(/\r?\n/);
+  if (lines[0] && lines[0].startsWith('# ')) {
+    lines.shift();
+  }
+  const cleanedMd = lines.join('\n');
+  parsedHtml.value = marked.parse(cleanedMd);
+  isLoading.value = false;
+} else {
+  // If no pre-rendered content (or if we are on the server), start loading the post
+  const loadPromise = loadPost(route.params.slug);
+  
+  if (isServer) {
+    onServerPrefetch(async () => {
+      try {
+        await loadPromise;
+      } catch (err) {
+        console.error('Prefetch error:', err);
+      }
+    });
+  }
+}
 
 onMounted(() => {
   shouldRestoreDarkClass = document.documentElement.classList.contains('dark');
@@ -159,7 +203,11 @@ onMounted(() => {
   } catch (initError) {
     console.error('Mermaid initialization failed:', initError);
   }
-  loadPost(route.params.slug);
+
+  // Trigger mermaid render for pre-rendered content after page mounts
+  setTimeout(() => {
+    renderMermaid();
+  }, 100);
 });
 
 onUnmounted(() => {
@@ -171,11 +219,13 @@ onUnmounted(() => {
   }
 });
 
-// Reload post when route parameter slug changes
+// Reload post when route parameter slug changes (client-side routing only)
 watch(() => route.params.slug, (newSlug) => {
   if (newSlug) {
     loadPost(newSlug);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 });
 </script>

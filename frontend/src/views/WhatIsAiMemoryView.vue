@@ -72,6 +72,25 @@
             </p>
           </div>
 
+          <!-- TL;DR -->
+          <div class="relative p-6 bg-white border border-dashed border-gray-300 rounded shadow-sm">
+            <!-- Corner Brackets -->
+            <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none">
+              <div class="absolute top-1.5 left-0 w-full h-px bg-gray-400"></div>
+              <div class="absolute left-1.5 top-0 h-full w-px bg-gray-400"></div>
+            </div>
+            <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none">
+              <div class="absolute top-1.5 left-0 w-full h-px bg-gray-400"></div>
+              <div class="absolute left-1.5 top-0 h-full w-px bg-gray-400"></div>
+            </div>
+            <div class="space-y-2">
+              <div class="text-[#D97757] font-mono text-xs uppercase font-bold tracking-wider">Quick Summary / TL;DR</div>
+              <p class="text-sm text-gray-600 leading-relaxed font-normal">
+                <strong>Answer:</strong> AI memory is a persistent context layer that tracks developer facts, preferences, and workspace rules across sessions. By combining hierarchical entity graphs, logarithmic forgetting curves, and recency-aware vector linkage, it eliminates stateless context window bloat and reduces agent cost by up to 78%.
+              </p>
+            </div>
+          </div>
+
           <div class="w-full h-px bg-gray-200 my-8"></div>
 
           <!-- Section 1: Introduction -->
@@ -203,15 +222,15 @@
               An infinite memory is as useless as no memory. If an AI agent retains every single command, typo, intermediate print statement, and temporary error message, the context will eventually become cluttered with noise. To maintain relevance, a modern AI memory system must implement a **forgetting curve** (or memory pruning algorithm).
             </p>
             <p class="text-gray-700 leading-relaxed">
-              In Memwyre, memory pruning is governed by a decay function that calculates the "importance score" ($I$) of a memory node over time ($t$). The formula incorporates the initial importance rating ($I_0$), the decay constant ($\lambda$), and the reinforcement frequency ($R$, representing how often the memory is queried or updated):
+              In Memwyre, memory pruning is governed by a decay function that calculates the "importance score" (`I`) of a memory node over time (`t`). The formula incorporates the initial importance rating (`I₀`), the decay constant (`λ`), and the reinforcement frequency (`R`, representing how often the memory is queried or updated):
             </p>
             <div class="my-6 p-6 bg-gray-50 border border-gray-200 rounded text-center">
               <span class="text-lg font-mono font-semibold text-gray-800">
-                I(t) = I_0 * e^(-&lambda; * t) * (1 + ln(1 + R))
+                I(t) = I₀ · e^(-λt) · (1 + ln(1 + R))
               </span>
             </div>
             <p class="text-gray-700 leading-relaxed">
-              If a memory node is created during a debugging session but is never referenced again, its score decays exponentially. Once it falls below a specific threshold, the memory is archived out of the active index. Conversely, if the user repeatedly queries the same fact or works on the same codebase area, the reinforcement constant ($R$) increases, boosting the importance score and locking the node in the active retrieval index.
+              If a memory node is created during a debugging session but is never referenced again, its score decays exponentially. Once it falls below a specific threshold, the memory is archived out of the active index. Conversely, if the user repeatedly queries the same fact or works on the same codebase area, the reinforcement constant (`R`) increases, boosting the importance score and locking the node in the active retrieval index.
             </p>
           </section>
 
@@ -287,9 +306,8 @@
   "mcpServers": {
     "memwyre-memory": {
       "command": "npx",
-      "args": ["-y", "@memwyre/mcp-server"],
+      "args": ["-y", "mcp-remote", "https://server.memwyre.tech/mcp", "--header", "Authorization:Bearer bv_sk_..."],
       "env": {
-        "MEMWYRE_API_KEY": "your_sec_api_key_here",
         "MEMWYRE_WORKSPACE_ID": "default"
       }
     }

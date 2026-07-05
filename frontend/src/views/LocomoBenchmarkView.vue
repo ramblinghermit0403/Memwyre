@@ -25,6 +25,25 @@
           LoCoMo-10 is a widely accepted standard for evaluating long-term memory performance in AI agents and conversational assistants. Below is the detailed analysis of Memwyre's retrieval capabilities on this benchmark.
         </p>
       </div>
+ 
+      <!-- TL;DR -->
+      <div class="relative p-6 bg-white border border-dashed border-gray-300 rounded shadow-sm text-left my-6">
+        <!-- Corner Brackets -->
+        <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none">
+          <div class="absolute top-1.5 left-0 w-full h-px bg-gray-400"></div>
+          <div class="absolute left-1.5 top-0 h-full w-px bg-gray-400"></div>
+        </div>
+        <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none">
+          <div class="absolute top-1.5 left-0 w-full h-px bg-gray-400"></div>
+          <div class="absolute left-1.5 top-0 h-full w-px bg-gray-400"></div>
+        </div>
+        <div class="space-y-2">
+          <div class="text-[#D97757] font-mono text-xs uppercase font-bold tracking-wider">Quick Summary / TL;DR</div>
+          <p class="text-sm text-gray-600 leading-relaxed font-normal">
+            <strong>Answer:</strong> On the LoCoMo-10 long-term memory benchmark, Memwyre achieves a 73.5% overall accuracy (outperforming flat vector systems) while retrieving a mean token count of only 3,000 per request (versus 26,000 tokens of raw dialog). This is driven by dynamic context pruning, Ebbinghaus logarithmic decay, and two-stage cross-encoder vector re-ranking.
+          </p>
+        </div>
+      </div>
 
       <!-- Metric Cards Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 my-10">

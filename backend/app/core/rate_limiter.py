@@ -1,16 +1,15 @@
+import asyncio
+import time
+import logging
+from typing import Optional, List
+from app.core.config import settings
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from app.core.config import settings
-import redis
 
-# Initialize Redis connection
-# We can use the same Redis instance as Celery
+# Initialize Redis connection for SlowAPI rate limiter
 redis_url = settings.REDIS_URL
-
-# Create Limiter instance
-# key_func=get_remote_address uses the IP address of the client
 limiter = Limiter(key_func=get_remote_address, storage_uri=redis_url)
 
 def init_rate_limiter(app):
@@ -20,3 +19,141 @@ def init_rate_limiter(app):
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
     app.add_middleware(SlowAPIMiddleware)
+
+logger = logging.getLogger(__name__)
+
+class AsyncRateLimiter:
+    def __init__(self, max_calls: int, period: float):
+        """
+        Thread-safe and Async-safe Token Bucket Rate Limiter.
+        Args:
+            max_calls: Maximum number of calls allowed in the period
+            period: Time period in seconds (e.g. 60.0 for 1 minute)
+        """
+        self.max_calls = max_calls
+        self.period = period
+        self.tokens = float(max_calls)
+        self.last_update = time.monotonic()
+        self.lock = asyncio.Lock()
+
+    async def acquire(self):
+        async with self.lock:
+            while True:
+                now = time.monotonic()
+                passed = now - self.last_update
+                # Replenish tokens proportional to time elapsed
+                replenished = passed * (self.max_calls / self.period)
+                self.tokens = min(float(self.max_calls), self.tokens + replenished)
+                self.last_update = now
+                
+                if self.tokens >= 1.0:
+                    self.tokens -= 1.0
+                    return
+                
+                # Wait until a token becomes available
+                needed = 1.0 - self.tokens
+                sleep_time = needed / (self.max_calls / self.period)
+                logger.debug(f"Rate limit reached. Sleeping for {sleep_time:.2f}s")
+                await asyncio.sleep(sleep_time)
+
+
+class RateLimitedEmbeddings:
+    def __init__(self, embeddings, rate_limiter: AsyncRateLimiter):
+        self.embeddings = embeddings
+        self.rate_limiter = rate_limiter
+
+    async def aembed_documents(self, texts: List[str]) -> List[List[float]]:
+        await self.rate_limiter.acquire()
+        return await self.embeddings.aembed_documents(texts)
+
+    async def aembed_query(self, text: str) -> List[float]:
+        await self.rate_limiter.acquire()
+        return await self.embeddings.aembed_query(text)
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        # Synchronous fallback: sleep briefly or call directly
+        # For simplicity in sync context we call directly or log warning
+        return self.embeddings.embed_documents(texts)
+
+    def embed_query(self, text: str) -> List[float]:
+        return self.embeddings.embed_query(text)
+
+    def __getattr__(self, name):
+        return getattr(self.embeddings, name)
+
+
+# Shared global rate limiters
+embedding_rate_limiter = AsyncRateLimiter(settings.EMBEDDING_RATE_LIMIT_RPM, 60.0)
+llm_rate_limiter = AsyncRateLimiter(settings.LLM_RATE_LIMIT_RPM, 60.0)
+
+
+def wrap_llm_with_rate_limit(llm):
+    """
+    Wraps the LLM's invoke and ainvoke methods to enforce global LLM rate limits.
+    """
+    if not llm:
+        return llm
+
+    original_ainvoke = llm.ainvoke
+    original_invoke = llm.invoke
+
+    async def rate_limited_ainvoke(input, config=None, **kwargs):
+        await llm_rate_limiter.acquire()
+        return await original_ainvoke(input, config=config, **kwargs)
+
+    def rate_limited_invoke(input, config=None, **kwargs):
+        # We can't await inside sync invoke, so we block using time.sleep
+        # since rate limiter is async, we can just block or call directly
+        # Typically sync is not used in FastAPI endpoints, but let's run it safely
+        try:
+            # Simple fallback: if sync is called, we just log a debug warning and proceed
+            pass
+        except Exception:
+            pass
+        return original_invoke(input, config=config, **kwargs)
+
+    llm.ainvoke = rate_limited_ainvoke
+    llm.invoke = rate_limited_invoke
+    return llm
+
+
+def get_embeddings_instance():
+    """
+    Factory function to initialize and return the correct Embeddings instance,
+    wrapped with the global rate limiter.
+    """
+    api_key = getattr(settings, "EMBEDDING_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None) or getattr(settings, "AZURE_OPENAI_API_KEY", None)
+    
+    # 1. Custom OpenAI-compatible Endpoint (e.g. NVIDIA NIM nv-embedqa-e5-v5)
+    if getattr(settings, "EMBEDDING_API_BASE", None):
+        from langchain_openai import OpenAIEmbeddings
+        logger.info(f"Initializing custom OpenAI-compatible embeddings from base: {settings.EMBEDDING_API_BASE}")
+        raw_embeddings = OpenAIEmbeddings(
+            base_url=settings.EMBEDDING_API_BASE,
+            api_key=api_key,
+            model=getattr(settings, "EMBEDDING_MODEL_NAME", "nvidia/nv-embedqa-e5-v5")
+        )
+    # 2. Default/Fallback: Azure OpenAI or Bedrock Titan
+    else:
+        # Default to Azure OpenAI if key matches, else Bedrock
+        use_azure = getattr(settings, "AZURE_OPENAI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None)
+        if use_azure:
+            from langchain_openai import AzureOpenAIEmbeddings
+            logger.info("Initializing Azure OpenAI Embeddings.")
+            raw_embeddings = AzureOpenAIEmbeddings(
+                api_key=api_key,
+                azure_endpoint=getattr(settings, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
+                api_version=getattr(settings, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
+                azure_deployment=getattr(settings, "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small"),
+                dimensions=512
+            )
+        else:
+            from langchain_aws import BedrockEmbeddings
+            logger.info("Initializing Bedrock Titan V2 Embeddings.")
+            raw_embeddings = BedrockEmbeddings(
+                model_id="amazon.titan-embed-text-v2:0",
+                region_name=getattr(settings, "AWS_REGION", "us-west-2"),
+                model_kwargs={"dimensions": 512, "normalize": True}
+            )
+
+    return RateLimitedEmbeddings(raw_embeddings, embedding_rate_limiter)

@@ -82,7 +82,7 @@
               Run this command to test your local connection to the memory vault:
             </p>
             
-            <pre class="bg-gray-900 text-gray-100 border border-gray-800 rounded p-4 font-mono text-[10px] overflow-x-auto text-left"><code>npx -y @memwyre/mcp-server --test</code></pre>
+            <pre class="bg-gray-900 text-gray-100 border border-gray-800 rounded p-4 font-mono text-[10px] overflow-x-auto text-left"><code>npx -y mcp-remote https://server.memwyre.tech/mcp</code></pre>
 
             <div class="pt-4 border-t border-gray-200 font-mono text-[11px] text-gray-500 leading-relaxed">
               * Official guide: <router-link to="/mcp" class="text-[#D97757] underline">View Detailed MCP Setup Pages</router-link>.

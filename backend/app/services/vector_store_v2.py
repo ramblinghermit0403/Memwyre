@@ -4,6 +4,7 @@ import asyncio
 from typing import List, Dict, Any
 from pinecone import Pinecone
 from app.core.config import settings
+from app.core.rate_limiter import get_embeddings_instance
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -23,17 +24,11 @@ class VectorStore:
         
         # Initialize Embeddings Locally
         try:
-            from langchain_aws import BedrockEmbeddings
-            
-            self.embeddings = BedrockEmbeddings(
-                model_id="amazon.titan-embed-text-v2:0",
-                region_name="us-west-2",
-                model_kwargs={"dimensions": 512, "normalize": True}
-            )
-            logger.info("Initialized Bedrock Titan V2 Embeddings locally.")
+            self.embeddings = get_embeddings_instance()
+            logger.info("Initialized Embeddings with Rate Limiter.")
         except Exception as e:
             import traceback
-            logger.error(f"Failed to load Titan embeddings: {e}")
+            logger.error(f"Failed to load embeddings: {e}")
             logger.error(traceback.format_exc())
             self.embeddings = None
         

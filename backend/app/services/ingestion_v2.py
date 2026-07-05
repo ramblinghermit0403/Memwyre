@@ -31,20 +31,10 @@ class IngestionService:
         )
         # Initialize semantic model
         try:
-            from app.core.config import settings
-            api_key = getattr(settings, "AZURE_OPENAI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None) or os.environ.get("AZURE_OPENAI_API_KEY")
-            
-            if not api_key:
-                print("Warning: Missing API Key for fallback.")
-            
-            from langchain_aws import BedrockEmbeddings
-            self.embeddings = BedrockEmbeddings(
-                model_id="amazon.titan-embed-text-v2:0",
-                region_name="us-west-2",
-                model_kwargs={"dimensions": 512, "normalize": True}
-            )
+            from app.core.rate_limiter import get_embeddings_instance
+            self.embeddings = get_embeddings_instance()
         except Exception as e:
-            print(f"Warning: Failed to load Azure embeddings: {e}")
+            print(f"Warning: Failed to load embeddings: {e}")
             self.embeddings = None
     
     def chunk_text(self, text: str) -> List[str]:

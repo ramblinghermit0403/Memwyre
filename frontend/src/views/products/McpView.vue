@@ -69,7 +69,7 @@
             </div>
             
             <div class="font-mono text-xs sm:text-sm space-y-3">
-              <div class="text-gray-400">$ npx -y @memwyre/mcp-server --init</div>
+              <div class="text-gray-400">$ npx -y mcp-remote https://server.memwyre.tech/mcp --header "Authorization:Bearer YOUR_KEY"</div>
               <div class="text-[#D97757]">Initializing Memwyre Model Context Protocol Server...</div>
               <div class="text-green-400">✔ Fetched auth credentials from environment</div>
               <div class="text-green-400">✔ Configured schemas for Cursor &amp; Claude Desktop</div>
@@ -142,11 +142,11 @@
       <span class="text-[#D97757]">"command"</span>: <span class="text-[#2B7FFF]">"npx"</span>,
       <span class="text-[#D97757]">"args"</span>: [
         <span class="text-[#2B7FFF]">-y</span>,
-        <span class="text-[#2B7FFF]" >@memwyre/mcp-server</span>
-      ],
-      <span class="text-[#D97757]">"env"</span>: {
-        <span class="text-[#D97757]">"MEMWYRE_API_KEY"</span>: <span class="text-[#2B7FFF]">"bv_sk_839f201..."</span>
-      }
+        <span class="text-[#2B7FFF]" >mcp-remote</span>,
+        <span class="text-[#2B7FFF]" >https://server.memwyre.tech/mcp</span>,
+        <span class="text-[#2B7FFF]" >--header</span>,
+        <span class="text-[#2B7FFF]" >Authorization:Bearer bv_sk_839f201...</span>
+      ]
     }
   }
 }</code></pre>
