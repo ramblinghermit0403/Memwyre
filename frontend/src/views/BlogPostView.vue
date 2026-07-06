@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, watch, nextTick, onServerPrefetch } from '
 
 let shouldRestoreDarkClass = false;
 import { useRoute, useRouter } from 'vue-router';
+import SiteFooter from '@/components/SiteFooter.vue';
 import { Marked } from 'marked';
 import mermaid from 'mermaid';
 
@@ -320,6 +321,7 @@ watch(() => route.params.slug, (newSlug) => {
       </div>
 
     </div>
+    <SiteFooter />
   </div>
 </template>
 

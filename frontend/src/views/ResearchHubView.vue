@@ -1,15 +1,20 @@
 <template>
   <div class="min-h-screen bg-white text-gray-900 font-sans relative overflow-x-hidden selection:bg-[#D97757] selection:text-white pt-16">
     <!-- Global Vertical Grid Lines -->
-    <div class="absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-200 pointer-events-none select-none z-30"></div>
-    <div class="absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-200 pointer-events-none select-none z-30"></div>
+    <div class="hidden lg:block absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-200 pointer-events-none select-none z-30"></div>
+    <div class="hidden lg:block absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-200 pointer-events-none select-none z-30"></div>
 
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
       
       <!-- Breadcrumb -->
       <div class="pt-6">
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
-          <div>/ RESEARCH / LAB INDEX</div>
+          <div class="flex items-center gap-2">
+            <router-link to="/" class="flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors">
+              <img src="/logo.png" alt="Memwyre" class="h-4 w-auto dark:invert" />
+              <span>/ RESEARCH / LAB INDEX</span>
+            </router-link>
+          </div>
           <div>MEMWYRE AUTHORITIES</div>
         </div>
         <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-200 pointer-events-none select-none mb-8"></div>

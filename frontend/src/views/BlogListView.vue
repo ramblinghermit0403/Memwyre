@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import SiteFooter from '@/components/SiteFooter.vue';
 
 let shouldRestoreDarkClass = false;
 
@@ -86,8 +87,8 @@ const posts = ref([
     </div>
 
     <!-- Global Vertical Grid Lines (matching landing page) -->
-    <div class="absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-300/80 dark:bg-gray-800/60 pointer-events-none select-none z-30"></div>
-    <div class="absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-300/80 dark:bg-gray-800/60 pointer-events-none select-none z-30"></div>
+    <div class="hidden lg:block absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-300/80 dark:bg-gray-800/60 pointer-events-none select-none z-30"></div>
+    <div class="hidden lg:block absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-300/80 dark:bg-gray-800/60 pointer-events-none select-none z-30"></div>
 
     <div class="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
       <!-- Breadcrumb & Header -->
@@ -158,5 +159,6 @@ const posts = ref([
         </article>
       </div>
     </div>
+    <SiteFooter />
   </div>
 </template>

@@ -52,7 +52,8 @@
 }
 
 .VPNavBarTitle .logo {
-  height: 35px !important;
+  height: 26px !important;
+  width: auto !important;
 }
 
 /* ── Sidebar ── */
@@ -260,9 +261,9 @@ div[class*='language-'] {
 
 /* ── Logo sizing ── */
 .VPNavBarTitle img {
-  height: 36px !important;
+  height: 26px !important;
   width: auto !important;
-  border-radius: 4px !important;
+  border-radius: 0 !important;
 }
 
 
