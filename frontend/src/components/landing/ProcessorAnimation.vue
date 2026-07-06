@@ -39,12 +39,21 @@ const processorSvg = computed(() => {
   transition: all 0.5s ease-in-out;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 767px) {
   .svg-wrapper {
-    width: 180%;
-    max-width: 180%;
-    transform: translate(calc(5% - 150px), 5%);
-    opacity: 1;
+    width: 185%;
+    max-width: 185%;
+    transform: translate(4%, calc(5% + 120px));
+    opacity: 1; /* Fully visible on mobile viewports */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .svg-wrapper {
+    width: 155%;
+    max-width: 155%;
+    transform: translate(12%, calc(5% + 110px));
+    opacity: 0.95;
   }
 }
 
@@ -54,15 +63,6 @@ const processorSvg = computed(() => {
     max-width: 180%;
     transform: translate(calc(5% - 300px), 5%);
     opacity: 1; /* Fully visible on large screens */
-  }
-}
-
-@media (max-width: 640px) and (max-height: 720px) {
-  .svg-wrapper {
-    width: 160%;
-    max-width: 160%;
-    transform: translate(4%, calc(5% + 180px));
-    opacity: 0.5; /* Slightly faded to avoid blocking readability on short screen */
   }
 }
 </style>

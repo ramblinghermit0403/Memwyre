@@ -3,12 +3,12 @@
     class="force-light relative min-h-[100svh] bg-white text-text-primary transition-colors duration-300 font-sans overflow-x-hidden selection:bg-primary selection:text-white *:selection:bg-primary *:selection:text-white">
 
     <!-- Global Vertical Grid Lines -->
-    <div class="hidden sm:block absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-300/80 pointer-events-none select-none z-30"></div>
-    <div class="hidden sm:block absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-300/80 pointer-events-none select-none z-30"></div>
+    <div class="hidden lg:block absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-300/80 pointer-events-none select-none z-30"></div>
+    <div class="hidden lg:block absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-300/80 pointer-events-none select-none z-30"></div>
 
     <!-- Hero Section -->
     <div data-theme="light"
-      class="hero-wash relative z-10 pt-16 sm:pt-24 lg:pt-12 pb-10 sm:pb-20 overflow-hidden min-h-[calc(100svh-88px)] flex items-start md:items-center">
+      class="hero-wash relative z-10 pt-16 sm:pt-24 lg:pt-12 pb-10 sm:pb-20 overflow-hidden min-h-[calc(100svh-88px)] flex items-center">
 
       <div class="absolute inset-0 z-0 hero-grain pointer-events-none"></div>
 
@@ -19,9 +19,9 @@
         <div class="absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 hidden lg:block"></div>
 
         <!-- Horizontal grid line below hero header elements -->
-        <div class="absolute top-[55%] left-0 right-0 h-px bg-gray-300/80"></div>
+        <div class="absolute top-[55%] left-0 right-0 h-px bg-gray-300/80 hidden sm:block"></div>
         <!-- Horizontal grid line above logo/footer elements inside hero -->
-        <div class="absolute bottom-[90px] left-0 right-0 h-px bg-gray-300/80"></div>
+        <div class="absolute bottom-[90px] left-0 right-0 h-px bg-gray-300/80 hidden sm:block"></div>
 
         <!-- Intersecting crosshairs at boundary coordinates -->
         <div class="hidden sm:block absolute top-[88px] left-6 sm:left-8 lg:left-[calc(50%-640px)] w-4 h-4 -translate-x-1/2 -translate-y-1/2">
@@ -62,9 +62,9 @@
       </div>
 
       <div
-        class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10 w-full">
+        class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10 w-full">
 
-        <div class="lg:col-span-6 text-left pt-16 sm:pt-28 lg:pt-0 lg:mt-[20px] lg:ml-10 px-0 sm:px-4">
+        <div class="lg:col-span-6 text-left pt-8 pb-8 sm:pt-28 lg:pt-0 lg:mt-[20px] lg:ml-10 px-0 sm:px-4 -translate-y-[120px] md:-translate-y-[100px] lg:translate-y-0">
 
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold mb-6 border border-emerald-200 animate-fade-in-up">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -72,7 +72,7 @@
           </div>
 
           <h1
-            class="animate-fade-in-up hero-serif text-4xl sm:text-6xl lg:text-[70px] tracking-[-0.02em] leading-[1.1] lg:leading-[78px] text-[rgb(1,1,16)] max-w-4xl">
+            class="animate-fade-in-up hero-serif text-4xl sm:text-5xl md:text-5xl lg:text-[70px] tracking-[-0.02em] leading-[1.1] lg:leading-[78px] text-[rgb(1,1,16)] max-w-4xl">
             Your AI should <br class="hidden md:block" />
             <span class="block text-[rgb(1,1,16)] italic font-medium">remember <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">everything.</span></span>
           </h1>
@@ -105,11 +105,11 @@
             <!-- Content (Buttons) -->
             <div class="flex flex-row items-center justify-start gap-3 sm:gap-4">
               <router-link to="/signup"
-                class="w-auto px-4 py-2 sm:px-8 sm:py-3 bg-[#050614] text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-base inline-flex items-center justify-center">
+                class="w-auto px-4 py-2 lg:px-8 lg:py-3 bg-[#050614] text-white font-bold sm:font-semibold lg:font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm lg:text-base inline-flex items-center justify-center">
                 Get Started
               </router-link>
               <router-link to="/#pricing"
-                class="w-auto px-4 py-2 sm:px-8 sm:py-3 bg-white text-[#050614] font-bold rounded border border-gray-250 hover:bg-gray-50 transition-all duration-300 text-xs sm:text-base inline-flex items-center justify-center">
+                class="w-auto px-4 py-2 lg:px-8 lg:py-3 bg-white text-[#050614] font-bold sm:font-semibold lg:font-bold rounded border border-gray-250 hover:bg-gray-50 transition-all duration-300 text-xs sm:text-sm lg:text-base inline-flex items-center justify-center">
                 See Plans
               </router-link>
             </div>
@@ -130,7 +130,7 @@
 
     <!-- Why AI Forgets Problem Framing Section -->
     <div id="problem-framing" data-theme="light" class="relative z-20 pt-10 pb-10 md:pt-16 md:pb-16 bg-white">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
           <div>/ THE PROBLEM</div>
           <div>[1/9]</div>
@@ -182,7 +182,7 @@
 
     <!-- Works with every LLM & Tool Section -->
     <div id="llm-compatibility" data-theme="light" class="relative z-20 pt-10 pb-0 md:pt-16 bg-white">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
           <div>/ PLATFORM COMPATIBILITY</div>
           <div>[2/9]</div>
@@ -248,11 +248,11 @@
         </div>
 
         <!-- Snippets of Use Cases (IDE/Agent Integrations & Multi-Model compatibility) -->
-        <div class="-mx-6 sm:-mx-8 lg:-mx-12 border-t border-b border-gray-300/80 bg-white relative z-20">
-          <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-300/80">
+        <div class="-mx-8 sm:-mx-8 lg:-mx-12 lg:border-t lg:border-b lg:border-gray-300/80 bg-white relative z-20">
+          <div class="flex lg:grid flex-nowrap lg:grid-cols-3 items-stretch gap-6 lg:gap-0 overflow-x-auto no-scrollbar scrollbar-none snap-x snap-mandatory px-8 lg:px-0">
             
             <!-- Column 1: IDE Integration -->
-            <div class="p-5 sm:p-8 flex flex-col justify-between min-h-[380px] md:min-h-[440px] text-left">
+            <div class="w-[290px] sm:w-[390px] lg:w-full shrink-0 snap-align-start p-5 sm:p-8 flex flex-col justify-between min-h-[380px] lg:min-h-[440px] text-left border border-gray-200 lg:border-0 lg:border-r lg:border-gray-300/80 rounded-lg lg:rounded-none">
               <div>
                 <div class="text-xs font-bold text-[#D97757] tracking-widest uppercase mb-3 font-mono">01 / IDE INTEGRATION</div>
                 <h3 class="font-display text-xl font-extrabold text-gray-900 mb-3 tracking-tight">Native IDE Memory</h3>
@@ -268,7 +268,7 @@
             </div>
             
             <!-- Column 2: Terminal Agents -->
-            <div class="p-5 sm:p-8 flex flex-col justify-between min-h-[380px] md:min-h-[440px] text-left">
+            <div class="w-[290px] sm:w-[390px] lg:w-full shrink-0 snap-align-start p-5 sm:p-8 flex flex-col justify-between min-h-[380px] lg:min-h-[440px] text-left border border-gray-200 lg:border-0 lg:border-r lg:border-gray-300/80 rounded-lg lg:rounded-none">
               <div>
                 <div class="text-xs font-bold text-[#D97757] tracking-widest uppercase mb-3 font-mono">02 / TERMINAL AGENTS</div>
                 <h3 class="font-display text-xl font-extrabold text-gray-900 mb-3 tracking-tight">DevOps &amp; Code Agents</h3>
@@ -284,7 +284,7 @@
             </div>
 
             <!-- Column 3: Multi-Model -->
-            <div class="p-5 sm:p-8 flex flex-col justify-between min-h-[380px] md:min-h-[440px] text-left">
+            <div class="w-[290px] sm:w-[390px] lg:w-full shrink-0 snap-align-start p-5 sm:p-8 flex flex-col justify-between min-h-[380px] lg:min-h-[440px] text-left border border-gray-200 lg:border-0 rounded-lg lg:rounded-none">
               <div>
                 <div class="text-xs font-bold text-[#D97757] tracking-widest uppercase mb-3 font-mono">03 / MULTI-MODEL</div>
                 <h3 class="font-display text-xl font-extrabold text-gray-900 mb-3 tracking-tight">Works With Every LLM</h3>
@@ -309,7 +309,7 @@
 
 <!-- Comparison Section (WHITE) -->
     <div id="comparison" data-theme="light" class="pt-6 md:pt-10 pb-0 bg-white relative z-25">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         
         <!-- Section Header breadcrumb and details (Supermemory Style) -->
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
@@ -335,231 +335,231 @@
         </div>
 
         <!-- Comparison Table Container -->
-        <div class="hidden md:block w-auto -mx-6 sm:-mx-8 lg:-mx-12 overflow-x-auto border-t border-b sm:border-l sm:border-r border-gray-300/80 bg-white relative z-20">
-          <table class="w-full min-w-[800px] border-collapse text-left">
+        <div class="hidden md:block w-auto -mx-8 sm:-mx-8 lg:-mx-12 md:overflow-x-hidden lg:overflow-x-auto border-t border-b sm:border-l sm:border-r border-gray-300/80 bg-white relative z-20">
+          <table class="w-full lg:min-w-[800px] border-collapse text-left table-fixed">
             <thead>
               <tr class="border-b border-gray-300/80">
-                <th class="py-5 px-6 text-xs uppercase font-bold tracking-wider text-gray-400 font-mono w-[30%]">Positioning Dimension</th>
-                <th class="py-5 px-6 text-center relative w-[28%] bg-[#D97757]/5">
-                  <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D97757] text-white text-[9px] font-extrabold tracking-widest px-3 py-0.5 rounded-full uppercase shadow-sm">RECOMMENDED</div>
+                <th class="py-4 sm:py-5 px-2.5 sm:px-6 text-xs uppercase font-bold tracking-wider text-gray-400 font-mono w-[30%]">Positioning Dimension</th>
+                <th class="py-4 sm:py-5 px-2.5 sm:px-6 text-center relative w-[28%] bg-[#D97757]/5">
+                  <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D97757] text-white text-[8px] sm:text-[9px] font-extrabold tracking-widest px-2 sm:px-3 py-0.5 rounded-full uppercase shadow-sm whitespace-nowrap">RECOMMENDED</div>
                   <div class="flex items-center justify-center mt-1 h-8">
                     <img src="/logo.png" alt="Memwyre" class="h-7 w-auto dark:invert" />
                   </div>
                 </th>
-                <th class="py-5 px-6 text-center text-gray-700 font-display text-base font-bold w-[21%]">Mem0</th>
-                <th class="py-5 px-6 text-center text-gray-700 font-display text-base font-bold w-[21%]">Zep AI</th>
+                <th class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-700 font-display text-sm lg:text-base font-bold w-[21%]">Mem0</th>
+                <th class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-700 font-display text-sm lg:text-base font-bold w-[21%]">Zep AI</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-300/80">
               
               <!-- Primary Target -->
               <tr class="hover:bg-gray-50/50 transition-colors duration-150">
-                <td class="py-5 px-6 font-medium text-gray-900 text-sm sm:text-base flex items-center gap-3">
-                  <div class="text-gray-400">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 font-medium text-gray-900 text-xs sm:text-sm lg:text-base flex items-center gap-2 lg:gap-3">
+                  <div class="text-gray-400 hidden lg:block">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                     </svg>
                   </div>
                   <div>
-                    <div class="font-bold text-gray-900 text-sm sm:text-base">Primary Customer</div>
-                    <div class="text-gray-400 text-xs mt-0.5">Who the product is designed for</div>
+                    <div class="font-bold text-gray-900 text-xs sm:text-sm lg:text-base">Primary Customer</div>
+                    <div class="text-gray-400 text-[10px] sm:text-xs mt-0.5">Who the product is designed for</div>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center bg-[#D97757]/5 font-bold text-[#D97757] text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center bg-[#D97757]/5 font-bold text-[#D97757] text-xs sm:text-sm">
                   Individual Developers &amp; Power Users
                 </td>
-                <td class="py-5 px-6 text-center text-gray-500 text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-500 text-xs sm:text-sm">
                   AI Agent Developers
                 </td>
-                <td class="py-5 px-6 text-center text-gray-500 text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-500 text-xs sm:text-sm">
                   AI Agent Developers
                 </td>
               </tr>
 
               <!-- Delivery Channel -->
               <tr class="hover:bg-gray-50/50 transition-colors duration-150">
-                <td class="py-5 px-6 font-medium text-gray-900 text-sm sm:text-base flex items-center gap-3">
-                  <div class="text-gray-400">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 font-medium text-gray-900 text-xs sm:text-sm lg:text-base flex items-center gap-2 lg:gap-3">
+                  <div class="text-gray-400 hidden lg:block">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
                     </svg>
                   </div>
                   <div>
-                    <div class="font-bold text-gray-900 text-sm sm:text-base">Core Product Interface</div>
-                    <div class="text-gray-400 text-xs mt-0.5">How users access and manage context</div>
+                    <div class="font-bold text-gray-900 text-xs sm:text-sm lg:text-base">Core Product Interface</div>
+                    <div class="text-gray-400 text-[10px] sm:text-xs mt-0.5">How users access and manage context</div>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center bg-[#D97757]/5 font-bold text-[#D97757] text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center bg-[#D97757]/5 font-bold text-[#D97757] text-xs sm:text-sm">
                   Desktop Overlay, Browser, &amp; IDEs
                 </td>
-                <td class="py-5 px-6 text-center text-gray-500 text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-500 text-xs sm:text-sm">
                   Backend API &amp; SDKs only
                 </td>
-                <td class="py-5 px-6 text-center text-gray-500 text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-500 text-xs sm:text-sm">
                   Backend API &amp; SDKs only
                 </td>
               </tr>
 
               <!-- Setup Time -->
               <tr class="hover:bg-gray-50/50 transition-colors duration-150">
-                <td class="py-5 px-6 font-medium text-gray-900 text-sm sm:text-base flex items-center gap-3">
-                  <div class="text-gray-400">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 font-medium text-gray-900 text-xs sm:text-sm lg:text-base flex items-center gap-2 lg:gap-3">
+                  <div class="text-gray-400 hidden lg:block">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div>
-                    <div class="font-bold text-gray-900 text-sm sm:text-base">Time-to-Value Setup</div>
-                    <div class="text-gray-400 text-xs mt-0.5">Time to connect tools and store first memory</div>
+                    <div class="font-bold text-gray-900 text-xs sm:text-sm lg:text-base">Time-to-Value Setup</div>
+                    <div class="text-gray-400 text-[10px] sm:text-xs mt-0.5">Time to connect tools and store first memory</div>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center bg-[#D97757]/5 font-bold text-[#D97757] text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center bg-[#D97757]/5 font-bold text-[#D97757] text-xs sm:text-sm">
                   &lt; 5 Minutes
                 </td>
-                <td class="py-5 px-6 text-center text-gray-500 text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-500 text-xs sm:text-sm">
                   Hours (Code &amp; Database Config)
                 </td>
-                <td class="py-5 px-6 text-center text-gray-500 text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-500 text-xs sm:text-sm">
                   Hours (Code &amp; Database Config)
                 </td>
               </tr>
 
               <!-- Cross-App Portability -->
               <tr class="hover:bg-gray-50/50 transition-colors duration-150">
-                <td class="py-5 px-6 font-medium text-gray-900 text-sm sm:text-base flex items-center gap-3">
-                  <div class="text-gray-400">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 font-medium text-gray-900 text-xs sm:text-sm lg:text-base flex items-center gap-2 lg:gap-3">
+                  <div class="text-gray-400 hidden lg:block">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 16.875V21m0-8.25v2.25m0-10.5v2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125zM3.375 18h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                     </svg>
                   </div>
                   <div>
-                    <div class="font-bold text-gray-900 text-sm sm:text-base">Cross-Tool Memory Sync</div>
-                    <div class="text-gray-400 text-xs mt-0.5">Auto-sharing memories across your workflows</div>
+                    <div class="font-bold text-gray-900 text-xs sm:text-sm lg:text-base">Cross-Tool Memory Sync</div>
+                    <div class="text-gray-400 text-[10px] sm:text-xs mt-0.5">Auto-sharing memories across your workflows</div>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center bg-[#D97757]/5 font-bold text-[#D97757] text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center bg-[#D97757]/5 font-bold text-[#D97757] text-xs sm:text-sm">
                   Built-in &amp; Automatic
                 </td>
-                <td class="py-5 px-6 text-center text-gray-500 text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-500 text-xs sm:text-sm">
                   Requires custom syncing pipelines
                 </td>
-                <td class="py-5 px-6 text-center text-gray-500 text-sm">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-500 text-xs sm:text-sm">
                   Requires custom syncing pipelines
                 </td>
               </tr>
 
               <!-- Workspace Connectors -->
               <tr class="hover:bg-gray-50/50 transition-colors duration-150">
-                <td class="py-5 px-6 font-medium text-gray-900 text-sm sm:text-base flex items-center gap-3">
-                  <div class="text-gray-400">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 font-medium text-gray-900 text-xs sm:text-sm lg:text-base flex items-center gap-2 lg:gap-3">
+                  <div class="text-gray-400 hidden lg:block">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
                     </svg>
                   </div>
                   <div>
-                    <div class="font-bold text-gray-900 text-sm sm:text-base">Ready-To-Use Connectors</div>
-                    <div class="text-gray-400 text-xs mt-0.5">Notion, Google Drive, GitHub sync capability</div>
+                    <div class="font-bold text-gray-900 text-xs sm:text-sm lg:text-base">Ready-To-Use Connectors</div>
+                    <div class="text-gray-400 text-[10px] sm:text-xs mt-0.5">Notion, Google Drive, GitHub sync capability</div>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center bg-[#D97757]/5">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center bg-[#D97757]/5">
                   <div class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-100 text-[#D97757]">
                     <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center text-gray-300 font-mono">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-300 font-mono">
                   —
                 </td>
-                <td class="py-5 px-6 text-center text-gray-300 font-mono">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-300 font-mono">
                   —
                 </td>
               </tr>
 
               <!-- MCP Server Support -->
               <tr class="hover:bg-gray-50/50 transition-colors duration-150">
-                <td class="py-5 px-6 font-medium text-gray-900 text-sm sm:text-base flex items-center gap-3">
-                  <div class="text-gray-400">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 font-medium text-gray-900 text-xs sm:text-sm lg:text-base flex items-center gap-2 lg:gap-3">
+                  <div class="text-gray-400 hidden lg:block">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.25a3 3 0 00-3 3v8.25a3 3 0 003 3h13.5a3 3 0 003-3V8.25a3 3 0 00-3-3H5.25zM12 9.75v4.5m-2.25-2.25h4.5" />
                     </svg>
                   </div>
                   <div>
-                    <div class="font-bold text-gray-900 text-sm sm:text-base">MCP Client Support</div>
-                    <div class="text-gray-400 text-xs mt-0.5">Out-of-the-box Cursor, Claude Desktop integration</div>
+                    <div class="font-bold text-gray-900 text-xs sm:text-sm lg:text-base">MCP Client Support</div>
+                    <div class="text-gray-400 text-[10px] sm:text-xs mt-0.5">Out-of-the-box Cursor, Claude Desktop integration</div>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center bg-[#D97757]/5">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center bg-[#D97757]/5">
                   <div class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-100 text-[#D97757]">
                     <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center text-gray-300 font-mono">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-300 font-mono">
                   —
                 </td>
-                <td class="py-5 px-6 text-center text-gray-300 font-mono">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-300 font-mono">
                   —
                 </td>
               </tr>
 
               <!-- Agent CLI Plugins -->
               <tr class="hover:bg-gray-50/50 transition-colors duration-150">
-                <td class="py-5 px-6 font-medium text-gray-900 text-sm sm:text-base flex items-center gap-3">
-                  <div class="text-gray-400">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 font-medium text-gray-900 text-xs sm:text-sm lg:text-base flex items-center gap-2 lg:gap-3">
+                  <div class="text-gray-400 hidden lg:block">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
                     </svg>
                   </div>
                   <div>
-                    <div class="font-bold text-gray-900 text-sm sm:text-base">Agent CLI Plugins</div>
-                    <div class="text-gray-400 text-xs mt-0.5">Native plugins for Claude Code and OpenClaw</div>
+                    <div class="font-bold text-gray-900 text-xs sm:text-sm lg:text-base">Agent CLI Plugins</div>
+                    <div class="text-gray-400 text-[10px] sm:text-xs mt-0.5">Native plugins for Claude Code and OpenClaw</div>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center bg-[#D97757]/5">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center bg-[#D97757]/5">
                   <div class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-100 text-[#D97757]">
                     <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center text-gray-300 font-mono">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-300 font-mono">
                   —
                 </td>
-                <td class="py-5 px-6 text-center text-gray-300 font-mono">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center text-gray-300 font-mono">
                   —
                 </td>
               </tr>
 
               <!-- Self-Hostable -->
               <tr class="hover:bg-gray-50/50 transition-colors duration-150">
-                <td class="py-5 px-6 font-medium text-gray-900 text-sm sm:text-base flex items-center gap-3">
-                  <div class="text-gray-400">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 font-medium text-gray-900 text-xs sm:text-sm lg:text-base flex items-center gap-2 lg:gap-3">
+                  <div class="text-gray-400 hidden lg:block">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
                     </svg>
                   </div>
                   <div>
-                    <div class="font-bold text-gray-900 text-sm sm:text-base">Self-Hostable</div>
-                    <div class="text-gray-400 text-xs mt-0.5">Fully open-source deployment using Docker</div>
+                    <div class="font-bold text-gray-900 text-xs sm:text-sm lg:text-base">Self-Hostable</div>
+                    <div class="text-gray-400 text-[10px] sm:text-xs mt-0.5">Fully open-source deployment using Docker</div>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center bg-[#D97757]/5">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center bg-[#D97757]/5">
                   <div class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-100 text-[#D97757]">
                     <svg class="w-3.5 h-3.5 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center">
                   <div class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-700">
                     <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                 </td>
-                <td class="py-5 px-6 text-center">
+                <td class="py-4 sm:py-5 px-2.5 sm:px-6 text-center">
                   <div class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-700">
                     <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -671,7 +671,7 @@
     
 <!-- Features Section (WHITE) -->
     <div id="features" data-theme="light" class="relative z-20 pt-6 sm:pt-8 pb-10 sm:pb-12 bg-white">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
 
         <!-- 2-Column Tabbed Showcase -->
         <div ref="showcaseContainer" class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -772,7 +772,7 @@
 
     <!-- Get Started Installer Section (Standalone) -->
     <div class="relative z-20 bg-white pt-12 pb-12 sm:pt-16 sm:pb-16">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         <!-- Section Header breadcrumb and details (Supermemory Style) -->
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
           <div>/ INSTALLER</div>
@@ -889,7 +889,7 @@
     
 <!-- How It Works Section -->
     <div id="how-it-works" ref="howItWorksSectionRef" data-theme="light" class="pt-6 pb-12 sm:pt-8 sm:pb-16 bg-white relative z-25">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         
         <!-- Section Header breadcrumb and details (Supermemory Style) -->
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
@@ -1063,7 +1063,7 @@
     <div id="benchmark" ref="benchmarkSectionRef" data-theme="light"
       class="relative pt-6 pb-12 sm:pt-8 sm:pb-16 text-gray-900 z-25">
 
-      <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="relative z-10 max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         <!-- Section Header breadcrumb and details (Supermemory Style) -->
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
           <div>/ BENCHMARK</div>
@@ -1408,7 +1408,7 @@
 
     <!-- Memory vs RAG Section -->
     <div class="relative z-20 bg-white py-6 sm:py-8">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         <div ref="comparisonSectionRef" class="p-8 sm:p-10 bg-gradient-to-r from-white via-[#FAF9F6] to-[#FAF6F0] border border-dashed border-gray-300 rounded-none relative overflow-hidden text-left shadow-sm">
           <!-- Corner Brackets -->
           <div class="absolute -top-1 -left-1 w-2.5 h-2.5 pointer-events-none">
@@ -1531,7 +1531,7 @@
 <!-- Ecosystem Section (LIGHT BLEND) -->
     <div id="ecosystem" data-theme="light" class="relative pt-6 pb-12 sm:pt-8 sm:pb-16 bg-white z-25">
 
-      <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="relative z-10 max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         <!-- Section Header breadcrumb and details (Supermemory Style) -->
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
           <div>/ TECHNICAL SPECS</div>
@@ -1554,10 +1554,10 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="flex lg:grid flex-nowrap lg:grid-cols-3 items-stretch gap-6 lg:gap-8 overflow-x-auto no-scrollbar scrollbar-none snap-x snap-mandatory -mx-8 lg:mx-0 px-8 lg:px-0 pb-6 lg:pb-0">
           <div
             @click="$router.push('/mcp')"
-            class="p-10 bg-white border border-gray-300/80 rounded transition-all duration-300 relative overflow-hidden group hover:border-gray-400 cursor-pointer">
+            class="w-[285px] sm:w-[370px] lg:w-full shrink-0 snap-align-start p-6 lg:p-10 bg-white border border-gray-300/80 rounded transition-all duration-300 relative overflow-hidden group hover:border-gray-400 cursor-pointer">
             <!-- Tilted MCP Background Icon -->
             <div
               class="absolute z-0 -top-12 -right-12 w-52 h-52 opacity-[0.10] group-hover:opacity-[0.16] rotate-[20deg] pointer-events-none transition-opacity duration-500 text-black">
@@ -1573,12 +1573,12 @@
                   stroke="currentColor" stroke-width="12" stroke-linecap="round" />
               </svg>
             </div>
-            <h3 class="relative z-10 text-2xl font-bold mb-4 mt-8 text-black">MCP Server</h3>
-            <p class="relative z-10 text-gray-600 mb-8">
+            <h3 class="relative z-10 text-xl lg:text-2xl font-bold mb-4 mt-8 text-black">MCP Server</h3>
+            <p class="relative z-10 text-sm lg:text-base text-gray-600 mb-8">
               Connect Memwyre directly to Claude Desktop or any MCP-compliant client. Give your AI assistant
               direct access to your knowledge base.
             </p>
-            <div class="relative z-10 bg-gray-50 border border-dashed border-gray-300 rounded p-4 font-mono text-xs text-gray-700">
+            <div class="relative z-10 bg-gray-50 border border-dashed border-gray-300 rounded p-4 font-mono text-[11px] lg:text-xs text-gray-700">
               <!-- Corner Brackets -->
               <div class="absolute -top-1 -left-1 w-2.5 h-2.5 pointer-events-none">
                 <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
@@ -1602,17 +1602,17 @@
 
           <div
             @click="$router.push('/extension')"
-            class="p-10 bg-white border border-gray-300/80 rounded transition-all duration-300 relative overflow-hidden group hover:border-gray-400 cursor-pointer">
+            class="w-[285px] sm:w-[370px] lg:w-full shrink-0 snap-align-start p-6 lg:p-10 bg-white border border-gray-300/80 rounded transition-all duration-300 relative overflow-hidden group hover:border-gray-400 cursor-pointer">
             <!-- Tilted Chrome Background Icon -->
             <img src="@/assets/chrome-logo-svgrepo-com.svg" alt=""
               class="absolute z-0 -top-14 -right-14 w-56 h-56 opacity-[0.10] group-hover:opacity-[0.16] rotate-[25deg] pointer-events-none transition-opacity duration-500" />
 
-            <h3 class="relative z-10 text-2xl font-bold mb-4 mt-8 text-black">Browser Extension</h3>
-            <p class="relative z-10 text-gray-600 mb-8">
+            <h3 class="relative z-10 text-xl lg:text-2xl font-bold mb-4 mt-8 text-black">Browser Extension</h3>
+            <p class="relative z-10 text-sm lg:text-base text-gray-600 mb-8">
               The easiest way to feed context into your memory platform. Clip code snippets, documentation, or chats instantly.
             </p>
             <div
-              class="relative z-10 inline-flex items-center gap-3 px-4 py-2 rounded border border-dashed border-gray-300 bg-gray-50 text-gray-800 text-sm font-bold">
+              class="relative z-10 inline-flex items-center gap-2 lg:gap-3 px-3 py-1.5 lg:px-4 lg:py-2 rounded border border-dashed border-gray-300 bg-gray-50 text-gray-800 text-xs lg:text-sm font-bold">
               <!-- Corner Brackets -->
               <div class="absolute -top-1 -left-1 w-2.5 h-2.5 pointer-events-none">
                 <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
@@ -1638,17 +1638,17 @@
 
           <div
             @click="$router.push('/plugins')"
-            class="p-10 bg-white border border-gray-300/80 rounded transition-all duration-300 relative overflow-hidden group hover:border-gray-400 cursor-pointer">
+            class="w-[285px] sm:w-[370px] lg:w-full shrink-0 snap-align-start p-6 lg:p-10 bg-white border border-gray-300/80 rounded transition-all duration-300 relative overflow-hidden group hover:border-gray-400 cursor-pointer">
             <!-- Tilted OpenClaw Background Icon -->
             <img src="@/assets/openclaw-color.svg" alt=""
               class="absolute z-0 -top-12 -right-12 w-52 h-52 opacity-[0.10] group-hover:opacity-[0.16] rotate-[20deg] pointer-events-none transition-opacity duration-500" />
 
-            <h3 class="relative z-10 text-2xl font-bold mb-4 mt-8 text-black">OpenClaw Plugin</h3>
-            <p class="relative z-10 text-gray-600 mb-8">
+            <h3 class="relative z-10 text-xl lg:text-2xl font-bold mb-4 mt-8 text-black">OpenClaw Plugin</h3>
+            <p class="relative z-10 text-sm lg:text-base text-gray-600 mb-8">
               Give autonomous agents persistent memory. The OpenClaw plugin lets AI agents save and recall context
               from your vault automatically.
             </p>
-            <div class="relative z-10 bg-gray-50 border border-dashed border-gray-300 rounded p-4 font-mono text-xs text-gray-700">
+            <div class="relative z-10 bg-gray-50 border border-dashed border-gray-300 rounded p-4 font-mono text-[11px] lg:text-xs text-gray-700">
               <!-- Corner Brackets -->
               <div class="absolute -top-1 -left-1 w-2.5 h-2.5 pointer-events-none">
                 <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
@@ -1679,7 +1679,7 @@
     
 <!-- Pricing Section -->
     <div id="pricing" data-theme="light" class="pt-6 pb-0 bg-white relative z-25">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         
         <!-- Section Header breadcrumb and details (Supermemory Style) -->
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
@@ -1692,7 +1692,6 @@
 
         <!-- Title / Header info -->
         <div class="text-center mb-12 sm:mb-16">
-          <h2 class="text-xs font-bold uppercase tracking-widest text-[#D97757] mb-4 font-mono">Simple &amp; Transparent</h2>
           <p class="hero-serif text-4xl sm:text-5xl tracking-tight text-gray-900 leading-[1.1]">
             AI that works where <span class="italic font-medium">your team <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">works.</span></span>
           </p>
@@ -1702,11 +1701,11 @@
         </div>
 
         <!-- 3-Column Bordered Grid matching "How It Works" Section -->
-        <div class="border-y border-gray-300 rounded-none bg-white relative z-20 -mx-6 sm:-mx-8 lg:-mx-12">
-          <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-300 items-stretch gap-y-4 md:gap-y-0 px-6 sm:px-0 py-4 md:py-0">
+        <div class="lg:border-y lg:border-gray-300 rounded-none bg-white relative z-20 -mx-8 sm:-mx-8 lg:-mx-12">
+          <div class="flex lg:grid flex-nowrap lg:grid-cols-3 items-stretch gap-6 lg:gap-0 overflow-x-auto no-scrollbar scrollbar-none snap-x snap-mandatory px-8 lg:px-0 py-4 lg:py-0">
             
             <!-- Free Plan -->
-            <div class="pt-6 px-5 pb-5 sm:pt-10 sm:px-10 sm:pb-5 flex flex-col justify-between h-full bg-white border border-gray-200 rounded-lg md:border-0 md:rounded-none">
+            <div class="w-[290px] sm:w-[390px] lg:w-full shrink-0 snap-align-start pt-6 px-5 pb-5 sm:pt-10 sm:px-10 lg:px-10 sm:pb-5 flex flex-col justify-between h-auto lg:h-full bg-white border border-gray-200 rounded-lg lg:border-0 lg:border-r lg:border-gray-300 lg:rounded-none">
               <div>
                 <div class="text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-6">01 . FREE</div>
                 <div class="mb-4">
@@ -1760,7 +1759,7 @@
             </div>
 
             <!-- Pro Plan (Recommended) -->
-            <div class="pt-6 px-5 pb-5 sm:pt-10 sm:px-10 sm:pb-5 flex flex-col justify-between h-full bg-orange-50/10 relative border border-[#D97757]/30 rounded-lg md:border-0 md:rounded-none">
+            <div class="w-[290px] sm:w-[390px] lg:w-full shrink-0 snap-align-start pt-6 px-5 pb-5 sm:pt-10 sm:px-10 lg:px-10 sm:pb-5 flex flex-col justify-between h-auto lg:h-full bg-orange-50/10 relative border border-[#D97757]/30 rounded-lg lg:border-0 lg:border-r lg:border-gray-300 lg:rounded-none">
               <div>
                 <div class="flex justify-between items-center mb-6">
                   <div class="text-xs tracking-wider uppercase font-bold font-mono text-[#D97757]">02 . PRO</div>
@@ -1857,7 +1856,7 @@
             </div>
 
             <!-- Enterprise Plan -->
-            <div class="pt-6 px-5 pb-5 sm:pt-10 sm:px-10 sm:pb-5 flex flex-col justify-between h-full bg-white border border-gray-200 rounded-lg md:border-0 md:rounded-none">
+            <div class="w-[290px] sm:w-[390px] lg:w-full shrink-0 snap-align-start pt-6 px-5 pb-5 sm:pt-10 sm:px-10 lg:px-10 sm:pb-5 flex flex-col justify-between h-auto lg:h-full bg-white border border-gray-200 rounded-lg lg:border-0 lg:rounded-none">
               <div>
                 <div class="text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-6">03 . ENTERPRISE</div>
                 <div class="mb-4">
@@ -1914,7 +1913,7 @@
     
 <!-- Blogs Section -->
     <div id="blog-section" data-theme="light" class="pt-16 pb-16 bg-white relative z-25">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12 text-center">
         <!-- Badge -->
         <div class="inline-flex items-center justify-center px-3 py-1 rounded border border-gray-200 text-xs font-semibold text-gray-800 bg-white shadow-sm font-mono tracking-wider mb-6">
           Blogs
@@ -1930,7 +1929,7 @@
           
           <!-- Blog Card 1 -->
           <router-link to="/blog/mcp-persistent-memory" class="group flex flex-row md:flex-col items-start md:items-stretch gap-4 md:gap-0">
-            <div class="w-24 h-16 md:w-full md:aspect-[16/10] shrink-0 rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
+            <div class="w-24 h-16 md:w-full md:h-auto md:aspect-[16/10] shrink-0 rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
               <img 
                 src="/blog-covers/mcp-persistent-memory.png" 
                 alt="How to Give Claude Desktop Persistent Memory using MCP" 
@@ -1939,7 +1938,7 @@
               />
             </div>
             <div class="flex-1">
-              <h3 class="text-sm md:text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 md:mt-5 md:mb-2 font-sans">
+              <h3 class="text-sm md:text-base lg:text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 md:mt-5 md:mb-2 font-sans">
                 How to Give Claude Desktop Persistent Memory using MCP
               </h3>
               <div class="text-[10px] md:text-xs text-gray-500 font-sans mt-1 md:mt-0">
@@ -1950,7 +1949,7 @@
 
           <!-- Blog Card 2 -->
           <router-link to="/blog/vscode-mcp-persistent-memory" class="group flex flex-row md:flex-col items-start md:items-stretch gap-4 md:gap-0">
-            <div class="w-24 h-16 md:w-full md:aspect-[16/10] shrink-0 rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
+            <div class="w-24 h-16 md:w-full md:h-auto md:aspect-[16/10] shrink-0 rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
               <img 
                 src="/blog-covers/vscode-mcp-persistent-memory.png" 
                 alt="How to Enable Persistent Codebase Memory in VS Code with MCP and Cline" 
@@ -1959,7 +1958,7 @@
               />
             </div>
             <div class="flex-1">
-              <h3 class="text-sm md:text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 md:mt-5 md:mb-2 font-sans">
+              <h3 class="text-sm md:text-base lg:text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 md:mt-5 md:mb-2 font-sans">
                 How to Enable Persistent Codebase Memory in VS Code with MCP and Cline
               </h3>
               <div class="text-[10px] md:text-xs text-gray-500 font-sans mt-1 md:mt-0">
@@ -1970,7 +1969,7 @@
 
           <!-- Blog Card 3 -->
           <router-link to="/blog/claude-code-memory-ingestion" class="group flex flex-row md:flex-col items-start md:items-stretch gap-4 md:gap-0">
-            <div class="w-24 h-16 md:w-full md:aspect-[16/10] shrink-0 rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
+            <div class="w-24 h-16 md:w-full md:h-auto md:aspect-[16/10] shrink-0 rounded overflow-hidden border border-gray-200/85 bg-gray-50 flex items-center justify-center relative">
               <img 
                 src="/blog-covers/claude-code-memory-ingestion.png" 
                 alt="Building Persistent Terminal Sessions: Claude Code Memory Ingestion" 
@@ -1979,7 +1978,7 @@
               />
             </div>
             <div class="flex-1">
-              <h3 class="text-sm md:text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 md:mt-5 md:mb-2 font-sans">
+              <h3 class="text-sm md:text-base lg:text-lg font-bold text-[rgb(1,1,16)] leading-snug group-hover:text-[#D97757] transition-colors duration-250 md:mt-5 md:mb-2 font-sans">
                 Building Persistent Terminal Sessions: Claude Code Memory Ingestion
               </h3>
               <div class="text-[10px] md:text-xs text-gray-500 font-sans mt-1 md:mt-0">
@@ -1997,7 +1996,7 @@
     <div class="w-full h-px bg-gray-300/80 pointer-events-none select-none relative z-30"></div>
 
     <div id="faq" data-theme="light" class="pt-6 pb-12 sm:pt-8 sm:pb-16 bg-white relative z-25">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="max-w-7xl mx-auto px-8 sm:px-8 lg:px-12">
         
         <!-- Section Header breadcrumb and details (Supermemory Style) -->
         <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
@@ -2870,8 +2869,8 @@ html {
   }
 }
 
-/* Optimization for short mobile viewports / 16:9 portrait phone screens */
-@media (max-width: 640px) and (max-height: 720px) {
+/* General mobile optimizations for all mobile screens */
+@media (max-width: 640px) {
   .hero-wash {
     padding-top: 3rem !important;
     padding-bottom: 2rem !important;
@@ -2947,6 +2946,47 @@ html {
     margin-bottom: 1.25rem !important;
   }
 }
+
+/* Specific optimizations for tall aspect ratio mobile viewports (19.5:9, 20:9, 21:9) */
+@media (max-width: 640px) and (max-aspect-ratio: 9/17) {
+  .hero-wash {
+    min-height: calc(100svh - 64px) !important;
+    padding-top: 4.5rem !important;
+    padding-bottom: 4.5rem !important;
+  }
+  
+  .hero-wash h1 {
+    font-size: 2.375rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-wash p {
+    margin-top: 1.25rem !important;
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .hero-wash .relative.inline-flex.p-3 {
+    margin-top: 2rem !important;
+    padding: 0.5rem !important;
+  }
+
+  /* Give sections a bit more breathing room on tall flagships */
+  #problem-framing,
+  #llm-compatibility,
+  #comparison,
+  #features,
+  #how-it-works,
+  #benchmark,
+  #ecosystem,
+  #pricing,
+  #blog-section,
+  #faq {
+    padding-top: 3.5rem !important;
+    padding-bottom: 3.5rem !important;
+  }
+}
+
 
 
 .force-light,
