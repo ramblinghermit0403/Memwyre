@@ -5,6 +5,7 @@
         <!-- Socials -->
         <div class="flex items-center gap-5">
           <a href="https://twitter.com/Memwyre" target="_blank"
+            aria-label="Follow Memwyre on X (Twitter)"
             class="text-black hover:text-gray-500 transition-all duration-300 transform hover:scale-110">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -12,6 +13,7 @@
             </svg>
           </a>
           <a href="https://github.com/ramblinghermit0403/Memwyre" target="_blank"
+            aria-label="Visit Memwyre on GitHub"
             class="text-black hover:text-gray-500 transition-all duration-300 transform hover:scale-110">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path

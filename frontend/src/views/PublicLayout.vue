@@ -3,7 +3,9 @@
     <SiteNavBar />
     
     <!-- Content Router View -->
-    <router-view />
+    <main id="main-content">
+      <router-view />
+    </main>
   </div>
 </template>
 

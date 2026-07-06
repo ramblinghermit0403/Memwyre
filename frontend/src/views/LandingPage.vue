@@ -741,10 +741,10 @@
                 class="w-full h-full object-cover"
                 muted
                 playsinline
-                preload="auto"
+                :preload="activeTab === index ? 'auto' : 'none'"
+                :src="activeTab === index || loadedTabs.has(index) ? tab.videoSrc : ''"
                 @ended="onVideoEnded"
               >
-                <source :src="tab.videoSrc" type="video/mp4" />
               </video>
             </div>
 
@@ -2251,6 +2251,7 @@ const fewerTokensPercent = ref(40);
 const activeTab = ref(0);
 const progressWidth = ref(0);
 const videoRefs = ref([]);
+const loadedTabs = ref(new Set([0]));
 const activeVideoRef = computed(() => videoRefs.value[activeTab.value]);
 const showcaseContainer = ref(null);
 let showcaseObserver = null;
@@ -2323,6 +2324,13 @@ const playActiveVideo = (reset = false) => {
   videoRefs.value.forEach((vid, i) => {
     if (vid) {
       if (i === activeTab.value) {
+        const targetSrc = tabs.value[i].videoSrc;
+        const currentSrc = vid.currentSrc || vid.src || '';
+        const isSrcLoaded = currentSrc.includes(targetSrc);
+        
+        if (!isSrcLoaded) {
+          vid.load();
+        }
         if (reset) {
           vid.currentTime = 0;
         }
@@ -2338,7 +2346,10 @@ const playActiveVideo = (reset = false) => {
 };
 
 const onVideoEnded = () => {
-  activeTab.value = (activeTab.value + 1) % tabs.value.length;
+  const nextIndex = (activeTab.value + 1) % tabs.value.length;
+  loadedTabs.value.add(nextIndex);
+  loadedTabs.value = new Set(loadedTabs.value);
+  activeTab.value = nextIndex;
   nextTick(() => {
     startProgressLoop();
     playActiveVideo(true);
@@ -2346,6 +2357,8 @@ const onVideoEnded = () => {
 };
 
 const selectTab = (index) => {
+  loadedTabs.value.add(index);
+  loadedTabs.value = new Set(loadedTabs.value);
   activeTab.value = index;
   progressWidth.value = 0;
   nextTick(() => {
@@ -2360,6 +2373,8 @@ const setupShowcaseObserver = () => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           isVisible.value = true;
+          loadedTabs.value.add(activeTab.value);
+          loadedTabs.value = new Set(loadedTabs.value);
           startProgressLoop();
           nextTick(() => {
             playActiveVideo(false);
