@@ -85,33 +85,15 @@
           <!-- Unified Buttons and Installer Container for symmetry -->
           <div class="flex flex-col gap-3 mt-4 sm:mt-6 max-w-[340px] sm:max-w-[380px] w-full animate-fade-in-up animation-delay-300 z-20">
             <!-- Buttons with technical grid brackets -->
-            <div class="relative w-full p-3 border border-dashed border-gray-300 rounded">
-              <!-- Corner Brackets (Crosshairs) -->
-              <div class="absolute -top-2 -left-2 w-4 h-4 pointer-events-none">
-                <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
-                <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
-              </div>
-              <div class="absolute -top-2 -right-2 w-4 h-4 pointer-events-none">
-                <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
-                <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
-              </div>
-              <div class="absolute -bottom-2 -left-2 w-4 h-4 pointer-events-none">
-                <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
-                <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
-              </div>
-              <div class="absolute -bottom-2 -right-2 w-4 h-4 pointer-events-none">
-                <div class="absolute top-2 left-0 w-full h-px bg-gray-400"></div>
-                <div class="absolute left-2 top-0 h-full w-px bg-gray-400"></div>
-              </div>
-
+            <div class="relative w-full p-3 border border-dashed border-gray-300 rounded-none">
               <!-- Content (Buttons) -->
               <div class="flex flex-row items-center justify-start gap-3 sm:gap-4 w-full">
                 <router-link to="/signup"
-                  class="flex-1 px-4 py-2 lg:py-2.5 bg-[#050614] text-white font-bold sm:font-semibold lg:font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm lg:text-base inline-flex items-center justify-center text-center">
+                  class="flex-1 px-4 py-2 lg:py-2.5 bg-[#050614] text-white font-bold sm:font-semibold lg:font-bold rounded-none hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm lg:text-base inline-flex items-center justify-center text-center">
                   Get Started
                 </router-link>
                 <router-link to="/#pricing"
-                  class="flex-1 px-4 py-2 lg:py-2.5 bg-white text-[#050614] font-bold sm:font-semibold lg:font-bold rounded border border-gray-250 hover:bg-gray-50 transition-all duration-300 text-xs sm:text-sm lg:text-base inline-flex items-center justify-center text-center">
+                  class="flex-1 px-4 py-2 lg:py-2.5 bg-white text-[#050614] font-bold sm:font-semibold lg:font-bold rounded-none border border-gray-250 hover:bg-gray-50 transition-all duration-300 text-xs sm:text-sm lg:text-base inline-flex items-center justify-center text-center">
                   See Plans
                 </router-link>
               </div>
@@ -119,23 +101,6 @@
 
             <!-- Command Installer Codeblock in Hero -->
             <div class="relative bg-gray-50 border border-dashed border-gray-300 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-gray-800 flex items-center justify-between gap-3 w-full select-none">
-              <!-- Corner Brackets -->
-              <div class="absolute -top-1 -left-1 w-2.5 h-2.5 pointer-events-none">
-                <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
-                <div class="absolute left-1 top-0 h-full w-px bg-gray-400"></div>
-              </div>
-              <div class="absolute -top-1 -right-1 w-2.5 h-2.5 pointer-events-none">
-                <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
-                <div class="absolute left-1 top-0 h-full w-px bg-gray-400"></div>
-              </div>
-              <div class="absolute -bottom-1 -left-1 w-2.5 h-2.5 pointer-events-none">
-                <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
-                <div class="absolute left-1 top-0 h-full w-px bg-gray-400"></div>
-              </div>
-              <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 pointer-events-none">
-                <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
-                <div class="absolute left-1 top-0 h-full w-px bg-gray-400"></div>
-              </div>
               <div class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none select-all py-0.5">
                 <span class="text-[#D97757] select-none font-bold">$</span>
                 <span>npx -y install-memwyre</span>

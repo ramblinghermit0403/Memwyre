@@ -13,11 +13,6 @@
 
           <!-- Command Installer Codeblock in Hero -->
           <div class="relative bg-zinc-50 border border-dashed border-zinc-200 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-zinc-600 flex items-center justify-between gap-3 max-w-sm mt-4 mx-auto select-none">
-            <!-- Corner Brackets -->
-            <div class="absolute -top-1 -left-1 w-2 h-2 pointer-events-none border-t border-l border-zinc-400"></div>
-            <div class="absolute -top-1 -right-1 w-2 h-2 pointer-events-none border-t border-r border-zinc-400"></div>
-            <div class="absolute -bottom-1 -left-1 w-2 h-2 pointer-events-none border-b border-l border-zinc-400"></div>
-            <div class="absolute -bottom-1 -right-1 w-2 h-2 pointer-events-none border-b border-r border-zinc-400"></div>
             <div class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none select-all py-0.5">
               <span class="text-[#D97757] select-none font-bold">$</span>
               <span>npx -y install-memwyre</span>
