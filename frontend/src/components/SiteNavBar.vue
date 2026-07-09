@@ -85,7 +85,7 @@ watch(() => route.path, () => {
     'fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out bg-white border-b border-black/5 shadow-sm',
     isHidden ? '-translate-y-full' : 'translate-y-0'
   ]">
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <div class="w-full px-6 sm:px-8 lg:px-12">
       <div class="flex justify-between items-center h-16">
         <router-link to="/" class="flex items-center group">
           <img src="/logo.png" alt="Memwyre"
