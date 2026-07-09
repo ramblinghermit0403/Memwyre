@@ -115,6 +115,37 @@
             </div>
           </div>
 
+          <!-- Command Installer Codeblock in Hero -->
+          <div class="relative bg-gray-50 border border-dashed border-gray-300 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-gray-800 flex items-center justify-between gap-3 max-w-[280px] sm:max-w-xs mt-6 animate-fade-in-up animation-delay-300 select-none">
+            <!-- Corner Brackets -->
+            <div class="absolute -top-1 -left-1 w-2.5 h-2.5 pointer-events-none">
+              <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
+              <div class="absolute left-1 top-0 h-full w-px bg-gray-400"></div>
+            </div>
+            <div class="absolute -top-1 -right-1 w-2.5 h-2.5 pointer-events-none">
+              <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
+              <div class="absolute left-1 top-0 h-full w-px bg-gray-400"></div>
+            </div>
+            <div class="absolute -bottom-1 -left-1 w-2.5 h-2.5 pointer-events-none">
+              <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
+              <div class="absolute left-1 top-0 h-full w-px bg-gray-400"></div>
+            </div>
+            <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 pointer-events-none">
+              <div class="absolute top-1 left-0 w-full h-px bg-gray-400"></div>
+              <div class="absolute left-1 top-0 h-full w-px bg-gray-400"></div>
+            </div>
+            <div class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none select-all py-0.5">
+              <span class="text-[#D97757] select-none font-bold">$</span>
+              <span>{{ getStartedCommand }}</span>
+            </div>
+            <button 
+              @click="copyGetStartedCommand" 
+              class="text-[#D97757] hover:text-[#C4654A] font-semibold text-[10px] sm:text-xs tracking-wider uppercase shrink-0 transition-colors cursor-pointer select-none"
+            >
+              {{ getStartedCopied ? 'Copied' : 'Copy' }}
+            </button>
+          </div>
+
         </div>
 
         <div class="hidden lg:block lg:col-span-6 relative min-h-[650px] pointer-events-none" aria-hidden="true">

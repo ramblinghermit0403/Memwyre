@@ -22,6 +22,25 @@
         <p class="text-base sm:text-lg text-[#4B5563] dark:text-gray-400 max-w-2xl font-normal leading-relaxed">
           Memwyre Research Lab publishes studies, evaluations, and datasets exploring how entity graphs, pruning algorithms, and context compression solve statelessness in AI agent networks.
         </p>
+
+        <!-- Command Installer Codeblock in Hero -->
+        <div class="relative bg-zinc-50 dark:bg-zinc-900 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 flex items-center justify-between gap-3 max-w-sm mt-6 select-none">
+          <!-- Corner Brackets -->
+          <div class="absolute -top-1 -left-1 w-2 h-2 pointer-events-none border-t border-l border-zinc-400"></div>
+          <div class="absolute -top-1 -right-1 w-2 h-2 pointer-events-none border-t border-r border-zinc-400"></div>
+          <div class="absolute -bottom-1 -left-1 w-2 h-2 pointer-events-none border-b border-l border-zinc-400"></div>
+          <div class="absolute -bottom-1 -right-1 w-2 h-2 pointer-events-none border-b border-r border-zinc-400"></div>
+          <div class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none select-all py-0.5">
+            <span class="text-[#D97757] select-none font-bold">$</span>
+            <span>npx -y install-memwyre</span>
+          </div>
+          <button 
+            @click="copyCommand('npx -y install-memwyre')" 
+            class="text-[#D97757] hover:text-[#C4654A] font-semibold text-[10px] sm:text-xs tracking-wider uppercase shrink-0 transition-colors cursor-pointer select-none"
+          >
+            {{ copiedText === 'npx -y install-memwyre' ? 'Copied' : 'Copy' }}
+          </button>
+        </div>
       </div>
 
       <!-- Grid of Cards (2 columns layout matching blog aesthetics) -->
@@ -105,7 +124,17 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import SiteFooter from '@/components/SiteFooter.vue';
+
+const copiedText = ref('');
+const copyCommand = (cmd) => {
+  navigator.clipboard.writeText(cmd);
+  copiedText.value = cmd;
+  setTimeout(() => {
+    copiedText.value = '';
+  }, 2000);
+};
 
 const papers = [
   {
