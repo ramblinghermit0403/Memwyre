@@ -7,12 +7,12 @@
           <h1 class="hero-serif text-4xl sm:text-5xl tracking-tight text-gray-900 leading-[1.1]">
             AI that works where <span class="italic font-medium">your team <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">works.</span></span>
           </h1>
-          <p class="mt-6 text-lg text-text-secondary max-w-2xl mx-auto">
+          <p class="mt-4 text-lg text-text-secondary max-w-2xl mx-auto">
             Simple, transparent pricing for individuals and teams.
           </p>
 
           <!-- Command Installer Codeblock in Hero -->
-          <div class="relative bg-zinc-50 border border-dashed border-zinc-200 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-zinc-600 flex items-center justify-between gap-3 max-w-sm mt-6 mx-auto select-none">
+          <div class="relative bg-zinc-50 border border-dashed border-zinc-200 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-zinc-600 flex items-center justify-between gap-3 max-w-sm mt-4 mx-auto select-none">
             <!-- Corner Brackets -->
             <div class="absolute -top-1 -left-1 w-2 h-2 pointer-events-none border-t border-l border-zinc-400"></div>
             <div class="absolute -top-1 -right-1 w-2 h-2 pointer-events-none border-t border-r border-zinc-400"></div>

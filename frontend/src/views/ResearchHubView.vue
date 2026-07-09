@@ -24,7 +24,7 @@
         </p>
 
         <!-- Command Installer Codeblock in Hero -->
-        <div class="relative bg-zinc-50 dark:bg-zinc-900 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 flex items-center justify-between gap-3 max-w-sm mt-6 select-none">
+        <div class="relative bg-zinc-50 dark:bg-zinc-900 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 flex items-center justify-between gap-3 max-w-sm mt-4 select-none">
           <!-- Corner Brackets -->
           <div class="absolute -top-1 -left-1 w-2 h-2 pointer-events-none border-t border-l border-zinc-400"></div>
           <div class="absolute -top-1 -right-1 w-2 h-2 pointer-events-none border-t border-r border-zinc-400"></div>

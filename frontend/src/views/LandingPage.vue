@@ -78,12 +78,12 @@
           </h1>
 
           <p
-            class="animate-fade-in-up animation-delay-150 text-balance text-base text-[#111827] leading-relaxed mt-6 sm:mt-8 max-w-2xl font-normal">
+            class="animate-fade-in-up animation-delay-150 text-balance text-base text-[#111827] leading-relaxed mt-4 sm:mt-5 max-w-2xl font-normal">
             Memwyre is the AI Memory Platform that gives every AI tool, agent, and conversation a persistent, shared memory.
           </p>
 
           <!-- Unified Buttons and Installer Container for symmetry -->
-          <div class="flex flex-col gap-4 mt-6 sm:mt-10 max-w-[340px] sm:max-w-[380px] w-full animate-fade-in-up animation-delay-300 z-20">
+          <div class="flex flex-col gap-3 mt-4 sm:mt-6 max-w-[340px] sm:max-w-[380px] w-full animate-fade-in-up animation-delay-300 z-20">
             <!-- Buttons with technical grid brackets -->
             <div class="relative w-full p-3 border border-dashed border-gray-300 rounded">
               <!-- Corner Brackets (Crosshairs) -->

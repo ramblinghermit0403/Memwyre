@@ -16,7 +16,7 @@ const copyCommand = (cmd) => {
     <!-- 1. HERO SECTION -->
     <div class="min-h-[calc(100vh-6rem)] max-w-5xl mx-auto px-6 lg:px-8 mb-32 flex items-center">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
-            <div class="space-y-8">
+            <div class="space-y-5">
                 <h1 class="hero-serif text-6xl font-extrabold tracking-tighter leading-none">
                     Your AI Forgets.<br>
                     <span class="text-primary">Memwyre Remembers.</span>
@@ -24,32 +24,34 @@ const copyCommand = (cmd) => {
                 <p class="text-xl text-text-secondary leading-relaxed max-w-lg">
                     Memwyre captures everything you do with AI—research, code, decisions—and turns it into persistent, accessible knowledge tailored to your workflow.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <router-link to="/signup" class="px-8 py-4 bg-primary text-white text-lg font-bold rounded hover:bg-primary-600 transition-colors text-center">
-                        See How It Works
-                    </router-link>
-                    <a href="mailto:shivharehimansh@gmail.com" class="px-8 py-4 border border-primary/30 text-text-primary text-lg font-bold rounded hover:bg-primary/10 transition-colors text-center">
-                        Talk to Us
-                    </a>
-                </div>
+                <div class="space-y-3">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <router-link to="/signup" class="px-8 py-4 bg-primary text-white text-lg font-bold rounded hover:bg-primary-600 transition-colors text-center">
+                            See How It Works
+                        </router-link>
+                        <a href="mailto:shivharehimansh@gmail.com" class="px-8 py-4 border border-primary/30 text-text-primary text-lg font-bold rounded hover:bg-primary/10 transition-colors text-center">
+                            Talk to Us
+                        </a>
+                    </div>
 
-                <!-- Command Installer Codeblock in Hero -->
-                <div class="relative bg-zinc-50 dark:bg-zinc-900 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 flex items-center justify-between gap-3 max-w-sm mt-6 select-none">
-                  <!-- Corner Brackets -->
-                  <div class="absolute -top-1 -left-1 w-2 h-2 pointer-events-none border-t border-l border-zinc-400"></div>
-                  <div class="absolute -top-1 -right-1 w-2 h-2 pointer-events-none border-t border-r border-zinc-400"></div>
-                  <div class="absolute -bottom-1 -left-1 w-2 h-2 pointer-events-none border-b border-l border-zinc-400"></div>
-                  <div class="absolute -bottom-1 -right-1 w-2 h-2 pointer-events-none border-b border-r border-zinc-400"></div>
-                  <div class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none select-all py-0.5">
-                    <span class="text-[#D97757] select-none font-bold">$</span>
-                    <span>npx -y install-memwyre</span>
-                  </div>
-                  <button 
-                    @click="copyCommand('npx -y install-memwyre')" 
-                    class="text-[#D97757] hover:text-[#C4654A] font-semibold text-[10px] sm:text-xs tracking-wider uppercase shrink-0 transition-colors cursor-pointer select-none"
-                  >
-                    {{ copiedText === 'npx -y install-memwyre' ? 'Copied' : 'Copy' }}
-                  </button>
+                    <!-- Command Installer Codeblock in Hero -->
+                    <div class="relative bg-zinc-50 dark:bg-zinc-900 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-none p-3.5 font-mono text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 flex items-center justify-between gap-3 max-w-sm select-none">
+                      <!-- Corner Brackets -->
+                      <div class="absolute -top-1 -left-1 w-2 h-2 pointer-events-none border-t border-l border-zinc-400"></div>
+                      <div class="absolute -top-1 -right-1 w-2 h-2 pointer-events-none border-t border-r border-zinc-400"></div>
+                      <div class="absolute -bottom-1 -left-1 w-2 h-2 pointer-events-none border-b border-l border-zinc-400"></div>
+                      <div class="absolute -bottom-1 -right-1 w-2 h-2 pointer-events-none border-b border-r border-zinc-400"></div>
+                      <div class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none select-all py-0.5">
+                        <span class="text-[#D97757] select-none font-bold">$</span>
+                        <span>npx -y install-memwyre</span>
+                      </div>
+                      <button 
+                        @click="copyCommand('npx -y install-memwyre')" 
+                        class="text-[#D97757] hover:text-[#C4654A] font-semibold text-[10px] sm:text-xs tracking-wider uppercase shrink-0 transition-colors cursor-pointer select-none"
+                      >
+                        {{ copiedText === 'npx -y install-memwyre' ? 'Copied' : 'Copy' }}
+                      </button>
+                    </div>
                 </div>
             </div>
             
