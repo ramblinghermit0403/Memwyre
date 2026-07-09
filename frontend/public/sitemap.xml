@@ -26,22 +26,13 @@
     <loc>https://memwyre.tech/plugins</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/rag</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/memory-graph</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/personal</loc>
-  </url>
-  <url>
     <loc>https://memwyre.tech/extension</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/what-is-ai-memory</loc>
+    <loc>https://memwyre.tech/research/what-is-ai-memory</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/ai-memory-benchmark-locomo</loc>
+    <loc>https://memwyre.tech/research/ai-memory-benchmark-locomo</loc>
   </url>
   <url>
     <loc>https://memwyre.tech/research</loc>

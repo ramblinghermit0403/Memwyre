@@ -1,0 +1,56 @@
+[
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 15,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./mcp-persistent-memory",
+    "resolved": "/mcp-persistent-memory",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 22,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./vscode-mcp-persistent-memory",
+    "resolved": "/vscode-mcp-persistent-memory",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 29,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./claude-code-memory-ingestion",
+    "resolved": "/claude-code-memory-ingestion",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 36,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./openclaw-autonomous-memory",
+    "resolved": "/openclaw-autonomous-memory",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 43,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./cursor-vs-claude-code-context",
+    "resolved": "/cursor-vs-claude-code-context",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 50,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./rag-vs-memory-long-term-knowledge",
+    "resolved": "/rag-vs-memory-long-term-knowledge",
+    "severity": "High"
+  }
+]

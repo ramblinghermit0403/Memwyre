@@ -454,7 +454,9 @@ const fetchTimeline = async () => {
     if (activeSource.value) params.source_app = activeSource.value;
     if (activeType.value) params.interaction_type = activeType.value;
     const response = await api.get('/memory/', { params });
-    items.value = (response.data || []).filter((x) => String(x.id || '').startsWith('mem_'));
+    items.value = (response.data || []).filter(
+      (x) => String(x.id || '').startsWith('mem_') || String(x.id || '').startsWith('doc_')
+    );
   } catch (error) {
     console.error('Failed to fetch timeline', error);
     toast.error('Failed to load AI interactions timeline');

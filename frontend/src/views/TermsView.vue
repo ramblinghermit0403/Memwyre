@@ -1,6 +1,6 @@
 <template>
   <div class="terms-view force-light bg-white text-gray-900 min-h-screen font-sans selection:bg-primary selection:text-white transition-colors duration-300 overflow-x-hidden">
-    <div class="py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col md:flex-row gap-12 items-start">
+    <div class="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-start">
     
       
       <!-- Sidebar Navigation -->
@@ -117,7 +117,7 @@
       <!-- Logo-masked numeric background (INVERTED for white bg) -->
       <LogoBgAnimation class="absolute inset-0 z-0 opacity-[0.08]" :invert="true" />
 
-      <div class="max-w-7xl mx-auto relative z-10">
+      <div class="max-w-5xl mx-auto relative z-10">
         <h2 class="font-display text-5xl sm:text-7xl lg:text-[7rem] font-medium tracking-tight mb-10 leading-[0.95]">
           <span
             class="bg-clip-text text-transparent bg-[repeating-linear-gradient(to_bottom,#111,#111_6px,white_6px,white_9px)]">
@@ -141,7 +141,7 @@
       </div>
 
       <div
-        class="max-w-7xl mx-auto px-8 lg:px-12 mt-12 relative z-10 border-t border-black/5 pt-10 flex flex-col md:flex-row justify-between items-start gap-8 text-left">
+        class="max-w-5xl mx-auto px-8 lg:px-12 mt-12 relative z-10 border-t border-black/5 pt-10 flex flex-col md:flex-row justify-between items-start gap-8 text-left">
         <div class="flex flex-col items-start gap-8">
           <!-- Socials -->
           <div class="flex items-center gap-5">
@@ -196,8 +196,6 @@
               class="text-sm text-black hover:text-gray-500 transition-colors font-medium">MCP</router-link>
             <router-link to="/plugins"
               class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Plugins</router-link>
-            <router-link to="/personal"
-              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Personal App</router-link>
           </div>
           <div class="flex flex-col gap-4">
             <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support</h4>

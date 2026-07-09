@@ -1,3 +1,7 @@
+---
+title: Connecting Data Sources to Memwyre
+description: Configure data connectors to sync Memwyre memory graphs automatically with Notion, GitHub, Google Drive, and more.
+---
 # Workspace Connectors
 
 Synchronize your existing workspace knowledge bases with Memwyre. Connectors sync documents, issues, chat channels, and databases into your memory vault, keeping your context updated automatically.

@@ -1,3 +1,7 @@
+---
+title: Claude Code CLI Lifecycle Hooks
+description: Integrate Memwyre lifecycle hooks into Claude Code CLI to automatically save and retrieve terminal session memory.
+---
 # Claude Code Plugin
 
 Integrate Memwyre directly with Anthropic's **Claude Code** terminal agent interface to provide persistent, cross-session memory and automatic transcript ingestion.

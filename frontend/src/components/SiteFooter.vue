@@ -1,6 +1,6 @@
 <template>
   <footer class="w-full bg-white relative overflow-hidden mt-12 sm:mt-16">
-    <div class="max-w-7xl mx-auto px-8 lg:px-12 border-t border-black/5 pt-10 pb-12 flex flex-col md:flex-row justify-between items-start gap-8 text-left">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 border-t border-black/5 pt-10 pb-12 flex flex-col md:flex-row justify-between items-start gap-8 text-left">
       <div class="flex flex-col items-start gap-8">
         <!-- Socials -->
         <div class="flex items-center gap-5">
@@ -42,8 +42,6 @@
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Use Cases</router-link>
           <router-link to="/extension"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Extension</router-link>
-          <router-link to="/personal"
-            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Personal App</router-link>
         </div>
         <div class="flex flex-col gap-4">
           <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Integrations</h4>
@@ -64,9 +62,9 @@
           <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Research</h4>
           <router-link to="/research"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Research Hub</router-link>
-          <router-link to="/ai-memory-benchmark-locomo"
+          <router-link to="/research/ai-memory-benchmark-locomo"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">LoCoMo Report</router-link>
-          <router-link to="/what-is-ai-memory"
+          <router-link to="/research/what-is-ai-memory"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">What is Memory?</router-link>
           <router-link to="/blog"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Blog</router-link>

@@ -51,7 +51,7 @@
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-[#050614] text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm inline-flex items-center justify-center gap-2">
                   Get Developer Plugins →
                 </router-link>
-                <a href="/docs/plugins/installation" target="_blank"
+                <a href="/docs/integrations/plugins/claude" target="_blank"
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-white text-[#050614] font-bold rounded border border-gray-250 hover:bg-gray-50 transition-all duration-300 text-xs sm:text-sm inline-flex items-center justify-center">
                   View Documentation
                 </a>
@@ -188,6 +188,35 @@
             </div>
             <div class="text-[10px] font-mono text-green-600 font-bold uppercase tracking-wider mt-4">✔ plugin active</div>
           </div>
+        </div>
+      </div>
+
+      <!-- 4b. DETAILED TECHNICAL SPECIFICATIONS -->
+      <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-300/80 pointer-events-none select-none"></div>
+      <div class="py-8 sm:py-10">
+        <div class="max-w-3xl mb-6 sm:mb-8">
+          <span class="text-xs tracking-wider uppercase font-bold font-mono text-[#D97757]">Integration Details</span>
+          <h2 class="hero-serif text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mt-2">
+            Technical specifications of our developer plugins.
+          </h2>
+        </div>
+
+        <div class="space-y-6 text-sm text-gray-600 leading-relaxed">
+          <p>
+            Memwyre developer plugins extend your command-line and agent environments by hooking directly into their execution cycles. For CLI tools like Claude Code, the integration exposes shell hooks that run before a command executes (pre-command hook) and after it exits (post-command hook). This allows the plugin to automatically capture error outputs, build files, and command history, streaming them into your memory vault as structured entries without requiring manual copy-pasting.
+          </p>
+          <p>
+            For autonomous frameworks such as OpenClaw, the plugin implements a persistent memory provider. As the agent plans and executes tasks, it queries the memory graph via vector semantic matching to retrieve relevant historical insights, while writing new learnings back to the graph. This creates a stateful workspace where agents can build upon work done in previous runs.
+          </p>
+          <p>
+            To prevent LLM context-window exhaustion and optimize token usage, the plugin uses a client-side filter. It dynamically selects and injects only the most relevant style rules, environment variables, and codebase paths based on the current task's scope. All interactions are signed using your developer API token, securing the connection between local CLI agents and your private cloud memory.
+          </p>
+          <p>
+            In IDE environments like VS Code and Cursor, the plugins run in the editor background, subscribing to active buffer state updates. When you open a file or start editing a line, the plugin extracts import statements and class definitions, querying your vault for related documentation pages. This allows the AI assistant to automatically suggest correct parameters or identify deprecated functions based on past debugging sessions stored in your vault. This real-time suggestion model boosts developer velocity.
+          </p>
+          <p>
+            All remote server interactions are authenticated via standard API keys that you can generate and rotate within the settings tab. The plugin client library maintains an offline-first storage queue; if your network connection drops, tool calls and saved memories are queued locally and synchronized automatically once the connection is restored, ensuring zero interruption in developer workflows. This local persistence queue makes the system fully reliable, resilient to network drops, and highly secure.
+          </p>
         </div>
       </div>
 

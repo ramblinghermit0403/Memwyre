@@ -12,9 +12,9 @@
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 Limited Beta Access
              </div>
-             <h2 class="text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+             <h1 class="text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
                 Log in to Memwyre
-             </h2>
+             </h1>
           </div>
 
           <form class="space-y-5" @submit.prevent="handleLogin">
@@ -87,9 +87,9 @@
                    {{ lastKnownUser.name ? lastKnownUser.name.charAt(0) : 'U' }}
                </div>
                
-               <h2 class="text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 mb-1">
+               <h1 class="text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 mb-1">
                    Welcome back, {{ lastKnownUser.name }}
-               </h2>
+               </h1>
                <p class="text-zinc-500 font-medium">{{ lastKnownUser.email }}</p>
           </div>
           

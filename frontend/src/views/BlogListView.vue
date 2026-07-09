@@ -1,23 +1,7 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
 import SiteFooter from '@/components/SiteFooter.vue';
 
-let shouldRestoreDarkClass = false;
-
-onMounted(() => {
-  shouldRestoreDarkClass = document.documentElement.classList.contains('dark');
-  document.documentElement.classList.remove('dark');
-  document.documentElement.style.colorScheme = 'light';
-});
-
-onUnmounted(() => {
-  document.documentElement.style.colorScheme = '';
-  if (shouldRestoreDarkClass) {
-    document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-  }
-});
 
 const posts = ref([
   {

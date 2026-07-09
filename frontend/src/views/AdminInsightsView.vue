@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gray-50 text-gray-900 dark:bg-background dark:text-text-primary">
     <NavBar />
 
-    <main class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-8 sm:px-8 lg:px-12">
+    <main class="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-8 sm:px-8 lg:px-12">
       <header class="flex flex-col gap-4 border-b border-gray-200 pb-6 dark:border-border md:flex-row md:items-end md:justify-between">
         <div>
           <p class="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Admin</p>
@@ -58,6 +58,25 @@
             </div>
             <p class="mt-3 text-xs text-gray-500 dark:text-text-secondary">{{ metric.detail }}</p>
           </article>
+        </section>
+
+        <section class="mt-6 mb-6 rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-border dark:bg-surface">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-gray-950 dark:text-white">Token Usage & Cost (Last 14 Days)</h2>
+              <p class="mt-1 text-sm text-gray-500 dark:text-text-secondary">Daily token consumption and estimated LLM cost.</p>
+            </div>
+            <p class="text-xs text-gray-400 dark:text-text-muted">Generated {{ formattedGeneratedAt }}</p>
+          </div>
+
+          <div class="mt-6 grid h-56 grid-cols-[repeat(14,minmax(0,1fr))] items-end gap-2">
+            <div v-for="day in insights.series" :key="day.date" class="flex h-full min-w-0 flex-col justify-end gap-1">
+              <div class="flex flex-1 items-end gap-1">
+                <div class="w-full rounded-t bg-amber-500" :style="{ height: barHeight(day.tokens, maxTokensValue) }" :title="`${formatNumber(day.tokens)} tokens ($${day.cost})`"></div>
+              </div>
+              <span class="truncate text-center text-[10px] text-gray-400">{{ formatShortDate(day.date) }}</span>
+            </div>
+          </div>
         </section>
 
         <section class="grid gap-6 xl:grid-cols-12">
@@ -273,6 +292,11 @@ const maxSeriesValue = computed(() => {
     day.documents,
     day.chat_sessions,
   ]);
+  return Math.max(1, ...values);
+});
+
+const maxTokensValue = computed(() => {
+  const values = (insights.value?.series || []).map((day) => day.tokens);
   return Math.max(1, ...values);
 });
 

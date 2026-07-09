@@ -1,3 +1,7 @@
+---
+title: How Memwyre Works — Architecture
+description: Understand the architectural concepts of Memwyre, including memory decay curves, graphs, profiles, and routing.
+---
 # How Memwyre Works
 
 Memwyre acts as a dynamic context provider for your AI sessions. Instead of manually copy-pasting reference files, documentation, decisions, or code conventions into your prompts, Memwyre automatically identifies what you are working on and injects the relevant context behind the scenes.

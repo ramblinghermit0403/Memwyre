@@ -3,7 +3,7 @@
     <NavBar />
 
     <main class="flex-1 overflow-y-auto lg:overflow-hidden w-full pt-6 pb-10 lg:pb-6 no-scrollbar">
-      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col min-h-full lg:h-full lg:min-h-0">
+      <div class="max-w-5xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col min-h-full lg:h-full lg:min-h-0">
         <div class="mb-6 shrink-0" id="tour-welcome">
           <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Good {{ timeOfDay }}, {{ user?.name || 'User' }}</h1>
           <p class="mt-1 text-gray-500 dark:text-text-secondary">This is where your AI work lives.</p>
@@ -11,7 +11,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
           <div class="lg:col-span-8 min-h-0">
-            <div id="tour-timeline" class="bg-white dark:bg-surface rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden h-[640px] lg:h-full min-h-0">
+            <div id="tour-timeline" class="bg-white dark:bg-surface rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden h-[512px] lg:h-full min-h-0">
               <AIInteractionTimeline ref="timelineRef" :project-id="projectStore.currentProjectId" :focus-today="focusToday" @open-item="openItem" />
             </div>
           </div>
@@ -68,7 +68,7 @@
                       >
                         <div class="flex items-center gap-3 min-w-0">
                           <div class="w-8 h-8 rounded-lg bg-white dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700/80 flex items-center justify-center shrink-0 shadow-sm">
-                            <img :src="item.icon" class="w-4.5 h-4.5 object-contain" :class="{'invert': item.invert, 'dark:invert': item.darkInvert}" />
+                            <img :src="item.icon" class="w-4.5 h-4.5 object-contain" :class="{'invert': item.invert, 'dark:invert': item.darkInvert}" :alt="item.name + ' icon'" />
                           </div>
                           <div class="flex flex-col min-w-0">
                             <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ item.name }}</span>

@@ -3,7 +3,7 @@
     <NavBar />
 
     <main class="flex-1 overflow-hidden">
-       <div class="max-w-7xl mx-auto h-full flex pt-6 pb-6 px-4 sm:px-6 lg:px-8 gap-6">
+       <div class="max-w-5xl mx-auto h-full flex pt-6 pb-6 px-4 sm:px-6 lg:px-8 gap-6">
            
            <!-- Left Pane: Incoming Items -->
            <div class="w-1/3 flex flex-col bg-white dark:bg-surface rounded-xl shadow-sm border border-gray-200 dark:border-border overflow-hidden">

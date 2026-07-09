@@ -40,13 +40,10 @@ onUnmounted(() => {
 
 const isProductsOpen = ref(false);
 const products = [
-  // { name: 'Connectors', to: '/connectors' },
+  { name: 'Connectors', to: '/connectors' },
   { name: 'Chrome Extension', to: '/extension' },
   { name: 'MCP', to: '/mcp' },
-  { name: 'Plugins', to: '/plugins' },
-  // { name: 'RAG', to: '/rag' },
-  // { name: 'Memory Graph', to: '/memory-graph' },
-  { name: 'Personal App', to: '/personal' }
+  { name: 'Plugins', to: '/plugins' }
 ];
 
 const isMobileMenuOpen = ref(false);
@@ -145,7 +142,6 @@ watch(() => route.path, () => {
           </div>
 
           <template v-for="link in [
-            { name: 'Features', to: '/#features' },
             { name: 'Ecosystem', to: '/#ecosystem' },
             { name: 'Pricing', to: '/#pricing' }
           ]" :key="link.name">
@@ -240,7 +236,6 @@ watch(() => route.path, () => {
         <!-- Main Links -->
         <div class="space-y-3">
           <template v-for="link in [
-            { name: 'Features', to: '/#features' },
             { name: 'Ecosystem', to: '/#ecosystem' },
             { name: 'Pricing', to: '/#pricing' }
           ]" :key="link.name">

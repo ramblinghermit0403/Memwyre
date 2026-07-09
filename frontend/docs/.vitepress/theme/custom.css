@@ -52,7 +52,7 @@
 }
 
 .VPNavBarTitle .logo {
-  height: 26px !important;
+  height: 35px !important;
   width: auto !important;
 }
 
@@ -261,7 +261,7 @@ div[class*='language-'] {
 
 /* ── Logo sizing ── */
 .VPNavBarTitle img {
-  height: 26px !important;
+  height: 35px !important;
   width: auto !important;
   border-radius: 0 !important;
 }

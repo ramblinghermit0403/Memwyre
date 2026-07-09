@@ -2,7 +2,7 @@
   <div class="h-screen flex flex-col transition-colors duration-300 font-sans overflow-hidden bg-gray-50 dark:bg-[#121212]">
     <NavBar />
     
-    <main class="flex-1 overflow-hidden w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col h-full">
+    <main class="flex-1 overflow-hidden w-full max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col h-full">
       <div class="flex-none mb-6">
           <h1 class="text-3xl font-bold text-gray-900 dark:text-text-primary">Retrieval Pipeline Visualizer</h1>
           <p class="text-gray-500 dark:text-gray-400 mt-2">Debug and visualize the internal steps of the vector retrieval and reranking process.</p>

@@ -137,7 +137,7 @@
                   stroke-linejoin="round">
                   <path d="M5 13l4 4L19 7" />
                 </svg>
-                <img v-else src="/image.svg" class="w-5 h-5 transition-transform group-hover:scale-110" />
+                <img v-else src="/image.svg" class="w-5 h-5 transition-transform group-hover:scale-110" alt="Memwyre Logo" />
               </div>
 
               <!-- Mic button -->

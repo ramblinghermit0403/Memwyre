@@ -136,7 +136,7 @@
     </div>
 
     <div class="w-full bg-white border-t border-black/5">
-      <footer class="max-w-7xl mx-auto px-8 lg:px-12 relative z-10 pt-16 pb-16 flex flex-col md:flex-row justify-between items-start gap-8 text-left">
+      <footer class="max-w-5xl mx-auto px-8 lg:px-12 relative z-10 pt-16 pb-16 flex flex-col md:flex-row justify-between items-start gap-8 text-left">
         <div class="flex flex-col items-start gap-8">
           <!-- Socials -->
           <div class="flex items-center gap-5">

@@ -1,3 +1,7 @@
+---
+title: Memwyre Chrome/Edge Extension Setup
+description: Learn how to install and use the Memwyre Chrome/Edge extension to capture web pages and chat context instantly.
+---
 # Browser Extension
 
 Connect your second brain directly to your browser. The Memwyre browser extension lets you capture content, save notes, and seamlessly inject memory into AI tools like ChatGPT, Claude, and Gemini — without leaving your current tab.

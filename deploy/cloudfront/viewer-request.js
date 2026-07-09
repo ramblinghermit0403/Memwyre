@@ -24,19 +24,17 @@ function handler(event) {
     }
 
     // --- 2. Trailing Slash Normalization ---
-    // Special case for /docs (static site needs trailing slash)
-    if (uri.indexOf('/docs') === 0) {
-        if (uri.charAt(uri.length - 1) !== '/') {
-            return {
-                statusCode: 301,
-                statusDescription: "Moved Permanently",
-                headers: {
-                    "location": { "value": "https://" + host + uri + '/' }
-                }
-            };
-        }
+    // Index routes that need trailing slashes
+    if (uri === "/docs" || uri === "/docs/integrations") {
+        return {
+            statusCode: 301,
+            statusDescription: "Moved Permanently",
+            headers: {
+                "location": { "value": "https://" + host + uri + '/' }
+            }
+        };
     } else {
-        // For other URIs, strip trailing slash (SPA routes)
+        // Strip trailing slash for all other pages (both SPA and doc subpages)
         if (uri.length > 1 && uri.charAt(uri.length - 1) === '/') {
             return {
                 statusCode: 301,
@@ -59,15 +57,21 @@ function handler(event) {
     }
 
     // --- 4. Directory Index Rewrite ---
-    // If the URI does not contain a file extension, append index.html so S3 serves the pre-rendered file
+    // If the URI does not contain a file extension, append index.html or .html so S3 serves the file
     var lastSegment = request.uri.substring(request.uri.lastIndexOf('/') + 1);
     var hasExtension = lastSegment.indexOf('.') !== -1;
 
     if (!hasExtension) {
-        if (request.uri.charAt(request.uri.length - 1) === '/') {
+        if (request.uri === '/docs/' || request.uri === '/docs/integrations/') {
             request.uri += 'index.html';
+        } else if (request.uri.indexOf('/docs/') === 0) {
+            request.uri += '.html';
         } else {
-            request.uri += '/index.html';
+            if (request.uri.charAt(request.uri.length - 1) === '/') {
+                request.uri += 'index.html';
+            } else {
+                request.uri += '/index.html';
+            }
         }
     }
 

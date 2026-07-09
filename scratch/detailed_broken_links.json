@@ -1,0 +1,212 @@
+[
+  {
+    "file": "docs\\index.md",
+    "line": 41,
+    "type": "Redirecting Link (301)",
+    "anchor": "Browser Extension",
+    "target": "./integrations/browser-extension",
+    "resolved": "/docs/integrations/browser-extension",
+    "description": "Redirects to /docs/integrations/browser-extension/ (VitePress requires trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "docs\\index.md",
+    "line": 42,
+    "type": "Redirecting Link (301)",
+    "anchor": "MCP Server",
+    "target": "./integrations/mcp-server",
+    "resolved": "/docs/integrations/mcp-server",
+    "description": "Redirects to /docs/integrations/mcp-server/ (VitePress requires trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "docs\\index.md",
+    "line": 43,
+    "type": "Redirecting Link (301)",
+    "anchor": "OpenClaw Plugin",
+    "target": "./integrations/plugins/openclaw",
+    "resolved": "/docs/integrations/plugins/openclaw",
+    "description": "Redirects to /docs/integrations/plugins/openclaw/ (VitePress requires trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "docs\\index.md",
+    "line": 48,
+    "type": "Redirecting Link (301)",
+    "anchor": "guide here",
+    "target": "./integrations/browser-extension",
+    "resolved": "/docs/integrations/browser-extension",
+    "description": "Redirects to /docs/integrations/browser-extension/ (VitePress requires trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "docs\\integrations\\index.md",
+    "line": 11,
+    "type": "Redirecting Link (301)",
+    "anchor": "Browser Extension",
+    "target": "./browser-extension",
+    "resolved": "/docs/integrations/browser-extension",
+    "description": "Redirects to /docs/integrations/browser-extension/ (VitePress requires trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "docs\\integrations\\index.md",
+    "line": 12,
+    "type": "Redirecting Link (301)",
+    "anchor": "IDEs & Agents (MCP Server)",
+    "target": "./mcp-server",
+    "resolved": "/docs/integrations/mcp-server",
+    "description": "Redirects to /docs/integrations/mcp-server/ (VitePress requires trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "docs\\integrations\\index.md",
+    "line": 13,
+    "type": "Redirecting Link (301)",
+    "anchor": "OpenClaw Plugin",
+    "target": "./plugins/openclaw",
+    "resolved": "/docs/integrations/plugins/openclaw",
+    "description": "Redirects to /docs/integrations/plugins/openclaw/ (VitePress requires trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\claude-code-memory-ingestion.md",
+    "line": 148,
+    "type": "Redirecting Link (301)",
+    "anchor": "memwyre.tech",
+    "target": "",
+    "resolved": "/blog/",
+    "description": "Redirects to /blog (SPA strips trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\cursor-vs-claude-code-context.md",
+    "line": 122,
+    "type": "Redirecting Link (301)",
+    "anchor": "memwyre.tech",
+    "target": "",
+    "resolved": "/blog/",
+    "description": "Redirects to /blog (SPA strips trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 15,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./mcp-persistent-memory",
+    "resolved": "/mcp-persistent-memory",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 22,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./vscode-mcp-persistent-memory",
+    "resolved": "/vscode-mcp-persistent-memory",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 29,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./claude-code-memory-ingestion",
+    "resolved": "/claude-code-memory-ingestion",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 36,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./openclaw-autonomous-memory",
+    "resolved": "/openclaw-autonomous-memory",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 43,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./cursor-vs-claude-code-context",
+    "resolved": "/cursor-vs-claude-code-context",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\index.md",
+    "line": 50,
+    "type": "Broken Link",
+    "anchor": "Read Guide \u2192",
+    "target": "./rag-vs-memory-long-term-knowledge",
+    "resolved": "/rag-vs-memory-long-term-knowledge",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\openclaw-autonomous-memory.md",
+    "line": 146,
+    "type": "Redirecting Link (301)",
+    "anchor": "memwyre.tech",
+    "target": "",
+    "resolved": "/blog/",
+    "description": "Redirects to /blog (SPA strips trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\rag-vs-memory-long-term-knowledge.md",
+    "line": 117,
+    "type": "Redirecting Link (301)",
+    "anchor": "memwyre.tech",
+    "target": "",
+    "resolved": "/blog/",
+    "description": "Redirects to /blog (SPA strips trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "src\\assets\\blog\\vscode-mcp-persistent-memory.md",
+    "line": 118,
+    "type": "Redirecting Link (301)",
+    "anchor": "memwyre.tech",
+    "target": "",
+    "resolved": "/blog/",
+    "description": "Redirects to /blog (SPA strips trailing slash)",
+    "severity": "High"
+  },
+  {
+    "file": "src\\views\\LoginView.vue",
+    "line": 30,
+    "type": "Broken Link",
+    "anchor": "",
+    "target": "/forgot-password",
+    "resolved": "/forgot-password",
+    "severity": "High"
+  },
+  {
+    "file": "src\\views\\ResetPasswordView.vue",
+    "line": 27,
+    "type": "Broken Link",
+    "anchor": "",
+    "target": "/forgot-password",
+    "resolved": "/forgot-password",
+    "severity": "High"
+  },
+  {
+    "file": "src\\components\\SiteNavBar.vue",
+    "line": 137,
+    "type": "Broken Link",
+    "anchor": "",
+    "target": "product.to",
+    "resolved": "/product.to",
+    "severity": "High"
+  },
+  {
+    "file": "src\\components\\SiteNavBar.vue",
+    "line": 152,
+    "type": "Broken Link",
+    "anchor": "",
+    "target": "link.to",
+    "resolved": "/link.to",
+    "severity": "High"
+  }
+]

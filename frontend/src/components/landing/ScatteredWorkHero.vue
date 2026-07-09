@@ -1,5 +1,5 @@
 <template>
-  <div class="py-16 sm:py-20 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+  <div class="py-16 sm:py-20 max-w-5xl mx-auto px-6 sm:px-8 lg:px-12">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
       <div class="space-y-8">
         <h2 class="text-base font-bold uppercase tracking-widest text-text-muted mb-4">Why Memwyre</h2>

@@ -152,24 +152,6 @@ export function createAppRouter({ ssr = false } = {}) {
                         meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/plugins'] }
                     },
                     {
-                        path: 'rag',
-                        name: 'rag',
-                        component: () => import('../views/products/RagView.vue'),
-                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/rag'] }
-                    },
-                    {
-                        path: 'memory-graph',
-                        name: 'memory-graph',
-                        component: () => import('../views/products/MemoryGraphView.vue'),
-                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/memory-graph'] }
-                    },
-                    {
-                        path: 'personal',
-                        name: 'personal',
-                        component: () => import('../views/products/PersonalAppView.vue'),
-                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/personal'] }
-                    },
-                    {
                         path: 'extension',
                         name: 'extension',
                         component: () => import('../views/products/ExtensionView.vue'),
@@ -182,22 +164,32 @@ export function createAppRouter({ ssr = false } = {}) {
                         meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/blog'] }
                     },
                     {
+                        path: 'blog/what-is-ai-memory',
+                        redirect: '/research/what-is-ai-memory'
+                    },
+                    {
+                        path: 'blog/ai-memory-benchmark-locomo',
+                        redirect: '/research/ai-memory-benchmark-locomo'
+                    },
+                    {
                         path: 'blog/:slug',
                         name: 'blog-post',
                         component: () => import('../views/BlogPostView.vue'),
                         meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/blog/:slug'] }
                     },
                     {
+                        path: 'research/:slug',
+                        name: 'research-post',
+                        component: () => import('../views/BlogPostView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/research/:slug'] }
+                    },
+                    {
                         path: 'what-is-ai-memory',
-                        name: 'what-is-ai-memory',
-                        component: () => import('../views/WhatIsAiMemoryView.vue'),
-                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/what-is-ai-memory'] }
+                        redirect: '/research/what-is-ai-memory'
                     },
                     {
                         path: 'ai-memory-benchmark-locomo',
-                        name: 'locomo-benchmark',
-                        component: () => import('../views/LocomoBenchmarkView.vue'),
-                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/ai-memory-benchmark-locomo'] }
+                        redirect: '/research/ai-memory-benchmark-locomo'
                     },
                     {
                         path: 'research',

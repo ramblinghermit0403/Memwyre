@@ -2,7 +2,7 @@ export const SITE_URL = 'https://memwyre.tech';
 export const SITE_NAME = 'Memwyre';
 export const DEFAULT_SOCIAL_IMAGE_PATH = '/sequence/ezgif-frame-015.png';
 export const PRERENDER_ROUTES = [
-  '/', '/use-cases', '/pricing', '/privacy-policy', '/terms', '/connectors', '/mcp', '/plugins', '/rag', '/memory-graph', '/personal', '/extension',
+  '/', '/use-cases', '/pricing', '/privacy-policy', '/terms', '/connectors', '/mcp', '/plugins', '/extension',
   '/blog',
   '/blog/mcp-persistent-memory',
   '/blog/cursor-vs-claude-code-context',
@@ -11,8 +11,8 @@ export const PRERENDER_ROUTES = [
   '/blog/claude-code-memory-ingestion',
   '/blog/openclaw-autonomous-memory',
   '/blog/state-of-ai-memory-2026',
-  '/what-is-ai-memory',
-  '/ai-memory-benchmark-locomo',
+  '/research/what-is-ai-memory',
+  '/research/ai-memory-benchmark-locomo',
   '/research',
   '/memwyre-vs-mem0', '/memwyre-vs-supermemory', '/memwyre-vs-zep',
   '/chatgpt-memory', '/claude-memory', '/cursor-memory', '/mcp-memory'
@@ -67,21 +67,6 @@ export const PUBLIC_ROUTE_SEO = {
     description:
       'Memwyre developer plugins for Claude Code, OpenClaw, OpenCode, and Hermes. One-click memory save, automatic context injection, and project-scoped knowledge.',
   },
-  '/rag': {
-    title: 'RAG — Memwyre | Latency-optimized Hybrid Search & Retrieval',
-    description:
-      'Sub-300ms retrieval using advanced Hybrid Search. Multi-modal RAG support for PDFs, markdown, videos, audio, and web pages with context-aware reranking.',
-  },
-  '/memory-graph': {
-    title: 'Memory Graph — Memwyre | Living Connected Knowledge Graphs',
-    description:
-      'An evolving knowledge graph where memories build relationships. Features automatic entity extraction, Updates/Extends/Derives connections, and built-in forgetting.',
-  },
-  '/personal': {
-    title: 'Personal App — Memwyre | Stretched Cross-Platform AI Memory',
-    description:
-      'A single context layer for all the AI you use. Save memory once and query it directly using Memwyre inside Claude, Cursor, ChatGPT, and your workspace.',
-  },
   '/extension': {
     title: 'Chrome Extension — Memwyre | Capture Web Context Instantly',
     description:
@@ -132,11 +117,16 @@ export const PUBLIC_ROUTE_SEO = {
     description:
       'Latest guides, insights, and updates on building persistent AI workflows from the Memwyre engineering team.',
   },
-  '/what-is-ai-memory': {
+  '/research/:slug': {
+    title: 'Memwyre Research | AI Memory & Retrieval Studies',
+    description:
+      'Deep dives, evaluations, and benchmarks from the Memwyre Research Lab on long-term AI memory architectures.',
+  },
+  '/research/what-is-ai-memory': {
     title: 'What is AI Memory? Long-Term Persistent Context for AI Agents',
     description: 'Learn the architectural principles of long-term AI memory, comparing entity memory graphs, vector databases, and forgetting decay curves for agentic workflows.',
   },
-  '/ai-memory-benchmark-locomo': {
+  '/research/ai-memory-benchmark-locomo': {
     title: 'LoCoMo Benchmark Report | Evaluating AI Memory Networks',
     description: 'Read the LoCoMo Benchmark Report: methodology, datasets, competitors, findings, and conclusions comparing Memwyre, Mem0, Zep, and Supermemory.',
   },
@@ -317,12 +307,25 @@ export function getSeoForPath(path = '/') {
 
   // Dynamic Schema Injection
   if (normalizedPath.startsWith('/blog/') && normalizedPath !== '/blog') {
+    const slug = normalizedPath.split('/').pop();
+    const blogDates = {
+      'mcp-persistent-memory': '2026-06-15T08:00:00Z',
+      'vscode-mcp-persistent-memory': '2026-06-02T08:00:00Z',
+      'claude-code-memory-ingestion': '2026-05-18T08:00:00Z',
+      'openclaw-autonomous-memory': '2026-05-04T08:00:00Z',
+      'cursor-vs-claude-code-context': '2026-04-22T08:00:00Z',
+      'state-of-ai-memory-2026': '2026-04-18T08:00:00Z',
+      'rag-vs-memory-long-term-knowledge': '2026-04-09T08:00:00Z'
+    };
+    const pubDate = blogDates[slug] || '2026-03-01T08:00:00Z';
     jsonLdData.push({
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
       'headline': routeSeo.title || DEFAULT_SEO.title,
       'description': routeSeo.description || DEFAULT_SEO.description,
       'image': socialImageUrl,
+      'datePublished': pubDate,
+      'dateModified': pubDate,
       'author': {
         '@type': 'Person',
         'name': 'Himansh Shivhare'
@@ -338,12 +341,19 @@ export function getSeoForPath(path = '/') {
       'url': canonical
     });
   } else if (normalizedPath === '/what-is-ai-memory' || normalizedPath === '/ai-memory-benchmark-locomo') {
+    const techDates = {
+      '/what-is-ai-memory': '2026-03-10T08:00:00Z',
+      '/ai-memory-benchmark-locomo': '2026-03-25T08:00:00Z'
+    };
+    const pubDate = techDates[normalizedPath] || '2026-03-01T08:00:00Z';
     jsonLdData.push({
       '@context': 'https://schema.org',
       '@type': 'TechArticle',
       'headline': routeSeo.title || DEFAULT_SEO.title,
       'description': routeSeo.description || DEFAULT_SEO.description,
       'image': socialImageUrl,
+      'datePublished': pubDate,
+      'dateModified': pubDate,
       'author': {
         '@type': 'Organization',
         'name': 'Memwyre Research Lab'
@@ -365,11 +375,12 @@ export function getSeoForPath(path = '/') {
       'name': `${SITE_NAME} Integration`,
       'applicationCategory': 'DeveloperApplication',
       'operatingSystem': 'Windows, macOS, Linux, ChromeOS',
+      'image': socialImageUrl,
       'offers': {
         '@type': 'Offer',
         'price': '0',
         'priceCurrency': 'USD',
-        'category': 'Free'
+        'availability': 'https://schema.org/InStock'
       },
       'description': routeSeo.description || DEFAULT_SEO.description
     });
@@ -378,10 +389,17 @@ export function getSeoForPath(path = '/') {
       '@context': 'https://schema.org',
       '@type': 'Product',
       'name': routeSeo.title || DEFAULT_SEO.title,
+      'image': socialImageUrl,
       'description': routeSeo.description || DEFAULT_SEO.description,
       'brand': {
         '@type': 'Brand',
         'name': SITE_NAME
+      },
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD',
+        'availability': 'https://schema.org/InStock'
       }
     });
   }

@@ -1,3 +1,7 @@
+---
+title: Memwyre Integrations Overview
+description: Browse available integrations for Memwyre, linking your memory vault to Claude, Cursor, VS Code, and browser extensions.
+---
 # Integrations Overview
 
 Memwyre is designed to plug into your existing workflow with zero friction. Choose an integration below to connect your memory vault to your favourite tools:

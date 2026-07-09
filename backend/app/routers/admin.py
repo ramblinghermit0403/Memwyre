@@ -38,6 +38,8 @@ def _empty_series(days: int) -> list[dict[str, Any]]:
             "memories": 0,
             "documents": 0,
             "chat_sessions": 0,
+            "tokens": 0,
+            "cost": 0.0,
         }
         for offset in range(days)
     ]
@@ -142,6 +144,19 @@ async def get_admin_insights(
             date_key = _as_date_key(created_at)
             if date_key in series_by_date:
                 series_by_date[date_key][key] += 1
+
+    usage_result = await db.execute(
+        select(UserUsage.timestamp, UserUsage.tokens_in, UserUsage.tokens_out, UserUsage.estimated_cost)
+        .where(UserUsage.timestamp >= series_start)
+    )
+    for timestamp, tokens_in, tokens_out, estimated_cost in usage_result.all():
+        date_key = _as_date_key(timestamp)
+        if date_key in series_by_date:
+            series_by_date[date_key]["tokens"] += (tokens_in or 0) + (tokens_out or 0)
+            series_by_date[date_key]["cost"] += float(estimated_cost or 0.0)
+
+    for item in series:
+        item["cost"] = round(item["cost"], 4)
 
     source_expr = func.coalesce(Memory.source_app, Memory.source_llm, "unknown")
     source_result = await db.execute(

@@ -1,3 +1,7 @@
+---
+title: RAG vs. Persistent AI Memory
+description: Compare traditional RAG retrieval with Memwyre's persistent memory layer to see how entity profiling improves context relevance.
+---
 # RAG vs. Memory Layer
 
 When building or using AI tools, developers often confuse a universal memory layer with traditional Retrieval-Augmented Generation (RAG). While both supply external context to LLMs, their architectures, lifecycles, and capabilities are fundamentally different.

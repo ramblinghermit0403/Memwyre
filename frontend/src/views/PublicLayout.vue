@@ -10,8 +10,35 @@
 </template>
 
 <script setup>
+import { onMounted, onUnmounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import SiteNavBar from '../components/SiteNavBar.vue';
 
 const route = useRoute();
+
+let shouldRestoreDarkClass = false;
+
+onMounted(() => {
+  if (typeof document !== 'undefined') {
+    shouldRestoreDarkClass = document.documentElement.classList.contains('dark');
+    document.documentElement.classList.remove('dark');
+    document.documentElement.style.colorScheme = 'light';
+  }
+});
+
+watch(() => route.path, () => {
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.style.colorScheme = 'light';
+  }
+}, { immediate: true });
+
+onUnmounted(() => {
+  if (typeof document !== 'undefined') {
+    document.documentElement.style.colorScheme = '';
+    if (shouldRestoreDarkClass) {
+      document.documentElement.classList.add('dark');
+    }
+  }
+});
 </script>

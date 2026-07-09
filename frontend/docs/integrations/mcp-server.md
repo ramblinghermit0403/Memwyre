@@ -1,3 +1,7 @@
+---
+title: Universal MCP Server Guide
+description: Universal guide to connecting Memwyre to Model Context Protocol (MCP) clients like Claude Desktop, Cursor, and VS Code.
+---
 # IDEs & Agents — MCP Server
 
 Memwyre provides a fully compliant **Model Context Protocol (MCP)** server. This lets your local AI agents, code editors, and desktop apps seamlessly read from and write to your Memwyre vault.

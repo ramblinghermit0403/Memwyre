@@ -1,0 +1,1914 @@
+{
+  "pages": [
+    {
+      "route": "/docs/benchmarks/",
+      "filename": "benchmarks.md",
+      "word_count": 353,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/how-it-works/",
+      "filename": "how-it-works.md",
+      "word_count": 400,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/",
+      "filename": "index.md",
+      "word_count": 339,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 5
+    },
+    {
+      "route": "/docs/rag-vs-memory/",
+      "filename": "rag-vs-memory.md",
+      "word_count": 604,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/security/",
+      "filename": "security.md",
+      "word_count": 540,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/self-hosting/",
+      "filename": "self-hosting.md",
+      "word_count": 697,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 1
+    },
+    {
+      "route": "/docs/use-cases/",
+      "filename": "use-cases.md",
+      "word_count": 361,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/integrations/browser-extension/",
+      "filename": "browser-extension.md",
+      "word_count": 414,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 2
+    },
+    {
+      "route": "/docs/integrations/cli-installer/",
+      "filename": "cli-installer.md",
+      "word_count": 543,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/integrations/connectors/",
+      "filename": "connectors.md",
+      "word_count": 411,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/integrations/",
+      "filename": "index.md",
+      "word_count": 70,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 3
+    },
+    {
+      "route": "/docs/integrations/mcp-server/",
+      "filename": "mcp-server.md",
+      "word_count": 735,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 1
+    },
+    {
+      "route": "/docs/integrations/mcp-server/claude/",
+      "filename": "claude.md",
+      "word_count": 210,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/integrations/mcp-server/cursor/",
+      "filename": "cursor.md",
+      "word_count": 136,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/integrations/mcp-server/vscode/",
+      "filename": "vscode.md",
+      "word_count": 159,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/integrations/plugins/claude/",
+      "filename": "claude.md",
+      "word_count": 262,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/docs/integrations/plugins/openclaw/",
+      "filename": "openclaw.md",
+      "word_count": 258,
+      "has_h1": true,
+      "type": "doc",
+      "links_count": 0
+    },
+    {
+      "route": "/blog/claude-code-memory-ingestion",
+      "filename": "claude-code-memory-ingestion.md",
+      "word_count": 970,
+      "has_h1": true,
+      "type": "blog",
+      "links_count": 1
+    },
+    {
+      "route": "/blog/cursor-vs-claude-code-context",
+      "filename": "cursor-vs-claude-code-context.md",
+      "word_count": 1092,
+      "has_h1": true,
+      "type": "blog",
+      "links_count": 1
+    },
+    {
+      "route": "/blog",
+      "filename": "index.md",
+      "word_count": 459,
+      "has_h1": true,
+      "type": "blog",
+      "links_count": 6
+    },
+    {
+      "route": "/blog/mcp-persistent-memory",
+      "filename": "mcp-persistent-memory.md",
+      "word_count": 906,
+      "has_h1": true,
+      "type": "blog",
+      "links_count": 0
+    },
+    {
+      "route": "/blog/openclaw-autonomous-memory",
+      "filename": "openclaw-autonomous-memory.md",
+      "word_count": 861,
+      "has_h1": true,
+      "type": "blog",
+      "links_count": 1
+    },
+    {
+      "route": "/blog/rag-vs-memory-long-term-knowledge",
+      "filename": "rag-vs-memory-long-term-knowledge.md",
+      "word_count": 1054,
+      "has_h1": true,
+      "type": "blog",
+      "links_count": 1
+    },
+    {
+      "route": "/blog/state-of-ai-memory-2026",
+      "filename": "state-of-ai-memory-2026.md",
+      "word_count": 2110,
+      "has_h1": true,
+      "type": "blog",
+      "links_count": 0
+    },
+    {
+      "route": "/blog/vscode-mcp-persistent-memory",
+      "filename": "vscode-mcp-persistent-memory.md",
+      "word_count": 886,
+      "has_h1": true,
+      "type": "blog",
+      "links_count": 1
+    },
+    {
+      "route": "/",
+      "filename": "LandingPage.vue",
+      "word_count": 4023,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 29
+    },
+    {
+      "route": "/use-cases",
+      "filename": "UseCaseView.vue",
+      "word_count": 654,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 4
+    },
+    {
+      "route": "/pricing",
+      "filename": "PricingView.vue",
+      "word_count": 270,
+      "has_h1": false,
+      "type": "vue",
+      "links_count": 19
+    },
+    {
+      "route": "/privacy-policy",
+      "filename": "PrivacyPolicyView.vue",
+      "word_count": 815,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 26
+    },
+    {
+      "route": "/terms",
+      "filename": "TermsView.vue",
+      "word_count": 679,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 25
+    },
+    {
+      "route": "/connectors",
+      "filename": "ConnectorsView.vue",
+      "word_count": 136,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/mcp",
+      "filename": "McpView.vue",
+      "word_count": 208,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/plugins",
+      "filename": "PluginsView.vue",
+      "word_count": 153,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/rag",
+      "filename": "RagView.vue",
+      "word_count": 175,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/memory-graph",
+      "filename": "MemoryGraphView.vue",
+      "word_count": 137,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/personal",
+      "filename": "PersonalAppView.vue",
+      "word_count": 321,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/extension",
+      "filename": "ExtensionView.vue",
+      "word_count": 324,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/blog",
+      "filename": "BlogListView.vue",
+      "word_count": 441,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 2
+    },
+    {
+      "route": "/blog/:slug",
+      "filename": "BlogPostView.vue",
+      "word_count": 1338,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 4
+    },
+    {
+      "route": "/what-is-ai-memory",
+      "filename": "WhatIsAiMemoryView.vue",
+      "word_count": 1827,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 15
+    },
+    {
+      "route": "/ai-memory-benchmark-locomo",
+      "filename": "LocomoBenchmarkView.vue",
+      "word_count": 893,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 6
+    },
+    {
+      "route": "/research",
+      "filename": "ResearchHubView.vue",
+      "word_count": 237,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 7
+    },
+    {
+      "route": "/memwyre-vs-mem0",
+      "filename": "MemwyreVsMem0.vue",
+      "word_count": 391,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 2
+    },
+    {
+      "route": "/memwyre-vs-supermemory",
+      "filename": "MemwyreVsSupermemory.vue",
+      "word_count": 341,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 2
+    },
+    {
+      "route": "/memwyre-vs-zep",
+      "filename": "MemwyreVsZep.vue",
+      "word_count": 330,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 2
+    },
+    {
+      "route": "/chatgpt-memory",
+      "filename": "ChatgptMemoryView.vue",
+      "word_count": 327,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/claude-memory",
+      "filename": "ClaudeMemoryView.vue",
+      "word_count": 292,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 4
+    },
+    {
+      "route": "/cursor-memory",
+      "filename": "CursorMemoryView.vue",
+      "word_count": 309,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 2
+    },
+    {
+      "route": "/mcp-memory",
+      "filename": "McpMemoryView.vue",
+      "word_count": 273,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/login",
+      "filename": "LoginView.vue",
+      "word_count": 788,
+      "has_h1": false,
+      "type": "vue",
+      "links_count": 2
+    },
+    {
+      "route": "/signup",
+      "filename": "RegisterView.vue",
+      "word_count": 768,
+      "has_h1": false,
+      "type": "vue",
+      "links_count": 1
+    },
+    {
+      "route": "/verify-email",
+      "filename": "VerifyEmailView.vue",
+      "word_count": 206,
+      "has_h1": false,
+      "type": "vue",
+      "links_count": 3
+    },
+    {
+      "route": "/forgot-password",
+      "filename": "ForgotPasswordView.vue",
+      "word_count": 238,
+      "has_h1": false,
+      "type": "vue",
+      "links_count": 1
+    },
+    {
+      "route": "/reset-password",
+      "filename": "ResetPasswordView.vue",
+      "word_count": 182,
+      "has_h1": false,
+      "type": "vue",
+      "links_count": 2
+    },
+    {
+      "route": "/settings",
+      "filename": "SettingsView.vue",
+      "word_count": 1107,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 0
+    },
+    {
+      "route": "/integrations",
+      "filename": "IntegrationsView.vue",
+      "word_count": 1364,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 1
+    },
+    {
+      "route": "/prompts",
+      "filename": "PromptGeneratorView.vue",
+      "word_count": 206,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 0
+    },
+    {
+      "route": "/map",
+      "filename": "MemoryMapView.vue",
+      "word_count": 1317,
+      "has_h1": false,
+      "type": "vue",
+      "links_count": 0
+    },
+    {
+      "route": "/chat",
+      "filename": "ChatView.vue",
+      "word_count": 509,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 0
+    },
+    {
+      "route": "/billing",
+      "filename": "BillingView.vue",
+      "word_count": 280,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 0
+    },
+    {
+      "route": "/admin",
+      "filename": "AdminInsightsView.vue",
+      "word_count": 711,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 1
+    },
+    {
+      "route": "/admin/bypass",
+      "filename": "AdminBypassView.vue",
+      "word_count": 280,
+      "has_h1": false,
+      "type": "vue",
+      "links_count": 0
+    },
+    {
+      "route": "/retrieval-visualizer",
+      "filename": "RetrievalVisualizerView.vue",
+      "word_count": 517,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 0
+    },
+    {
+      "route": "/redeem",
+      "filename": "RedeemView.vue",
+      "word_count": 193,
+      "has_h1": false,
+      "type": "vue",
+      "links_count": 2
+    },
+    {
+      "route": "/slides",
+      "filename": "SlideGalleryView.vue",
+      "word_count": 103,
+      "has_h1": true,
+      "type": "vue",
+      "links_count": 0
+    },
+    {
+      "route": "[SiteNavBar]",
+      "filename": "SiteNavBar.vue",
+      "word_count": 208,
+      "has_h1": false,
+      "type": "component",
+      "links_count": 14
+    },
+    {
+      "route": "[SiteFooter]",
+      "filename": "SiteFooter.vue",
+      "word_count": 66,
+      "has_h1": false,
+      "type": "component",
+      "links_count": 24
+    }
+  ],
+  "broken_links": [
+    {
+      "source_page": "/docs/",
+      "source_file": "index.md",
+      "link_url": "./integrations/browser-extension",
+      "resolved_url": "/docs/integrations/browser-extension",
+      "text": "Browser Extension",
+      "status": "broken"
+    },
+    {
+      "source_page": "/docs/",
+      "source_file": "index.md",
+      "link_url": "./integrations/mcp-server",
+      "resolved_url": "/docs/integrations/mcp-server",
+      "text": "MCP Server",
+      "status": "broken"
+    },
+    {
+      "source_page": "/docs/",
+      "source_file": "index.md",
+      "link_url": "./integrations/plugins/openclaw",
+      "resolved_url": "/docs/integrations/plugins/openclaw",
+      "text": "OpenClaw Plugin",
+      "status": "broken"
+    },
+    {
+      "source_page": "/docs/",
+      "source_file": "index.md",
+      "link_url": "./integrations/browser-extension",
+      "resolved_url": "/docs/integrations/browser-extension",
+      "text": "guide here",
+      "status": "broken"
+    },
+    {
+      "source_page": "/docs/integrations/",
+      "source_file": "index.md",
+      "link_url": "./browser-extension",
+      "resolved_url": "/docs/integrations/browser-extension",
+      "text": "Browser Extension",
+      "status": "broken"
+    },
+    {
+      "source_page": "/docs/integrations/",
+      "source_file": "index.md",
+      "link_url": "./mcp-server",
+      "resolved_url": "/docs/integrations/mcp-server",
+      "text": "IDEs & Agents (MCP Server)",
+      "status": "broken"
+    },
+    {
+      "source_page": "/docs/integrations/",
+      "source_file": "index.md",
+      "link_url": "./plugins/openclaw",
+      "resolved_url": "/docs/integrations/plugins/openclaw",
+      "text": "OpenClaw Plugin",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog/claude-code-memory-ingestion",
+      "source_file": "claude-code-memory-ingestion.md",
+      "link_url": "https://memwyre.tech",
+      "resolved_url": "/blog/",
+      "text": "memwyre.tech",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog/cursor-vs-claude-code-context",
+      "source_file": "cursor-vs-claude-code-context.md",
+      "link_url": "https://memwyre.tech",
+      "resolved_url": "/blog/",
+      "text": "memwyre.tech",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog",
+      "source_file": "index.md",
+      "link_url": "./mcp-persistent-memory",
+      "resolved_url": "/mcp-persistent-memory",
+      "text": "Read Guide \u2192",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog",
+      "source_file": "index.md",
+      "link_url": "./vscode-mcp-persistent-memory",
+      "resolved_url": "/vscode-mcp-persistent-memory",
+      "text": "Read Guide \u2192",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog",
+      "source_file": "index.md",
+      "link_url": "./claude-code-memory-ingestion",
+      "resolved_url": "/claude-code-memory-ingestion",
+      "text": "Read Guide \u2192",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog",
+      "source_file": "index.md",
+      "link_url": "./openclaw-autonomous-memory",
+      "resolved_url": "/openclaw-autonomous-memory",
+      "text": "Read Guide \u2192",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog",
+      "source_file": "index.md",
+      "link_url": "./cursor-vs-claude-code-context",
+      "resolved_url": "/cursor-vs-claude-code-context",
+      "text": "Read Guide \u2192",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog",
+      "source_file": "index.md",
+      "link_url": "./rag-vs-memory-long-term-knowledge",
+      "resolved_url": "/rag-vs-memory-long-term-knowledge",
+      "text": "Read Guide \u2192",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog/openclaw-autonomous-memory",
+      "source_file": "openclaw-autonomous-memory.md",
+      "link_url": "https://memwyre.tech",
+      "resolved_url": "/blog/",
+      "text": "memwyre.tech",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog/rag-vs-memory-long-term-knowledge",
+      "source_file": "rag-vs-memory-long-term-knowledge.md",
+      "link_url": "https://memwyre.tech",
+      "resolved_url": "/blog/",
+      "text": "memwyre.tech",
+      "status": "broken"
+    },
+    {
+      "source_page": "/blog/vscode-mcp-persistent-memory",
+      "source_file": "vscode-mcp-persistent-memory.md",
+      "link_url": "https://memwyre.tech",
+      "resolved_url": "/blog/",
+      "text": "memwyre.tech",
+      "status": "broken"
+    },
+    {
+      "source_page": "/connectors",
+      "source_file": "ConnectorsView.vue",
+      "link_url": "/docs/connectors/overview",
+      "resolved_url": "/docs/connectors/overview",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/mcp",
+      "source_file": "McpView.vue",
+      "link_url": "/docs/mcp/setup",
+      "resolved_url": "/docs/mcp/setup",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/plugins",
+      "source_file": "PluginsView.vue",
+      "link_url": "/docs/plugins/installation",
+      "resolved_url": "/docs/plugins/installation",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/rag",
+      "source_file": "RagView.vue",
+      "link_url": "/docs/rag/retrieval",
+      "resolved_url": "/docs/rag/retrieval",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/memory-graph",
+      "source_file": "MemoryGraphView.vue",
+      "link_url": "/docs/graph/overview",
+      "resolved_url": "/docs/graph/overview",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/personal",
+      "source_file": "PersonalAppView.vue",
+      "link_url": "/dashboard",
+      "resolved_url": "/dashboard",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/verify-email",
+      "source_file": "VerifyEmailView.vue",
+      "link_url": "/dashboard",
+      "resolved_url": "/dashboard",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/integrations",
+      "source_file": "IntegrationsView.vue",
+      "link_url": "item.docsLink",
+      "resolved_url": "/item.docsLink",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/redeem",
+      "source_file": "RedeemView.vue",
+      "link_url": "/dashboard",
+      "resolved_url": "/dashboard",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "[SiteNavBar]",
+      "source_file": "SiteNavBar.vue",
+      "link_url": "product.to",
+      "resolved_url": "/product.to",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "[SiteNavBar]",
+      "source_file": "SiteNavBar.vue",
+      "link_url": "product.to",
+      "resolved_url": "/product.to",
+      "text": "",
+      "status": "broken"
+    }
+  ],
+  "redirect_links": [],
+  "no_anchor_links": [
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/#pricing",
+      "resolved_url": "/#pricing",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/ai-memory-benchmark-locomo",
+      "resolved_url": "/ai-memory-benchmark-locomo",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/blog/mcp-persistent-memory",
+      "resolved_url": "/blog/mcp-persistent-memory",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/blog/vscode-mcp-persistent-memory",
+      "resolved_url": "/blog/vscode-mcp-persistent-memory",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/blog/claude-code-memory-ingestion",
+      "resolved_url": "/blog/claude-code-memory-ingestion",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/#pricing",
+      "resolved_url": "/#pricing",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/#features",
+      "resolved_url": "/#features",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/#pricing",
+      "resolved_url": "/#pricing",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/#ecosystem",
+      "resolved_url": "/#ecosystem",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/extension",
+      "resolved_url": "/extension",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/mcp",
+      "resolved_url": "/mcp",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/plugins",
+      "resolved_url": "/plugins",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/personal",
+      "resolved_url": "/personal",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/privacy-policy",
+      "resolved_url": "/privacy-policy",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/terms",
+      "resolved_url": "/terms",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/docs/",
+      "resolved_url": "/docs/",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/",
+      "source_file": "LandingPage.vue",
+      "link_url": "/docs/",
+      "resolved_url": "/docs/",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/use-cases",
+      "source_file": "UseCaseView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/use-cases",
+      "source_file": "UseCaseView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/pricing",
+      "resolved_url": "/pricing",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/#features",
+      "resolved_url": "/#features",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/pricing",
+      "resolved_url": "/pricing",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/#ecosystem",
+      "resolved_url": "/#ecosystem",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/extension",
+      "resolved_url": "/extension",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/mcp",
+      "resolved_url": "/mcp",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/plugins",
+      "resolved_url": "/plugins",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/personal",
+      "resolved_url": "/personal",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/privacy-policy",
+      "resolved_url": "/privacy-policy",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/pricing",
+      "source_file": "PricingView.vue",
+      "link_url": "/terms",
+      "resolved_url": "/terms",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/",
+      "resolved_url": "/",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/",
+      "resolved_url": "/",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/pricing",
+      "resolved_url": "/pricing",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/extension",
+      "resolved_url": "/extension",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/mcp",
+      "resolved_url": "/mcp",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/plugins",
+      "resolved_url": "/plugins",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/personal",
+      "resolved_url": "/personal",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/privacy-policy",
+      "resolved_url": "/privacy-policy",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/terms",
+      "resolved_url": "/terms",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/#features",
+      "resolved_url": "/#features",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/pricing",
+      "resolved_url": "/pricing",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/privacy-policy",
+      "source_file": "PrivacyPolicyView.vue",
+      "link_url": "/#ecosystem",
+      "resolved_url": "/#ecosystem",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/",
+      "resolved_url": "/",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/",
+      "resolved_url": "/",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/pricing",
+      "resolved_url": "/pricing",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/extension",
+      "resolved_url": "/extension",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/mcp",
+      "resolved_url": "/mcp",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/plugins",
+      "resolved_url": "/plugins",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/personal",
+      "resolved_url": "/personal",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/privacy-policy",
+      "resolved_url": "/privacy-policy",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/terms",
+      "resolved_url": "/terms",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/#features",
+      "resolved_url": "/#features",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/pricing",
+      "resolved_url": "/pricing",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/terms",
+      "source_file": "TermsView.vue",
+      "link_url": "/#ecosystem",
+      "resolved_url": "/#ecosystem",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/connectors",
+      "source_file": "ConnectorsView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/connectors",
+      "source_file": "ConnectorsView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/connectors",
+      "source_file": "ConnectorsView.vue",
+      "link_url": "/docs/connectors/overview",
+      "resolved_url": "/docs/connectors/overview",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/mcp",
+      "source_file": "McpView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/mcp",
+      "source_file": "McpView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/mcp",
+      "source_file": "McpView.vue",
+      "link_url": "/docs/mcp/setup",
+      "resolved_url": "/docs/mcp/setup",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/plugins",
+      "source_file": "PluginsView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/plugins",
+      "source_file": "PluginsView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/plugins",
+      "source_file": "PluginsView.vue",
+      "link_url": "/docs/plugins/installation",
+      "resolved_url": "/docs/plugins/installation",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/rag",
+      "source_file": "RagView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/rag",
+      "source_file": "RagView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/rag",
+      "source_file": "RagView.vue",
+      "link_url": "/docs/rag/retrieval",
+      "resolved_url": "/docs/rag/retrieval",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/memory-graph",
+      "source_file": "MemoryGraphView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/memory-graph",
+      "source_file": "MemoryGraphView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/memory-graph",
+      "source_file": "MemoryGraphView.vue",
+      "link_url": "/docs/graph/overview",
+      "resolved_url": "/docs/graph/overview",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/personal",
+      "source_file": "PersonalAppView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/personal",
+      "source_file": "PersonalAppView.vue",
+      "link_url": "/dashboard",
+      "resolved_url": "/dashboard",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/personal",
+      "source_file": "PersonalAppView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/blog/:slug",
+      "source_file": "BlogPostView.vue",
+      "link_url": "/blog",
+      "resolved_url": "/blog",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/blog/:slug",
+      "source_file": "BlogPostView.vue",
+      "link_url": "/blog",
+      "resolved_url": "/blog",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/what-is-ai-memory",
+      "source_file": "WhatIsAiMemoryView.vue",
+      "link_url": "/research",
+      "resolved_url": "/research",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/what-is-ai-memory",
+      "source_file": "WhatIsAiMemoryView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/what-is-ai-memory",
+      "source_file": "WhatIsAiMemoryView.vue",
+      "link_url": "/ai-memory-benchmark-locomo",
+      "resolved_url": "/ai-memory-benchmark-locomo",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/what-is-ai-memory",
+      "source_file": "WhatIsAiMemoryView.vue",
+      "link_url": "/research",
+      "resolved_url": "/research",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/what-is-ai-memory",
+      "source_file": "WhatIsAiMemoryView.vue",
+      "link_url": "/mcp-memory",
+      "resolved_url": "/mcp-memory",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/what-is-ai-memory",
+      "source_file": "WhatIsAiMemoryView.vue",
+      "link_url": "/memwyre-vs-mem0",
+      "resolved_url": "/memwyre-vs-mem0",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/what-is-ai-memory",
+      "source_file": "WhatIsAiMemoryView.vue",
+      "link_url": "/docs/",
+      "resolved_url": "/docs/",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/ai-memory-benchmark-locomo",
+      "source_file": "LocomoBenchmarkView.vue",
+      "link_url": "/research",
+      "resolved_url": "/research",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/research",
+      "source_file": "ResearchHubView.vue",
+      "link_url": "/",
+      "resolved_url": "/",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/research",
+      "source_file": "ResearchHubView.vue",
+      "link_url": "/ai-memory-benchmark-locomo",
+      "resolved_url": "/ai-memory-benchmark-locomo",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/research",
+      "source_file": "ResearchHubView.vue",
+      "link_url": "/what-is-ai-memory",
+      "resolved_url": "/what-is-ai-memory",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/research",
+      "source_file": "ResearchHubView.vue",
+      "link_url": "/blog/state-of-ai-memory-2026",
+      "resolved_url": "/blog/state-of-ai-memory-2026",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/research",
+      "source_file": "ResearchHubView.vue",
+      "link_url": "/rag",
+      "resolved_url": "/rag",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/research",
+      "source_file": "ResearchHubView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/memwyre-vs-mem0",
+      "source_file": "MemwyreVsMem0.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/memwyre-vs-mem0",
+      "source_file": "MemwyreVsMem0.vue",
+      "link_url": "/ai-memory-benchmark-locomo",
+      "resolved_url": "/ai-memory-benchmark-locomo",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/memwyre-vs-supermemory",
+      "source_file": "MemwyreVsSupermemory.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/memwyre-vs-supermemory",
+      "source_file": "MemwyreVsSupermemory.vue",
+      "link_url": "/ai-memory-benchmark-locomo",
+      "resolved_url": "/ai-memory-benchmark-locomo",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/memwyre-vs-zep",
+      "source_file": "MemwyreVsZep.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/memwyre-vs-zep",
+      "source_file": "MemwyreVsZep.vue",
+      "link_url": "/ai-memory-benchmark-locomo",
+      "resolved_url": "/ai-memory-benchmark-locomo",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/chatgpt-memory",
+      "source_file": "ChatgptMemoryView.vue",
+      "link_url": "/extension",
+      "resolved_url": "/extension",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/chatgpt-memory",
+      "source_file": "ChatgptMemoryView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/chatgpt-memory",
+      "source_file": "ChatgptMemoryView.vue",
+      "link_url": "/extension",
+      "resolved_url": "/extension",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/claude-memory",
+      "source_file": "ClaudeMemoryView.vue",
+      "link_url": "/blog/mcp-persistent-memory",
+      "resolved_url": "/blog/mcp-persistent-memory",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/claude-memory",
+      "source_file": "ClaudeMemoryView.vue",
+      "link_url": "/blog/claude-code-memory-ingestion",
+      "resolved_url": "/blog/claude-code-memory-ingestion",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/claude-memory",
+      "source_file": "ClaudeMemoryView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/claude-memory",
+      "source_file": "ClaudeMemoryView.vue",
+      "link_url": "/docs/",
+      "resolved_url": "/docs/",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/cursor-memory",
+      "source_file": "CursorMemoryView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/cursor-memory",
+      "source_file": "CursorMemoryView.vue",
+      "link_url": "/blog/cursor-vs-claude-code-context",
+      "resolved_url": "/blog/cursor-vs-claude-code-context",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/mcp-memory",
+      "source_file": "McpMemoryView.vue",
+      "link_url": "/mcp",
+      "resolved_url": "/mcp",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/mcp-memory",
+      "source_file": "McpMemoryView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/mcp-memory",
+      "source_file": "McpMemoryView.vue",
+      "link_url": "/mcp",
+      "resolved_url": "/mcp",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/login",
+      "source_file": "LoginView.vue",
+      "link_url": "/forgot-password",
+      "resolved_url": "/forgot-password",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/login",
+      "source_file": "LoginView.vue",
+      "link_url": "/signup",
+      "resolved_url": "/signup",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/signup",
+      "source_file": "RegisterView.vue",
+      "link_url": "/login",
+      "resolved_url": "/login",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/verify-email",
+      "source_file": "VerifyEmailView.vue",
+      "link_url": "/login",
+      "resolved_url": "/login",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/verify-email",
+      "source_file": "VerifyEmailView.vue",
+      "link_url": "/dashboard",
+      "resolved_url": "/dashboard",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/verify-email",
+      "source_file": "VerifyEmailView.vue",
+      "link_url": "/login",
+      "resolved_url": "/login",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/forgot-password",
+      "source_file": "ForgotPasswordView.vue",
+      "link_url": "/login",
+      "resolved_url": "/login",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/reset-password",
+      "source_file": "ResetPasswordView.vue",
+      "link_url": "/login",
+      "resolved_url": "/login",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/reset-password",
+      "source_file": "ResetPasswordView.vue",
+      "link_url": "/forgot-password",
+      "resolved_url": "/forgot-password",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/integrations",
+      "source_file": "IntegrationsView.vue",
+      "link_url": "item.docsLink",
+      "resolved_url": "/item.docsLink",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/admin",
+      "source_file": "AdminInsightsView.vue",
+      "link_url": "/admin/bypass",
+      "resolved_url": "/admin/bypass",
+      "text": "",
+      "status": "ok"
+    },
+    {
+      "source_page": "/redeem",
+      "source_file": "RedeemView.vue",
+      "link_url": "/dashboard",
+      "resolved_url": "/dashboard",
+      "text": "",
+      "status": "broken"
+    },
+    {
+      "source_page": "/redeem",
+      "source_file": "RedeemView.vue",
+      "link_url": "/",
+      "resolved_url": "/",
+      "text": "",
+      "status": "ok"
+    }
+  ],
+  "low_word_count_pages": [
+    {
+      "route": "/docs/integrations/",
+      "file": "index.md",
+      "words": 70
+    },
+    {
+      "route": "/docs/integrations/mcp-server/claude/",
+      "file": "claude.md",
+      "words": 210
+    },
+    {
+      "route": "/docs/integrations/mcp-server/cursor/",
+      "file": "cursor.md",
+      "words": 136
+    },
+    {
+      "route": "/docs/integrations/mcp-server/vscode/",
+      "file": "vscode.md",
+      "words": 159
+    },
+    {
+      "route": "/connectors",
+      "file": "ConnectorsView.vue",
+      "words": 136
+    },
+    {
+      "route": "/mcp",
+      "file": "McpView.vue",
+      "words": 208
+    },
+    {
+      "route": "/plugins",
+      "file": "PluginsView.vue",
+      "words": 153
+    },
+    {
+      "route": "/rag",
+      "file": "RagView.vue",
+      "words": 175
+    },
+    {
+      "route": "/memory-graph",
+      "file": "MemoryGraphView.vue",
+      "words": 137
+    },
+    {
+      "route": "/research",
+      "file": "ResearchHubView.vue",
+      "words": 237
+    },
+    {
+      "route": "/verify-email",
+      "file": "VerifyEmailView.vue",
+      "words": 206
+    },
+    {
+      "route": "/forgot-password",
+      "file": "ForgotPasswordView.vue",
+      "words": 238
+    },
+    {
+      "route": "/reset-password",
+      "file": "ResetPasswordView.vue",
+      "words": 182
+    },
+    {
+      "route": "/prompts",
+      "file": "PromptGeneratorView.vue",
+      "words": 206
+    },
+    {
+      "route": "/redeem",
+      "file": "RedeemView.vue",
+      "words": 193
+    },
+    {
+      "route": "/slides",
+      "file": "SlideGalleryView.vue",
+      "words": 103
+    }
+  ],
+  "missing_h1_pages": [
+    {
+      "route": "/pricing",
+      "file": "PricingView.vue"
+    },
+    {
+      "route": "/login",
+      "file": "LoginView.vue"
+    },
+    {
+      "route": "/signup",
+      "file": "RegisterView.vue"
+    },
+    {
+      "route": "/verify-email",
+      "file": "VerifyEmailView.vue"
+    },
+    {
+      "route": "/forgot-password",
+      "file": "ForgotPasswordView.vue"
+    },
+    {
+      "route": "/reset-password",
+      "file": "ResetPasswordView.vue"
+    },
+    {
+      "route": "/map",
+      "file": "MemoryMapView.vue"
+    },
+    {
+      "route": "/admin/bypass",
+      "file": "AdminBypassView.vue"
+    },
+    {
+      "route": "/redeem",
+      "file": "RedeemView.vue"
+    }
+  ],
+  "duplicate_metas": {}
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-white text-[#191919] font-sans selection:bg-[#D97757] selection:text-white">
     <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/5 px-6 py-4">
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
         <router-link to="/portfolio" class="flex items-center gap-2 font-bold text-gray-600 hover:text-black transition-colors">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -12,7 +12,7 @@
       </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 py-12 sm:py-20">
+    <main class="max-w-5xl mx-auto px-6 py-12 sm:py-20">
       <div v-if="project" class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
         <!-- Left Side: Content -->
         <div class="lg:col-span-6 lg:sticky lg:top-28 animate-in fade-in slide-in-from-left-4 duration-700">
@@ -79,7 +79,7 @@
     </main>
 
     <footer class="border-t border-black/5 py-12 text-center text-gray-400 text-sm">
-      <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
         <p>© 2026 Himansh Shivhare. All rights reserved.</p>
         <div class="flex gap-6">
           <a href="#" class="hover:text-black transition-colors">Twitter</a>

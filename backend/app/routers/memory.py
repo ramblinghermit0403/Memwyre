@@ -230,29 +230,52 @@ async def read_memories(
             }
         )
 
-    if view != "timeline":
-        result_doc = await db.execute(select(Document).where(Document.user_id == current_user.id))
-        documents = result_doc.scalars().all()
-        for doc in documents:
-            doc_type = "memory" if doc.doc_type == "memory" else "document"
-            results.append(
-                {
-                    "id": f"doc_{doc.id}",
-                    "title": doc.title or "Untitled Document",
-                    "content": doc.content if doc.content else f"Uploaded Document: {doc.source} ({doc.file_type})",
-                    "user_id": doc.user_id,
-                    "created_at": doc.created_at or datetime.now(),
-                    "updated_at": None,
-                    "source": doc.source,
-                    "source_app": doc.source,
-                    "interaction_type": "document",
-                    "project_id": None,
-                    "project_name": None,
-                    "doc_type": doc_type,
-                    "type": doc_type,
-                    "tags": doc.tags if doc.tags is not None else [],
-                }
-            )
+    doc_filters = [Document.user_id == current_user.id]
+    if project_id is not None:
+        doc_filters.append(Document.project_id == project_id)
+    if date_from:
+        try:
+            doc_filters.append(Document.created_at >= datetime.fromisoformat(date_from))
+        except ValueError:
+            pass
+    if date_to:
+        try:
+            doc_filters.append(Document.created_at <= datetime.fromisoformat(date_to))
+        except ValueError:
+            pass
+
+    result_doc = await db.execute(select(Document).where(and_(*doc_filters)))
+    documents = result_doc.scalars().all()
+    
+    for doc in documents:
+        doc_type = "memory" if doc.doc_type == "memory" else "document"
+        
+        # If activeType filter is used for "conversation", "prompt", "memory", "webpage" on frontend,
+        # documents should be returned if interaction_type is not provided OR matches.
+        # But documents don't have interaction_type in DB, they have doc_type.
+        # So we'll map their interaction_type to "document".
+        if interaction_type and interaction_type != "document":
+            continue
+            
+        results.append(
+            {
+                "id": f"doc_{doc.id}",
+                "title": doc.title or "Untitled Document",
+                "content": doc.content if doc.content else f"Uploaded Document: {doc.source} ({doc.file_type})",
+                "user_id": doc.user_id,
+                "created_at": doc.created_at or datetime.now(),
+                "updated_at": None,
+                "source": doc.source,
+                "source_app": doc.source,
+                "interaction_type": "document",
+                "project_id": doc.project_id,
+                "project_name": project_map.get(doc.project_id).name if doc.project_id and project_map.get(doc.project_id) else None,
+                "timeline_group": (doc.created_at or datetime.now()).strftime("%Y-%m-%d"),
+                "doc_type": doc_type,
+                "type": doc_type,
+                "tags": doc.tags if doc.tags is not None else [],
+            }
+        )
 
     def get_sort_key(x):
         dt = x.get("created_at")

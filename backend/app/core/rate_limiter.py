@@ -1,7 +1,7 @@
 import asyncio
 import time
 import logging
-from typing import Optional, List
+from typing import Optional, List, Any
 from app.core.config import settings
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -32,7 +32,10 @@ class AsyncRateLimiter:
         """
         self.max_calls = max_calls
         self.period = period
-        self.tokens = float(max_calls)
+        # Cap the token bucket to 1.0 to enforce strict pacing and prevent large bursts 
+        # that trigger 429 errors from strict APIs (like Moonshot/NVIDIA) after idle periods.
+        self.max_burst = min(float(max_calls), 1.0)
+        self.tokens = self.max_burst
         self.last_update = time.monotonic()
         self.lock = asyncio.Lock()
 
@@ -43,7 +46,8 @@ class AsyncRateLimiter:
                 passed = now - self.last_update
                 # Replenish tokens proportional to time elapsed
                 replenished = passed * (self.max_calls / self.period)
-                self.tokens = min(float(self.max_calls), self.tokens + replenished)
+                # Cap the tokens at max_burst instead of max_calls
+                self.tokens = min(self.max_burst, self.tokens + replenished)
                 self.last_update = now
                 
                 if self.tokens >= 1.0:
@@ -112,8 +116,8 @@ def wrap_llm_with_rate_limit(llm):
             pass
         return original_invoke(input, config=config, **kwargs)
 
-    llm.ainvoke = rate_limited_ainvoke
-    llm.invoke = rate_limited_invoke
+    object.__setattr__(llm, "ainvoke", rate_limited_ainvoke)
+    object.__setattr__(llm, "invoke", rate_limited_invoke)
     return llm
 
 
@@ -127,11 +131,63 @@ def get_embeddings_instance():
     # 1. Custom OpenAI-compatible Endpoint (e.g. NVIDIA NIM nv-embedqa-e5-v5)
     if getattr(settings, "EMBEDDING_API_BASE", None):
         from langchain_openai import OpenAIEmbeddings
+
+        class CustomNIMEmbeddings(OpenAIEmbeddings):
+            """Custom wrapper for NVIDIA NIM asymmetric embeddings which require 'input_type'."""
+            def __init__(self, **kwargs):
+                super().__init__(**kwargs)
+                self.check_embedding_ctx_length = False
+
+            async def aembed_documents(self, texts: List[str], chunk_size: Optional[int] = 0) -> List[List[float]]:
+                original_create = self.async_client.create
+                async def mock_create(*args, **kwargs):
+                    kwargs["extra_body"] = {"input_type": "passage"}
+                    return await original_create(*args, **kwargs)
+                self.async_client.create = mock_create
+                try:
+                    return await super().aembed_documents(texts, chunk_size)
+                finally:
+                    self.async_client.create = original_create
+
+            async def aembed_query(self, text: str) -> List[float]:
+                original_create = self.async_client.create
+                async def mock_create(*args, **kwargs):
+                    kwargs["extra_body"] = {"input_type": "query"}
+                    return await original_create(*args, **kwargs)
+                self.async_client.create = mock_create
+                try:
+                    return await super().aembed_query(text)
+                finally:
+                    self.async_client.create = original_create
+
+            def embed_documents(self, texts: List[str], chunk_size: Optional[int] = 0) -> List[List[float]]:
+                original_create = self.client.create
+                def mock_create(*args, **kwargs):
+                    kwargs["extra_body"] = {"input_type": "passage"}
+                    return original_create(*args, **kwargs)
+                self.client.create = mock_create
+                try:
+                    return super().embed_documents(texts, chunk_size)
+                finally:
+                    self.client.create = original_create
+
+            def embed_query(self, text: str) -> List[float]:
+                original_create = self.client.create
+                def mock_create(*args, **kwargs):
+                    kwargs["extra_body"] = {"input_type": "query"}
+                    return original_create(*args, **kwargs)
+                self.client.create = mock_create
+                try:
+                    return super().embed_query(text)
+                finally:
+                    self.client.create = original_create
+
         logger.info(f"Initializing custom OpenAI-compatible embeddings from base: {settings.EMBEDDING_API_BASE}")
-        raw_embeddings = OpenAIEmbeddings(
+        raw_embeddings = CustomNIMEmbeddings(
             base_url=settings.EMBEDDING_API_BASE,
             api_key=api_key,
-            model=getattr(settings, "EMBEDDING_MODEL_NAME", "nvidia/nv-embedqa-e5-v5")
+            model=getattr(settings, "EMBEDDING_MODEL_NAME", "nvidia/nv-embedqa-e5-v5"),
+            check_embedding_ctx_length=False
         )
     # 2. Default/Fallback: Azure OpenAI or Bedrock Titan
     else:

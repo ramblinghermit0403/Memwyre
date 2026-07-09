@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-app text-text-primary pt-24 pb-20 font-sans selection:bg-primary selection:text-white dark:selection:bg-primary dark:selection:text-white">
     
     <!-- 1. HERO SECTION -->
-    <div class="min-h-[calc(100vh-6rem)] max-w-7xl mx-auto px-6 lg:px-8 mb-32 flex items-center">
+    <div class="min-h-[calc(100vh-6rem)] max-w-5xl mx-auto px-6 lg:px-8 mb-32 flex items-center">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
             <div class="space-y-8">
                 <h1 class="hero-serif text-6xl font-extrabold tracking-tighter leading-none">
@@ -163,7 +163,7 @@
     </div>
 
     <!-- 3. DETAILED USE CASES (Grid) -->
-    <div class="py-32 max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="py-32 max-w-5xl mx-auto px-6 lg:px-8">
         <div class="text-center mb-20">
              <h2 class="text-4xl lg:text-5xl font-extrabold mb-6">Designed for How You Work</h2>
              <p class="text-xl text-text-secondary max-w-2xl mx-auto">
@@ -284,7 +284,7 @@
 
     <!-- 5. BEFORE vs AFTER -->
     <div class="bg-surface text-text-primary py-32 border-y border-primary/10">
-        <div class="px-6 lg:px-8 max-w-6xl mx-auto">
+        <div class="px-6 lg:px-8 max-w-5xl mx-auto">
              <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold">The Memwyre Impact</h2>
             </div>

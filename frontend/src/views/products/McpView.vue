@@ -51,7 +51,7 @@
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-[#050614] text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm inline-flex items-center justify-center gap-2">
                   Get MCP Keys →
                 </router-link>
-                <a href="/docs/mcp/setup" target="_blank"
+                <a href="/docs/integrations/mcp-server" target="_blank"
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-white text-[#050614] font-bold rounded border border-gray-250 hover:bg-gray-50 transition-all duration-300 text-xs sm:text-sm inline-flex items-center justify-center">
                   Read Configuration
                 </a>
@@ -181,6 +181,32 @@
               <div class="text-xs text-gray-400">{{ client.desc }}</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- 4b. DETAILED TECHNICAL SPECIFICATIONS -->
+      <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-300/80 pointer-events-none select-none"></div>
+      <div class="py-8 sm:py-10">
+        <div class="max-w-3xl mb-6 sm:mb-8">
+          <span class="text-xs tracking-wider uppercase font-bold font-mono text-[#D97757]">Protocol Specs</span>
+          <h2 class="hero-serif text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mt-2">
+            Technical specifications of our MCP server.
+          </h2>
+        </div>
+
+        <div class="space-y-6 text-sm text-gray-600 leading-relaxed">
+          <p>
+            The Model Context Protocol (MCP) server acts as a local proxy between client interfaces (such as Cursor, VS Code, and Claude Desktop) and your secure Memwyre Cloud vault. The communication is established as a stdio subprocess, exchanging JSON-RPC 2.0 messages over standard input and standard output streams. This guarantees that your connection credentials remain private and isolated to your local environment.
+          </p>
+          <p>
+            The server exposes two primary tools to the LLM agent: <code>save_memory</code> and <code>search_memwyre</code>. When an agent runs a query, it dynamically assesses whether to call these tools. For example, if you ask Cursor "What did we configure yesterday?", the LLM generates a tool call to <code>search_memwyre</code> with semantic query parameters. The local server processes the request, performs a vector search against the Memwyre vault, and returns matching context blocks in less than 300 milliseconds.
+          </p>
+          <p>
+            Similarly, when you compile a package or explain a new requirement, the agent calls the <code>save_memory</code> tool to persist this context. The local server routes this data back to your cloud vault, ensuring that the next time you open VS Code, Claude Desktop, or Windsurf, the agent starts with the latest context. This removes the stateless amnesia problem and guarantees consistent developer guidelines across all AI client sessions.
+          </p>
+          <p>
+            To further optimize client query performance, the local MCP proxy maintains a lightweight cache of recently accessed semantic rule blocks. This ensures that repeated lookups of static project parameters do not require a round-trip to the cloud server, reducing latency to single-digit milliseconds. When you make changes to your cloud vault via the browser or the extension, a WebSocket invalidate signal is broadcast to clear this local cache, maintaining a fully synchronized state across your tools. This guarantees real-time updates and minimal latency.
+          </p>
         </div>
       </div>
 

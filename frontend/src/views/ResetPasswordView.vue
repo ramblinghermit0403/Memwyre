@@ -3,7 +3,7 @@
     <div class="max-w-md w-full bg-surface border border-border rounded-3xl p-8 shadow-xl animate-in fade-in duration-700">
       
         <div class="text-center mb-8">
-            <h2 class="text-2xl font-bold mb-2">Reset Password</h2>
+            <h1 class="text-2xl font-bold mb-2">Reset Password</h1>
             <p class="text-sm text-text-secondary">Enter your new password below to regain access.</p>
         </div>
 

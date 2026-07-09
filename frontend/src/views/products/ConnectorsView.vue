@@ -51,7 +51,7 @@
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-[#050614] text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm inline-flex items-center justify-center gap-2">
                   Start Connecting →
                 </router-link>
-                <a href="/docs/connectors/overview" target="_blank"
+                <a href="/docs/integrations/connectors" target="_blank"
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-white text-[#050614] font-bold rounded border border-gray-250 hover:bg-gray-50 transition-all duration-300 text-xs sm:text-sm inline-flex items-center justify-center">
                   Read Documentation
                 </a>
@@ -162,6 +162,35 @@
               <div class="text-xs text-gray-400">{{ app.desc }}</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- 4b. DETAILED TECHNICAL SPECIFICATIONS -->
+      <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-300/80 pointer-events-none select-none"></div>
+      <div class="py-8 sm:py-10">
+        <div class="max-w-3xl mb-6 sm:mb-8">
+          <span class="text-xs tracking-wider uppercase font-bold font-mono text-[#D97757]">Integration Details</span>
+          <h2 class="hero-serif text-3xl sm:text-4xl md:text-5xl tracking-[-0.02em] leading-[1.1] text-[rgb(1,1,16)] mt-2">
+            Technical specifications of our sync engine.
+          </h2>
+        </div>
+
+        <div class="space-y-6 text-sm text-gray-600 leading-relaxed">
+          <p>
+            Memwyre’s data connectors are built to address the stale context problem by integrating directly into your team's existing workflow. The sync engine operates by monitoring third-party APIs (such as Notion, Google Drive, Slack, and GitHub) and ingesting new updates into your memory vault. For databases like Notion, the connector polls the workspace API and extracts text blocks, database relations, and properties, transforming them into clean, structured Markdown.
+          </p>
+          <p>
+            When processing file attachments from Google Drive or local uploads (PDF, Docx, or raw text), the system extracts raw text and passes it to our parsing queue. This Celery-backed ingestion pipeline strips navigation elements, scripts, and null bytes, preventing database errors and eliminating useless token bloat before indexing.
+          </p>
+          <p>
+            For engineering environments, the GitHub connector maps commits, pull request changes, and issues into relational entities. This allows your developer agents to understand the context behind a code change or issue resolution. Our API endpoint supports automated URL scraping where you can POST a web address with custom tags; the server scrapes the content, parses it to Markdown, and broadcasts a WebSocket notification to update all active MCP clients in under 300 milliseconds.
+          </p>
+          <p>
+            To ensure secure connectivity, all third-party integrations utilize OAuth 2.0 authorization flows. The tokens are encrypted at rest using AES-256-GCM and are stored within an isolated vault environment. The connector orchestrator supports customizable sync schedules (ranging from real-time webhook updates to hourly or daily cron-style polling cycles) depending on your team's API limits and data rate constraints. This guarantees that your background workers do not exceed platform thresholds.
+          </p>
+          <p>
+            Once data is successfully ingested and normalized into clean Markdown, it is parsed by our backend semantic engine to build detailed context profiles. These profiles map entity relationships, ensuring that when an AI assistant queries your memory vault, it receives a cohesive knowledge graph rather than disjointed chunks of text. You can monitor all active data syncs, execution logs, and pending document approvals directly in the Memwyre Web Dashboard interface. This administrative dashboard provides granular sync state oversight, active data bandwidth monitoring, and debug execution logs for every data connector.
+          </p>
         </div>
       </div>
 

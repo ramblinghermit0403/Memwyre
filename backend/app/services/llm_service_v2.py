@@ -34,10 +34,10 @@ class LLMService:
             loop = asyncio.get_running_loop()
             loop_id = id(loop)
         except RuntimeError:
-            return asyncio.Semaphore(10)
+            return asyncio.Semaphore(2)
             
         if loop_id not in self._semaphores:
-            self._semaphores[loop_id] = asyncio.Semaphore(10)
+            self._semaphores[loop_id] = asyncio.Semaphore(2)
         return self._semaphores[loop_id]
 
     def _get_openai_llm(self, temperature: float = 0, target_key: Optional[str] = None):
@@ -244,7 +244,7 @@ Existing Tags Context:
                     pass
             return {}
 
-    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
+    @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, min=5, max=60))
     async def generate_chunk_enrichment(self, content: str, api_key: Optional[str] = None) -> dict:
         """
         Generate summary, Q&A, and entities for a text chunk.
@@ -311,7 +311,7 @@ Rules:
             # If we got text but couldn't parse JSON, that's a failure we should know about
             raise ValueError(f"Failed to parse JSON from LLM response: {text[:100]}...")
 
-    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
+    @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, min=5, max=60))
     async def extract_facts_from_text(self, text: str, api_key: Optional[str] = None, reference_date: Optional[datetime] = None) -> List[dict]:
         """
         Extract Atomic Facts (Subject-Predicate-Object) from text.

@@ -45,7 +45,7 @@
                            
                            <!-- Logo -->
                            <div class="h-10 w-10 mb-4 flex items-center justify-center rounded-lg overflow-hidden" :class="item.bgColor || 'bg-gray-200 dark:bg-gray-800'">
-                               <img v-if="item.icon" :src="item.icon" :class="[item.fullIcon ? 'w-full h-full' : 'w-6 h-6 object-contain', {'invert': item.invert, 'dark:invert': item.darkInvert}]" />
+                               <img v-if="item.icon" :src="item.icon" :class="[item.fullIcon ? 'w-full h-full' : 'w-6 h-6 object-contain', {'invert': item.invert, 'dark:invert': item.darkInvert}]" :alt="item.name + ' integration icon'" />
                                <svg v-else class="w-6 h-6 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                            </div>
                            
@@ -180,7 +180,7 @@
             <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
                 <div class="flex items-center gap-3">
                     <div class="h-8 w-8 flex items-center justify-center rounded-lg overflow-hidden" :class="selectedIntegration?.bgColor || 'bg-gray-200'">
-                        <img v-if="selectedIntegration?.icon" :src="selectedIntegration?.icon" :class="[selectedIntegration?.fullIcon ? 'w-full h-full' : 'w-5 h-5 object-contain', {'invert dark:invert-0': selectedIntegration?.invert}]" />
+                        <img v-if="selectedIntegration?.icon" :src="selectedIntegration?.icon" :class="[selectedIntegration?.fullIcon ? 'w-full h-full' : 'w-5 h-5 object-contain', {'invert dark:invert-0': selectedIntegration?.invert}]" :alt="selectedIntegration?.name + ' integration icon'" />
                     </div>
                     <div>
                         <h3 class="text-base font-semibold text-gray-900 dark:text-white">Connect to {{ selectedIntegration?.name }}</h3>

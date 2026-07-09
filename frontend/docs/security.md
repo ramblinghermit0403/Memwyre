@@ -1,3 +1,7 @@
+---
+title: Security & Data Privacy in Memwyre
+description: Read about Memwyre security practices, including private memory vaults, data encryption, and local offline deployment.
+---
 # Security & Privacy
 
 Privacy is not an afterthought — it is the core design philosophy of Memwyre. As your unified memory layer, Memwyre handles sensitive codebase structures, credentials, and personal notes. This page details our security architecture and data governance practices.

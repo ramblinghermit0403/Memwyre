@@ -1,3 +1,7 @@
+---
+title: CLI Auto-Installer Guide
+description: Step-by-step instructions for running the Memwyre CLI installer to configure local MCP servers and developer hooks.
+---
 # CLI Auto-Installer
 
 Setup your local developer environment in seconds. The Memwyre CLI installer handles authentication, creates configuration templates, and configures MCP servers for your favorite IDEs automatically.

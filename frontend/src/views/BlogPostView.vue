@@ -1,7 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch, nextTick, onServerPrefetch } from 'vue';
-
-let shouldRestoreDarkClass = false;
+import { ref, onMounted, onUnmounted, watch, nextTick, computed, onServerPrefetch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import SiteFooter from '@/components/SiteFooter.vue';
 import { Marked } from 'marked';
@@ -10,8 +8,27 @@ import mermaid from 'mermaid';
 const route = useRoute();
 const router = useRouter();
 
+// Slugify heading helper
+const slugify = (text) => {
+  return text.toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-');
+};
+
 const marked = new Marked({
   renderer: {
+    heading(text, level, raw) {
+      let depth = level;
+      let rawText = '';
+      if (typeof text === 'object' && text !== null) {
+        rawText = text.text;
+        depth = text.depth;
+      } else {
+        rawText = text;
+      }
+      const slug = slugify(rawText);
+      return `<h${depth} id="${slug}">${rawText}</h${depth}>`;
+    },
     code(code, infostring) {
       let text = '';
       let lang = '';
@@ -24,7 +41,6 @@ const marked = new Marked({
       }
       
       if (lang === 'mermaid') {
-        // Safely pass the raw mermaid text by base64 encoding it
         let b64 = '';
         if (typeof window !== 'undefined' && window.btoa) {
           b64 = window.btoa(unescape(encodeURIComponent(text)));
@@ -40,6 +56,29 @@ const rawContent = ref('');
 const parsedHtml = ref('');
 const isLoading = ref(true);
 const error = ref(null);
+const toc = ref([]);
+const activeSection = ref('');
+
+const parseToc = (md) => {
+  if (!md) return;
+  const headings = [];
+  const lines = md.split(/\r?\n/);
+  let sectionIndex = 1;
+  for (const line of lines) {
+    const match = line.match(/^(#{2,3})\s+(.+)$/);
+    if (match) {
+      const level = match[1].length;
+      const text = match[2].trim();
+      const slug = slugify(text);
+      headings.push({ level, text, slug, index: sectionIndex++ });
+    }
+  }
+  toc.value = headings;
+};
+
+watch(rawContent, (newContent) => {
+  parseToc(newContent);
+}, { immediate: true });
 
 // Get meta info for other articles sidebar
 const recentPosts = [
@@ -48,49 +87,72 @@ const recentPosts = [
     title: 'How to Give Claude Desktop Persistent Memory using MCP',
     category: 'MCP Server',
     author: 'Himansh Shivhare',
-    fullDate: 'June 15, 2026'
+    fullDate: 'June 15, 2026',
+    readTime: '4 MIN'
   },
   {
     slug: 'vscode-mcp-persistent-memory',
     title: 'How to Enable Persistent Codebase Memory in VS Code with MCP and Cline',
     category: 'MCP Server',
     author: 'Himansh Shivhare',
-    fullDate: 'June 2, 2026'
+    fullDate: 'June 2, 2026',
+    readTime: '5 MIN'
   },
   {
     slug: 'claude-code-memory-ingestion',
-    title: 'Building Persistent Terminal Sessions: Claude Code Memory Ingestion with Memwyre',
+    title: 'Building Persistent Terminal Sessions: Claude Code Memory Ingestion',
     category: 'CLI Plugins',
     author: 'Himansh Shivhare',
-    fullDate: 'May 18, 2026'
+    fullDate: 'May 18, 2026',
+    readTime: '5 MIN'
   },
   {
     slug: 'openclaw-autonomous-memory',
-    title: 'Persistent Memory for Autonomous Agents: OpenClaw and Memwyre Integration',
+    title: 'Persistent Memory for Autonomous Agents: OpenClaw and Memwyre',
     category: 'CLI Plugins',
     author: 'Himansh Shivhare',
-    fullDate: 'May 4, 2026'
+    fullDate: 'May 4, 2026',
+    readTime: '4 MIN'
   },
   {
     slug: 'cursor-vs-claude-code-context',
     title: 'Cursor AI vs Claude Code: Managing Context and Memory in IDEs',
     category: 'Comparisons',
     author: 'Himansh Shivhare',
-    fullDate: 'April 22, 2026'
+    fullDate: 'April 22, 2026',
+    readTime: '6 MIN'
   },
   {
     slug: 'state-of-ai-memory-2026',
     title: 'State of AI Memory 2026: The Shift from Stateless to Stateful Agent Networks',
     category: 'Architecture',
     author: 'Himansh Shivhare',
-    fullDate: 'April 18, 2026'
+    fullDate: 'April 18, 2026',
+    readTime: '5 MIN'
   },
   {
     slug: 'rag-vs-memory-long-term-knowledge',
     title: 'RAG vs. AI Memory: Choosing the Right Approach for Long-Term Knowledge',
     category: 'Architecture',
     author: 'Himansh Shivhare',
-    fullDate: 'April 9, 2026'
+    fullDate: 'April 9, 2026',
+    readTime: '6 MIN'
+  },
+  {
+    slug: 'what-is-ai-memory',
+    title: 'What is AI Memory? The Architecture of Long-Term Context',
+    category: 'Research',
+    author: 'Memwyre Research Lab',
+    fullDate: 'June 24, 2026',
+    readTime: '15 MIN'
+  },
+  {
+    slug: 'ai-memory-benchmark-locomo',
+    title: 'LoCoMo Benchmark: Evaluation of AI Memory',
+    category: 'Research',
+    author: 'Memwyre Research Lab',
+    fullDate: 'June 24, 2026',
+    readTime: '12 MIN'
   }
 ];
 
@@ -128,7 +190,6 @@ const loadPost = async (slug) => {
       const rawMd = await markdownFiles[filePath]();
       rawContent.value = rawMd;
       
-      // Strip title heading (# Title) from raw markdown to display it in a custom header section instead
       const lines = rawMd.split(/\r?\n/);
       if (lines[0] && lines[0].startsWith('# ')) {
         lines.shift();
@@ -141,7 +202,6 @@ const loadPost = async (slug) => {
     } finally {
       isLoading.value = false;
       
-      // Render Mermaid diagrams after DOM updates are completely flushed on client
       if (typeof window !== 'undefined') {
         setTimeout(async () => {
           await renderMermaid();
@@ -153,6 +213,38 @@ const loadPost = async (slug) => {
     isLoading.value = false;
   }
 };
+
+// Scrollspy Observer
+let observer = null;
+const setupScrollObserver = () => {
+  if (typeof window === 'undefined') return;
+  if (observer) observer.disconnect();
+
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        activeSection.value = entry.target.id;
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: '0px 0px -75% 0px',
+    threshold: 0
+  });
+
+  nextTick(() => {
+    const headings = document.querySelectorAll('.markdown-content h2, .markdown-content h3');
+    headings.forEach((h) => {
+      observer.observe(h);
+    });
+  });
+};
+
+watch(parsedHtml, () => {
+  setTimeout(() => {
+    setupScrollObserver();
+  }, 200);
+});
 
 // Initial state load check: handle server vs client hydration
 const isServer = typeof window === 'undefined';
@@ -172,7 +264,6 @@ if (preRenderedContent) {
   parsedHtml.value = marked.parse(cleanedMd);
   isLoading.value = false;
 } else {
-  // If no pre-rendered content (or if we are on the server), start loading the post
   const loadPromise = loadPost(route.params.slug);
   
   if (isServer) {
@@ -187,10 +278,6 @@ if (preRenderedContent) {
 }
 
 onMounted(() => {
-  shouldRestoreDarkClass = document.documentElement.classList.contains('dark');
-  document.documentElement.classList.remove('dark');
-  document.documentElement.style.colorScheme = 'light';
-
   try {
     mermaid.initialize({
       startOnLoad: false,
@@ -205,37 +292,61 @@ onMounted(() => {
     console.error('Mermaid initialization failed:', initError);
   }
 
-  // Trigger mermaid render for pre-rendered content after page mounts
   setTimeout(() => {
     renderMermaid();
-  }, 100);
+    setupScrollObserver();
+  }, 200);
 });
 
 onUnmounted(() => {
-  document.documentElement.style.colorScheme = '';
-  if (shouldRestoreDarkClass) {
-    document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-  }
+  if (observer) observer.disconnect();
 });
 
-// Reload post when route parameter slug changes (client-side routing only)
 watch(() => route.params.slug, (newSlug) => {
   if (newSlug) {
     loadPost(newSlug);
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   }
 });
+
+// Meta helpers
+const pageUrl = computed(() => typeof window !== 'undefined' ? window.location.href : '');
+const pageTitle = computed(() => {
+  const currentPost = recentPosts.find(p => p.slug === route.params.slug);
+  return currentPost ? currentPost.title : 'Memwyre Guide';
+});
+
+const copyLink = () => {
+  if (typeof window !== 'undefined') {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Article link copied to clipboard!');
+  }
+};
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-[#fafafa] dark:bg-[#0c0c0c] pt-16 pb-0 overflow-hidden font-sans">
-    <!-- Centered A4-style page column with vertical lines on the sides -->
-    <div class="relative max-w-4xl mx-auto border-l border-r border-gray-200 dark:border-gray-800/60 bg-white dark:bg-[#111] min-h-[calc(100vh-4rem)] pt-12 pb-20 px-6 sm:px-16 shadow-none">
+  <div class="relative min-h-screen bg-white dark:bg-[#0c0c0c] pt-28 pb-0 font-sans">
+    <!-- Grid Blueprint background line effects -->
+    <div class="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]">
+      <div class="absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    </div>
+
+    <!-- Global Vertical Grid Lines -->
+    <div class="hidden lg:block absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-300/80 dark:bg-gray-800/60 pointer-events-none select-none z-30"></div>
+    <div class="hidden lg:block absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-300/80 dark:bg-gray-800/60 pointer-events-none select-none z-30"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10 animate-fade-in">
       
+      <!-- Back Navigation Header -->
+      <div class="pt-6 mb-8">
+        <router-link 
+          :to="recentPosts.find(p => p.slug === route.params.slug)?.category === 'Research' ? '/research' : '/blog'" 
+          class="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 hover:text-[#D97757] dark:hover:text-[#D97757] transition-colors"
+        >
+          <span class="inline-flex items-center justify-center w-5 h-5 rounded-full border border-gray-300 dark:border-zinc-800 text-[10px]">&larr;</span>
+          {{ recentPosts.find(p => p.slug === route.params.slug)?.category === 'Research' ? 'All research' : 'All articles' }}
+        </router-link>
+      </div>
+
       <!-- Loading State -->
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-32">
         <div class="w-10 h-10 border-4 border-gray-300 dark:border-gray-800 border-t-[#D97757] rounded-full animate-spin"></div>
@@ -243,7 +354,7 @@ watch(() => route.params.slug, (newSlug) => {
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="bg-red-500/5 border border-red-500/20 text-red-500 rounded p-8 text-center my-10 animate-fade-in">
+      <div v-else-if="error" class="bg-red-500/5 border border-red-500/20 text-red-500 rounded p-8 text-center my-10">
         <h2 class="text-lg font-semibold mb-2">Error</h2>
         <p class="text-sm font-light mb-6">{{ error }}</p>
         <router-link to="/blog" class="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded text-sm font-semibold hover:bg-gray-800 dark:hover:bg-gray-150 transition-colors">
@@ -251,75 +362,156 @@ watch(() => route.params.slug, (newSlug) => {
         </router-link>
       </div>
 
-      <!-- Main Content Flow -->
+      <!-- Article Flow -->
       <div v-else>
-        <!-- Breadcrumb / Category Navigation (e.g. Blog / Engineering Guide) -->
-        <div class="flex items-center gap-1.5 text-[14px] text-gray-500 dark:text-gray-400 mb-6 font-normal">
-          <router-link to="/blog" class="hover:text-black dark:hover:text-white transition-colors duration-150">Blog</router-link>
-          <span class="text-gray-300 dark:text-gray-700">/</span>
-          <span>{{ recentPosts.find(p => p.slug === route.params.slug)?.category || 'Engineering' }}</span>
-        </div>
-
-        <!-- Header Metadata -->
-        <div class="mb-8 pb-6 border-b border-gray-100 dark:border-gray-900">
-          <h1 class="text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-gray-900 dark:text-white leading-[1.2] mb-6">
+        <!-- Header Section -->
+        <div class="space-y-4 mb-8 text-left">
+          <div class="text-xs font-bold uppercase tracking-wider text-[#D97757] font-mono">
+            {{ recentPosts.find(p => p.slug === route.params.slug)?.category || 'Engineering' }} 
+            <span class="text-gray-300 dark:text-gray-700 mx-2">/</span> 
+            {{ recentPosts.find(p => p.slug === route.params.slug)?.fullDate || 'June 24, 2026' }}
+          </div>
+          
+          <h1 v-if="route.params.slug === 'what-is-ai-memory'" class="hero-serif text-4xl sm:text-5xl lg:text-6xl tracking-[-0.02em] leading-[1.1] text-gray-950 dark:text-white">
+            What is AI Memory? <br />
+            <span class="italic font-medium text-gray-900 dark:text-gray-100">The Architecture of <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">Long-Term Context.</span></span>
+          </h1>
+          <h1 v-else-if="route.params.slug === 'ai-memory-benchmark-locomo'" class="hero-serif text-4xl sm:text-5xl lg:text-6xl tracking-[-0.02em] leading-[1.1] text-gray-950 dark:text-white">
+            LoCoMo Benchmark <br />
+            <span class="italic font-medium text-gray-900 dark:text-gray-100">Evaluation of <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">AI Memory.</span></span>
+          </h1>
+          <h1 v-else class="hero-serif text-4xl sm:text-5xl lg:text-6xl tracking-[-0.02em] leading-[1.1] text-gray-950 dark:text-white">
             {{ recentPosts.find(p => p.slug === route.params.slug)?.title || 'Memwyre Guide' }}
           </h1>
-          <div class="flex items-center gap-2 text-[14px] text-gray-500 dark:text-gray-400">
-            <img 
-              src="https://avatars.githubusercontent.com/u/170114968?v=4" 
-              alt="Himansh Shivhare" 
-              class="w-6 h-6 rounded-full object-cover"
-              @error="$event.target.src = 'https://ui-avatars.com/api/?name=Himansh+Shivhare&background=f3f4f6&color=333'"
-            />
-            <span class="font-normal text-gray-900 dark:text-gray-100">
-              {{ recentPosts.find(p => p.slug === route.params.slug)?.author || 'Himansh Shivhare' }}
-            </span>
-            <span class="text-gray-300 dark:text-gray-700">•</span>
-            <span>{{ recentPosts.find(p => p.slug === route.params.slug)?.fullDate || 'June 24, 2026' }}</span>
+
+          <div class="text-[10px] tracking-wider uppercase font-bold font-mono text-gray-400 dark:text-gray-500 pt-2">
+            {{ recentPosts.find(p => p.slug === route.params.slug)?.readTime || '5 MIN' }} READ
           </div>
         </div>
 
-        <!-- Cover Image -->
-        <div class="w-full aspect-[2/1] rounded-xl overflow-hidden mb-10 bg-gray-50 border border-gray-150 dark:bg-zinc-900/30 dark:border-zinc-800/80">
-          <img 
-            :src="`/blog-covers/${route.params.slug}.png`" 
-            :alt="recentPosts.find(p => p.slug === route.params.slug)?.title || 'Blog Cover'" 
-            class="w-full h-full object-cover"
-            @error="$event.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80'"
-          />
-        </div>
+        <!-- Section Separator Line -->
+        <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-200 dark:bg-gray-850 pointer-events-none select-none"></div>
 
-        <!-- Parsed Markdown HTML Container -->
-        <div class="markdown-content mb-16" v-html="parsedHtml"></div>
+        <!-- 3-Column Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-0 pb-24">
+          
+          <!-- Left Sidebar (Author Info & Social Sharing) -->
+          <aside class="lg:col-span-2 lg:border-r border-gray-200 dark:border-gray-800 lg:pr-8 pt-8 lg:pt-12 text-left">
+            <div class="sticky top-24 space-y-8">
+              <!-- Author Card -->
+              <div class="flex items-center gap-3">
+                <img 
+                  src="https://avatars.githubusercontent.com/u/170114968?v=4" 
+                  alt="Himansh Shivhare" 
+                  class="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-zinc-800"
+                  @error="$event.target.src = 'https://ui-avatars.com/api/?name=Himansh+Shivhare&background=f3f4f6&color=333'"
+                />
+                <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                  {{ recentPosts.find(p => p.slug === route.params.slug)?.author || 'Himansh Shivhare' }}
+                </span>
+              </div>
 
-        <!-- Read Next / Other Articles (at the end of the article) -->
-        <div class="pt-10 border-t border-gray-100 dark:border-gray-900">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-6 pb-2 border-b border-gray-100 dark:border-gray-900">
-            Read Next
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div 
-              v-for="post in recentPosts.filter(p => p.slug !== route.params.slug).slice(0, 2)" 
-              :key="post.slug"
-              class="group flex flex-col justify-between p-5 rounded-lg border border-gray-100 dark:border-gray-950 hover:border-[#D97757] dark:hover:border-[#D97757] transition-all duration-200 bg-gray-50/35 dark:bg-[#151515]/25"
-            >
-              <h4 class="text-base font-semibold text-gray-900 dark:text-white group-hover:text-[#D97757] transition-colors leading-snug mb-3">
-                <router-link :to="`/blog/${post.slug}`">
-                  {{ post.title }}
-                </router-link>
-              </h4>
-              <router-link 
-                :to="`/blog/${post.slug}`"
-                class="inline-flex items-center gap-1 text-xs font-bold text-[#D97757] hover:text-[#c05c3d] transition-colors duration-150"
-              >
-                Read Article →
-              </router-link>
+              <!-- Share Buttons -->
+              <div class="space-y-3 pt-6 border-t border-gray-100 dark:border-gray-900">
+                <div class="text-[11px] font-mono text-gray-400 dark:text-gray-500 tracking-wider uppercase font-bold">SHARE THIS ARTICLE</div>
+                <div class="flex items-center gap-2">
+                  <a 
+                    :href="`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`" 
+                    target="_blank"
+                    class="w-9 h-9 rounded border border-gray-200 dark:border-zinc-800 flex items-center justify-center text-gray-500 hover:text-[#D97757] dark:hover:text-[#D97757] transition-all bg-white dark:bg-[#111]"
+                  >
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                  </a>
+                  <a 
+                    :href="`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(pageTitle)}`" 
+                    target="_blank"
+                    class="w-9 h-9 rounded border border-gray-200 dark:border-zinc-800 flex items-center justify-center text-gray-500 hover:text-[#D97757] dark:hover:text-[#D97757] transition-all bg-white dark:bg-[#111]"
+                  >
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  </a>
+                  <button 
+                    @click="copyLink"
+                    class="w-9 h-9 rounded border border-gray-200 dark:border-zinc-800 flex items-center justify-center text-gray-500 hover:text-[#D97757] dark:hover:text-[#D97757] transition-all bg-white dark:bg-[#111] cursor-pointer"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+          </aside>
+
+          <!-- Middle Column (Banner & Article Body) -->
+          <main class="lg:col-span-8 px-0 lg:px-8 pt-0 lg:pt-12 text-left">
+            <!-- Cover Image -->
+            <div class="w-full aspect-[2/1] rounded-xl overflow-hidden mb-10 bg-gray-50 border border-gray-150 dark:bg-zinc-900/30 dark:border-zinc-800/80">
+              <img 
+                :src="`/blog-covers/${route.params.slug}.png`" 
+                :alt="recentPosts.find(p => p.slug === route.params.slug)?.title || 'Blog Cover'" 
+                class="w-full h-full object-cover"
+                @error="$event.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80'"
+              />
+            </div>
+
+            <!-- Parsed Markdown HTML -->
+            <div class="markdown-content mb-16 animate-fade-in" v-html="parsedHtml"></div>
+
+            <!-- Read Next section -->
+            <div class="pt-10 border-t border-gray-100 dark:border-gray-900">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-6 pb-2 border-b border-gray-100 dark:border-gray-900 font-mono">
+                Read Next
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div 
+                  v-for="post in recentPosts.filter(p => p.slug !== route.params.slug).slice(0, 3)" 
+                  :key="post.slug"
+                  class="group flex flex-col justify-between p-4 rounded-lg border border-gray-150 dark:border-zinc-800 hover:border-[#D97757] dark:hover:border-[#D97757] transition-all duration-200 bg-gray-50/35 dark:bg-[#151515]/25"
+                >
+                  <h4 class="text-xs font-semibold text-gray-900 dark:text-white group-hover:text-[#D97757] transition-colors leading-snug mb-3">
+                    <router-link :to="post.category === 'Research' ? `/research/${post.slug}` : `/blog/${post.slug}`">
+                      {{ post.title }}
+                    </router-link>
+                  </h4>
+                  <router-link 
+                    :to="post.category === 'Research' ? `/research/${post.slug}` : `/blog/${post.slug}`"
+                    class="inline-flex items-center gap-1 text-[11px] font-bold text-[#D97757] hover:text-[#c05c3d] transition-colors duration-150 font-mono"
+                  >
+                    Read &rarr;
+                  </router-link>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <!-- Right Sidebar (Dynamic Table of Contents) -->
+          <aside class="hidden lg:block lg:col-span-2 lg:border-l border-gray-200 dark:border-gray-800 lg:pl-8 pt-12 text-left">
+            <div class="sticky top-24 space-y-4">
+              <div class="text-[11px] font-mono text-gray-400 dark:text-gray-500 tracking-wider uppercase font-bold">ON THIS PAGE</div>
+              <nav class="space-y-3 text-sm relative pl-4 border-l border-gray-100 dark:border-zinc-900">
+                <a 
+                  v-for="heading in toc" 
+                  :key="heading.slug" 
+                  :href="`#${heading.slug}`" 
+                  class="block font-medium text-gray-500 dark:text-gray-400 hover:text-[#D97757] dark:hover:text-[#D97757] transition-colors leading-snug relative"
+                  :class="{ 'text-[#D97757] font-semibold': activeSection === heading.slug, 'pl-4 text-xs opacity-80': heading.level === 3 }"
+                >
+                  <!-- Active Indicator vertical line -->
+                  <div 
+                    v-if="activeSection === heading.slug" 
+                    class="absolute -left-[17px] top-0 bottom-0 w-0.5 bg-[#D97757]"
+                  ></div>
+                  {{ heading.text }}
+                </a>
+              </nav>
+            </div>
+          </aside>
         </div>
       </div>
-
     </div>
     <SiteFooter />
   </div>
@@ -390,11 +582,12 @@ watch(() => route.params.slug, (newSlug) => {
 .markdown-content h2,
 .markdown-content h3,
 .markdown-content h4 {
-  font-weight: 600;
+  font-family: 'Playfair Display', Georgia, serif;
   color: #111827;
-  line-height: 1.35;
-  margin-top: 32px;
+  line-height: 1.25;
+  margin-top: 36px;
   margin-bottom: 16px;
+  scroll-margin-top: 100px;
 }
 
 .dark .markdown-content h1,
@@ -404,10 +597,29 @@ watch(() => route.params.slug, (newSlug) => {
   color: #f3f4f6;
 }
 
-.markdown-content h1 { font-size: 26px; }
-.markdown-content h2 { font-size: 22px; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 8px; }
-.dark .markdown-content h2 { border-bottom-color: rgba(255,255,255,0.06); }
-.markdown-content h3 { font-size: 18px; }
+.markdown-content h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.markdown-content h2 {
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding-bottom: 8px;
+}
+
+.dark .markdown-content h2 {
+  border-bottom-color: rgba(255,255,255,0.06);
+}
+
+.markdown-content h3 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
 
 .markdown-content p {
   font-size: 15px;

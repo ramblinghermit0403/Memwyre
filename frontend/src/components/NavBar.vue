@@ -135,6 +135,7 @@
                 </div>
                 <router-link to="/billing" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-text-secondary hover:bg-gray-50 dark:hover:bg-surface-2 transition-colors">Billing</router-link>
                 <router-link to="/settings" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-text-secondary hover:bg-gray-50 dark:hover:bg-surface-2 transition-colors">Settings</router-link>
+                <router-link v-if="authStore.user?.email === 'shivharehimansh@gmail.com'" to="/admin" class="flex items-center px-4 py-2 text-sm text-[#D97757] font-semibold hover:bg-gray-50 dark:hover:bg-surface-2 transition-colors">Admin Insights</router-link>
                 <button @click="logout" class="flex w-full items-center px-4 py-2 text-sm text-red-600 dark:text-danger hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Logout</button>
               </div>
             </transition>

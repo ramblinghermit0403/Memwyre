@@ -9,9 +9,9 @@
             <div class="flex justify-center mb-6">
               <img src="/logo.png" alt="Memwyre" class="h-9 w-auto dark:invert opacity-90" />
             </div>
-            <h2 class="text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">
+            <h1 class="text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">
               Create an account
-            </h2>
+            </h1>
             <p class="text-sm text-zinc-500 dark:text-zinc-400">
               Get started with your free account
             </p>
@@ -106,9 +106,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
               </svg>
             </div>
-            <h2 class="text-[26px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">
+            <h1 class="text-[26px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">
               Check your email
-            </h2>
+            </h1>
             <p class="text-sm text-zinc-500 dark:text-zinc-400">
               We sent a 6-digit code to <span class="font-semibold text-zinc-700 dark:text-zinc-300">{{ registeredEmail }}</span>
             </p>

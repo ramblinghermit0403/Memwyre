@@ -1,8 +1,22 @@
 import { defineConfig } from 'vitepress'
 
+const mcpSidebar = [
+  {
+    text: 'MCP Server',
+    items: [
+      { text: 'Overview', link: '/integrations/mcp-server' },
+      { text: 'CLI Auto-Installer', link: '/integrations/cli-installer' },
+      { text: 'Claude Desktop', link: '/integrations/mcp-server/claude' },
+      { text: 'Cursor', link: '/integrations/mcp-server/cursor' },
+      { text: 'VS Code', link: '/integrations/mcp-server/vscode' }
+    ]
+  }
+]
+
 export default defineConfig({
   outDir: '../dist/docs',
   base: '/docs/',
+  cleanUrls: true,
   appearance: false,
   title: 'Memwyre',
   titleTemplate: ':title — Memwyre Docs',
@@ -20,23 +34,13 @@ export default defineConfig({
     siteTitle: false,
 
     nav: [
-      { text: '← Dashboard', link: 'https://memwyre.tech/dashboard' },
+      { text: 'Dashboard', link: 'https://memwyre.tech/dashboard' },
       { text: 'Blog', link: 'https://memwyre.tech/blog/' }
     ],
 
     sidebar: {
-      '/integrations/mcp-server': [
-        {
-          text: 'MCP Server',
-          items: [
-            { text: 'Overview', link: '/integrations/mcp-server' },
-            { text: 'CLI Auto-Installer', link: '/integrations/cli-installer' },
-            { text: 'Claude Desktop', link: '/integrations/mcp-server/claude' },
-            { text: 'Cursor', link: '/integrations/mcp-server/cursor' },
-            { text: 'VS Code', link: '/integrations/mcp-server/vscode' }
-          ]
-        }
-      ],
+      '/integrations/mcp-server': mcpSidebar,
+      '/integrations/cli-installer': mcpSidebar,
       '/integrations/plugins': [
         {
           text: 'Plugins',

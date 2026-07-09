@@ -1,18 +1,18 @@
 <template>
   <div class="force-light relative min-h-[100svh] bg-white text-text-primary transition-colors duration-300 font-sans overflow-x-hidden selection:bg-primary selection:text-white *:selection:bg-primary *:selection:text-white">
     <div class="pt-16 pb-24 sm:pt-24 sm:pb-32">
-      <div id="pricing" class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div id="pricing" class="max-w-5xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="text-center mb-16">
           <h2 class="text-sm font-bold uppercase tracking-widest text-text-muted mb-4">Pricing</h2>
-          <p class="hero-serif text-4xl sm:text-5xl tracking-tight text-gray-900 leading-[1.1]">
+          <h1 class="hero-serif text-4xl sm:text-5xl tracking-tight text-gray-900 leading-[1.1]">
             AI that works where <span class="italic font-medium">your team <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">works.</span></span>
-          </p>
+          </h1>
           <p class="mt-6 text-lg text-text-secondary max-w-2xl mx-auto">
             Simple, transparent pricing for individuals and teams.
           </p>
         </div>
 
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           <!-- Free Plan -->
           <div class="rounded-3xl bg-white border border-black/5 p-8 sm:p-10 relative transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
             <div class="flex items-center gap-3 mb-4">
@@ -196,7 +196,7 @@
       <!-- Logo-masked numeric background (INVERTED for white bg) -->
       <LogoBgAnimation class="absolute inset-0 z-0 opacity-[0.08]" :invert="true" />
 
-      <div class="max-w-7xl mx-auto relative z-10">
+      <div class="max-w-5xl mx-auto relative z-10">
         <h2 class="font-display text-5xl sm:text-7xl lg:text-[7rem] font-medium tracking-tight mb-10 leading-[0.95]">
           <span
             class="bg-clip-text text-transparent bg-[repeating-linear-gradient(to_bottom,#111,#111_6px,white_6px,white_9px)]">
@@ -220,7 +220,7 @@
       </div>
 
       <div
-        class="max-w-7xl mx-auto px-8 lg:px-12 mt-12 relative z-10 border-t border-black/5 pt-10 flex flex-col md:flex-row justify-between items-start gap-8 text-left">
+        class="max-w-5xl mx-auto px-8 lg:px-12 mt-12 relative z-10 border-t border-black/5 pt-10 flex flex-col md:flex-row justify-between items-start gap-8 text-left">
         <div class="flex flex-col items-start gap-8">
           <!-- Socials -->
           <div class="flex items-center gap-5">
@@ -275,8 +275,6 @@
               class="text-sm text-black hover:text-gray-500 transition-colors font-medium">MCP</router-link>
             <router-link to="/plugins"
               class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Plugins</router-link>
-            <router-link to="/personal"
-              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Personal App</router-link>
           </div>
           <div class="flex flex-col gap-4">
             <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support</h4>

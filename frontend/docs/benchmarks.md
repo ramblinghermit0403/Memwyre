@@ -1,3 +1,7 @@
+---
+title: Memwyre Latency & Performance Benchmarks
+description: Read the performance and latency benchmark report comparing Memwyre's retrieval with Mem0, Zep, and Supermemory.
+---
 # Performance & Recall Benchmarks
 
 To evaluate the efficiency of Memwyre's context retrieval, we benchmark our engine against standard Retrieval-Augmented Generation (RAG) setups on the **LoCoMo benchmark dataset**. 
