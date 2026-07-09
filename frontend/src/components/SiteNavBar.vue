@@ -85,7 +85,7 @@ watch(() => route.path, () => {
     'fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out bg-white border-b border-black/5 shadow-sm',
     isHidden ? '-translate-y-full' : 'translate-y-0'
   ]">
-    <div class="w-full px-8 sm:px-8 lg:px-12">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
       <div class="flex justify-between items-center h-16">
         <router-link to="/" class="flex items-center group">
           <img src="/logo.png" alt="Memwyre"
@@ -171,7 +171,7 @@ watch(() => route.path, () => {
             Log in
           </router-link>
           <router-link to="/signup"
-            class="px-3 py-1.5 sm:px-4 sm:py-2 bg-black text-white text-xs sm:text-sm font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">
+            class="hidden sm:inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-black text-white text-xs sm:text-sm font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">
             Start Free
           </router-link>
 
@@ -272,11 +272,18 @@ watch(() => route.path, () => {
 
         <hr class="border-black/5 sm:hidden" />
 
-        <!-- Mobile Login (visible only on small screens) -->
-        <div class="sm:hidden space-y-3">
+        <!-- Mobile CTAs (visible only on small screens) -->
+        <div class="sm:hidden pt-2 space-y-3">
+          <router-link 
+            to="/signup"
+            class="block w-full text-center px-4 py-2.5 bg-black text-white text-sm font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm"
+            @click="isMobileMenuOpen = false"
+          >
+            Start Free
+          </router-link>
           <router-link 
             to="/login"
-            class="block py-1.5 text-[15px] font-medium text-black/60 hover:text-black transition-colors"
+            class="block w-full text-center px-4 py-2 border border-black/10 text-black text-sm font-medium rounded hover:bg-black/5 transition-colors"
             @click="isMobileMenuOpen = false"
           >
             Log in
