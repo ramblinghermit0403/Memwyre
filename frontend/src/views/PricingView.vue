@@ -292,8 +292,8 @@
           </div>
           <div class="flex flex-col gap-4">
             <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support</h4>
-            <a href="mailto:shivharehimansh@gmail.com"
-              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Contact Us</a>
+            <router-link to="/contact"
+              class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Contact Us</router-link>
             <a href="https://x.com/Memwyre" target="_blank"
               class="text-sm text-black hover:text-gray-500 transition-colors font-medium">Twitter</a>
           </div>
