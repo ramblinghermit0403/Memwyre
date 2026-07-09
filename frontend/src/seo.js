@@ -15,7 +15,8 @@ export const PRERENDER_ROUTES = [
   '/research/ai-memory-benchmark-locomo',
   '/research',
   '/memwyre-vs-mem0', '/memwyre-vs-supermemory', '/memwyre-vs-zep',
-  '/chatgpt-memory', '/claude-memory', '/cursor-memory', '/mcp-memory'
+  '/chatgpt-memory', '/claude-memory', '/cursor-memory', '/mcp-memory',
+  '/contact'
 ];
 
 export const DEFAULT_SEO = {
@@ -27,6 +28,11 @@ export const DEFAULT_SEO = {
 };
 
 export const PUBLIC_ROUTE_SEO = {
+  '/contact': {
+    title: 'Contact Us | Memwyre — Support, Sales & Partnerships',
+    description:
+      'Get in touch with the Memwyre team. Reach out directly to himansh@memwyre.tech or submit a message for developer support and sales inquiries.',
+  },
   '/': {
     title: 'Memwyre | AI Memory Platform — Persistent Shared Memory for Every AI',
     description:

@@ -82,8 +82,8 @@
           <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support &amp; Legal</h4>
           <a href="/docs/"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Documentation</a>
-          <a href="mailto:shivharehimansh@gmail.com"
-            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Contact Us</a>
+          <router-link to="/contact"
+            class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Contact Us</router-link>
           <router-link to="/privacy-policy"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Privacy Policy</router-link>
           <router-link to="/terms"

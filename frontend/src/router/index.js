@@ -134,6 +134,12 @@ export function createAppRouter({ ssr = false } = {}) {
                         meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/pricing'] }
                     },
                     {
+                        path: 'contact',
+                        name: 'contact',
+                        component: () => import('../views/ContactView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/contact'] }
+                    },
+                    {
                         path: 'connectors',
                         name: 'connectors',
                         component: () => import('../views/products/ConnectorsView.vue'),
