@@ -138,13 +138,13 @@
               </div>
               <div class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none select-all py-0.5">
                 <span class="text-[#D97757] select-none font-bold">$</span>
-                <span>{{ getStartedCommand }}</span>
+                <span>npx -y install-memwyre</span>
               </div>
               <button 
-                @click="copyGetStartedCommand" 
+                @click="copyHeroCommand" 
                 class="text-[#D97757] hover:text-[#C4654A] font-semibold text-[10px] sm:text-xs tracking-wider uppercase shrink-0 transition-colors cursor-pointer select-none"
               >
-                {{ getStartedCopied ? 'Copied' : 'Copy' }}
+                {{ heroCommandCopied ? 'Copied' : 'Copy' }}
               </button>
             </div>
           </div>
@@ -2192,6 +2192,19 @@ const copyGetStartedCommand = async () => {
     getStartedCopied.value = true;
     setTimeout(() => {
       getStartedCopied.value = false;
+    }, 2000);
+  } catch (err) {
+    console.error('Failed to copy text: ', err);
+  }
+};
+
+const heroCommandCopied = ref(false);
+const copyHeroCommand = async () => {
+  try {
+    await navigator.clipboard.writeText('npx -y install-memwyre');
+    heroCommandCopied.value = true;
+    setTimeout(() => {
+      heroCommandCopied.value = false;
     }, 2000);
   } catch (err) {
     console.error('Failed to copy text: ', err);
