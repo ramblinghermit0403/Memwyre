@@ -324,7 +324,7 @@ const copyLink = () => {
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-white dark:bg-[#0c0c0c] pt-28 pb-0 font-sans">
+  <div class="relative min-h-screen bg-white dark:bg-[#0c0c0c] pt-28 pb-0 overflow-x-hidden font-sans">
     <!-- Grid Blueprint background line effects -->
     <div class="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]">
       <div class="absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px]"></div>
@@ -677,6 +677,7 @@ const copyLink = () => {
   padding: 3px 6px;
   border-radius: 4px;
   border: 1px solid #e4e4e7;
+  word-break: break-word;
 }
 
 .dark .markdown-content code {
@@ -706,7 +707,9 @@ const copyLink = () => {
 }
 
 .markdown-content table {
+  display: block;
   width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin-top: 20px;
   margin-bottom: 24px;
