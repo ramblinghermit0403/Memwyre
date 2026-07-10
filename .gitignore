@@ -32,3 +32,13 @@ pytest_output.txt
 .temp_research/
 scratch/
 tmp/
+
+# Development & Agent Configs
+.cursor/
+.agent/
+.codex/
+.benchmarks/
+
+# Internal Documentation
+ai_brain_vault_srs.md
+system_design.md
