@@ -1,6 +1,6 @@
 # Memwyre
 
-### Your Second Brain, Supercharged.
+### Persistent Shared Memory for Every AI.
 
 <p align="center">
   <img src="assets/cover.png" alt="Memwyre Cover Image" width="100%">
