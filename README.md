@@ -10,6 +10,13 @@
   </picture>
 </p>
 
+<p align="center">
+  <a href="https://memwyre.tech">Website</a> ·
+  <a href="https://memwyre.tech/docs/">Documentation</a> ·
+  <a href="https://memwyre.tech/login">Console / App</a> ·
+  <a href="https://x.com/Memwyre">Twitter / X</a>
+</p>
+
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-blue.svg?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Vue 3](https://img.shields.io/badge/Frontend-Vue%203-green.svg?style=flat-square&logo=vue.js)](https://vuejs.org/)
 [![Chrome Extension](https://img.shields.io/badge/Extension-Manifest%20V3-orange.svg?style=flat-square&logo=google-chrome)](https://developer.chrome.com/docs/extensions/mv3/intro/)
@@ -23,15 +30,51 @@ Rather than treating AI as stateless and losing context every time you switch be
 
 ---
 
+## Quickstart
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🧑‍💻 I want to connect my AI tools
+
+Build your own external memory layer using our consumer-facing dashboard or browser extension, and plug it directly into **Cursor, VS Code, or Claude Desktop** via MCP:
+
+```bash
+npx -y install-memwyre
+```
+
+**[→ Jump to User Setup](#installation--setup)**
+
+</td>
+<td width="50%" valign="top">
+
+### 🔧 I'm building AI agents & products
+
+Interface with the unified memory vault, custom vector searches, and profile-based retrieval APIs:
+
+- Integration guides for custom AI agents and apps
+- Plug-and-play **OpenClaw** & **Claude** plugins
+- Direct vector storage without configuration
+
+**[→ Jump to Developer Setup](#installation--setup)**
+
+</td>
+</tr>
+</table>
+
+---
+
 ## Table of Contents
-1. [Core Features](#core-features)
-2. [Ecosystem Tiers](#ecosystem-tiers)
-3. [System Architecture & Core Workflows](#system-architecture--core-workflows)
-4. [The LoCoMo Benchmark Evaluation](#the-locomo-benchmark-evaluation)
-5. [Database Schema & Multi-Tenancy](#database-schema--multi-tenancy)
-6. [Installation & Setup](#installation--setup)
-7. [Environment Configuration](#environment-configuration)
-8. [License](#license)
+1. [Quickstart](#quickstart)
+2. [Core Features](#core-features)
+3. [Ecosystem Tiers](#ecosystem-tiers)
+4. [System Architecture & Core Workflows](#system-architecture--core-workflows)
+5. [The LoCoMo Benchmark Evaluation](#the-locomo-benchmark-evaluation)
+6. [Database Schema & Multi-Tenancy](#database-schema--multi-tenancy)
+7. [Installation & Setup](#installation--setup)
+8. [Environment Configuration](#environment-configuration)
+9. [License](#license)
 
 ---
 
@@ -181,7 +224,7 @@ sequenceDiagram
 
 ## The LoCoMo Benchmark Evaluation
 
-The **LoCoMo-10** (Long Conversational Memory) benchmark, introduced by Snap Research in *"Evaluating Very Long-Term Conversational Memory of LLM Agents" (2024)*, evaluates AI agent systems on long-term memory, factual consistency, temporal alignment, and multi-hop reasoning over lengthy, multi-session dialog flows (up to 32 sessions and 26,000 tokens per conversation).
+The **[LoCoMo-10](https://github.com/snap-research/locomo)** (Long Conversational Memory) benchmark, introduced by Snap Research in *"Evaluating Very Long-Term Conversational Memory of LLM Agents" (2024)*, evaluates AI agent systems on long-term memory, factual consistency, temporal alignment, and multi-hop reasoning over lengthy, multi-session dialog flows (up to 32 sessions and 26,000 tokens per conversation).
 
 ### Performance Metrics (Memwyre vs. Flat Vector Systems)
 
