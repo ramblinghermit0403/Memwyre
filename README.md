@@ -2,6 +2,10 @@
 
 ### Your Second Brain, Supercharged.
 
+<p align="center">
+  <img src="assets/cover.png" alt="Memwyre Cover Image" width="100%">
+</p>
+
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-blue.svg?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Vue 3](https://img.shields.io/badge/Frontend-Vue%203-green.svg?style=flat-square&logo=vue.js)](https://vuejs.org/)
 [![Chrome Extension](https://img.shields.io/badge/Extension-Manifest%20V3-orange.svg?style=flat-square&logo=google-chrome)](https://developer.chrome.com/docs/extensions/mv3/intro/)
