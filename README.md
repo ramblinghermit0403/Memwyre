@@ -3,7 +3,11 @@
 ### Persistent Shared Memory for Every AI.
 
 <p align="center">
-  <img src="assets/cover.png" alt="Memwyre Cover Image" width="100%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/cover-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/cover-light.svg">
+    <img alt="Memwyre Logo" src="assets/cover-light.svg" width="300">
+  </picture>
 </p>
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-blue.svg?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
