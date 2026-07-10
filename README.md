@@ -24,9 +24,9 @@
 [![LoCoMo Accuracy](https://img.shields.io/badge/LoCoMo%20Accuracy-73.5%25-brightgreen.svg?style=flat-square)](https://github.com/ramblinghermit0403/Memwyre#-the-locomo-benchmark-evaluation)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 
-Memwyre is the open-source AI Memory Platform that gives every AI tool, agent, and conversation a persistent, shared memory. 
+Memwyre is an open-source, universal memory infrastructure and persistent knowledge retrieval layer for Large Language Models (LLMs), AI agents, and custom applications.
 
-Rather than treating AI as stateless and losing context every time you switch between ChatGPT, Claude, Cursor, VS Code, or different agent environments, Memwyre sits externally as a unified personal brain. It securely ingests, chunks, and structures your documents, web pages, conversations, and workflows—making them instantly retrievable across your entire AI toolchain (connecting directly to Cursor, VS Code, ChatGPT, Claude, and more).
+Rather than treating AI as stateless and losing context every time you switch between ChatGPT, Claude, Cursor, or different agent environments, Memwyre sits externally as a unified personal brain. It securely ingests, chunks, and structures your documents, web pages, conversations, and workflows—making them instantly retrievable across your entire AI toolchain.
 
 ---
 
@@ -252,35 +252,11 @@ The **[LoCoMo-10](https://github.com/snap-research/locomo)** (Long Conversationa
 
 Memwyre uses a hybrid storage model: metadata, relational facts, and user credentials reside in SQL tables (PostgreSQL/SQLite), while document chunks and enriched fact strings are mirrored in vector databases (Pinecone/ChromaDB).
 
-```
-  +------------------+          +-------------------+          +------------------+
-  |      Users       | 1      * |     Memories      | 1      * |      Chunks      |
-  |------------------|----------|-------------------|----------|------------------|
-  | id (PK)          |          | id (PK)           |          | id (PK)          |
-  | email            |          | user_id (FK)      |          | memory_id (FK)   |
-  +------------------+          | content           |          | content_text     |
-           | 1                  | project_id        |          | metadata (JSON)  |
-           |                    | status            |          +------------------+
-           |                    +-------------------+
-           | *                            | 1
-  +------------------+                    |
-  |      Facts       | *                  |
-  |------------------|--------------------+
-  | id (PK)          |
-  | user_id (FK)     |
-  | memory_id (FK)   |
-  | subject          |  (e.g., "User")
-  | predicate        |  (e.g., "lives_in")
-  | object           |  (e.g., "Tokyo")
-  | valid_from       |
-  | valid_until      |  (Determines supersession)
-  | is_superseded    |
-  +------------------+
-```
+👉 **[View the Detailed Database Schema](docs/database_schema.md)** for a complete breakdown of the Core Entities (`users`, `projects`, `memories`, `documents`, `chunks`, `facts`) and the Entity Relationship Diagram.
 
 ### Fact Supersession & Project Containerization
-- **Supersession**: When a new fact matching the same `subject` and `predicate` is written (e.g. user moves from Berlin to Tokyo), the database marks the old record's `is_superseded` flag as true and updates `valid_until` to the current timestamp. This guarantees that temporal inquiries return state-accurate facts.
-- **Containerization**: Every memory and vector contains a `project_id`. When querying, filters strictly enforce containment matching the current workspace's `project_id`, preventing leakage across different project environments.
+- **Supersession**: When a new fact matching the same `subject` and `predicate` is written (e.g. user moves from Berlin to Tokyo), the database marks the old record's `is_superseded` flag as `true` and updates `valid_until` to the current timestamp. This guarantees that temporal inquiries return state-accurate facts.
+- **Containerization**: Every memory, document, chunk, and fact contains a `project_id`. When querying, filters strictly enforce containment matching the current workspace's `project_id`, preventing leakage across different project environments.
 
 ---
 
