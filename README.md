@@ -107,35 +107,35 @@ Memwyre connects user clients to local or cloud vector search services and AI pr
 
 ```mermaid
 flowchart TB
-    subgraph Client_Side [Client Side]
+    subgraph Client_Side ["Client Side"]
         Browser["WebApp (Vue 3 / Vite)"]
         Extension["Chrome Extension (MV3)"]
         CLI["CLI Client (Node.js)"]
     end
 
-    subgraph Load_Balancer [Ingress]
+    subgraph Load_Balancer ["Ingress"]
         Nginx["Nginx Reverse Proxy"]
     end
 
-    subgraph Backend_Core [Backend API (FastAPI)]
+    subgraph Backend_Core ["Backend API (FastAPI)"]
         Auth_Mod["Auth & Users Module"]
         Mem_Mod["Memory Management"]
         Ret_Mod["Retrieval Engine"]
         LLM_Mod["LLM Service (V1/V2)"]
     end
 
-    subgraph Background_Workers [Celery Workers]
+    subgraph Background_Workers ["Celery Workers"]
         Ingest_Worker["Ingestion & Chunking Worker"]
         Dedupe_Worker["Deduplication Worker"]
     end
 
-    subgraph Data_Persistence [Data Layer]
+    subgraph Data_Persistence ["Data Layer"]
         Postgres[("PostgreSQL / SQLite")]
         Pinecone[("Pinecone / ChromaDB")]
         Redis[("Redis Message Broker")]
     end
     
-    subgraph External_Services [AI Inference]
+    subgraph External_Services ["AI Inference"]
         NVIDIA["NVIDIA NIM (Kimi K2.6)"]
         Azure["Azure OpenAI (GPT-4o-mini)"]
         Gemini["Google Gemini API"]
