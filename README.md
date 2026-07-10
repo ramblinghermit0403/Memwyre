@@ -9,9 +9,9 @@
 [![LoCoMo Accuracy](https://img.shields.io/badge/LoCoMo%20Accuracy-73.5%25-brightgreen.svg?style=flat-square)](https://github.com/ramblinghermit0403/Memwyre#-the-locomo-benchmark-evaluation)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 
-Memwyre is an open-source, universal memory infrastructure and persistent knowledge retrieval layer for Large Language Models (LLMs), AI agents, and custom applications. 
+Memwyre is the open-source AI Memory Platform that gives every AI tool, agent, and conversation a persistent, shared memory. 
 
-Rather than treating AI as stateless and losing context every time you switch between ChatGPT, Claude, Cursor, or different agent environments, Memwyre sits externally as a unified personal brain. It securely ingests, chunks, and structures your documents, web pages, conversations, and workflows—making them instantly retrievable across your entire AI toolchain.
+Rather than treating AI as stateless and losing context every time you switch between ChatGPT, Claude, Cursor, VS Code, or different agent environments, Memwyre sits externally as a unified personal brain. It securely ingests, chunks, and structures your documents, web pages, conversations, and workflows—making them instantly retrievable across your entire AI toolchain (connecting directly to Cursor, VS Code, ChatGPT, Claude, and more).
 
 ---
 
