@@ -501,7 +501,7 @@
                   <h4 class="font-bold text-gray-950 dark:text-white">Interested in the raw benchmark datasets?</h4>
                   <p class="text-xs text-gray-555 dark:text-gray-400 mt-0.5">Download our complete evaluation logs (JSON format).</p>
                 </div>
-                <a href="https://github.com/ramblinghermit0403/Memwyre/tree/main/.benchmarks" target="_blank" class="px-5 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold rounded hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors shrink-0">
+                <a href="https://github.com/ramblinghermit0403/Memwyre" target="_blank" class="px-5 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold rounded hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors shrink-0">
                   View GitHub Repository →
                 </a>
               </div>
