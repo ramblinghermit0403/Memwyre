@@ -117,6 +117,6 @@ Without a shared memory network, these agents remain isolated, repeating the sam
 
 Stop repeating project context, coding rules, and database schemas. Set up Memwyre's universal memory layer for free in under five minutes.
 
-[Get Started Free](/signup) · [View LoCoMo Benchmarks](/research/ai-memory-benchmark-locomo)
+[Get Started Free](/signup) · [View LoCoMo Benchmarks](/ai-memory-benchmark-locomo)
 
 [/ Research Hub](/research) · [/ MCP Integration](/mcp) · [/ Memwyre vs Mem0](/comparisons/memwyre-vs-mem0) · [/ Documentation](/docs/)

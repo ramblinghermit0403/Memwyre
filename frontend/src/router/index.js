@@ -175,13 +175,17 @@ export function createAppRouter({ ssr = false } = {}) {
                     },
                     {
                         path: 'blog/ai-memory-benchmark-locomo',
-                        redirect: '/research/ai-memory-benchmark-locomo'
+                        redirect: '/ai-memory-benchmark-locomo'
                     },
                     {
                         path: 'blog/:slug',
                         name: 'blog-post',
                         component: () => import('../views/BlogPostView.vue'),
                         meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/blog/:slug'] }
+                    },
+                    {
+                        path: 'research/ai-memory-benchmark-locomo',
+                        redirect: '/ai-memory-benchmark-locomo'
                     },
                     {
                         path: 'research/:slug',
@@ -195,7 +199,9 @@ export function createAppRouter({ ssr = false } = {}) {
                     },
                     {
                         path: 'ai-memory-benchmark-locomo',
-                        redirect: '/research/ai-memory-benchmark-locomo'
+                        name: 'locomo-benchmark',
+                        component: () => import('../views/LocomoBenchmarkView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/ai-memory-benchmark-locomo'] }
                     },
                     {
                         path: 'research',

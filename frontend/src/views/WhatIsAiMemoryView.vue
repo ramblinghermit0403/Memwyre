@@ -395,7 +395,7 @@
                 <router-link to="/signup" class="px-6 py-2.5 bg-[#050614] dark:bg-white text-white dark:text-black text-sm font-semibold rounded hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors shadow-sm">
                   Get Started Free
                 </router-link>
-                <router-link to="/research/ai-memory-benchmark-locomo" class="px-6 py-2.5 bg-white dark:bg-zinc-900 text-gray-900 dark:text-white border border-gray-300 dark:border-zinc-800 text-sm font-semibold rounded hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
+                <router-link to="/ai-memory-benchmark-locomo" class="px-6 py-2.5 bg-white dark:bg-zinc-900 text-gray-900 dark:text-white border border-gray-300 dark:border-zinc-800 text-sm font-semibold rounded hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors">
                   View LoCoMo Benchmarks
                 </router-link>
               </div>

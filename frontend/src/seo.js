@@ -12,7 +12,7 @@ export const PRERENDER_ROUTES = [
   '/blog/openclaw-autonomous-memory',
   '/blog/state-of-ai-memory-2026',
   '/research/what-is-ai-memory',
-  '/research/ai-memory-benchmark-locomo',
+  '/ai-memory-benchmark-locomo',
   '/research',
   '/memwyre-vs-mem0', '/memwyre-vs-supermemory', '/memwyre-vs-zep',
   '/chatgpt-memory', '/claude-memory', '/cursor-memory', '/mcp-memory',
@@ -132,7 +132,7 @@ export const PUBLIC_ROUTE_SEO = {
     title: 'What is AI Memory? Long-Term Persistent Context for AI Agents',
     description: 'Learn the architectural principles of long-term AI memory, comparing entity memory graphs, vector databases, and forgetting decay curves for agentic workflows.',
   },
-  '/research/ai-memory-benchmark-locomo': {
+  '/ai-memory-benchmark-locomo': {
     title: 'LoCoMo Benchmark Report | Evaluating AI Memory Networks',
     description: 'Read the LoCoMo Benchmark Report: methodology, datasets, competitors, findings, and conclusions comparing Memwyre, Mem0, Zep, and Supermemory.',
   },

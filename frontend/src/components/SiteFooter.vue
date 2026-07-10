@@ -62,7 +62,7 @@
           <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Research</h4>
           <router-link to="/research"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Research Hub</router-link>
-          <router-link to="/research/ai-memory-benchmark-locomo"
+          <router-link to="/ai-memory-benchmark-locomo"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">LoCoMo Report</router-link>
           <router-link to="/research/what-is-ai-memory"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">What is Memory?</router-link>
