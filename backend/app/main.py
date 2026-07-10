@@ -36,8 +36,9 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
 
     # Start background tasks
-    asyncio.create_task(dedupe_service.run_periodic_check(AsyncSessionLocal))
-    asyncio.create_task(manager.start_redis_listener())
+    if "pytest" not in sys.modules:
+        asyncio.create_task(dedupe_service.run_periodic_check(AsyncSessionLocal))
+        asyncio.create_task(manager.start_redis_listener())
 
     # App is running
     yield

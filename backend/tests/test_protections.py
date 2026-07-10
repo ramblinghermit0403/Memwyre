@@ -25,6 +25,24 @@ app.dependency_overrides[deps.get_current_user] = override_get_current_user
 from app.core.rate_limiter import limiter
 limiter.enabled = False 
 
+# Mock vector_store.query to avoid Pinecone network calls
+from app.services.vector_store import vector_store
+async def mock_vector_store_query(*args, **kwargs):
+    return {
+        "ids": [["mem_123"]],
+        "distances": [[0.5]],
+        "metadatas": [[{"memory_id": 123, "text_content": "FastAPI is a modern web framework"}]],
+        "documents": [["FastAPI is a modern web framework"]],
+        "embeddings": []
+    }
+vector_store.query = mock_vector_store_query
+
+# Mock llm_service_v2.generate_response to avoid live OpenAI/Azure/NVIDIA calls
+from app.services.llm_service_v2 import llm_service_v2
+async def mock_generate_response(*args, **kwargs):
+    return "This is a mock LLM response."
+llm_service_v2.generate_response = mock_generate_response
+
 @pytest.mark.asyncio
 async def test_guardrails_input_too_long():
     transport = ASGITransport(app=app)
