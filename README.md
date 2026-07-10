@@ -19,7 +19,7 @@
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-blue.svg?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Vue 3](https://img.shields.io/badge/Frontend-Vue%203-green.svg?style=flat-square&logo=vue.js)](https://vuejs.org/)
-[![Chrome Extension](https://img.shields.io/badge/Extension-Manifest%20V3-orange.svg?style=flat-square&logo=google-chrome)](https://developer.chrome.com/docs/extensions/mv3/intro/)
+[![Chrome Extension](https://img.shields.io/badge/Extension-Chrome%20Web%20Store-orange.svg?style=flat-square&logo=google-chrome)](https://chromewebstore.google.com/detail/memwyre/biplnkodgfdgejgblohhjeckiclfpekn)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-lightgrey.svg?style=flat-square)](https://modelcontextprotocol.io/)
 [![LoCoMo Accuracy](https://img.shields.io/badge/LoCoMo%20Accuracy-73.5%25-brightgreen.svg?style=flat-square)](https://github.com/ramblinghermit0403/Memwyre#-the-locomo-benchmark-evaluation)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
@@ -92,8 +92,8 @@ Interface with the unified memory vault, custom vector searches, and profile-bas
 
 Memwyre provides multiple ways to ingest and retrieve information:
 
-*   **1. Web Application & Dashboard**: Written in Vue 3 (Vite + Tailwind CSS), incorporating an onboarding tour, Monaco Editor for document management, billing integration, and a visual retrieval simulator to debug and verify vector rankings.
-*   **2. Chrome Extension (Manifest V3)**: Auto-injects context into web chat clients, maps authentication tokens, and allows users to save articles, code snippets, or conversational logs directly to their vault with a single click.
+*   **1. Web Application & Dashboard** ([Deployed on memwyre.tech](https://memwyre.tech/login)): The main web app written in Vue 3 (Vite + Tailwind CSS), incorporating an onboarding tour, Monaco Editor for document management, billing integration, and a visual retrieval simulator to debug and verify vector rankings.
+*   **2. Chrome Extension (Manifest V3)** ([Available on Chrome Web Store](https://chromewebstore.google.com/detail/memwyre/biplnkodgfdgejgblohhjeckiclfpekn)): Auto-injects context into web chat clients, maps authentication tokens, and allows users to save articles, code snippets, or conversational logs directly to their vault with a single click.
 *   **3. Model Context Protocol (MCP) Server**: A Python server mapping memory tools (`search_memory`, `save_memory`, `get_document`) directly into IDEs like Cursor and VS Code, or desktop assistants like Claude Desktop.
 *   **4. CLI Tool**: A Node-based Command Line Interface (`cli/`) providing terminal-level interaction, query testing, and batch document uploads.
 *   **5. OpenClaw Plugin**: A dedicated integration module (`openclaw-plugin/`) allowing multi-agent platforms to interface directly with the Memwyre memory vault.
