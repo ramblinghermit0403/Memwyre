@@ -7,7 +7,7 @@
 [![Chrome Extension](https://img.shields.io/badge/Extension-Manifest%20V3-orange.svg?style=flat-square&logo=google-chrome)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-lightgrey.svg?style=flat-square)](https://modelcontextprotocol.io/)
 [![LoCoMo Accuracy](https://img.shields.io/badge/LoCoMo%20Accuracy-73.5%25-brightgreen.svg?style=flat-square)](https://github.com/ramblinghermit0403/Memwyre#-the-locomo-benchmark-evaluation)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 
 Memwyre is an open-source, universal memory infrastructure and persistent knowledge retrieval layer for Large Language Models (LLMs), AI agents, and custom applications. 
 
@@ -353,4 +353,4 @@ LLM_API_KEY="your-nvidia-llm-key"
 
 ## License
 
-This project is licensed under the MIT License. Feel free to copy, modify, and distribute Memwyre as needed for personal or commercial applications.
+This project is licensed under the Apache License, Version 2.0 (Apache-2.0). See the [LICENSE](LICENSE) and [NOTICE](NOTICE) files for details.

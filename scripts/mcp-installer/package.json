@@ -10,5 +10,5 @@
     "start": "node index.js"
   },
   "author": "Memwyre",
-  "license": "MIT"
+  "license": "Apache-2.0"
 }
