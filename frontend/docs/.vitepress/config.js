@@ -34,7 +34,7 @@ export default defineConfig({
     siteTitle: false,
 
     nav: [
-      { text: 'Dashboard', link: 'https://memwyre.tech/dashboard' },
+      { text: 'Dashboard', link: 'https://memwyre.tech/dashboard/' },
       { text: 'Blog', link: 'https://memwyre.tech/blog/' }
     ],
 
