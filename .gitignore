@@ -42,3 +42,6 @@ tmp/
 # Internal Documentation
 ai_brain_vault_srs.md
 system_design.md
+
+# Ignore portfolio folder in public release
+portfolio/

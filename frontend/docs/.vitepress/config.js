@@ -16,7 +16,7 @@ const mcpSidebar = [
 export default defineConfig({
   outDir: '../dist/docs',
   base: '/docs/',
-  cleanUrls: true,
+  cleanUrls: false,
   appearance: false,
   title: 'Memwyre',
   titleTemplate: ':title — Memwyre Docs',

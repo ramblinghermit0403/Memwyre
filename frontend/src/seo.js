@@ -177,7 +177,7 @@ export function normalizePath(path = '/') {
 
 export function buildCanonicalUrl(path = '/') {
   const normalizedPath = normalizePath(path);
-  return normalizedPath === '/' ? `${SITE_URL}/` : `${SITE_URL}${normalizedPath}`;
+  return normalizedPath === '/' ? `${SITE_URL}/` : `${SITE_URL}${normalizedPath}/`;
 }
 
 export function getDefaultJsonLd() {
