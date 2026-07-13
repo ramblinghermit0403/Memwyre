@@ -18,7 +18,8 @@ export const PRERENDER_ROUTES = [
   '/chatgpt-memory', '/claude-memory', '/cursor-memory', '/mcp-memory',
   '/contact',
   '/login',
-  '/signup'
+  '/signup',
+  '/dashboard'
 ];
 
 export const DEFAULT_SEO = {
