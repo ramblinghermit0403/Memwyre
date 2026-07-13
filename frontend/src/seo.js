@@ -16,7 +16,9 @@ export const PRERENDER_ROUTES = [
   '/research',
   '/memwyre-vs-mem0', '/memwyre-vs-supermemory', '/memwyre-vs-zep',
   '/chatgpt-memory', '/claude-memory', '/cursor-memory', '/mcp-memory',
-  '/contact'
+  '/contact',
+  '/login',
+  '/signup'
 ];
 
 export const DEFAULT_SEO = {

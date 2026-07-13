@@ -128,12 +128,8 @@ const turnstileId = ref(null);
 const lastKnownUser = ref(null);
 const lastProvider = ref(null);
 
-window.onTurnstileSuccess = (token) => {
-    turnstileToken.value = token;
-};
-
 const loadTurnstile = () => {
-    if (window.turnstile && document.getElementById('turnstile-container')) {
+    if (typeof window !== 'undefined' && window.turnstile && document.getElementById('turnstile-container')) {
         turnstileId.value = window.turnstile.render('#turnstile-container', {
             sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA',
             callback: window.onTurnstileSuccess
@@ -241,6 +237,10 @@ const handleGoogleOneTapResponse = async (response) => {
 };
 
 onMounted(() => {
+    window.onTurnstileSuccess = (token) => {
+        turnstileToken.value = token;
+    };
+
     // Check for tokens (OAuth Callback)
     const accessToken = route.query.access_token;
     const refreshToken = route.query.refresh_token;
