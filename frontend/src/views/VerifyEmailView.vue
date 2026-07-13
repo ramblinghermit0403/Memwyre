@@ -35,14 +35,14 @@
         <p class="text-gray-500 text-sm mb-8">Your Memwyre account is now active. You can log in and start building your AI memory vault.</p>
 
         <router-link
-          to="/login"
+          to="/login/"
           class="block w-full py-3.5 rounded-xl font-bold text-white text-sm shadow-md transition-all"
           style="background: linear-gradient(135deg, #D97757, #C4654A);"
         >
           Go to Login
         </router-link>
 
-        <p class="mt-4 text-xs text-gray-400">Already logged in? <router-link to="/dashboard" class="text-[#D97757] font-medium hover:underline">Go to Dashboard</router-link></p>
+        <p class="mt-4 text-xs text-gray-400">Already logged in? <router-link to="/dashboard/" class="text-[#D97757] font-medium hover:underline">Go to Dashboard</router-link></p>
       </div>
 
       <!-- Error state -->
@@ -59,7 +59,7 @@
         <p class="text-gray-500 text-sm mb-6">The link may have expired or already been used. Request a new link from the onboarding screen after logging in.</p>
 
         <router-link
-          to="/login"
+          to="/login/"
           class="block w-full py-3.5 rounded-xl font-bold text-white text-sm shadow-md transition-all"
           style="background: linear-gradient(135deg, #D97757, #C4654A);"
         >

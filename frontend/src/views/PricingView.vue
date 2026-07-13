@@ -38,7 +38,7 @@
             </div>
             <p class="text-text-secondary mb-6">A great way to get started with building your persistent AI memory layer.</p>
 
-            <router-link to="/signup"
+            <router-link to="/signup/"
               class="inline-flex w-full items-center justify-center rounded bg-gray-50 text-gray-900 border border-gray-200 px-4 py-3.5 text-sm font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-[1.02]">
               Get Started for Free
             </router-link>
@@ -92,7 +92,7 @@
             <p class="text-text-secondary mb-6">Everything in Free, plus unlimited storage and priority features.
             </p>
 
-            <router-link to="/signup"
+            <router-link to="/signup/"
               class="inline-flex w-full items-center justify-center rounded bg-gray-900 text-white px-4 py-3.5 text-sm font-bold shadow-[0_4px_14px_0_rgb(0,0,0,0.2)] hover:bg-gray-800 transition-all duration-300 hover:scale-[1.02]">
               Get Started with Pro Memory
             </router-link>
@@ -222,7 +222,7 @@
         </h2>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
-          <router-link to="/signup"
+          <router-link to="/signup/"
             class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105">
             Get Started
           </router-link>

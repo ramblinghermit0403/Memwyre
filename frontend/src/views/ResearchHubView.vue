@@ -105,7 +105,7 @@
           Access our open source benchmark repositories, integrate Model Context Protocol memory servers, and build stateful agents.
         </p>
         <div class="flex justify-center gap-4">
-          <router-link to="/signup" class="px-6 py-2.5 bg-[#D97757] hover:bg-[#c05c3d] text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
+          <router-link to="/signup/" class="px-6 py-2.5 bg-[#D97757] hover:bg-[#c05c3d] text-white text-sm font-semibold rounded-lg transition-colors shadow-sm">
             Join the Beta
           </router-link>
           <a href="https://github.com/ramblinghermit0403/Memwyre" target="_blank" class="px-6 py-2.5 bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-800 text-gray-700 dark:text-gray-300 text-sm font-semibold rounded-lg transition-colors">

@@ -27,7 +27,7 @@
                  <div>
                     <div class="flex items-center justify-between mb-1.5">
                         <label for="password" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300">Password</label>
-                        <router-link to="/forgot-password" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+                        <router-link to="/forgot-password/" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
                             Forgot password?
                         </router-link>
                     </div>
@@ -73,7 +73,7 @@
           <div class="text-center pt-2">
              <p class="text-sm text-zinc-600 dark:text-zinc-400">
                  Don't have an account? 
-                 <router-link to="/signup" class="font-medium text-zinc-900 dark:text-zinc-100 hover:underline underline-offset-4 decoration-zinc-300 dark:decoration-zinc-600 transition-colors">
+                 <router-link to="/signup/" class="font-medium text-zinc-900 dark:text-zinc-100 hover:underline underline-offset-4 decoration-zinc-300 dark:decoration-zinc-600 transition-colors">
                  Sign up
                  </router-link>
              </p>

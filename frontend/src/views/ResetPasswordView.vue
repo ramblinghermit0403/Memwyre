@@ -14,7 +14,7 @@
             <p class="text-green-500 font-medium">
               Your password has been reset successfully.
             </p>
-            <router-link to="/login" class="block w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-600 transition-colors">
+            <router-link to="/login/" class="block w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-600 transition-colors">
               Log in now
             </router-link>
         </div>
@@ -24,7 +24,7 @@
                 <div class="p-4 rounded-lg bg-red-50 text-red-600 text-center font-medium">
                     {{ message || 'Invalid or expired password reset link.' }}
                 </div>
-                <router-link to="/forgot-password" class="block w-full py-3 bg-surface-2 border border-border text-center font-bold rounded-xl hover:bg-surface-3 transition-colors mt-4">
+                <router-link to="/forgot-password/" class="block w-full py-3 bg-surface-2 border border-border text-center font-bold rounded-xl hover:bg-surface-3 transition-colors mt-4">
                     Request new link
                 </router-link>
             </template>

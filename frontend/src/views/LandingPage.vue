@@ -88,7 +88,7 @@
             <div class="relative w-full p-3 border border-dashed border-gray-300 rounded-none">
               <!-- Content (Buttons) -->
               <div class="flex flex-row items-center justify-start gap-3 sm:gap-4 w-full">
-                <router-link to="/signup"
+                <router-link to="/signup/"
                   class="flex-1 px-4 py-2 lg:py-2.5 bg-[#050614] text-white font-bold sm:font-semibold lg:font-bold rounded-none hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm lg:text-base inline-flex items-center justify-center text-center">
                   Get Started
                 </router-link>
@@ -1750,7 +1750,7 @@
               </div>
 
               <div class="mt-8">
-                <router-link to="/signup"
+                <router-link to="/signup/"
                   class="inline-flex w-full items-center justify-center rounded bg-gray-50 text-gray-900 border border-gray-200 px-4 py-3.5 text-sm font-bold hover:bg-gray-100 transition-all duration-300 hover:scale-[1.02]">
                   Get Started for Free
                 </router-link>
@@ -1847,7 +1847,7 @@
               </div>
 
               <div class="mt-8">
-                <router-link to="/signup"
+                <router-link to="/signup/"
                   class="inline-flex w-full items-center justify-center rounded bg-black text-white px-4 py-3 text-sm font-bold shadow-md hover:bg-gray-800 transition-all duration-300 hover:scale-[1.02]">
                   Start Building Your Brain
                 </router-link>
@@ -2066,7 +2066,7 @@
           </div>
 
           <div class="flex flex-row items-center justify-start gap-3 sm:gap-4">
-            <router-link to="/signup"
+            <router-link to="/signup/"
               class="w-auto px-6 py-2.5 sm:px-8 sm:py-3 bg-black text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-base inline-flex items-center justify-center">
               Get Started
             </router-link>

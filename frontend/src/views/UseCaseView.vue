@@ -26,7 +26,7 @@ const copyCommand = (cmd) => {
                 </p>
                 <div class="space-y-3">
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <router-link to="/signup" class="px-8 py-4 bg-primary text-white text-lg font-bold rounded-none hover:bg-primary-600 transition-colors text-center">
+                        <router-link to="/signup/" class="px-8 py-4 bg-primary text-white text-lg font-bold rounded-none hover:bg-primary-600 transition-colors text-center">
                             See How It Works
                         </router-link>
                         <a href="mailto:shivharehimansh@gmail.com" class="px-8 py-4 border border-primary/30 text-text-primary text-lg font-bold rounded-none hover:bg-primary/10 transition-colors text-center">
@@ -396,7 +396,7 @@ const copyCommand = (cmd) => {
          <p class="text-2xl text-text-secondary mb-12">Make sure it actually remembers you.</p>
          
          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <router-link to="/signup" class="px-10 py-5 bg-primary text-white text-xl font-bold rounded hover:bg-primary-600 transition-colors shadow-xl">
+            <router-link to="/signup/" class="px-10 py-5 bg-primary text-white text-xl font-bold rounded hover:bg-primary-600 transition-colors shadow-xl">
                 Start Building Your Brain
             </router-link>
             <a href="mailto:shivharehimansh@gmail.com" class="px-10 py-5 border border-primary/30 text-text-primary text-xl font-bold rounded hover:bg-primary/10 transition-colors">

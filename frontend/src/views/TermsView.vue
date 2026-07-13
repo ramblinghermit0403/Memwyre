@@ -129,7 +129,7 @@
         </h2>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
-          <router-link to="/signup"
+          <router-link to="/signup/"
             class="w-full sm:w-auto px-10 py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-xl hover:scale-105">
             Start Building Your Brain
           </router-link>

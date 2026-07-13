@@ -15,7 +15,7 @@
         <p class="text-green-500 font-medium">
           {{ message }}
         </p>
-        <router-link to="/dashboard" class="block w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-600 transition-colors">
+        <router-link to="/dashboard/" class="block w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-600 transition-colors">
           Go to Dashboard
         </router-link>
       </div>

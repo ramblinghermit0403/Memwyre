@@ -47,7 +47,7 @@
 
               <!-- Content (Buttons) -->
               <div class="flex flex-row items-center justify-start gap-3 sm:gap-4">
-                <router-link to="/signup"
+                <router-link to="/signup/"
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-[#050614] text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm inline-flex items-center justify-center gap-2">
                   Start Connecting →
                 </router-link>
@@ -208,7 +208,7 @@
         <p class="text-sm text-gray-500 max-w-md mx-auto mb-6">
           Stop importing. Start connecting. Set up your first data stream in minutes.
         </p>
-        <router-link to="/signup" class="inline-block px-8 py-3 bg-[#050614] text-white text-sm font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md">
+        <router-link to="/signup/" class="inline-block px-8 py-3 bg-[#050614] text-white text-sm font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md">
           Connect Your Vault
         </router-link>
       </div>

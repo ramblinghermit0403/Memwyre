@@ -5,58 +5,67 @@
     <loc>https://memwyre.tech/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/use-cases</loc>
+    <loc>https://memwyre.tech/use-cases/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/pricing</loc>
+    <loc>https://memwyre.tech/pricing/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/privacy-policy</loc>
+    <loc>https://memwyre.tech/privacy-policy/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/terms</loc>
+    <loc>https://memwyre.tech/terms/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/connectors</loc>
+    <loc>https://memwyre.tech/connectors/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/mcp</loc>
+    <loc>https://memwyre.tech/mcp/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/plugins</loc>
+    <loc>https://memwyre.tech/plugins/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/extension</loc>
+    <loc>https://memwyre.tech/extension/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/research/what-is-ai-memory</loc>
+    <loc>https://memwyre.tech/research/what-is-ai-memory/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/ai-memory-benchmark-locomo</loc>
+    <loc>https://memwyre.tech/ai-memory-benchmark-locomo/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/research</loc>
+    <loc>https://memwyre.tech/research/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/memwyre-vs-mem0</loc>
+    <loc>https://memwyre.tech/memwyre-vs-mem0/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/memwyre-vs-supermemory</loc>
+    <loc>https://memwyre.tech/memwyre-vs-supermemory/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/memwyre-vs-zep</loc>
+    <loc>https://memwyre.tech/memwyre-vs-zep/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/chatgpt-memory</loc>
+    <loc>https://memwyre.tech/chatgpt-memory/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/claude-memory</loc>
+    <loc>https://memwyre.tech/claude-memory/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/cursor-memory</loc>
+    <loc>https://memwyre.tech/cursor-memory/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/mcp-memory</loc>
+    <loc>https://memwyre.tech/mcp-memory/</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/contact/</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/login/</loc>
+  </url>
+  <url>
+    <loc>https://memwyre.tech/signup/</loc>
   </url>
 
   <!-- Documentation Pages -->
@@ -64,76 +73,73 @@
     <loc>https://memwyre.tech/docs/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/use-cases</loc>
+    <loc>https://memwyre.tech/docs/use-cases.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/self-hosting</loc>
+    <loc>https://memwyre.tech/docs/self-hosting.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/how-it-works</loc>
+    <loc>https://memwyre.tech/docs/how-it-works.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/rag-vs-memory</loc>
+    <loc>https://memwyre.tech/docs/rag-vs-memory.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/benchmarks</loc>
+    <loc>https://memwyre.tech/docs/benchmarks.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/security</loc>
+    <loc>https://memwyre.tech/docs/security.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/integrations/</loc>
+    <loc>https://memwyre.tech/docs/integrations/browser-extension.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/integrations/browser-extension</loc>
+    <loc>https://memwyre.tech/docs/integrations/cli-installer.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/integrations/cli-installer</loc>
+    <loc>https://memwyre.tech/docs/integrations/connectors.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/integrations/connectors</loc>
+    <loc>https://memwyre.tech/docs/integrations/mcp-server.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/integrations/mcp-server</loc>
+    <loc>https://memwyre.tech/docs/integrations/mcp-server/claude.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/integrations/mcp-server/claude</loc>
+    <loc>https://memwyre.tech/docs/integrations/mcp-server/cursor.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/integrations/mcp-server/cursor</loc>
+    <loc>https://memwyre.tech/docs/integrations/mcp-server/vscode.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/integrations/mcp-server/vscode</loc>
+    <loc>https://memwyre.tech/docs/integrations/plugins/claude.html</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/integrations/plugins/claude</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/plugins/openclaw</loc>
+    <loc>https://memwyre.tech/docs/integrations/plugins/openclaw.html</loc>
   </url>
   <!-- Programmatic SEO Blogs -->
   <url>
-    <loc>https://memwyre.tech/blog</loc>
+    <loc>https://memwyre.tech/blog/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/blog/mcp-persistent-memory</loc>
+    <loc>https://memwyre.tech/blog/mcp-persistent-memory/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/blog/cursor-vs-claude-code-context</loc>
+    <loc>https://memwyre.tech/blog/cursor-vs-claude-code-context/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/blog/rag-vs-memory-long-term-knowledge</loc>
+    <loc>https://memwyre.tech/blog/rag-vs-memory-long-term-knowledge/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/blog/vscode-mcp-persistent-memory</loc>
+    <loc>https://memwyre.tech/blog/vscode-mcp-persistent-memory/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/blog/claude-code-memory-ingestion</loc>
+    <loc>https://memwyre.tech/blog/claude-code-memory-ingestion/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/blog/openclaw-autonomous-memory</loc>
+    <loc>https://memwyre.tech/blog/openclaw-autonomous-memory/</loc>
   </url>
   <url>
-    <loc>https://memwyre.tech/blog/state-of-ai-memory-2026</loc>
+    <loc>https://memwyre.tech/blog/state-of-ai-memory-2026/</loc>
   </url>
 </urlset>

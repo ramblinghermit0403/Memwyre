@@ -19,7 +19,8 @@ export const PRERENDER_ROUTES = [
   '/contact',
   '/login',
   '/signup',
-  '/dashboard'
+  '/dashboard',
+  '/forgot-password'
 ];
 
 export const DEFAULT_SEO = {

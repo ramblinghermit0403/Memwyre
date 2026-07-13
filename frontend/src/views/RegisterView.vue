@@ -88,7 +88,7 @@
           <div class="text-center pt-2">
             <p class="text-sm text-zinc-600 dark:text-zinc-400">
               Already have an account?
-              <router-link to="/login" class="font-medium text-zinc-900 dark:text-zinc-100 hover:underline underline-offset-4 decoration-zinc-300 dark:decoration-zinc-600 transition-colors">
+              <router-link to="/login/" class="font-medium text-zinc-900 dark:text-zinc-100 hover:underline underline-offset-4 decoration-zinc-300 dark:decoration-zinc-600 transition-colors">
                 Sign in
               </router-link>
             </p>

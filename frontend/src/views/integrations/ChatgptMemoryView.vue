@@ -107,7 +107,7 @@
           Start building your personal long-term AI memory graph. Save context in the browser and use it in your IDE.
         </p>
         <div class="flex justify-center gap-4">
-          <router-link to="/signup" class="px-6 py-2.5 bg-[#D97757] hover:bg-[#e68a6c] text-white text-sm font-semibold rounded transition-colors shadow-sm">
+          <router-link to="/signup/" class="px-6 py-2.5 bg-[#D97757] hover:bg-[#e68a6c] text-white text-sm font-semibold rounded transition-colors shadow-sm">
             Start Free
           </router-link>
           <router-link to="/extension" class="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded transition-colors">

@@ -24,7 +24,7 @@
             </div>
             
             <div class="text-center pt-2">
-                <router-link to="/login" class="text-sm font-medium text-text-secondary hover:text-primary transition-colors">
+                <router-link to="/login/" class="text-sm font-medium text-text-secondary hover:text-primary transition-colors">
                     Back to login
                 </router-link>
             </div>
