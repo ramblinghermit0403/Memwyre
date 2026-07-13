@@ -51,7 +51,7 @@
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-[#050614] text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm inline-flex items-center justify-center gap-2">
                   Get Developer Plugins →
                 </router-link>
-                <a href="/docs/integrations/plugins/claude" target="_blank"
+                <a href="/docs/integrations/plugins/claude.html" target="_blank"
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-white text-[#050614] font-bold rounded border border-gray-250 hover:bg-gray-50 transition-all duration-300 text-xs sm:text-sm inline-flex items-center justify-center">
                   View Documentation
                 </a>

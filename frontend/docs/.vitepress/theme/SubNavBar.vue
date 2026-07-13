@@ -33,25 +33,25 @@ const items = [
   },
   {
     text: 'Plugins',
-    link: '/integrations/plugins/openclaw',
+    link: '/integrations/plugins/openclaw.html',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`,
     match: (path) => path.includes('/plugins/')
   },
   {
     text: 'MCP Server',
-    link: '/integrations/mcp-server',
+    link: '/integrations/mcp-server.html',
     icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/mcp.svg',
     match: (path) => path.includes('/mcp-server') || path.includes('/cli-installer')
   },
   {
     text: 'Workspace Connectors',
-    link: '/integrations/connectors',
+    link: '/integrations/connectors.html',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
     match: (path) => path.includes('/connectors')
   },
   {
     text: 'Browser Extension',
-    link: '/integrations/browser-extension',
+    link: '/integrations/browser-extension.html',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/></svg>`,
     match: (path) => path.includes('/browser-extension')
   }
