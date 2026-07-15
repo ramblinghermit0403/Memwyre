@@ -69,6 +69,7 @@ function syncSeoHead(to) {
     upsertMetaTag('property', 'og:image', seo.ogImage);
     upsertMetaTag('property', 'og:image:width', seo.ogImageWidth);
     upsertMetaTag('property', 'og:image:height', seo.ogImageHeight);
+    upsertMetaTag('property', 'og:site_name', seo.ogSiteName || 'Memwyre');
 
     upsertMetaTag('name', 'twitter:card', seo.twitterCard);
     upsertMetaTag('name', 'twitter:title', seo.twitterTitle || seo.title);

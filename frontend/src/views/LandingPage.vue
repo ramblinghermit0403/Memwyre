@@ -73,8 +73,7 @@
 
           <h1
             class="animate-fade-in-up hero-serif text-4xl sm:text-5xl md:text-5xl lg:text-[70px] tracking-[-0.02em] leading-[1.1] lg:leading-[78px] text-[rgb(1,1,16)] max-w-4xl">
-            Your AI should <br class="hidden md:block" />
-            <span class="block text-[rgb(1,1,16)] italic font-medium">remember <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">everything.</span></span>
+            Memwyre — Your AI <br class="hidden md:block" />should <span class="italic font-medium">remember <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">everything.</span></span>
           </h1>
 
           <p

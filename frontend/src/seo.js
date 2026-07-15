@@ -91,36 +91,43 @@ export const PUBLIC_ROUTE_SEO = {
     title: 'How to Give Claude Desktop Persistent Memory using MCP | Memwyre Blog',
     description:
       'Connect Memwyre to Claude Desktop as a Model Context Protocol (MCP) server. Give your local Claude assistant a persistent long-term memory layer.',
+    ogImage: '/blog-covers/mcp-persistent-memory.png',
   },
   '/blog/vscode-mcp-persistent-memory': {
     title: 'How to Enable Persistent Codebase Memory in VS Code | Memwyre Blog',
     description:
       'Configure remote MCP memory gateway for VS Code agentic extensions like Cline, Roo-Code, and Devins. Stop starting from scratch each session.',
+    ogImage: '/blog-covers/vscode-mcp-persistent-memory.png',
   },
   '/blog/claude-code-memory-ingestion': {
     title: 'Building Persistent Terminal Sessions: Claude Code Memory | Memwyre Blog',
     description:
       'Integrate Memwyre lifecycle hooks into Anthropic\'s Claude Code CLI. Inject workspace context on startup and automatically ingest terminal chats on exit.',
+    ogImage: '/blog-covers/claude-code-memory-ingestion.png',
   },
   '/blog/openclaw-autonomous-memory': {
     title: 'Persistent Memory for Autonomous Agents: OpenClaw | Memwyre Blog',
     description:
       'Load the Memwyre plugin for OpenClaw autonomous coding agents. Enable long-term memory query tools and persistent inbox updates across agent runs.',
+    ogImage: '/blog-covers/openclaw-autonomous-memory.png',
   },
   '/blog/cursor-vs-claude-code-context': {
     title: 'Cursor AI vs Claude Code: Managing Context and Memory | Memwyre Blog',
     description:
       'Compare workspace indexing and memory management between Cursor AI and Claude Code CLI. Learn how to plug both into a unified memory layer.',
+    ogImage: '/blog-covers/cursor-vs-claude-code-context.png',
   },
   '/blog/rag-vs-memory-long-term-knowledge': {
     title: 'RAG vs. AI Memory: Choosing the Right Approach | Memwyre Blog',
     description:
       'Analyze why basic RAG fails for developer workflows due to chunk fragmentation, and why entity-profile routing provides better context.',
+    ogImage: '/blog-covers/rag-vs-memory-long-term-knowledge.png',
   },
   '/blog/state-of-ai-memory-2026': {
     title: 'State of AI Memory 2026: Shift from Stateless to Stateful | Memwyre Blog',
     description:
       'An inspection of context window explosion and why stateless attention buffers create substantial financial and latency overheads for enterprise codebase scale.',
+    ogImage: '/blog-covers/state-of-ai-memory-2026.png',
   },
   '/blog/:slug': {
     title: 'Memwyre Blog | Engineering Insights & Developer Guides',
@@ -139,6 +146,7 @@ export const PUBLIC_ROUTE_SEO = {
   '/ai-memory-benchmark-locomo': {
     title: 'LoCoMo Benchmark Report | Evaluating AI Memory Networks',
     description: 'Read the LoCoMo Benchmark Report: methodology, datasets, competitors, findings, and conclusions comparing Memwyre, Mem0, Zep, and Supermemory.',
+    ogImage: '/blog-covers/ai-memory-benchmark-locomo.png',
   },
   '/research': {
     title: 'Memwyre Research Hub | Advancing AI Long-Term Context Retention',
@@ -181,7 +189,7 @@ export function normalizePath(path = '/') {
 
 export function buildCanonicalUrl(path = '/') {
   const normalizedPath = normalizePath(path);
-  return normalizedPath === '/' ? `${SITE_URL}/` : `${SITE_URL}${normalizedPath}/`;
+  return normalizedPath === '/' ? `${SITE_URL}/` : `${SITE_URL}${normalizedPath}`;
 }
 
 export function getDefaultJsonLd() {
@@ -213,7 +221,8 @@ export function getSeoForPath(path = '/') {
   const isIndexable = PRERENDER_ROUTES.includes(normalizedPath);
   const routeSeo = PUBLIC_ROUTE_SEO[normalizedPath] || {};
   const canonical = buildCanonicalUrl(normalizedPath);
-  const socialImageUrl = `${SITE_URL}${DEFAULT_SOCIAL_IMAGE_PATH}`;
+  const defaultImageUrl = `${SITE_URL}${DEFAULT_SOCIAL_IMAGE_PATH}`;
+  const socialImageUrl = routeSeo.ogImage ? `${SITE_URL}${routeSeo.ogImage}` : defaultImageUrl;
 
   const jsonLdData = getDefaultJsonLd();
 
@@ -422,6 +431,7 @@ export function getSeoForPath(path = '/') {
     ogDescription: routeSeo.description || DEFAULT_SEO.description,
     ogType: DEFAULT_SEO.ogType,
     ogUrl: canonical,
+    ogSiteName: SITE_NAME,
     ogImage: socialImageUrl,
     ogImageWidth: '1280',
     ogImageHeight: '720',
