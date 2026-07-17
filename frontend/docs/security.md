@@ -1,5 +1,5 @@
 ---
-title: "Security & Data Privacy in Memwyre"
+title: "Security & Data Privacy"
 description: "Read about Memwyre security practices, including private memory vaults, data encryption, and local offline deployment."
 ---
 
