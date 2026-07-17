@@ -1,7 +1,8 @@
 ---
-title: Memwyre Documentation Overview
-description: Get started with Memwyre, the universal persistent memory layer for AI agents, developer IDEs, and prompt workflows.
+title: "Overview"
+description: "Get started with Memwyre, the universal persistent memory layer for AI agents, developer IDEs, and prompt workflows."
 ---
+
 # Overview
 
 **Memwyre** is a universal memory layer for AI — a persistent, searchable knowledge vault that sits between you and every AI tool you use.
@@ -14,7 +15,7 @@ Modern AI tools are powerful, but stateless. Every new conversation starts from 
 
 ## How It Works
 
-```
+```text
   You ──► Memwyre Vault ──► Any AI Tool
             ▲
   Browser / IDE / YouTube / Web Pages
@@ -27,7 +28,7 @@ Modern AI tools are powerful, but stateless. Every new conversation starts from 
 ## Core Concepts
 
 | Concept | Description | Database Model |
-|---|---|---|
+| --- | --- | --- |
 | **Memory** | A single unit of raw ingested text — a note, snippet, article, or video transcript. | `Memory` |
 | **Chunk** | A segmented slice of a larger document, vectorized for dense retrieval. | `Chunk` |
 | **Fact** | An extracted atomic statement (subject-predicate-object) representing a current, stateful truth. | `Fact` |

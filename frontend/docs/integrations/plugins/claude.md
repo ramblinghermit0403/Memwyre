@@ -1,7 +1,8 @@
 ---
-title: Claude Code CLI Lifecycle Hooks
-description: Integrate Memwyre lifecycle hooks into Claude Code CLI to automatically save and retrieve terminal session memory.
+title: "Claude Code"
+description: "Integrate Memwyre lifecycle hooks into Claude Code CLI to automatically save and retrieve terminal session memory."
 ---
+
 # Claude Code Plugin
 
 Integrate Memwyre directly with Anthropic's **Claude Code** terminal agent interface to provide persistent, cross-session memory and automatic transcript ingestion.
@@ -16,15 +17,19 @@ Claude Code is a command-line tool that allows you to interact with Claude direc
 ## Installation
 
 ### 1. Install the Package
+
 Install the Memwyre Claude Plugin globally:
+
 ```bash
 npm install -g @memwyre/claude-memwyre
 ```
 
 ### 2. Register Plugin Hooks in Claude Code
+
 Register the plugin by editing your Claude Code configuration directory (typically located at `~/.claude/`):
 
 Open `~/.claude/hooks.json` (create it if it doesn't exist) and add the hooks block pointing to the installed script:
+
 ```json
 {
   "description": "Memwyre: Persistent autonomous memory",
