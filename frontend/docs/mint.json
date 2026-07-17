@@ -2,10 +2,10 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Memwyre",
   "logo": {
-    "dark": "/logo.png",
-    "light": "/logo.png"
+    "dark": "/images/logo.png",
+    "light": "/images/logo.png"
   },
-  "favicon": "/image.svg",
+  "favicon": "/images/image.svg",
   "colors": {
     "primary": "#D97757",
     "light": "#D97757",
