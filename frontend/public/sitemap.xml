@@ -1,145 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Core App Pages -->
   <url>
     <loc>https://memwyre.tech/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/use-cases/</loc>
+    <loc>https://memwyre.tech/use-cases</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/pricing/</loc>
+    <loc>https://memwyre.tech/pricing</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/privacy-policy/</loc>
+    <loc>https://memwyre.tech/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/terms/</loc>
+    <loc>https://memwyre.tech/connectors</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/connectors/</loc>
+    <loc>https://memwyre.tech/mcp</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/mcp/</loc>
+    <loc>https://memwyre.tech/plugins</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/plugins/</loc>
+    <loc>https://memwyre.tech/extension</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/extension/</loc>
+    <loc>https://memwyre.tech/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/research/what-is-ai-memory/</loc>
+    <loc>https://memwyre.tech/research</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/ai-memory-benchmark-locomo/</loc>
+    <loc>https://memwyre.tech/ai-memory-benchmark-locomo</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/research/</loc>
+    <loc>https://memwyre.tech/research/what-is-ai-memory</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/memwyre-vs-mem0/</loc>
+    <loc>https://memwyre.tech/research/context-engineering</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/memwyre-vs-supermemory/</loc>
+    <loc>https://memwyre.tech/memwyre-vs-mem0</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/memwyre-vs-zep/</loc>
+    <loc>https://memwyre.tech/memwyre-vs-supermemory</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/chatgpt-memory/</loc>
+    <loc>https://memwyre.tech/memwyre-vs-zep</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/claude-memory/</loc>
+    <loc>https://memwyre.tech/chatgpt-memory</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/cursor-memory/</loc>
+    <loc>https://memwyre.tech/claude-memory</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/mcp-memory/</loc>
+    <loc>https://memwyre.tech/cursor-memory</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/contact/</loc>
+    <loc>https://memwyre.tech/mcp-memory</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/login/</loc>
+    <loc>https://memwyre.tech/privacy-policy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/signup/</loc>
-  </url>
-
-  <!-- Documentation Pages -->
-  <url>
-    <loc>https://memwyre.tech/docs/</loc>
+    <loc>https://memwyre.tech/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/use-cases.html</loc>
+    <loc>https://memwyre.tech/login</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/self-hosting.html</loc>
+    <loc>https://memwyre.tech/signup</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/how-it-works.html</loc>
+    <loc>https://memwyre.tech/dashboard</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
   </url>
   <url>
-    <loc>https://memwyre.tech/docs/rag-vs-memory.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/benchmarks.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/security.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/browser-extension.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/cli-installer.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/connectors.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/mcp-server.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/mcp-server/claude.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/mcp-server/cursor.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/mcp-server/vscode.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/plugins/claude.html</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/docs/integrations/plugins/openclaw.html</loc>
-  </url>
-  <!-- Programmatic SEO Blogs -->
-  <url>
-    <loc>https://memwyre.tech/blog/</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/blog/mcp-persistent-memory/</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/blog/cursor-vs-claude-code-context/</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/blog/rag-vs-memory-long-term-knowledge/</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/blog/vscode-mcp-persistent-memory/</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/blog/claude-code-memory-ingestion/</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/blog/openclaw-autonomous-memory/</loc>
-  </url>
-  <url>
-    <loc>https://memwyre.tech/blog/state-of-ai-memory-2026/</loc>
+    <loc>https://memwyre.tech/forgot-password</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
   </url>
 </urlset>

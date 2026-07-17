@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-300 font-sans overflow-x-hidden selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
+  <div class="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-300 font-sans [overflow-x:clip] selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
     <SiteNavBar />
     
     <!-- Content Router View -->

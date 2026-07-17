@@ -2,21 +2,28 @@ export const SITE_URL = 'https://memwyre.tech';
 export const SITE_NAME = 'Memwyre';
 export const DEFAULT_SOCIAL_IMAGE_PATH = '/sequence/ezgif-frame-015.png';
 export const PRERENDER_ROUTES = [
-  '/', '/use-cases', '/pricing', '/privacy-policy', '/terms', '/connectors', '/mcp', '/plugins', '/extension',
-  '/blog',
-  '/blog/mcp-persistent-memory',
-  '/blog/cursor-vs-claude-code-context',
-  '/blog/rag-vs-memory-long-term-knowledge',
-  '/blog/vscode-mcp-persistent-memory',
-  '/blog/claude-code-memory-ingestion',
-  '/blog/openclaw-autonomous-memory',
-  '/blog/state-of-ai-memory-2026',
-  '/research/what-is-ai-memory',
-  '/ai-memory-benchmark-locomo',
-  '/research',
-  '/memwyre-vs-mem0', '/memwyre-vs-supermemory', '/memwyre-vs-zep',
-  '/chatgpt-memory', '/claude-memory', '/cursor-memory', '/mcp-memory',
+  '/',
+  '/use-cases',
+  '/pricing',
   '/contact',
+  '/connectors',
+  '/mcp',
+  '/plugins',
+  '/extension',
+  '/blog',
+  '/research',
+  '/ai-memory-benchmark-locomo',
+  '/research/what-is-ai-memory',
+  '/research/context-engineering',
+  '/memwyre-vs-mem0',
+  '/memwyre-vs-supermemory',
+  '/memwyre-vs-zep',
+  '/chatgpt-memory',
+  '/claude-memory',
+  '/cursor-memory',
+  '/mcp-memory',
+  '/privacy-policy',
+  '/terms',
   '/login',
   '/signup',
   '/dashboard',
@@ -140,8 +147,32 @@ export const PUBLIC_ROUTE_SEO = {
       'Deep dives, evaluations, and benchmarks from the Memwyre Research Lab on long-term AI memory architectures.',
   },
   '/research/what-is-ai-memory': {
-    title: 'What is AI Memory? Long-Term Persistent Context for AI Agents',
-    description: 'Learn the architectural principles of long-term AI memory, comparing entity memory graphs, vector databases, and forgetting decay curves for agentic workflows.',
+    title: 'What is AI Memory? The Architecture of Long-Term Context',
+    description: 'Explore the technical architecture of AI memory, from flat vector embeddings to hierarchical entity graphs, and how it solves LLM amnesia.',
+    canonical: 'https://memwyre.com/research/what-is-ai-memory',
+    ogType: 'article',
+    jsonLd: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "What is AI Memory? The Architecture of Long-Term Context",
+        "description": "Explore the technical architecture of AI memory, from flat vector embeddings to hierarchical entity graphs.",
+        "author": { "@type": "Organization", "name": "Himansh Shivhare" },
+        "publisher": { "@type": "Organization", "name": "Memwyre", "logo": { "@type": "ImageObject", "url": "https://memwyre.com/logo.png" } }
+    })
+  },
+  '/research/context-engineering': {
+    title: 'What is Context Engineering? The 2026 Guide for Developers',
+    description: 'Prompt engineering is dead. Learn how Context Engineering and hierarchical entity graphs are replacing standard RAG for production AI agents.',
+    canonical: 'https://memwyre.com/research/context-engineering',
+    ogType: 'article',
+    jsonLd: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "What is Context Engineering? The 2026 Guide for Developers",
+        "description": "Prompt engineering is dead. Learn how Context Engineering and hierarchical entity graphs are replacing standard RAG for production AI agents.",
+        "author": { "@type": "Organization", "name": "Himansh Shivhare" },
+        "publisher": { "@type": "Organization", "name": "Memwyre", "logo": { "@type": "ImageObject", "url": "https://memwyre.com/logo.png" } }
+    })
   },
   '/ai-memory-benchmark-locomo': {
     title: 'LoCoMo Benchmark Report | Evaluating AI Memory Networks',
@@ -359,10 +390,11 @@ export function getSeoForPath(path = '/') {
       },
       'url': canonical
     });
-  } else if (normalizedPath === '/what-is-ai-memory' || normalizedPath === '/ai-memory-benchmark-locomo') {
+  } else if (normalizedPath === '/research/what-is-ai-memory' || normalizedPath === '/ai-memory-benchmark-locomo' || normalizedPath === '/research/context-engineering') {
     const techDates = {
-      '/what-is-ai-memory': '2026-03-10T08:00:00Z',
-      '/ai-memory-benchmark-locomo': '2026-03-25T08:00:00Z'
+      '/research/what-is-ai-memory': '2026-03-10T08:00:00Z',
+      '/ai-memory-benchmark-locomo': '2026-03-25T08:00:00Z',
+      '/research/context-engineering': '2026-03-20T08:00:00Z'
     };
     const pubDate = techDates[normalizedPath] || '2026-03-01T08:00:00Z';
     jsonLdData.push({
@@ -375,7 +407,7 @@ export function getSeoForPath(path = '/') {
       'dateModified': pubDate,
       'author': {
         '@type': 'Organization',
-        'name': 'Memwyre Research Lab'
+        'name': 'Himansh Shivhare'
       },
       'publisher': {
         '@type': 'Organization',
@@ -406,20 +438,23 @@ export function getSeoForPath(path = '/') {
   } else if (['/memwyre-vs-mem0', '/memwyre-vs-supermemory', '/memwyre-vs-zep'].includes(normalizedPath)) {
     jsonLdData.push({
       '@context': 'https://schema.org',
-      '@type': 'Product',
-      'name': routeSeo.title || DEFAULT_SEO.title,
-      'image': socialImageUrl,
+      '@type': 'Article',
+      'headline': routeSeo.title || DEFAULT_SEO.title,
       'description': routeSeo.description || DEFAULT_SEO.description,
-      'brand': {
-        '@type': 'Brand',
+      'image': socialImageUrl,
+      'author': {
+        '@type': 'Organization',
         'name': SITE_NAME
       },
-      'offers': {
-        '@type': 'Offer',
-        'price': '0',
-        'priceCurrency': 'USD',
-        'availability': 'https://schema.org/InStock'
-      }
+      'publisher': {
+        '@type': 'Organization',
+        'name': SITE_NAME,
+        'logo': {
+          '@type': 'ImageObject',
+          'url': `${SITE_URL}/image.svg`
+        }
+      },
+      'url': canonical
     });
   }
 

@@ -403,7 +403,7 @@
               <div class="pt-6 border-t border-gray-150 dark:border-gray-800 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono font-bold text-gray-450">
                 <router-link to="/research" class="hover:text-[#D97757] uppercase">/ Research Hub</router-link>
                 <router-link to="/mcp" class="hover:text-[#D97757] uppercase">/ MCP Integration</router-link>
-                <router-link to="/comparisons/memwyre-vs-mem0" class="hover:text-[#D97757] uppercase">/ Memwyre vs Mem0</router-link>
+                <router-link to="/memwyre-vs-mem0" class="hover:text-[#D97757] uppercase">/ Memwyre vs Mem0</router-link>
                 <a href="/docs/" class="hover:text-[#D97757] uppercase">/ Documentation</a>
               </div>
             </div>

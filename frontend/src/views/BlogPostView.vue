@@ -142,7 +142,7 @@ const recentPosts = [
     slug: 'what-is-ai-memory',
     title: 'What is AI Memory? The Architecture of Long-Term Context',
     category: 'Research',
-    author: 'Memwyre Research Lab',
+    author: 'Himansh Shivhare',
     fullDate: 'June 24, 2026',
     readTime: '15 MIN'
   },
@@ -150,7 +150,7 @@ const recentPosts = [
     slug: 'ai-memory-benchmark-locomo',
     title: 'LoCoMo Benchmark: Evaluation of AI Memory',
     category: 'Research',
-    author: 'Memwyre Research Lab',
+    author: 'Himansh Shivhare',
     fullDate: 'June 24, 2026',
     readTime: '12 MIN'
   }
@@ -324,7 +324,7 @@ const copyLink = () => {
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-white dark:bg-[#0c0c0c] pt-28 pb-0 overflow-x-hidden font-sans">
+  <div class="relative min-h-screen bg-white dark:bg-[#0c0c0c] pt-28 pb-0 [overflow-x:clip] font-sans">
     <!-- Grid Blueprint background line effects -->
     <div class="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]">
       <div class="absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px]"></div>
@@ -407,7 +407,7 @@ const copyLink = () => {
                   @error="$event.target.src = 'https://ui-avatars.com/api/?name=Himansh+Shivhare&background=f3f4f6&color=333'"
                 />
                 <span class="text-sm font-semibold text-gray-900 dark:text-white">
-                  {{ recentPosts.find(p => p.slug === route.params.slug)?.author || 'Himansh Shivhare' }}
+                  Himansh Shivhare
                 </span>
               </div>
 

@@ -189,6 +189,12 @@ export function createAppRouter({ ssr = false } = {}) {
                         redirect: '/ai-memory-benchmark-locomo'
                     },
                     {
+                        path: 'research/context-engineering',
+                        name: 'context-engineering',
+                        component: () => import('../views/ContextEngineeringView.vue'),
+                        meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/research/context-engineering'] }
+                    },
+                    {
                         path: 'research/:slug',
                         name: 'research-post',
                         component: () => import('../views/BlogPostView.vue'),

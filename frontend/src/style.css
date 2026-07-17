@@ -232,4 +232,6 @@ body {
 .hero-serif {
   font-family: 'DM Serif Text', serif;
   letter-spacing: -0.02em;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
 }

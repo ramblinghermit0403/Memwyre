@@ -1,134 +1,380 @@
 <template>
-  <div class="min-h-screen bg-white text-gray-900 font-sans relative overflow-x-hidden selection:bg-[#D97757] selection:text-white pt-16">
+  <div class="relative min-h-screen bg-white dark:bg-[#0c0c0c] pt-28 pb-0 font-sans">
+    <!-- Grid Blueprint background line effects -->
+    <div class="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]">
+      <div class="absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    </div>
+
     <!-- Global Vertical Grid Lines -->
-    <div class="absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-200 pointer-events-none select-none z-30"></div>
-    <div class="absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-200 pointer-events-none select-none z-30"></div>
+    <div class="hidden lg:block absolute top-0 bottom-0 left-6 sm:left-8 lg:left-[calc(50%-640px)] w-px bg-gray-300/80 dark:bg-gray-800/60 pointer-events-none select-none z-30"></div>
+    <div class="hidden lg:block absolute top-0 bottom-0 right-6 sm:right-8 lg:right-[calc(50%-640px)] w-px bg-gray-300/80 dark:bg-gray-800/60 pointer-events-none select-none z-30"></div>
 
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+    <div class="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 z-10 animate-fade-in">
       
-      <!-- Breadcrumb -->
-      <div class="pt-6">
-        <div class="flex justify-between items-center text-xs tracking-wider uppercase font-bold font-mono text-gray-400 mb-4">
-          <div>/ COMPARISONS / MEMWYRE VS SUPERMEMORY</div>
-          <div>COMPILATION DATE: JUNE 2026</div>
-        </div>
-        <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-200 pointer-events-none select-none mb-8"></div>
+      <!-- Back Navigation Header -->
+      <div class="pt-6 mb-8">
+        <router-link 
+          to="/" 
+          class="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 hover:text-[#D97757] dark:hover:text-[#D97757] transition-colors"
+        >
+          <span class="inline-flex items-center justify-center w-5 h-5 rounded-full border border-gray-300 dark:border-zinc-800 text-[10px]">&larr;</span>
+          Back to Home
+        </router-link>
       </div>
 
-      <!-- Hero Header -->
-      <div class="space-y-6 max-w-4xl text-left">
-        <h1 class="hero-serif text-4xl sm:text-6xl tracking-[-0.02em] leading-[1.1] text-gray-900">
-          Memwyre vs Supermemory <br />
-          <span class="italic font-medium text-gray-900">Developer Context vs <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">Personal Bookmarks.</span></span>
+      <!-- Header Section -->
+      <div class="space-y-4 mb-8 text-left max-w-4xl">
+        <div class="text-xs font-bold uppercase tracking-wider text-[#D97757] font-mono">
+          COMPARISONS 
+          <span class="text-gray-300 dark:text-gray-700 mx-2">/</span> 
+          MEMWYRE VS SUPERMEMORY
+        </div>
+        
+        <h1 class="hero-serif text-4xl sm:text-5xl lg:text-6xl tracking-[-0.02em] leading-[1.1] text-gray-950 dark:text-white">
+          Memwyre vs Supermemory: <br />
+          <span class="italic font-medium text-gray-900 dark:text-gray-100">Which AI Memory Tool <span class="inline-block bg-[#D97757] text-white px-3 py-0.5 italic font-medium">Do You Need?</span></span>
         </h1>
-        <p class="text-lg text-gray-500 leading-relaxed font-normal">
-          Compare the engineering requirements for developer-first memory networks against bookmark retrieval search engines. Understand how Memwyre's latency-optimized backend suits active agent loops.
-        </p>
-      </div>
 
-      <!-- Comparison Matrix Table -->
-      <div class="border border-dashed border-gray-300 rounded p-6 bg-[#FDFCFB] my-10 relative text-left">
-        <!-- Corner Brackets -->
-        <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none">
-          <div class="absolute top-1.5 left-0 w-full h-px bg-gray-400"></div>
-          <div class="absolute left-1.5 top-0 h-full w-px bg-gray-400"></div>
-        </div>
-        <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none">
-          <div class="absolute top-1.5 left-0 w-full h-px bg-gray-400"></div>
-          <div class="absolute left-1.5 top-0 h-full w-px bg-gray-400"></div>
-        </div>
-
-        <h3 class="hero-serif text-xl sm:text-2xl text-gray-900 mb-6">Feature Comparison Matrix</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left text-gray-500">
-            <thead class="text-xs uppercase bg-gray-100 text-gray-700 border-b border-gray-200 font-mono">
-              <tr>
-                <th scope="col" class="px-6 py-4">Capability</th>
-                <th scope="col" class="px-6 py-4 bg-[#D97757]/5 text-gray-950 font-bold">Memwyre</th>
-                <th scope="col" class="px-6 py-4">Supermemory</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 text-gray-700">
-              <tr>
-                <td class="px-6 py-4 font-bold text-gray-900">Primary Focus</td>
-                <td class="px-6 py-4 font-bold text-[#D97757] bg-[#D97757]/5">Developer workflows &amp; Agent context</td>
-                <td class="px-6 py-4">Personal bookmarks &amp; Web curation</td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 font-bold text-gray-900">Retrieval Speed</td>
-                <td class="px-6 py-4 bg-[#D97757]/5 text-gray-950">Sub-300ms latency (pruning &amp; graph cache)</td>
-                <td class="px-6 py-4">600ms - 1.2s (Heavy text embedding search)</td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 font-bold text-gray-900">Knowledge Type</td>
-                <td class="px-6 py-4 bg-[#D97757]/5 text-gray-950">Active multi-hop graph nodes &amp; variables</td>
-                <td class="px-6 py-4">Flat static page clips &amp; files</td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 font-bold text-gray-900">Decay Curve</td>
-                <td class="px-6 py-4 bg-[#D97757]/5 text-gray-950">Exponential forgetting curve pruning</td>
-                <td class="px-6 py-4">None (Permanent archive storage)</td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 font-bold text-gray-900">IDE Plugins</td>
-                <td class="px-6 py-4 bg-[#D97757]/5 text-gray-950">Cursor, VS Code, Claude Code CLI, OpenClaw</td>
-                <td class="px-6 py-4">None (Chrome Extension web page clip only)</td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 font-bold text-gray-900">LoCoMo score</td>
-                <td class="px-6 py-4 font-bold text-[#D97757] bg-[#D97757]/5">70.0% Accuracy</td>
-                <td class="px-6 py-4">46.8% Accuracy</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="text-[10px] tracking-wider uppercase font-bold font-mono text-gray-400 dark:text-gray-500 pt-2">
+          UPDATED 2026
         </div>
       </div>
 
-      <!-- Core Architectural Differences -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 py-10 text-left">
-        <div class="space-y-4">
-          <h3 class="hero-serif text-2xl text-gray-900">The Supermemory Approach</h3>
-          <p class="text-gray-600 leading-relaxed text-sm">
-            Supermemory operates primarily as a web clipper and bookmark manager for AI users. It takes Twitter bookmarks, saved web pages, and uploaded PDFs, chunks them, and stores them in a vector index so you can ask a chatbot questions about your bookmarks.
-          </p>
-          <p class="text-gray-600 leading-relaxed text-sm">
-            While this is great for organizing research articles and reading lists, it lacks the low-latency guarantees and active lifecycle integrations needed for active terminal or IDE agent sessions. Bookmarked links do not track active git diff changes, environment variables, or developer dependencies.
-          </p>
-        </div>
-        <div class="space-y-4">
-          <h3 class="hero-serif text-2xl text-gray-900">The Memwyre Approach</h3>
-          <p class="text-gray-600 leading-relaxed text-sm">
-            Memwyre is designed from the ground up for software engineering. It connects natively to developer CLI hooks and Model Context Protocol (MCP) clients, reading active codebase structures, workspace decisions, and project constraints.
-          </p>
-          <p class="text-gray-600 leading-relaxed text-sm">
-            Memwyre's latency is optimized to remain under 300ms, making it suitable for inline context injection in agentic loop scripts. It prunes old error statements automatically, keeping your context buffer clean and efficient.
-          </p>
-        </div>
-      </div>
+      <!-- Section Separator Line -->
+      <div class="-mx-6 sm:-mx-8 lg:-mx-12 h-px bg-gray-200 dark:bg-gray-850 pointer-events-none select-none"></div>
 
-      <!-- CTA -->
-      <div class="p-8 bg-[#050614] text-white rounded text-center my-12 relative overflow-hidden">
-        <h3 class="hero-serif text-2xl sm:text-3xl mb-3">Upgrade to Stateful AI Memory</h3>
-        <p class="text-gray-400 text-sm max-w-xl mx-auto mb-6">
-          Experience sub-300ms graph retrieval and official developer plugins that align context across all your editor sessions.
-        </p>
-        <div class="flex justify-center gap-4">
-          <router-link to="/signup/" class="px-6 py-2.5 bg-[#D97757] hover:bg-[#e68a6c] text-white text-sm font-semibold rounded transition-colors shadow-sm">
-            Start Free
-          </router-link>
-          <router-link to="/ai-memory-benchmark-locomo" class="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded transition-colors">
-            View Benchmark Data
-          </router-link>
-        </div>
-      </div>
+      <!-- Main Content Layout (3-Column Blog Article Template) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-0 pb-24">
+        
+        <!-- Left Sidebar (Author Info & Social Sharing) -->
+        <aside class="lg:col-span-2 lg:border-r border-gray-200 dark:border-gray-800 lg:pr-8 pt-8 lg:pt-12 text-left">
+          <div class="sticky top-24 space-y-8">
+            <!-- Author Card -->
+            <div class="flex items-center gap-3">
+              <img 
+                src="https://avatars.githubusercontent.com/u/170114968?v=4" 
+                alt="Himansh Shivhare" 
+                class="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-zinc-800"
+                @error="$event.target.src = 'https://ui-avatars.com/api/?name=Himansh+Shivhare&background=f3f4f6&color=333'"
+              />
+              <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                Himansh Shivhare
+              </span>
+            </div>
 
+            <!-- Share Buttons -->
+            <div class="space-y-3 pt-6 border-t border-gray-100 dark:border-gray-900">
+              <div class="text-[11px] font-mono text-gray-400 dark:text-gray-500 tracking-wider uppercase font-bold">SHARE THIS ARTICLE</div>
+              <div class="flex items-center gap-2">
+                <a 
+                  :href="`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`" 
+                  target="_blank"
+                  class="w-9 h-9 rounded border border-gray-200 dark:border-zinc-800 flex items-center justify-center text-gray-500 hover:text-[#D97757] dark:hover:text-[#D97757] transition-all bg-white dark:bg-[#111]"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                  </svg>
+                </a>
+                <a 
+                  :href="`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(pageTitle)}`" 
+                  target="_blank"
+                  class="w-9 h-9 rounded border border-gray-200 dark:border-zinc-800 flex items-center justify-center text-gray-500 hover:text-[#D97757] dark:hover:text-[#D97757] transition-all bg-white dark:bg-[#111]"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+                <button 
+                  @click="copyLink"
+                  class="w-9 h-9 rounded border border-gray-200 dark:border-zinc-800 flex items-center justify-center text-gray-500 hover:text-[#D97757] dark:hover:text-[#D97757] transition-all bg-white dark:bg-[#111] cursor-pointer"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <main class="lg:col-span-8 px-0 lg:px-8 pt-0 lg:pt-12 text-left">
+          <article class="markdown-content space-y-12">
+            
+            <!-- Quick Verdict / TL;DR -->
+            <div class="relative p-6 bg-white dark:bg-[#111] border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl shadow-sm">
+              <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
+              <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
+              <div class="space-y-2">
+                <div class="text-[#D97757] font-mono text-xs uppercase font-bold tracking-wider">Quick Verdict</div>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-normal">
+                  <strong>Answer:</strong> If you are looking for a personal "second brain" to save bookmarks, organize tweets, and chat with your web clippings, choose <strong>Supermemory</strong>. If you are an engineer looking for a persistent knowledge graph for your <strong>codebase</strong> that plugs directly into IDEs like Cursor and VS Code via the Model Context Protocol (MCP), choose <strong>Memwyre</strong>.
+                </p>
+              </div>
+            </div>
+
+            <!-- At a Glance Table -->
+            <section id="at-a-glance" class="scroll-mt-20">
+              <h2 class="hero-serif text-2xl sm:text-3xl tracking-tight text-gray-900 dark:text-white mb-6">
+                At a Glance Comparison
+              </h2>
+              <div class="overflow-x-auto border border-gray-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] shadow-sm">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs uppercase bg-gray-50 dark:bg-zinc-900 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-zinc-850">
+                    <tr>
+                      <th scope="col" class="px-6 py-4">Capability</th>
+                      <th scope="col" class="px-6 py-4">Memwyre</th>
+                      <th scope="col" class="px-6 py-4">Supermemory</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200 dark:divide-zinc-850 font-sans">
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-950 dark:text-white">Primary Customer</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300 font-bold text-[#D97757]">Individual Developers & Power Users</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300">Knowledge Workers & Students</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-950 dark:text-white">Core Product Interface</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300 font-bold text-[#D97757]">Desktop Overlay, Browser, & IDEs</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300">Web Dashboard & Chrome Extension</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-950 dark:text-white">Time-to-Value Setup</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300 font-bold text-[#D97757]">&lt; 5 Minutes</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300">&lt; 5 Minutes</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-950 dark:text-white">Cross-Tool Memory Sync</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300 font-bold text-[#D97757]">Built-in & Automatic</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300">Manual Web Clipping</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-950 dark:text-white">Ready-To-Use Connectors</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300 font-bold text-[#D97757]">Yes</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300">No (Web Focus)</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-950 dark:text-white">MCP Client Support</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300 font-bold text-[#D97757]">Yes</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300">Remote Gateway Only</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-950 dark:text-white">Agent CLI Plugins</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300 font-bold text-[#D97757]">Yes</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300">No</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-950 dark:text-white">Self-Hostable</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300">Yes</td>
+                      <td class="px-6 py-4 text-gray-900 dark:text-gray-300">Yes</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- What is Section -->
+            <div class="grid md:grid-cols-2 gap-8 my-12">
+              <div class="p-6 bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl">
+                <h3 class="hero-serif text-xl font-bold text-gray-900 dark:text-white mb-4">What is Memwyre?</h3>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                  Memwyre is a developer-centric AI memory layer. Rather than acting as a general-purpose note-taking app, Memwyre is designed to map codebase relationships, store architectural decisions, and recall debugging histories.
+                </p>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                  It integrates directly into professional engineering workflows through the Model Context Protocol (MCP), meaning your IDE automatically queries Memwyre in the background while you code.
+                </p>
+              </div>
+              <div class="p-6 bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl">
+                <h3 class="hero-serif text-xl font-bold text-gray-900 dark:text-white mb-4">What is Supermemory?</h3>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                  Supermemory is a popular open-source AI platform designed to act as your ultimate "second brain" for the internet. It excels at scraping web pages, saving Twitter (X) bookmarks, organizing articles, and providing a ChatGPT-like interface to chat with that saved content.
+                </p>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                  It is an incredible tool for general knowledge workers, researchers, and students who need a unified space to organize scattered information from the web.
+                </p>
+              </div>
+            </div>
+
+            <!-- Deep-Dive Feature Comparison -->
+            <section id="deep-dive" class="space-y-8 scroll-mt-20">
+              <h2 class="hero-serif text-2xl sm:text-3xl tracking-tight text-gray-900 dark:text-white border-b border-gray-200 dark:border-zinc-800 pb-4">
+                Deep-Dive Feature Comparison
+              </h2>
+
+              <div class="space-y-6 mt-12">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">1. Developer vs. Consumer Workflows</h3>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed bg-[#D97757]/10 p-4 rounded border border-[#D97757]/20 font-medium">
+                  <strong>The Answer:</strong> Memwyre is built for engineers writing code. Supermemory is built for consumers reading the internet.
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  The clearest distinction between these two tools is where you spend your time. If you spend your day browsing Twitter, reading Substack articles, and researching competitors, Supermemory's Chrome extension is perfect for instantly clipping those pages into a searchable database.
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  If you spend your day in a terminal and an IDE, writing React components or Python scripts, Supermemory falls short. Memwyre is designed to sit invisibly alongside Cursor AI, Claude Code, and VS Code. It doesn't save tweets; it saves the fact that your `authContext.ts` file depends on a specific API endpoint that routinely times out.
+                </p>
+              </div>
+
+              <div class="space-y-6 mt-12">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">2. IDE & Workflow Integration (MCP)</h3>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed bg-[#D97757]/10 p-4 rounded border border-[#D97757]/20 font-medium">
+                  <strong>The Answer:</strong> Both support the Model Context Protocol (MCP), but Memwyre runs a local-first server specifically designed for IDE auto-context, while Supermemory acts as a remote gateway to your web clippings.
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  Both tools recognize the importance of the Model Context Protocol (MCP). Supermemory offers an MCP server that you can connect to Cursor or Windsurf via a remote gateway to pull in saved bookmarks or general web context.
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  Memwyre, however, is a native, local-first MCP server that lives alongside your code. It doesn't just act as a read-only bridge to internet bookmarks; it actively hooks into agent lifecycles via plugins (like Claude Code) to build project-specific rules in the background while you type.
+                </p>
+              </div>
+
+              <div class="space-y-6 mt-12">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">3. Architecture: Graphs vs Vectors</h3>
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed bg-[#D97757]/10 p-4 rounded border border-[#D97757]/20 font-medium">
+                  <strong>The Answer:</strong> Both utilize Knowledge Graphs, but Memwyre's entity graph is optimized for codebase reasoning, while Supermemory maps general web relationships.
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  Supermemory has recently upgraded its architecture to use a knowledge graph alongside vector embeddings. This is excellent for answering broad questions across saved articles and finding connections between disparate web sources.
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  When dealing with code, the relationships are vastly different. A change in a database schema directly affects an API layer, which affects a UI component. Memwyre builds an active, project-scoped entity graph that understands these strict developer dependencies, enabling the multi-hop reasoning necessary for programming tasks.
+                </p>
+              </div>
+            </section>
+
+            <!-- Final Recommendation -->
+            <section id="recommendation" class="scroll-mt-20">
+              <h2 class="hero-serif text-2xl sm:text-3xl tracking-tight text-gray-900 dark:text-white mb-6">
+                Final Recommendation
+              </h2>
+              <div class="space-y-6">
+                <div class="border-l-2 border-[#D97757] pl-6 py-2">
+                  <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Choose Memwyre if...</h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">You are a software engineer who wants to give your <strong>AI coding assistant a permanent memory</strong>. If you want your IDE (Cursor, VS Code, Claude Desktop) to remember project rules and architecture automatically via MCP, Memwyre is the only tool built specifically for this workflow.</p>
+                </div>
+                <div class="border-l-2 border-gray-300 dark:border-zinc-700 pl-6 py-2">
+                  <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Choose Supermemory if...</h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">You are a researcher, student, or knowledge worker looking for an <strong>AI-powered bookmarking tool</strong>. If your primary goal is to save websites, organize Twitter threads, and chat with articles inside a clean web dashboard, Supermemory is an exceptional open-source choice.</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section id="faq" class="scroll-mt-20">
+              <h2 class="hero-serif text-2xl sm:text-3xl tracking-tight text-gray-900 dark:text-white mb-6">
+                Frequently Asked Questions
+              </h2>
+              <div class="space-y-4" itemscope itemtype="https://schema.org/FAQPage">
+                
+                <div class="border border-gray-200 dark:border-zinc-800 rounded-xl p-5 bg-white dark:bg-[#111]" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                  <h3 class="text-base font-bold text-gray-900 dark:text-white mb-2" itemprop="name">Does Supermemory work with Cursor AI or Claude Desktop?</h3>
+                  <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <p class="text-sm text-gray-600 dark:text-gray-400" itemprop="text">Yes, Supermemory has recently added an MCP server you can connect to Cursor or Windsurf. However, it acts as a remote gateway to your web clippings. Memwyre is a local-first MCP server that generates and organizes specialized code-reasoning context specifically for IDEs.</p>
+                  </div>
+                </div>
+
+                <div class="border border-gray-200 dark:border-zinc-800 rounded-xl p-5 bg-white dark:bg-[#111]" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                  <h3 class="text-base font-bold text-gray-900 dark:text-white mb-2" itemprop="name">Are both Memwyre and Supermemory open source?</h3>
+                  <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                    <p class="text-sm text-gray-600 dark:text-gray-400" itemprop="text">Supermemory is fully open-source. Memwyre offers open-source local MCP binaries alongside a managed cloud layer for multi-device synchronization.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- CTA -->
+            <div class="border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl p-8 bg-[#050614] dark:bg-white text-left relative mt-16 shadow-md">
+              <div class="hero-serif text-xl sm:text-2xl !text-white dark:!text-gray-900 mb-3">
+                Stop starting from scratch.
+              </div>
+              <div class="!text-gray-400 dark:!text-gray-600 text-sm leading-relaxed mb-6">
+                Give your AI agents persistent, graph-based memory today. Works instantly with Claude Desktop, Cursor, and VS Code via MCP.
+              </div>
+              
+              <div class="flex flex-wrap gap-4 items-center">
+                <router-link to="/signup/" class="px-6 py-2.5 bg-[#D97757] text-white text-sm font-semibold rounded hover:bg-[#c4684a] transition-colors shadow-sm">
+                  Start Free Trial
+                </router-link>
+              </div>
+            </div>
+
+          </article>
+        </main>
+
+        <!-- Right Sidebar (Dynamic Table of Contents) -->
+        <aside class="hidden lg:block lg:col-span-2 lg:border-l border-gray-200 dark:border-gray-800 lg:pl-8 pt-12 text-left">
+          <div class="sticky top-24 space-y-4">
+            <div class="text-[11px] font-mono text-gray-400 dark:text-gray-500 tracking-wider uppercase font-bold">ON THIS PAGE</div>
+            <nav class="space-y-3 text-sm relative pl-4 border-l border-gray-100 dark:border-zinc-900">
+              <a 
+                v-for="heading in toc" 
+                :key="heading.slug" 
+                :href="`#${heading.slug}`" 
+                class="block font-medium text-gray-500 dark:text-gray-400 hover:text-[#D97757] dark:hover:text-[#D97757] transition-colors leading-snug relative"
+                :class="{ 'text-[#D97757] font-semibold': activeSection === heading.slug }"
+              >
+                <!-- Active Indicator vertical line -->
+                <div 
+                  v-if="activeSection === heading.slug" 
+                  class="absolute -left-[17px] top-0 bottom-0 w-0.5 bg-[#D97757]"
+                ></div>
+                {{ heading.text }}
+              </a>
+            </nav>
+          </div>
+        </aside>
+
+      </div>
     </div>
     <SiteFooter />
   </div>
 </template>
 
 <script setup>
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import SiteFooter from '@/components/SiteFooter.vue';
+
+const pageUrl = computed(() => typeof window !== 'undefined' ? window.location.href : '');
+const pageTitle = computed(() => typeof document !== 'undefined' ? document.title : '');
+
+const copyLink = () => {
+  if (typeof window !== 'undefined' && navigator.clipboard) {
+    navigator.clipboard.writeText(window.location.href);
+  }
+};
+
+const activeSection = ref('');
+const toc = [
+  { text: 'At a Glance', slug: 'at-a-glance' },
+  { text: 'Deep-Dive Features', slug: 'deep-dive' },
+  { text: 'Recommendation', slug: 'recommendation' },
+  { text: 'FAQ', slug: 'faq' }
+];
+
+// Scrollspy Observer
+let observer = null;
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          activeSection.value = entry.target.id;
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px 0px -75% 0px',
+      threshold: 0
+    });
+
+    const headings = document.querySelectorAll('.scroll-mt-20');
+    headings.forEach((h) => {
+      observer.observe(h);
+    });
+  }
+});
+
+onUnmounted(() => {
+  if (observer) observer.disconnect();
+});
 </script>
 
 <style scoped>
@@ -136,5 +382,22 @@ import SiteFooter from '@/components/SiteFooter.vue';
 
 .hero-serif {
   font-family: 'Playfair Display', Georgia, serif;
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+}
+
+.markdown-content h2,
+.markdown-content h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #111827;
+  line-height: 1.25;
+  margin-top: 36px;
+  margin-bottom: 16px;
+  scroll-margin-top: 100px;
+}
+
+.dark .markdown-content h2,
+.dark .markdown-content h3 {
+  color: #f3f4f6;
 }
 </style>
