@@ -1,0 +1,67 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Memwyre",
+  "logo": {
+    "dark": "/logo.png",
+    "light": "/logo.png"
+  },
+  "favicon": "/image.svg",
+  "colors": {
+    "primary": "#D97757",
+    "light": "#D97757",
+    "dark": "#D97757"
+  },
+  "topbarLinks": [
+    {
+      "name": "Dashboard",
+      "url": "https://memwyre.tech/dashboard/"
+    },
+    {
+      "name": "Blog",
+      "url": "https://memwyre.tech/blog/"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "https://memwyre.tech/signup"
+  },
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "index",
+        "use-cases",
+        "self-hosting"
+      ]
+    },
+    {
+      "group": "Concepts",
+      "pages": [
+        "how-it-works",
+        "rag-vs-memory",
+        "benchmarks",
+        "security"
+      ]
+    },
+    {
+      "group": "MCP Server",
+      "pages": [
+        "integrations/mcp-server",
+        "integrations/cli-installer",
+        "integrations/mcp-server/claude",
+        "integrations/mcp-server/cursor",
+        "integrations/mcp-server/vscode"
+      ]
+    },
+    {
+      "group": "Plugins",
+      "pages": [
+        "integrations/plugins/openclaw",
+        "integrations/plugins/claude"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/ramblinghermit0403/Memwyre"
+  }
+}
