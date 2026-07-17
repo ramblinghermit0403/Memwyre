@@ -159,7 +159,7 @@ watch(() => route.path, () => {
             Blog
           </router-link>
           <!-- Docs is a separate VitePress static site — needs a hard navigation, not router-link -->
-          <a href="/docs/"
+          <a href="https://docs.memwyre.tech" target="_blank"
             class="px-3 py-1.5 text-sm font-normal transition-all duration-200 rounded-md text-black hover:bg-black/5">
             Docs
           </a>
@@ -262,7 +262,7 @@ watch(() => route.path, () => {
             Blog
           </router-link>
           <a 
-            href="/docs/"
+            href="https://docs.memwyre.tech" target="_blank"
             class="block py-1.5 text-[15px] font-normal text-black hover:text-[#D97757] transition-colors"
             @click="isMobileMenuOpen = false"
           >

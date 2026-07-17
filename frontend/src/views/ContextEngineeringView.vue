@@ -417,7 +417,7 @@
                 <router-link to="/research" class="hover:text-[#D97757] uppercase">/ Research Hub</router-link>
                 <router-link to="/mcp" class="hover:text-[#D97757] uppercase">/ MCP Integration</router-link>
                 <router-link to="/memwyre-vs-mem0" class="hover:text-[#D97757] uppercase">/ Memwyre vs Mem0</router-link>
-                <a href="/docs/" class="hover:text-[#D97757] uppercase">/ Documentation</a>
+                <a href="https://docs.memwyre.tech" target="_blank" class="hover:text-[#D97757] uppercase">/ Documentation</a>
               </div>
             </div>
           </article>

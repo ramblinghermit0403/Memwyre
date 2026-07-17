@@ -252,26 +252,26 @@ const integrationCategories = ref([
   {
     name: 'MCP Client Connections',
     items: [
-      { id: 'cursor', name: 'Cursor', desc: 'One-click MCP install in Cursor', btnText: 'Connect', docsLink: '/docs/integrations/mcp-server/cursor', bgColor: 'bg-black dark:bg-black', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/cursor.svg', invert: true },
-      { id: 'claude-desktop', name: 'Claude Desktop', desc: 'Connect supermemory in Claude Desktop', btnText: 'Connect', docsLink: '/docs/integrations/mcp-server/claude', bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/claude-color.svg' },
-      { id: 'vscode', name: 'VS Code', desc: 'Native MCP support for VS Code', btnText: 'Connect', docsLink: '/docs/integrations/mcp-server/vscode', bgColor: 'bg-blue-50 text-blue-700 border-blue-200/60 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-900/40', icon: '/src/assets/vscode.svg' },
-      { id: 'antigravity', name: 'Antigravity', desc: 'Integrate directly into the Antigravity system', btnText: 'Connect', docsLink: '/docs/integrations/mcp-server', bgColor: 'bg-white dark:bg-white', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/antigravity-color.svg' },
-      { id: 'codex', name: 'Codex', desc: 'Persistent memory for the Codex CLI — free on every plan', btnText: 'Connect', docsLink: '/docs/integrations/cli-installer', bgColor: 'bg-transparent dark:bg-transparent', fullIcon: true, icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/codex-color.svg' }
+      { id: 'cursor', name: 'Cursor', desc: 'One-click MCP install in Cursor', btnText: 'Connect', docsLink: 'https://docs.memwyre.tech/integrations/mcp-server/cursor', bgColor: 'bg-black dark:bg-black', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/cursor.svg', invert: true },
+      { id: 'claude-desktop', name: 'Claude Desktop', desc: 'Connect supermemory in Claude Desktop', btnText: 'Connect', docsLink: 'https://docs.memwyre.tech/integrations/mcp-server/claude', bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/claude-color.svg' },
+      { id: 'vscode', name: 'VS Code', desc: 'Native MCP support for VS Code', btnText: 'Connect', docsLink: 'https://docs.memwyre.tech/integrations/mcp-server/vscode', bgColor: 'bg-blue-50 text-blue-700 border-blue-200/60 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-900/40', icon: '/src/assets/vscode.svg' },
+      { id: 'antigravity', name: 'Antigravity', desc: 'Integrate directly into the Antigravity system', btnText: 'Connect', docsLink: 'https://docs.memwyre.tech/integrations/mcp-server', bgColor: 'bg-white dark:bg-white', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/antigravity-color.svg' },
+      { id: 'codex', name: 'Codex', desc: 'Persistent memory for the Codex CLI — free on every plan', btnText: 'Connect', docsLink: 'https://docs.memwyre.tech/integrations/cli-installer', bgColor: 'bg-transparent dark:bg-transparent', fullIcon: true, icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/codex-color.svg' }
     ]
   },
   {
     name: 'Plugins',
     items: [
-      { id: 'claude-code', name: 'Claude Code', isPro: true, desc: 'Remembers your conventions, decisions, and project context', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/plugins/claude', bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: '/src/assets/claudecode-color.svg' },
-      { id: 'opencode', name: 'OpenCode', isPro: true, desc: 'Long-term memory for your OpenCode sessions', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/mcp-server', bgColor: 'bg-gray-200 dark:bg-gray-700', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/opencode.svg' },
-      { id: 'openclaw', name: 'OpenClaw', isPro: true, desc: 'Add persistent memory to autonomous OpenClaw agent sessions', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/plugins/openclaw', bgColor: 'bg-[#FF3366]/10 dark:bg-[#FF3366]/20', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openclaw-color.svg' }
+      { id: 'claude-code', name: 'Claude Code', isPro: true, desc: 'Remembers your conventions, decisions, and project context', btnText: 'Upgrade', isLightning: true, docsLink: 'https://docs.memwyre.tech/integrations/plugins/claude', bgColor: 'bg-[#D97757]/10 dark:bg-[#D97757]/20', icon: '/src/assets/claudecode-color.svg' },
+      { id: 'opencode', name: 'OpenCode', isPro: true, desc: 'Long-term memory for your OpenCode sessions', btnText: 'Upgrade', isLightning: true, docsLink: 'https://docs.memwyre.tech/integrations/mcp-server', bgColor: 'bg-gray-200 dark:bg-gray-700', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/opencode.svg' },
+      { id: 'openclaw', name: 'OpenClaw', isPro: true, desc: 'Add persistent memory to autonomous OpenClaw agent sessions', btnText: 'Upgrade', isLightning: true, docsLink: 'https://docs.memwyre.tech/integrations/plugins/openclaw', bgColor: 'bg-[#FF3366]/10 dark:bg-[#FF3366]/20', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openclaw-color.svg' }
     ]
   },
   {
     name: 'Knowledge bases',
     items: [
-      { id: 'gdrive', name: 'Google Drive', isPro: true, desc: 'Sync Docs, Sheets and Slides into your memory', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/connectors', bgColor: 'bg-gray-100 dark:bg-white/10', icon: '/src/assets/google-drive.svg' },
-      { id: 'notion', name: 'Notion', isPro: true, desc: 'Import Notion pages and databases', btnText: 'Upgrade', isLightning: true, docsLink: '/docs/integrations/connectors', bgColor: 'bg-white dark:bg-black', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/notion.svg', darkInvert: true }
+      { id: 'gdrive', name: 'Google Drive', isPro: true, desc: 'Sync Docs, Sheets and Slides into your memory', btnText: 'Upgrade', isLightning: true, docsLink: 'https://docs.memwyre.tech/integrations/connectors', bgColor: 'bg-gray-100 dark:bg-white/10', icon: '/src/assets/google-drive.svg' },
+      { id: 'notion', name: 'Notion', isPro: true, desc: 'Import Notion pages and databases', btnText: 'Upgrade', isLightning: true, docsLink: 'https://docs.memwyre.tech/integrations/connectors', bgColor: 'bg-white dark:bg-black', icon: 'https://unpkg.com/@lobehub/icons-static-svg@latest/icons/notion.svg', darkInvert: true }
     ]
   }
 ]);

@@ -119,4 +119,4 @@ Stop repeating project context, coding rules, and database schemas. Set up Memwy
 
 [Get Started Free](/signup/) · [View LoCoMo Benchmarks](/ai-memory-benchmark-locomo/)
 
-[/ Research Hub](/research/) · [/ MCP Integration](/mcp/) · [/ Memwyre vs Mem0](/memwyre-vs-mem0/) · [/ Documentation](/docs/)
+[/ Research Hub](/research/) · [/ MCP Integration](/mcp/) · [/ Memwyre vs Mem0](/memwyre-vs-mem0/) · [/ Documentation](https://docs.memwyre.tech)

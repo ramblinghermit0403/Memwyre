@@ -51,7 +51,7 @@
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-[#050614] text-white font-bold rounded hover:bg-gray-800 transition-all duration-300 shadow-md text-xs sm:text-sm inline-flex items-center justify-center gap-2">
                   Start Connecting →
                 </router-link>
-                <a href="/docs/integrations/connectors.html" target="_blank"
+                <a href="https://docs.memwyre.tech/integrations/connectors" target="_blank"
                   class="w-auto px-4 py-2 sm:px-6 sm:py-3 bg-white text-[#050614] font-bold rounded border border-gray-250 hover:bg-gray-50 transition-all duration-300 text-xs sm:text-sm inline-flex items-center justify-center">
                   Read Documentation
                 </a>

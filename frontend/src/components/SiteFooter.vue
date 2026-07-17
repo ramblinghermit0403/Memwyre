@@ -80,7 +80,7 @@
         </div>
         <div class="flex flex-col gap-4">
           <h4 class="text-xs font-bold uppercase tracking-widest text-black/40">Support &amp; Legal</h4>
-          <a href="/docs/"
+           <a href="https://docs.memwyre.tech" target="_blank"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Documentation</a>
           <router-link to="/contact/"
             class="text-sm text-black hover:text-[#D97757] transition-colors font-medium">Contact Us</router-link>

@@ -108,7 +108,7 @@
           <router-link to="/signup/" class="px-6 py-2.5 bg-[#D97757] hover:bg-[#e68a6c] text-white text-sm font-semibold rounded transition-colors shadow-sm">
             Start Free
           </router-link>
-          <a href="/docs/" class="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded transition-colors">
+           <a href="https://docs.memwyre.tech" target="_blank" class="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold rounded transition-colors">
             Read Integration Docs
           </a>
         </div>
