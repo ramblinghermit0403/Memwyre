@@ -9,7 +9,7 @@
   "favicon": "/images/image.svg",
   "logo": {
     "light": "/images/logo.png",
-    "dark": "/images/logo.png"
+    "dark": "/images/logo-white.png"
   },
   "navbar": {
     "links": [
