@@ -3,12 +3,6 @@ title: "Self-Hosting"
 description: "Learn how to host Memwyre locally or on your own private cloud using Docker Compose, PostgreSQL, and pgvector."
 ---
 
-# Self-Hosting Memwyre
-
-Run Memwyre entirely on your own infrastructure. This guide covers deploying the backend services via Docker Compose and configuring local language models using Ollama for a completely private, offline memory vault.
-
----
-
 ## Architecture Overview
 
 A self-hosted Memwyre deployment consists of four primary components:

@@ -3,10 +3,6 @@ title: "Claude Code"
 description: "Integrate Memwyre lifecycle hooks into Claude Code CLI to automatically save and retrieve terminal session memory."
 ---
 
-# Claude Code Plugin
-
-Integrate Memwyre directly with Anthropic's **Claude Code** terminal agent interface to provide persistent, cross-session memory and automatic transcript ingestion.
-
 ## Overview
 
 Claude Code is a command-line tool that allows you to interact with Claude directly in your terminal. By default, Claude Code has no long-term memory of past tasks. The Memwyre Claude Plugin bridges this gap:

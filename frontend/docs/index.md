@@ -3,10 +3,6 @@ title: "Overview"
 description: "Get started with Memwyre, the universal persistent memory layer for AI agents, developer IDEs, and prompt workflows."
 ---
 
-# Overview
-
-**Memwyre** is a universal memory layer for AI — a persistent, searchable knowledge vault that sits between you and every AI tool you use.
-
 Instead of re-explaining your projects to ChatGPT, losing context when a Claude session ends, or copy-pasting the same background notes into every prompt, Memwyre remembers it for you. Automatically.
 
 ## What Problem Does It Solve?

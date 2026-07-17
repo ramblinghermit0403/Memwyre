@@ -3,12 +3,6 @@ title: "Use Cases"
 description: "Explore core use cases for Memwyre, including codebase synchronization, personalized AI memory, and team workflows."
 ---
 
-# Use Cases
-
-Memwyre is designed to serve as a long-term, unified context repository across different developer and researcher workflows. Here are the primary use cases where a stateful memory layer provides significant advantages:
-
----
-
 ## 1. Coding & IDE Context Sync
 
 - **The Workflow**: Synchronizing codebase architectures, framework versions, styling conventions, API keys, and architectural decisions with your local IDE (e.g. Cursor, VS Code, or Claude Desktop).

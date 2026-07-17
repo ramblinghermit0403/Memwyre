@@ -1,11 +1,6 @@
 ---
-title: CLI Auto-Installer Guide
-description: Step-by-step instructions for running the Memwyre CLI installer to configure local MCP servers and developer hooks.
----
-# CLI Auto-Installer
-
-Setup your local developer environment in seconds. The Memwyre CLI installer handles authentication, creates configuration templates, and configures MCP servers for your favorite IDEs automatically.
-
+title: "CLI Auto-Installer Guide"
+description: "Step-by-step instructions for running the Memwyre CLI installer to configure local MCP servers and developer hooks."
 ---
 
 ## Quickstart
@@ -24,7 +19,7 @@ This interactive CLI script automates the installation process, removing the nee
 
 The installer handles the OAuth handshake securely using a local loopback handler:
 
-```
+```text
 ┌──────────────┐      1. Start Loopback       ┌──────────────┐
 │  Local CLI   ├─────────────────────────────►│ Local Port   │
 │  Installer   │                              │ (Randomized) │
@@ -39,8 +34,7 @@ The installer handles the OAuth handshake securely using a local loopback handle
 ```
 
 1. **Local Server Start**: The script starts a temporary, lightweight Express server on an ephemeral port (e.g. `http://localhost:50310`).
-2. **Browser Redirection**: The script opens your default web browser and redirects you to the authentication page:
-   `https://memwyre.tech/login?cli_port=50310`
+2. **Browser Redirection**: The script opens your default web browser and redirects you to the authentication page: `https://memwyre.tech/login?cli_port=50310`
 3. **Authentication**: You sign in with Google, GitHub, or email.
 4. **Token Delivery**: Once authenticated, the web application sends the secure Bearer Token to the local loopback address (`http://localhost:50310/callback`).
 5. **Config Write**: The CLI captures the token, writes it to your global configurations (like `mcp.json` and `claude_desktop_config.json`), and shuts down the loopback listener.
@@ -54,8 +48,9 @@ The CLI script detects your installed developer applications and automatically m
 For each application, it writes the following configuration:
 
 ### 1. Cursor
-* **Configuration Path**: `~/.cursor/mcp.json`
-* **JSON Structure**:
+
+- **Configuration Path**: `~/.cursor/mcp.json`
+- **JSON Structure**:
   ```json
   "memwyre": {
     "command": "npx",
@@ -64,8 +59,9 @@ For each application, it writes the following configuration:
   ```
 
 ### 2. VS Code (MCP Client)
-* **Configuration Path**: `%APPDATA%\Code\User\mcp.json` (Windows) or `~/Library/Application Support/Code/User/mcp.json` (macOS)
-* **JSON Structure**:
+
+- **Configuration Path**: `%APPDATA%\Code\User\mcp.json` (Windows) or `~/Library/Application Support/Code/User/mcp.json` (macOS)
+- **JSON Structure**:
   ```json
   "memwyre": {
     "type": "stdio",
@@ -75,8 +71,9 @@ For each application, it writes the following configuration:
   ```
 
 ### 3. Claude Desktop
-* **Configuration Path**: `%APPDATA%\Claude\claude_desktop_config.json` (Windows) or `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
-* **JSON Structure**:
+
+- **Configuration Path**: `%APPDATA%\Claude\claude_desktop_config.json` (Windows) or `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
+- **JSON Structure**:
   ```json
   "mcpServers": {
     "memwyre": {
@@ -87,8 +84,9 @@ For each application, it writes the following configuration:
   ```
 
 ### 4. Codex
-* **Configuration Path**: `~/.codex/config.toml`
-* **TOML Structure**:
+
+- **Configuration Path**: `~/.codex/config.toml`
+- **TOML Structure**:
   ```toml
   [mcp_servers.memwyre]
   enabled = true
@@ -97,14 +95,16 @@ For each application, it writes the following configuration:
   ```
 
 ### 5. Claude Code
-* **Action**: Executes the Claude CLI registration command directly in your shell:
+
+- **Action**: Executes the Claude CLI registration command directly in your shell:
   ```bash
   claude mcp add memwyre -- npx -y mcp-remote https://server.memwyre.tech/mcp --header "Authorization:Bearer <token>"
   ```
 
 ### 6. Antigravity
-* **Configuration Path**: `~/.gemini/config/mcp_config.json`
-* **JSON Structure**:
+
+- **Configuration Path**: `~/.gemini/config/mcp_config.json`
+- **JSON Structure**:
   ```json
   "memwyre": {
     "command": "npx",
@@ -117,13 +117,18 @@ For each application, it writes the following configuration:
 ## Troubleshooting
 
 ### Port Conflict Error
+
 If the script fails to start the callback listener, you may see:
+
 ```text
 Error: listen EADDRINUSE: address already in use 127.0.0.1:XXXX
 ```
-* **Solution**: The script automatically attempts to find an open port, but firewall rules or VPN clients can block local loopback binds. Disable active VPNs or corporate proxy configurations during authentication.
+
+- **Solution**: The script automatically attempts to find an open port, but firewall rules or VPN clients can block local loopback binds. Disable active VPNs or corporate proxy configurations during authentication.
 
 ### Token Expiration Warning
+
 If your IDE displays authentication errors:
-* Run the installer again (`npx -y install-memwyre`) to renew your token and update configuration files automatically.
-* Alternatively, generate an API key from your web dashboard and manually set it as `MEMWYRE_API_KEY` in your client's environment block.
+
+- Run the installer again (`npx -y install-memwyre`) to renew your token and update configuration files automatically.
+- Alternatively, generate an API key from your web dashboard and manually set it as `MEMWYRE_API_KEY` in your client's environment block.

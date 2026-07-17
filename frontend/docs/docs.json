@@ -1,0 +1,74 @@
+{
+  "theme": "mint",
+  "name": "Memwyre",
+  "colors": {
+    "primary": "#D97757",
+    "light": "#D97757",
+    "dark": "#D97757"
+  },
+  "favicon": "/images/image.svg",
+  "logo": {
+    "light": "/images/logo.png",
+    "dark": "/images/logo.png"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Dashboard",
+        "href": "https://memwyre.tech/dashboard/"
+      },
+      {
+        "label": "Blog",
+        "href": "https://memwyre.tech/blog/"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "https://memwyre.tech/signup"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/ramblinghermit0403/Memwyre"
+    }
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Getting Started",
+        "pages": [
+          "index",
+          "use-cases",
+          "self-hosting"
+        ]
+      },
+      {
+        "group": "MCP Server",
+        "pages": [
+          "integrations/mcp-server",
+          "integrations/cli-installer",
+          "integrations/mcp-server/claude",
+          "integrations/mcp-server/cursor",
+          "integrations/mcp-server/vscode"
+        ]
+      },
+      {
+        "group": "Plugins",
+        "pages": [
+          "integrations/plugins/openclaw",
+          "integrations/plugins/claude"
+        ]
+      },
+      {
+        "group": "Concepts",
+        "pages": [
+          "how-it-works",
+          "rag-vs-memory",
+          "benchmarks",
+          "security"
+        ]
+      }
+    ]
+  }
+}

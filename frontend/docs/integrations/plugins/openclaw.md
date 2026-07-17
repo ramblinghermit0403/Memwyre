@@ -3,10 +3,6 @@ title: "Openclaw"
 description: "Install the Memwyre plugin for OpenClaw autonomous agents to query and persist memory graphs across agent runs."
 ---
 
-# OpenClaw Plugin
-
-Add persistent, long-term memory to your **OpenClaw** autonomous agent sessions using Memwyre as the memory and context engine.
-
 ## Overview
 
 OpenClaw agents operate within a single session and lose context when that session ends. This plugin bridges the gap — giving your agent access to Memwyre's vault so it can recall previous sessions, look up project documentation, and save its own findings for future runs.
