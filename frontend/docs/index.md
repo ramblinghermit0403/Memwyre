@@ -11,43 +11,6 @@ Instead of re-explaining your project architectures to Cursor, losing context wh
 
 ---
 
-## How It Works
-
-Memwyre captures knowledge from your workflows, processes it using a hybrid vector-graph model, and delivers it on-demand to your AI tools via the **Model Context Protocol (MCP)**.
-
-```mermaid
-graph TD
-    subgraph Capture ["1. Capture & Sync"]
-        Browser[Browser Extension] -->|Web Clips & Chats| API
-        IDE[IDE Integrations] -->|Active Files & Workspace| API
-        Connectors[Connectors: Notion, GitHub, GDrive] -->|Knowledge Bases| API
-    end
-
-    subgraph Core ["2. Processing & Storage"]
-        API[Memwyre API] --> Ingest[Ingestion Pipeline]
-        Ingest --> Chunking[Semantic Chunking]
-        Ingest --> Facts[Fact Extraction]
-        Chunking --> VecDB[(Vector DB)]
-        Facts --> Graph[(Hierarchical Entity Graph)]
-    end
-
-    subgraph Retrieve ["3. Context Delivery"]
-        VecDB --> Hybrid[Hybrid Query Engine]
-        Graph --> Hybrid
-        Hybrid --> MCP[MCP Server]
-        MCP -->|Dynamic Context Injection| Clients[Cursor / VS Code / Claude Code / Claude Desktop]
-    end
-    
-    style Graph fill:#D97757,stroke:#fff,stroke-width:2px,color:#fff
-    style MCP fill:#050614,stroke:#fff,stroke-width:2px,color:#fff
-```
-
-1. **Capture** — Save text blocks, code snippets, Slack chats, or documentation from the browser extension, native connectors, or CLI.
-2. **Ingest & Structure** — Incoming data is parsed. The system splits text into semantic chunks and uses LLMs to extract atomic facts (subject-predicate-object relationships), storing them in a hierarchical entity graph.
-3. **Retrieve** — When you prompt your AI, Memwyre uses hybrid search (combining dense vector retrieval with graph traversal) to resolve exactly which projects, files, and rules apply to your query, serving them instantly.
-
----
-
 ## Core Pillars
 
 ### 1. Model Context Protocol (MCP)
@@ -65,13 +28,13 @@ Traditional RAG retrieves random text chunks based on keywords. Memwyre maps you
 
 ## Terminology
 
-| Concept | Description | Database Entity |
-| :--- | :--- | :--- |
-| **Memory** | A raw unit of ingested text — a note, clipped article, sync'd doc, or chat history. | `Memory` |
-| **Chunk** | A segmented slice of a larger Memory, vectorized for semantic retrieval. | `Chunk` |
-| **Fact** | An extracted atomic truth (e.g., *Project X uses Vue 3*). Decays/updates over time. | `Fact` |
-| **Entity Profile** | A compiled metadata profile representing a unique project, repository, tool, or person. | `EntityProfile` |
-| **MCP Server** | The standard interface exposing Memwyre search and writing tools to client IDEs. | — |
+| Concept | Description |
+| :--- | :--- |
+| **Memory** | A raw unit of ingested text — a note, clipped article, sync'd doc, or chat history. |
+| **Chunk** | A segmented slice of a larger Memory, vectorized for semantic retrieval. |
+| **Fact** | An extracted atomic truth (e.g., *Project X uses Vue 3*). Decays/updates over time. |
+| **Entity Profile** | A compiled metadata profile representing a unique project, repository, tool, or person. |
+| **MCP Server** | The standard interface exposing Memwyre search and writing tools to client IDEs. |
 
 ---
 
