@@ -55,6 +55,7 @@
       <!-- Provider Selection -->
       <div>
         <select v-model="selectedProvider" class="block w-full text-xs border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-[#D97757] focus:border-[#D97757] bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+          <option value="bedrock">AWS Bedrock (Kimi K2.5)</option>
           <option value="gemini">Google Gemini</option>
           <option value="openai">OpenAI (GPT-3.5)</option>
         </select>
@@ -102,7 +103,7 @@ const query = ref('');
 const messages = ref([]);
 const loading = ref(false);
 const messagesEnd = ref(null);
-const selectedProvider = ref('gemini');
+const selectedProvider = ref('bedrock');
 
 const scrollToBottom = async () => {
   await nextTick();
@@ -157,11 +158,16 @@ const sendMessage = async () => {
     }
 
     const provider = selectedProvider.value;
-    const apiKey = provider === 'gemini' 
-      ? localStorage.getItem('gemini_key') 
-      : localStorage.getItem('openai_key');
+    let apiKey = "";
+    if (provider === 'bedrock') {
+      apiKey = "bedrock-system";
+    } else if (provider === 'gemini') {
+      apiKey = localStorage.getItem('gemini_key');
+    } else {
+      apiKey = localStorage.getItem('openai_key');
+    }
 
-    if (!apiKey) {
+    if (!apiKey && provider !== 'bedrock') {
       messages.value.push({ role: 'assistant', content: `Error: Please set your ${provider === 'gemini' ? 'Gemini' : 'OpenAI'} API key in Settings.` });
       loading.value = false;
       return;

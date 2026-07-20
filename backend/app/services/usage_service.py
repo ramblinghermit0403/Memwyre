@@ -15,6 +15,8 @@ COST_RATES = {
     "bedrock": {"in": 0.80, "out": 2.40},
 }
 
+from app.services.token_tracker import token_tracker
+
 class UsageService:
     async def track_usage(
         self, 
@@ -22,28 +24,34 @@ class UsageService:
         provider: str, 
         model_name: Optional[str], 
         tokens_in: int, 
-        tokens_out: int
+        tokens_out: int,
+        resource_type: Optional[str] = None,
+        resource_id: Optional[int] = None
     ):
         """
-        Log usage to DB.
+        Log granular usage to DB with model & resource context.
         """
         async with AsyncSessionLocal() as db:
-            cost = 0.0
-            rates = COST_RATES.get(provider, {"in": 0, "out": 0})
-            
-            cost += (tokens_in / 1_000_000) * rates["in"]
-            cost += (tokens_out / 1_000_000) * rates["out"]
+            cost = token_tracker.calculate_cost(
+                tokens_in=tokens_in,
+                tokens_out=tokens_out,
+                provider=provider,
+                model_name=model_name or "gpt-4o"
+            )
             
             usage = UserUsage(
                 user_id=user_id,
                 provider=provider,
                 model_name=model_name,
+                resource_type=resource_type,
+                resource_id=resource_id,
                 tokens_in=tokens_in,
                 tokens_out=tokens_out,
                 estimated_cost=cost
             )
             db.add(usage)
             await db.commit()
+            return usage
 
     async def check_budget(self, user_id: int) -> bool:
         """

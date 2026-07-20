@@ -11,14 +11,26 @@ from app.core.config import settings
 from app.core.aws_config import AWS_CONFIG
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from app.services.usage_service import usage_service
-import tiktoken
+from app.services.token_tracker import token_tracker
 
-def count_tokens(text: str, model: str = "gpt-3.5-turbo") -> int:
-    try:
-        encoding = tiktoken.encoding_for_model(model)
-        return len(encoding.encode(text))
-    except:
-        return len(text) // 4
+def count_tokens(text: str, model: str = "gpt-4o", provider: str = "openai") -> int:
+    return token_tracker.count_tokens(text, provider=provider, model_name=model)
+
+def _init_bedrock_chat(model_id: str, temperature: float, config=None) -> ChatBedrock:
+    bedrock_kwargs = {
+        "model_id": model_id,
+        "model_kwargs": {"temperature": temperature},
+    }
+    if config:
+        bedrock_kwargs["config"] = config
+        
+    aws_key = getattr(settings, "AWS_ACCESS_KEY_ID", None)
+    aws_secret = getattr(settings, "AWS_SECRET_ACCESS_KEY", None)
+    if aws_key and aws_secret:
+        bedrock_kwargs["aws_access_key_id"] = aws_key
+        bedrock_kwargs["aws_secret_access_key"] = aws_secret
+        
+    return ChatBedrock(**bedrock_kwargs)
 
 class LLMService:
     def __init__(self):
@@ -99,11 +111,7 @@ class LLMService:
             try:
                 # Default to Nova Pro (APAC) if not specified
                 model_id = "apac.amazon.nova-pro-v1:0" 
-                llm = ChatBedrock(
-                    model_id=model_id,
-                    model_kwargs={"temperature": 0.7},
-                    config=AWS_CONFIG
-                )
+                llm = _init_bedrock_chat(model_id=model_id, temperature=0.7, config=AWS_CONFIG)
                 messages = [
                     SystemMessage(content=system_prompt),
                     HumanMessage(content=query)
@@ -183,7 +191,7 @@ Existing Tags Context:
         used_bedrock = False
         try:
              # Default to Nova Pro
-             llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0}, config=AWS_CONFIG)
+             llm = _init_bedrock_chat(model_id="apac.amazon.nova-pro-v1:0", temperature=0, config=AWS_CONFIG)
              messages = [
                  SystemMessage(content=system_instruction),
                  HumanMessage(content=user_message)
@@ -283,7 +291,7 @@ Rules:
         # 1. Try Bedrock (Nova Pro) First - Always attempt if available
         try:
                 # We assume availability of AWS credentials
-                llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0}, config=AWS_CONFIG)
+                llm = _init_bedrock_chat(model_id="apac.amazon.nova-pro-v1:0", temperature=0, config=AWS_CONFIG)
                 messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
                 res = await llm.ainvoke(messages)
                 text = res.content
@@ -390,7 +398,7 @@ Rules:
             # 1. Try Bedrock (Nova Pro)
             used_bedrock = False
             try:
-                llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0}, config=AWS_CONFIG)
+                llm = _init_bedrock_chat(model_id="apac.amazon.nova-pro-v1:0", temperature=0, config=AWS_CONFIG)
                 messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_message)]
                 res = await llm.ainvoke(messages)
                 text_response = res.content
@@ -467,7 +475,7 @@ Rules:
 
              # 1. Try Bedrock First (Unconditionally)
             try:
-                 llm = ChatBedrock(model_id="apac.amazon.nova-pro-v1:0", model_kwargs={"temperature": 0.7}, config=AWS_CONFIG)
+                 llm = _init_bedrock_chat(model_id="apac.amazon.nova-pro-v1:0", temperature=0.7, config=AWS_CONFIG)
                  messages = [SystemMessage(content=system_prompt), HumanMessage(content=conversation_context)]
                  res = await llm.ainvoke(messages)
                  return clean_title(res.content)

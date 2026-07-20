@@ -288,18 +288,15 @@ def ingest_memory_task_v2(memory_id: int, user_id: int, content: str, title: str
                              # Let's verify Fact model later. For now, we try passing it if it was doing so before.
                              pass 
 
-                             # Only create facts if it's a memory or if we updated Fact model.
-                             # Given scope, safer to only do Fact Extraction if doc_type == "memory"
-                             if doc_type == "memory":
-                                 await fact_service.create_facts(
-                                     facts_data=facts_res,
-                                     user_id=u_id,
-                                     memory_id=m_id,
-                                     chunk_id=c_id,
-                                     db=local_db,
-                                     project_id=project_id
-                                 )
-                                 await local_db.commit()
+                             await fact_service.create_facts(
+                                 facts_data=facts_res,
+                                 user_id=u_id,
+                                 memory_id=m_id if doc_type == "memory" else None,
+                                 chunk_id=c_id,
+                                 db=local_db,
+                                 project_id=project_id
+                             )
+                             await local_db.commit()
 
                      fact_tasks = []
                      for i, chunk in enumerate(saved_chunks):
@@ -313,57 +310,56 @@ def ingest_memory_task_v2(memory_id: int, user_id: int, content: str, title: str
                          await asyncio.gather(*fact_tasks)
                      
                      # Update Entity Profiles (Inline - runs immediately after fact extraction)
-                     if doc_type == "memory":
-                          try:
-                              entity_facts = {}
-                              
-                              # Stopwords and common nouns to ignore
-                              ignored_entities = {
-                                  "it", "he", "she", "they", "them", "him", "her", "we", "us", "you", "i",
-                                  "this", "that", "these", "those", "room", "music", "kids", "community",
-                                  "people", "nature", "blue", "picture", "posters", "boy", "girl", "man", "woman"
-                              }
-                              
-                              for facts in all_facts_results:
-                                  if isinstance(facts, list):
-                                      for f in facts:
-                                          subject = f.get("subject")
-                                          if subject:
-                                              entity_lower = subject.lower()
+                     try:
+                          entity_facts = {}
+                          
+                          # Stopwords and common nouns to ignore
+                          ignored_entities = {
+                              "it", "he", "she", "they", "them", "him", "her", "we", "us", "you", "i",
+                              "this", "that", "these", "those", "room", "music", "kids", "community",
+                              "people", "nature", "blue", "picture", "posters", "boy", "girl", "man", "woman"
+                          }
+                          
+                          for facts in all_facts_results:
+                              if isinstance(facts, list):
+                                  for f in facts:
+                                      subject = f.get("subject")
+                                      if subject:
+                                          entity_lower = subject.lower()
+                                          
+                                          # Strict filtering to avoid noise profiles
+                                          if entity_lower in ignored_entities:
+                                              continue
+                                          if len(entity_lower) <= 2:
+                                              continue
+                                          if len(subject.split()) > 2:
+                                              continue
+                                          if "'" in subject or "’" in subject:
+                                              continue
                                               
-                                              # Strict filtering to avoid noise profiles
-                                              if entity_lower in ignored_entities:
-                                                  continue
-                                              if len(entity_lower) <= 2:
-                                                  continue
-                                              if len(subject.split()) > 2:
-                                                  continue
-                                              if "'" in subject or "’" in subject:
-                                                  continue
-                                                  
-                                              entity_name = subject.strip().capitalize()
-                                              if entity_name not in entity_facts:
-                                                  entity_facts[entity_name] = []
-                                                  
-                                              # Construct a clean fact representation
-                                              fact_str = f"{f.get('subject')} {f.get('predicate')} {f.get('object')}"
-                                              if f.get("location"):
-                                                  fact_str += f" ({f.get('location')})"
-                                              entity_facts[entity_name].append(fact_str)
-                              
-                              if entity_facts:
-                                  print(f"Worker: Updating entity profiles inline for memory {memory_id} with entities: {list(entity_facts.keys())} under project {project_id}")
-                                  from app.services.profile_service import profile_service
-                                  async with AsyncSessionLocal() as profile_db:
-                                      await profile_service.update_profiles(entity_facts, user_id, profile_db, project_id=project_id)
-                                      await profile_db.commit()
-                                  print(f"Worker: Entity profiles updated for memory {memory_id}")
-                              else:
-                                  print(f"Worker: No entities found for profile update (memory {memory_id})")
-                          except Exception as profile_e:
-                              print(f"Worker: Profile update failed: {profile_e}")
-                              import traceback
-                              traceback.print_exc()
+                                          entity_name = subject.strip().capitalize()
+                                          if entity_name not in entity_facts:
+                                              entity_facts[entity_name] = []
+                                              
+                                          # Construct a clean fact representation
+                                          fact_str = f"{f.get('subject')} {f.get('predicate')} {f.get('object')}"
+                                          if f.get("location"):
+                                              fact_str += f" ({f.get('location')})"
+                                          entity_facts[entity_name].append(fact_str)
+                          
+                          if entity_facts:
+                              print(f"Worker: Updating entity profiles inline for {doc_type} {memory_id} with entities: {list(entity_facts.keys())} under project {project_id}")
+                              from app.services.profile_service import profile_service
+                              async with AsyncSessionLocal() as profile_db:
+                                  await profile_service.update_profiles(entity_facts, user_id, profile_db, project_id=project_id)
+                                  await profile_db.commit()
+                              print(f"Worker: Entity profiles updated for {doc_type} {memory_id}")
+                          else:
+                              print(f"Worker: No entities found for profile update ({doc_type} {memory_id})")
+                     except Exception as profile_e:
+                          print(f"Worker: Profile update failed: {profile_e}")
+                          import traceback
+                          traceback.print_exc()
                      
                      print(f"Worker: Ingestion complete for {doc_type} {memory_id}")
             else:

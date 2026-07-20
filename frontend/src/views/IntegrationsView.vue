@@ -145,19 +145,6 @@
                             </div>
                        </div>
                    </div>
-
-               <div class="mt-10 pt-8 border-t border-gray-100 dark:border-border">
-                  <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-text-primary mb-2">Browser Extension Auth</h3>
-                  <p class="text-sm text-gray-500 dark:text-text-secondary mb-6">Use this token to log in to the Brain Vault extension.</p>
-                  
-                  <div class="flex items-center gap-4">
-                     <button @click="copyToken" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#D97757] hover:bg-[#C4654A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D97757] transition-colors">
-                       <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
-                       <span v-if="tokenCopied">Copied!</span>
-                       <span v-else>Copy Token</span>
-                     </button>
-                  </div>
-               </div>
                </template>
           </div>
       </div>

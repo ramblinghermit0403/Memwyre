@@ -212,6 +212,7 @@ async def get_admin_insights(
     latest_chats = await grouped_latest(ChatSession, ChatSession.user_id, ChatSession.updated_at)
     latest_usage = await grouped_latest(UserUsage, UserUsage.user_id, UserUsage.timestamp)
 
+    # Fetch detailed per-user memories and documents with token counts
     user_rows = []
     for user in users:
         latest_values = [
@@ -225,6 +226,55 @@ async def get_admin_insights(
             if value is not None
         ]
         last_activity = max(latest_values) if latest_values else user.created_at
+
+        # User's Memories with ingestion tokens
+        mem_res = await db.execute(
+            select(Memory)
+            .where(Memory.user_id == user.id)
+            .order_by(Memory.created_at.desc())
+            .limit(20)
+        )
+        user_memories = [
+            {
+                "id": m.id,
+                "title": m.title or "Untitled Memory",
+                "source": m.source_app or m.source_llm or "user",
+                "model_name": m.model_name or "gpt-4o",
+                "tokens_count": m.raw_tokens_count or m.tokens_count or max(1, len(m.content) // 4),
+                "raw_tokens_count": m.raw_tokens_count or m.tokens_count or max(1, len(m.content) // 4),
+                "llm_tokens_count": m.llm_tokens_count or m.tokens_count or max(1, len(m.content) // 4),
+                "estimated_cost": float(m.estimated_cost or 0.0),
+                "created_at": _as_iso(m.created_at)
+            }
+            for m in mem_res.scalars().all()
+        ]
+
+        # User's Documents with ingestion tokens
+        doc_res = await db.execute(
+            select(Document)
+            .where(Document.user_id == user.id, Document.doc_type != "memory")
+            .order_by(Document.created_at.desc())
+            .limit(20)
+        )
+        user_documents = [
+            {
+                "id": d.id,
+                "title": d.title or "Untitled Document",
+                "file_type": d.file_type or "file",
+                "model_name": d.model_name or "gpt-4o",
+                "tokens_count": d.raw_tokens_count or d.tokens_count or max(1, len(d.content or "") // 4),
+                "raw_tokens_count": d.raw_tokens_count or d.tokens_count or max(1, len(d.content or "") // 4),
+                "llm_tokens_count": d.llm_tokens_count or d.tokens_count or max(1, len(d.content or "") // 4),
+                "estimated_cost": float(d.estimated_cost or 0.0),
+                "created_at": _as_iso(d.created_at)
+            }
+            for d in doc_res.scalars().all()
+        ]
+
+        user_raw_tokens = sum(m["raw_tokens_count"] for m in user_memories) + sum(d["raw_tokens_count"] for d in user_documents)
+        user_llm_tokens = sum(m["llm_tokens_count"] for m in user_memories) + sum(d["llm_tokens_count"] for d in user_documents)
+        user_cost = sum(m["estimated_cost"] for m in user_memories) + sum(d["estimated_cost"] for d in user_documents)
+
         user_rows.append(
             {
                 "id": user.id,
@@ -238,6 +288,12 @@ async def get_admin_insights(
                 "documents": document_counts.get(user.id, 0),
                 "chat_sessions": chat_counts.get(user.id, 0),
                 "usage_events": usage_counts.get(user.id, 0),
+                "total_ingestion_tokens": user_raw_tokens,
+                "total_raw_tokens": user_raw_tokens,
+                "total_llm_tokens": user_llm_tokens,
+                "total_ingestion_cost": round(user_cost, 6),
+                "memory_items": user_memories,
+                "document_items": user_documents,
             }
         )
     user_rows.sort(key=lambda item: item["last_activity_at"] or "", reverse=True)

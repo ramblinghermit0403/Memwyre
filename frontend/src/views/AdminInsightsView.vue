@@ -142,39 +142,132 @@
         <section class="grid gap-6 xl:grid-cols-12">
           <article class="rounded-lg border border-gray-200 bg-white shadow-sm dark:border-border dark:bg-surface xl:col-span-8">
             <div class="border-b border-gray-200 p-5 dark:border-border">
-              <h2 class="text-lg font-bold text-gray-950 dark:text-white">Users</h2>
-              <p class="mt-1 text-sm text-gray-500 dark:text-text-secondary">Sorted by most recent activity.</p>
+              <h2 class="text-lg font-bold text-gray-950 dark:text-white">User Ingestion Token Breakdown</h2>
+              <p class="mt-1 text-sm text-gray-500 dark:text-text-secondary">Click on any user to view their ingested Memories, Documents, Model, and exact Tokens consumed.</p>
             </div>
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200 text-sm dark:divide-border">
-                <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500 dark:bg-surface-2 dark:text-text-muted">
-                  <tr>
-                    <th class="px-5 py-3 font-semibold">User</th>
-                    <th class="px-5 py-3 font-semibold">Memories</th>
-                    <th class="px-5 py-3 font-semibold">Docs</th>
-                    <th class="px-5 py-3 font-semibold">Chats</th>
-                    <th class="px-5 py-3 font-semibold">Last Activity</th>
-                    <th class="px-5 py-3 font-semibold">Status</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-border">
-                  <tr v-for="user in insights.users" :key="user.id" class="hover:bg-gray-50/80 dark:hover:bg-surface-2/60">
-                    <td class="max-w-xs px-5 py-4">
-                      <p class="truncate font-semibold text-gray-900 dark:text-white">{{ user.email }}</p>
-                      <p class="truncate text-xs text-gray-500 dark:text-text-secondary">{{ user.name || 'No name' }}</p>
-                    </td>
-                    <td class="px-5 py-4 font-medium">{{ formatNumber(user.memories) }}</td>
-                    <td class="px-5 py-4 font-medium">{{ formatNumber(user.documents) }}</td>
-                    <td class="px-5 py-4 font-medium">{{ formatNumber(user.chat_sessions) }}</td>
-                    <td class="px-5 py-4 text-gray-500 dark:text-text-secondary">{{ formatDateTime(user.last_activity_at) }}</td>
-                    <td class="px-5 py-4">
-                      <span class="rounded-full px-2.5 py-1 text-xs font-semibold" :class="user.is_verified ? 'bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-300' : 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'">
-                        {{ user.is_verified ? 'Verified' : 'Unverified' }}
+            
+            <div class="divide-y divide-gray-200 dark:divide-border">
+              <div v-for="user in insights.users" :key="user.id" class="p-5 transition-colors hover:bg-gray-50/50 dark:hover:bg-surface-2/40">
+                <div class="flex flex-wrap items-center justify-between gap-4 cursor-pointer" @click="toggleUserExpand(user.id)">
+                  <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-sm">
+                      {{ (user.email || 'U')[0].toUpperCase() }}
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="font-bold text-gray-950 dark:text-white">{{ user.email }}</span>
+                        <span class="rounded-full px-2 py-0.5 text-[10px] font-semibold" :class="user.is_verified ? 'bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-300' : 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'">
+                          {{ user.is_verified ? 'Verified' : 'Unverified' }}
+                        </span>
+                      </div>
+                      <p class="text-xs text-gray-500 dark:text-text-secondary">User ID: {{ user.id }} · Joined {{ formatShortDate(user.created_at) }}</p>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-4 text-sm">
+                    <div class="text-right">
+                      <p class="text-xs text-gray-400">Raw Content Tokens</p>
+                      <p class="font-bold text-amber-600 dark:text-amber-400">{{ formatNumber(user.total_raw_tokens || user.total_ingestion_tokens || 0) }} tokens</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xs text-gray-400">LLM API Tokens</p>
+                      <p class="font-bold text-blue-600 dark:text-blue-400">{{ formatNumber(user.total_llm_tokens || user.total_ingestion_tokens || 0) }} tokens</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xs text-gray-400">Est. Cost</p>
+                      <p class="font-bold text-emerald-600 dark:text-emerald-400">${{ (user.total_ingestion_cost || 0).toFixed(4) }}</p>
+                    </div>
+                    <div class="flex gap-2">
+                      <span class="rounded-md bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-950/40 dark:text-blue-300">
+                        {{ user.memories || 0 }} Memories
                       </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      <span class="rounded-md bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-950/40 dark:text-violet-300">
+                        {{ user.documents || 0 }} Docs
+                      </span>
+                    </div>
+                    <svg class="h-5 w-5 transform text-gray-400 transition-transform" :class="{ 'rotate-180': expandedUserIds.has(user.id) }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Expanded Details for User -->
+                <div v-if="expandedUserIds.has(user.id)" class="mt-5 space-y-6 border-t border-gray-100 pt-5 dark:border-border/60">
+                  <!-- User Memories Section -->
+                  <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-text-muted mb-3 flex items-center gap-2">
+                      <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                      Ingested Memories ({{ (user.memory_items || []).length }})
+                    </h4>
+                    <div v-if="(user.memory_items || []).length" class="overflow-x-auto rounded-lg border border-gray-100 dark:border-border">
+                      <table class="min-w-full divide-y divide-gray-100 text-xs dark:divide-border">
+                        <thead class="bg-gray-50 dark:bg-surface-2 text-gray-500 dark:text-text-muted">
+                          <tr>
+                            <th class="px-4 py-2.5 text-left font-semibold">Title</th>
+                            <th class="px-4 py-2.5 text-left font-semibold">Source</th>
+                            <th class="px-4 py-2.5 text-left font-semibold">Model</th>
+                            <th class="px-4 py-2.5 text-right font-semibold">Raw Content Tokens</th>
+                            <th class="px-4 py-2.5 text-right font-semibold">LLM API Tokens</th>
+                            <th class="px-4 py-2.5 text-right font-semibold">Cost</th>
+                            <th class="px-4 py-2.5 text-right font-semibold">Ingested At</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-border bg-white dark:bg-surface">
+                          <tr v-for="item in user.memory_items" :key="item.id">
+                            <td class="px-4 py-2.5 font-medium text-gray-900 dark:text-white max-w-xs truncate">{{ item.title }}</td>
+                            <td class="px-4 py-2.5 text-gray-500 dark:text-text-secondary capitalize">{{ item.source }}</td>
+                            <td class="px-4 py-2.5"><span class="rounded bg-gray-100 dark:bg-surface-2 px-1.5 py-0.5 font-mono text-[10px]">{{ item.model_name }}</span></td>
+                            <td class="px-4 py-2.5 text-right font-bold text-amber-600 dark:text-amber-400">{{ formatNumber(item.raw_tokens_count || item.tokens_count) }} tokens</td>
+                            <td class="px-4 py-2.5 text-right font-semibold text-blue-600 dark:text-blue-400">{{ formatNumber(item.llm_tokens_count || item.tokens_count) }} tokens</td>
+                            <td class="px-4 py-2.5 text-right text-gray-500">${{ item.estimated_cost.toFixed(5) }}</td>
+                            <td class="px-4 py-2.5 text-right text-gray-400">{{ formatDateTime(item.created_at) }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <p v-else class="text-xs text-gray-400 italic">No memories created yet.</p>
+                  </div>
+
+                  <!-- User Documents Section -->
+                  <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-text-muted mb-3 flex items-center gap-2">
+                      <span class="h-2 w-2 rounded-full bg-violet-500"></span>
+                      Ingested Documents ({{ (user.document_items || []).length }})
+                    </h4>
+                    <div v-if="(user.document_items || []).length" class="overflow-x-auto rounded-lg border border-gray-100 dark:border-border">
+                      <table class="min-w-full divide-y divide-gray-100 text-xs dark:divide-border">
+                        <thead class="bg-gray-50 dark:bg-surface-2 text-gray-500 dark:text-text-muted">
+                          <tr>
+                            <th class="px-4 py-2.5 text-left font-semibold">Title</th>
+                            <th class="px-4 py-2.5 text-left font-semibold">File Type</th>
+                            <th class="px-4 py-2.5 text-left font-semibold">Model</th>
+                            <th class="px-4 py-2.5 text-right font-semibold">Raw Document Tokens</th>
+                            <th class="px-4 py-2.5 text-right font-semibold">LLM API Tokens</th>
+                            <th class="px-4 py-2.5 text-right font-semibold">Cost</th>
+                            <th class="px-4 py-2.5 text-right font-semibold">Ingested At</th>
+                          </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-border bg-white dark:bg-surface">
+                          <tr v-for="doc in user.document_items" :key="doc.id">
+                            <td class="px-4 py-2.5 font-medium text-gray-900 dark:text-white max-w-xs truncate">{{ doc.title }}</td>
+                            <td class="px-4 py-2.5 text-gray-500 dark:text-text-secondary uppercase">{{ doc.file_type }}</td>
+                            <td class="px-4 py-2.5"><span class="rounded bg-gray-100 dark:bg-surface-2 px-1.5 py-0.5 font-mono text-[10px]">{{ doc.model_name }}</span></td>
+                            <td class="px-4 py-2.5 text-right font-bold text-amber-600 dark:text-amber-400">{{ formatNumber(doc.raw_tokens_count || doc.tokens_count) }} tokens</td>
+                            <td class="px-4 py-2.5 text-right font-semibold text-blue-600 dark:text-blue-400">{{ formatNumber(doc.llm_tokens_count || doc.tokens_count) }} tokens</td>
+                            <td class="px-4 py-2.5 text-right text-gray-500">${{ doc.estimated_cost.toFixed(5) }}</td>
+                            <td class="px-4 py-2.5 text-right text-gray-400">{{ formatDateTime(doc.created_at) }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <p v-else class="text-xs text-gray-400 italic">No documents ingested yet.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="!insights.users?.length" class="p-8 text-center text-sm text-gray-500">
+                No users found.
+              </div>
             </div>
           </article>
 
@@ -221,6 +314,15 @@ import api from '../services/api';
 const insights = ref(null);
 const loading = ref(false);
 const error = ref('');
+const expandedUserIds = ref(new Set());
+
+const toggleUserExpand = (id) => {
+  if (expandedUserIds.value.has(id)) {
+    expandedUserIds.value.delete(id);
+  } else {
+    expandedUserIds.value.add(id);
+  }
+};
 
 const iconClass = 'h-5 w-5';
 const icon = (path) => ({

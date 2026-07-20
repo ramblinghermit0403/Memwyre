@@ -52,6 +52,7 @@ class Settings(BaseSettings):
     
     # LLM Provider
     DEFAULT_LLM_PROVIDER: str = "bedrock"
+    DEFAULT_EMBEDDING_PROVIDER: Optional[str] = None
 
     # Database
     # Default to sqlite if not set in .env
@@ -93,8 +94,8 @@ class Settings(BaseSettings):
     LLM_MODEL_NAME: Optional[str] = "moonshotai/kimi-k2.6"
 
     # Rate Limiting
-    EMBEDDING_RATE_LIMIT_RPM: int = 40
-    LLM_RATE_LIMIT_RPM: int = 40
+    EMBEDDING_RATE_LIMIT_RPM: int = 60
+    LLM_RATE_LIMIT_RPM: int = 100
 
     # OAuth
     GOOGLE_CLIENT_ID: Optional[str] = None

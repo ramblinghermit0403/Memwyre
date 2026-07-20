@@ -121,6 +121,21 @@ async def upload_document(
         
     project_id = await deps.resolve_project_id(db, current_user.id, project_id)
 
+    from app.services.token_tracker import token_tracker
+    from app.services.usage_service import usage_service
+
+    model_name = getattr(current_user, "preferred_model", None) or "gpt-4o"
+    provider = "openai"
+    if "gemini" in model_name:
+        provider = "gemini"
+    elif "claude" in model_name:
+        provider = "bedrock"
+
+    raw_tokens_count = token_tracker.count_tokens(text, provider=provider, model_name=model_name)
+    # LLM processing tokens (e.g. metadata extraction + embeddings)
+    llm_tokens_count = raw_tokens_count
+    estimated_cost = token_tracker.calculate_cost(tokens_in=llm_tokens_count, tokens_out=0, provider=provider, model_name=model_name)
+
     # Create Document Record
     document = Document(
         title=file.filename,
@@ -129,11 +144,27 @@ async def upload_document(
         file_type=file_ext,
         doc_type="file",  # Mark as file upload
         user_id=current_user.id,
-        project_id=project_id
+        project_id=project_id,
+        model_name=model_name,
+        tokens_count=raw_tokens_count,
+        raw_tokens_count=raw_tokens_count,
+        llm_tokens_count=llm_tokens_count,
+        estimated_cost=estimated_cost
     )
     db.add(document)
     await db.commit()
     await db.refresh(document)
+
+    # Track granular usage log
+    await usage_service.track_usage(
+        user_id=current_user.id,
+        provider=provider,
+        model_name=model_name,
+        tokens_in=raw_tokens_count,
+        tokens_out=0,
+        resource_type="document",
+        resource_id=document.id
+    )
     
     # Offload Ingestion to Background Task
     try:

@@ -3,7 +3,7 @@
     <NavBar />
 
     <main class="flex-1 overflow-y-auto lg:overflow-hidden w-full pt-6 pb-10 lg:pb-6 no-scrollbar">
-      <div class="max-w-5xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col min-h-full lg:h-full lg:min-h-0">
+      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col min-h-full lg:h-full lg:min-h-0">
         <div class="mb-6 shrink-0" id="tour-welcome">
           <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Good {{ timeOfDay }}, {{ user?.name || 'User' }}</h1>
           <p class="mt-1 text-gray-500 dark:text-text-secondary">This is where your AI work lives.</p>

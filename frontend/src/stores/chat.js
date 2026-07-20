@@ -58,7 +58,7 @@ export const useChatStore = defineStore('chat', () => {
     const isLoading = ref(false);
     const error = ref(null);
     const thinking = ref(false);
-    const selectedModel = ref('apac.amazon.nova-pro-v1:0');
+    const selectedModel = ref('moonshotai.kimi-k2.5');
     const currentContext = ref([]);
 
     const socket = ref(null);
@@ -68,17 +68,15 @@ export const useChatStore = defineStore('chat', () => {
     const activeTurnId = ref(null);
     const turnProgressById = ref({});
 
-    if (selectedModel.value.includes('gemini')) {
-        selectedModel.value = 'apac.amazon.nova-pro-v1:0';
-    }
-
     const storedModel = localStorage.getItem('chat-model');
-    if (storedModel && storedModel.includes('gemini')) {
-        selectedModel.value = 'apac.amazon.nova-pro-v1:0';
-        localStorage.setItem('chat-model', 'apac.amazon.nova-pro-v1:0');
+    if (storedModel && storedModel !== 'undefined') {
+        selectedModel.value = storedModel;
+    } else {
+        selectedModel.value = 'moonshotai.kimi-k2.5';
     }
 
     const availableModels = [
+        { id: 'moonshotai.kimi-k2.5', name: 'Kimi K2.5 (Bedrock)' },
         { id: 'apac.amazon.nova-pro-v1:0', name: 'Amazon Nova Pro' }
     ];
 

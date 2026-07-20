@@ -12,14 +12,10 @@ from app.core.aws_config import AWS_CONFIG
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from app.services.usage_service import usage_service
 from app.core.rate_limiter import wrap_llm_with_rate_limit
-import tiktoken
+from app.services.token_tracker import token_tracker
 
-def count_tokens(text: str, model: str = "gpt-4o-mini") -> int:
-    try:
-        encoding = tiktoken.encoding_for_model(model)
-        return len(encoding.encode(text))
-    except:
-        return len(text) // 4
+def count_tokens(text: str, model: str = "gpt-4o-mini", provider: str = "openai") -> int:
+    return token_tracker.count_tokens(text, provider=provider, model_name=model)
 
 class LLMService:
     def __init__(self):
@@ -72,12 +68,20 @@ class LLMService:
         
     def _get_bedrock_llm(self, temperature: float = 0):
         # We use ChatBedrockConverse with Moonshot Kimi K2.5
-        # Credentials are automatically loaded from AWS_CONFIG/environment
-        llm = ChatBedrockConverse(
-            model_id="moonshotai.kimi-k2.5",
-            region_name="us-west-2",
-            temperature=temperature
-        )
+        # Credentials are explicitly passed from settings if present
+        bedrock_kwargs = {
+            "model_id": "moonshotai.kimi-k2.5",
+            "region_name": getattr(settings, "AWS_REGION", "us-west-2"),
+            "temperature": temperature
+        }
+        
+        aws_key = getattr(settings, "AWS_ACCESS_KEY_ID", None)
+        aws_secret = getattr(settings, "AWS_SECRET_ACCESS_KEY", None)
+        if aws_key and aws_secret:
+            bedrock_kwargs["aws_access_key_id"] = aws_key
+            bedrock_kwargs["aws_secret_access_key"] = aws_secret
+            
+        llm = ChatBedrockConverse(**bedrock_kwargs)
         return wrap_llm_with_rate_limit(llm)
 
     def _get_default_llm(self, temperature: float = 0, target_key: Optional[str] = None):
@@ -88,8 +92,8 @@ class LLMService:
             return self._get_openai_llm(temperature=temperature, target_key=target_key)
         
     async def generate_response(self, query: str, context: List[str], provider: str = "openai", api_key: Optional[str] = None, user_id: Optional[int] = None) -> str:
-        # Fallback to defaults
-        provider = "openai"
+        # Respect provider parameter if passed, else fallback to settings
+        req_provider = (provider or "").lower()
         api_key = api_key or self.api_key
             
         if not context:
@@ -109,25 +113,28 @@ class LLMService:
             f"Context:\n{context_str}"
         )
         
-        if provider == "openai" or provider == "bedrock" or not provider:
-            try:
-                llm = self._get_default_llm(temperature=0.7, target_key=api_key)
-                messages = [
-                    SystemMessage(content=system_prompt),
-                    HumanMessage(content=query)
-                ]
-                async with self.semaphore:
-                    response = await llm.ainvoke(messages)
-                
-                # Track Usage
-                if user_id:
-                     tokens_in = count_tokens(system_prompt + query)
-                     tokens_out = count_tokens(response.content)
-                     await usage_service.track_usage(user_id, "openai", "gpt-4o-mini", tokens_in, tokens_out)
-                     
-                return response.content
-            except Exception as e:
-                return f"OpenAI Error: {str(e)}"
+        if req_provider in ["bedrock", "kimi"] or "kimi" in req_provider:
+            llm = self._get_bedrock_llm(temperature=0.7)
+        else:
+            llm = self._get_default_llm(temperature=0.7, target_key=api_key)
+
+        try:
+            messages = [
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=query)
+            ]
+            async with self.semaphore:
+                response = await llm.ainvoke(messages)
+            
+            # Track Usage
+            if user_id:
+                 tokens_in = count_tokens(system_prompt + query)
+                 tokens_out = count_tokens(response.content)
+                 await usage_service.track_usage(user_id, "bedrock" if req_provider in ["bedrock", "kimi"] else "openai", "moonshotai.kimi-k2.5" if req_provider in ["bedrock", "kimi"] else "gpt-4o-mini", tokens_in, tokens_out)
+                 
+            return response.content
+        except Exception as e:
+            return f"LLM Error: {str(e)}"
         
         if provider == "gemini":
              if not api_key:
@@ -272,7 +279,7 @@ Rules:
 - Entities should be specific (Person, Org, Product, Location).
 - Keep JSON valid and minimal."""
 
-        user_message = f"Chunk Content:\n{content[:2000]}"
+        user_message = f"Chunk Content:\n{content}"
         
         provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()
         if target_key or provider == "bedrock":
@@ -359,7 +366,7 @@ Rules:
 5. **Filter**: Only extract meaningful knowledge.
 6. **Format**: Output ONLY valid JSON.
 """
-        user_message = f"Text to Analyze:\n{text[:2000]}"
+        user_message = f"Text to Analyze:\n{text}"
         
         try:
             provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()

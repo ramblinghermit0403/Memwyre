@@ -21,6 +21,10 @@ class Memory(Base):
     source_app = Column(String, nullable=True)  # normalized source shown in timeline
     interaction_type = Column(String, nullable=True, default="conversation")
     model_name = Column(String, nullable=True)  # e.g. "gpt-4", "claude-3-opus"
+    tokens_count = Column(Integer, default=0) # raw content tokens
+    raw_tokens_count = Column(Integer, default=0) # explicit document text tokens
+    llm_tokens_count = Column(Integer, default=0) # tokens used by LLM API calls during ingestion
+    estimated_cost = Column(Float, default=0.0)
     importance_score = Column(Float, default=0.0)
     status = Column(String, default="approved")  # "pending", "approved", "merged", "discarded", "archived"
 

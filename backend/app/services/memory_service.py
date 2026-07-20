@@ -70,6 +70,21 @@ class MemoryService:
             if initial_status == "approved" and not is_external_source and not is_extension:
                 show_in_inbox = False
 
+        from app.services.token_tracker import token_tracker
+        from app.services.usage_service import usage_service
+
+        model_name = getattr(user, "preferred_model", None) or "gpt-4o"
+        provider = "openai"
+        if "gemini" in model_name:
+            provider = "gemini"
+        elif "claude" in model_name:
+            provider = "bedrock"
+
+        raw_tokens_count = token_tracker.count_tokens(content, provider=provider, model_name=model_name)
+        # LLM processing tokens (e.g., embeddings & metadata extraction calls)
+        llm_tokens_count = raw_tokens_count
+        estimated_cost = token_tracker.calculate_cost(tokens_in=llm_tokens_count, tokens_out=0, provider=provider, model_name=model_name)
+
         memory = Memory(
             title=title,
             content=content,
@@ -82,6 +97,11 @@ class MemoryService:
             source_llm=source,
             source_app=source_app or source,
             interaction_type=interaction_type,
+            model_name=model_name,
+            tokens_count=raw_tokens_count,
+            raw_tokens_count=raw_tokens_count,
+            llm_tokens_count=llm_tokens_count,
+            estimated_cost=estimated_cost,
         )
 
         normalized_tags = [t.lower() for t in tags_list]
@@ -95,6 +115,16 @@ class MemoryService:
         try:
             await db.commit()
             print("Memory committed to DB")
+            # Track granular usage
+            await usage_service.track_usage(
+                user_id=user.id,
+                provider=provider,
+                model_name=model_name,
+                tokens_in=raw_tokens_count,
+                tokens_out=0,
+                resource_type="memory",
+                resource_id=memory.id
+            )
         except Exception as e:
             print(f"Error committing to DB: {e}")
             await db.rollback()
