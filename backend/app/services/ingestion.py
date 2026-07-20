@@ -216,12 +216,11 @@ class IngestionService:
             
         return chunks
 
-    def count_tokens(self, text: str) -> int:
+    def count_tokens(self, text: str, provider: str = "openai", model_name: str = "gpt-4o") -> int:
         """
-        Estimate token count (approx 4 chars per token).
+        Calculates exact token count using TokenTrackerService.
         """
-        if not text:
-            return 0
-        return len(text) // 4
+        from app.services.token_tracker import token_tracker
+        return token_tracker.count_tokens(text, provider=provider, model_name=model_name)
 
 ingestion_service = IngestionService()

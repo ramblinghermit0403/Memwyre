@@ -102,6 +102,8 @@ app.include_router(plugin.router, prefix=f"{settings.API_V1_STR}/plugin", tags=[
 app.include_router(connectors.router, prefix=f"{settings.API_V1_STR}", tags=["connectors"])
 app.include_router(ws.router, prefix="/ws", tags=["websocket"])
 app.include_router(billing.router, prefix=f"{settings.API_V1_STR}/billing", tags=["billing"])
+from app.routers import token_router
+app.include_router(token_router.router, prefix=f"{settings.API_V1_STR}/tokens", tags=["tokens"])
 app.include_router(admin.router, prefix=f"{settings.API_V1_STR}/admin", tags=["admin"])
 app.include_router(admin_bypass.router, prefix=f"{settings.API_V1_STR}/admin/bypass", tags=["admin-bypass"])
 app.include_router(bypass.router, prefix=f"{settings.API_V1_STR}/bypass", tags=["bypass"])

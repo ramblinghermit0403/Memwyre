@@ -13,7 +13,12 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_aws import ChatBedrock
-from langgraph.prebuilt import create_react_agent
+try:
+    from langgraph.prebuilt import create_react_agent
+    HAVE_LANGGRAPH = True
+except ImportError:
+    create_react_agent = None
+    HAVE_LANGGRAPH = False
 
 
 # App Imports
@@ -294,12 +299,14 @@ class AgentService:
             from app.services.llm_service_v2 import llm_service_v2
             
             provider = getattr(settings, "DEFAULT_LLM_PROVIDER", "openai").lower()
-            if provider == "bedrock":
-                return llm_service_v2._get_default_llm(temperature=temperature)
+            model_lower = (model_name or "").lower()
+            
+            if provider == "bedrock" or "kimi" in model_lower or "bedrock" in model_lower:
+                return llm_service_v2._get_bedrock_llm(temperature=temperature)
                 
             google_key = settings.GEMINI_API_KEY
             
-            if "gemini" in model_name.lower():
+            if "gemini" in model_lower:
                 if google_key:
                     return ChatGoogleGenerativeAI(
                         google_api_key=google_key, 
@@ -308,7 +315,7 @@ class AgentService:
                         max_output_tokens=max_tokens
                     )
                 raise ValueError("Google API Key not configured.")
-            elif "gpt" in model_name.lower():
+            elif "gpt" in model_lower:
                 if settings.OPENAI_API_KEY:
                     return ChatOpenAI(
                         api_key=settings.OPENAI_API_KEY, 

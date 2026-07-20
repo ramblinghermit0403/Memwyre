@@ -128,8 +128,19 @@ def get_embeddings_instance():
     """
     api_key = getattr(settings, "EMBEDDING_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None) or getattr(settings, "AZURE_OPENAI_API_KEY", None)
     
-    # 1. Custom OpenAI-compatible Endpoint (e.g. NVIDIA NIM nv-embedqa-e5-v5)
-    if getattr(settings, "EMBEDDING_API_BASE", None):
+    provider = getattr(settings, "DEFAULT_EMBEDDING_PROVIDER", None)
+    if provider:
+        provider = provider.lower()
+    else:
+        # Backwards-compatible auto-detection logic
+        if getattr(settings, "EMBEDDING_API_BASE", None):
+            provider = "nvidia"
+        elif getattr(settings, "AZURE_OPENAI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None):
+            provider = "azure"
+        else:
+            provider = "bedrock"
+
+    if provider == "nvidia":
         from langchain_openai import OpenAIEmbeddings
 
         class CustomNIMEmbeddings(OpenAIEmbeddings):
@@ -189,27 +200,35 @@ def get_embeddings_instance():
             model=getattr(settings, "EMBEDDING_MODEL_NAME", "nvidia/nv-embedqa-e5-v5"),
             check_embedding_ctx_length=False
         )
-    # 2. Default/Fallback: Azure OpenAI or Bedrock Titan
+    elif provider == "azure" or provider == "openai":
+        from langchain_openai import AzureOpenAIEmbeddings
+        logger.info("Initializing Azure OpenAI Embeddings.")
+        raw_embeddings = AzureOpenAIEmbeddings(
+            api_key=api_key,
+            azure_endpoint=getattr(settings, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
+            api_version=getattr(settings, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
+            azure_deployment=getattr(settings, "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small"),
+            dimensions=1024
+        )
+    elif provider == "bedrock":
+        from langchain_aws import BedrockEmbeddings
+        logger.info("Initializing Bedrock Titan V2 Embeddings.")
+        
+        bedrock_kwargs = {
+            "model_id": "amazon.titan-embed-text-v2:0",
+            "region_name": getattr(settings, "AWS_REGION", "us-west-2"),
+            "model_kwargs": {"dimensions": 1024, "normalize": True}
+        }
+        
+        # Explicitly pass credentials if configured in settings
+        aws_key = getattr(settings, "AWS_ACCESS_KEY_ID", None)
+        aws_secret = getattr(settings, "AWS_SECRET_ACCESS_KEY", None)
+        if aws_key and aws_secret:
+            bedrock_kwargs["aws_access_key_id"] = aws_key
+            bedrock_kwargs["aws_secret_access_key"] = aws_secret
+            
+        raw_embeddings = BedrockEmbeddings(**bedrock_kwargs)
     else:
-        # Default to Azure OpenAI if key matches, else Bedrock
-        use_azure = getattr(settings, "AZURE_OPENAI_API_KEY", None) or getattr(settings, "OPENAI_API_KEY", None)
-        if use_azure:
-            from langchain_openai import AzureOpenAIEmbeddings
-            logger.info("Initializing Azure OpenAI Embeddings.")
-            raw_embeddings = AzureOpenAIEmbeddings(
-                api_key=api_key,
-                azure_endpoint=getattr(settings, "AZURE_OPENAI_ENDPOINT", "https://memwyre.cognitiveservices.azure.com/"),
-                api_version=getattr(settings, "AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
-                azure_deployment=getattr(settings, "AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small"),
-                dimensions=512
-            )
-        else:
-            from langchain_aws import BedrockEmbeddings
-            logger.info("Initializing Bedrock Titan V2 Embeddings.")
-            raw_embeddings = BedrockEmbeddings(
-                model_id="amazon.titan-embed-text-v2:0",
-                region_name=getattr(settings, "AWS_REGION", "us-west-2"),
-                model_kwargs={"dimensions": 512, "normalize": True}
-            )
+        raise ValueError(f"Unsupported embedding provider: {provider}")
 
     return RateLimitedEmbeddings(raw_embeddings, embedding_rate_limiter)

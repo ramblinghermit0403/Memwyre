@@ -1,6 +1,12 @@
 from typing import Optional
-from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api.proxies import GenericProxyConfig
+try:
+    from youtube_transcript_api import YouTubeTranscriptApi
+    from youtube_transcript_api.proxies import GenericProxyConfig
+    HAVE_YOUTUBE_API = True
+except ImportError:
+    YouTubeTranscriptApi = None
+    GenericProxyConfig = None
+    HAVE_YOUTUBE_API = False
 from urllib.parse import urlparse, parse_qs
 import httpx
 from bs4 import BeautifulSoup

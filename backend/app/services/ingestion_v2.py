@@ -81,34 +81,57 @@ class IngestionService:
         
         if enrich or extract_facts:
             from app.services.llm_service_v2 import llm_service_v2 as llm_service
-            all_tasks = []
+            all_enrich_tasks = []
+            all_fact_tasks = []
+            
+            # Group chunks into batches to reduce prompt overhead (approx 10,000 chars per batch)
+            BATCH_MAX_CHARS = 10000
+            batches = []
+            current_batch = []
+            current_chars = 0
+            
+            for i, chunk_text in enumerate(chunks):
+                if current_chars + len(chunk_text) > BATCH_MAX_CHARS and current_batch:
+                    batches.append(current_batch)
+                    current_batch = []
+                    current_chars = 0
+                current_batch.append((i, chunk_text))
+                current_chars += len(chunk_text)
+                
+            if current_batch:
+                batches.append(current_batch)
             
             # Queue enrichment tasks
             if enrich:
-                for chunk_text in chunks:
-                    all_tasks.append(llm_service.generate_chunk_enrichment(chunk_text))
+                for batch in batches:
+                    combined_text = "\n\n".join([c[1] for c in batch])
+                    all_enrich_tasks.append(llm_service.generate_chunk_enrichment(combined_text))
             
             # Queue fact extraction tasks
             if extract_facts:
-                for chunk_text in chunks:
-                    all_tasks.append(llm_service.extract_facts_from_text(chunk_text, reference_date=reference_date))
+                for batch in batches:
+                    combined_text = "\n\n".join([c[1] for c in batch])
+                    all_fact_tasks.append(llm_service.extract_facts_from_text(combined_text, reference_date=reference_date))
                     
             # Run everything concurrently (controlled by the global semaphore)
-            results = await asyncio.gather(*all_tasks, return_exceptions=True)
+            results = await asyncio.gather(*(all_enrich_tasks + all_fact_tasks), return_exceptions=True)
             
-            # Separate the results back into enrichment and facts
+            enrichment_results_raw = results[:len(all_enrich_tasks)] if enrich else []
+            fact_results_raw = results[len(all_enrich_tasks):] if extract_facts else []
+            
+            enrichment_results = [None] * len(chunks)
+            fact_results = [None] * len(chunks)
+            
+            # Map results back to the FIRST chunk of each batch
             if enrich:
-                enrichment_results = results[:len(chunks)]
-                if extract_facts:
-                    fact_results = results[len(chunks):]
-                else:
-                    fact_results = [None] * len(chunks)
-            else:
-                enrichment_results = [None] * len(chunks)
-                if extract_facts:
-                    fact_results = results
-                else:
-                    fact_results = [None] * len(chunks)
+                for batch_idx, batch in enumerate(batches):
+                    first_chunk_idx = batch[0][0]
+                    enrichment_results[first_chunk_idx] = enrichment_results_raw[batch_idx]
+                    
+            if extract_facts:
+                for batch_idx, batch in enumerate(batches):
+                    first_chunk_idx = batch[0][0]
+                    fact_results[first_chunk_idx] = fact_results_raw[batch_idx]
         else:
             enrichment_results = [None] * len(chunks)
             fact_results = [None] * len(chunks)
@@ -242,12 +265,11 @@ class IngestionService:
             
         return chunks
 
-    def count_tokens(self, text: str) -> int:
+    def count_tokens(self, text: str, provider: str = "openai", model_name: str = "gpt-4o") -> int:
         """
-        Estimate token count (approx 4 chars per token).
+        Calculates exact token count using TokenTrackerService.
         """
-        if not text:
-            return 0
-        return len(text) // 4
+        from app.services.token_tracker import token_tracker
+        return token_tracker.count_tokens(text, provider=provider, model_name=model_name)
 
 ingestion_service_v2 = IngestionService()

@@ -9,6 +9,8 @@ class UserUsage(Base):
     user_id = Column(Integer, nullable=False, index=True)
     provider = Column(String, nullable=False) # "openai", "gemini", "bedrock"
     model_name = Column(String, nullable=True) 
+    resource_type = Column(String, nullable=True, index=True) # "memory", "document", "chat", "ingestion"
+    resource_id = Column(Integer, nullable=True, index=True)
     tokens_in = Column(Integer, default=0)
     tokens_out = Column(Integer, default=0)
     estimated_cost = Column(Float, default=0.0)

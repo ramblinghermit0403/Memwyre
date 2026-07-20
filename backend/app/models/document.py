@@ -14,6 +14,11 @@ class Document(Base):
     file_type = Column(String, nullable=True)  # pdf, docx, txt, md, or null for memories
     doc_type = Column(String, default="file", nullable=False)  # 'file' or 'memory'
     tags = Column(JSON, nullable=True)
+    model_name = Column(String, nullable=True)
+    tokens_count = Column(Integer, default=0) # raw text tokens
+    raw_tokens_count = Column(Integer, default=0) # explicit document content tokens
+    llm_tokens_count = Column(Integer, default=0) # LLM API tokens used to process/enrich document
+    estimated_cost = Column(Float, default=0.0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
 
