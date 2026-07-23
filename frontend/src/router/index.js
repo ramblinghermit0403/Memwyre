@@ -171,6 +171,12 @@ export function createAppRouter({ ssr = false } = {}) {
                         meta: { requiresAuth: false, seo: PUBLIC_ROUTE_SEO['/blog'] }
                     },
                     {
+                        path: 'docs',
+                        beforeEnter(to, from, next) {
+                            window.location.href = 'https://docs.memwyre.tech';
+                        }
+                    },
+                    {
                         path: 'blog/what-is-ai-memory',
                         redirect: '/research/what-is-ai-memory'
                     },

@@ -23,30 +23,32 @@ function handler(event) {
         };
     }
 
-    // --- 2. Trailing Slash Normalization ---
-    // Index routes that need trailing slashes
-    if (uri === "/docs" || uri === "/docs/integrations") {
+    // --- 2. Docs Redirect ---
+    if (uri === "/docs" || uri.indexOf("/docs/") === 0) {
+        var newPath = uri.substring(5);
+        if (newPath === "") newPath = "/";
         return {
             statusCode: 301,
             statusDescription: "Moved Permanently",
             headers: {
-                "location": { "value": "https://" + host + uri + '/' }
+                "location": { "value": "https://docs.memwyre.tech" + newPath }
             }
         };
-    } else {
-        // Strip trailing slash for all other pages (both SPA and doc subpages)
-        if (uri.length > 1 && uri.charAt(uri.length - 1) === '/') {
-            return {
-                statusCode: 301,
-                statusDescription: "Moved Permanently",
-                headers: {
-                    "location": { "value": "https://" + host + uri.slice(0, -1) }
-                }
-            };
-        }
     }
 
-    // --- 3. Markdown Content Negotiation ---
+    // --- 3. Trailing Slash Normalization ---
+    // Strip trailing slash for all pages
+    if (uri.length > 1 && uri.charAt(uri.length - 1) === '/') {
+        return {
+            statusCode: 301,
+            statusDescription: "Moved Permanently",
+            headers: {
+                "location": { "value": "https://" + host + uri.slice(0, -1) }
+            }
+        };
+    }
+
+    // --- 4. Markdown Content Negotiation ---
     // If requesting homepage and Accept includes text/markdown, serve index.md
     if (uri === '/' || uri === '/index.html') {
         var accept = headers['accept'] ? headers['accept'].value : '';
@@ -56,22 +58,16 @@ function handler(event) {
         }
     }
 
-    // --- 4. Directory Index Rewrite ---
+    // --- 5. Directory Index Rewrite ---
     // If the URI does not contain a file extension, append index.html or .html so S3 serves the file
     var lastSegment = request.uri.substring(request.uri.lastIndexOf('/') + 1);
     var hasExtension = lastSegment.indexOf('.') !== -1;
 
     if (!hasExtension) {
-        if (request.uri === '/docs/' || request.uri === '/docs/integrations/') {
+        if (request.uri.charAt(request.uri.length - 1) === '/') {
             request.uri += 'index.html';
-        } else if (request.uri.indexOf('/docs/') === 0) {
-            request.uri += '.html';
         } else {
-            if (request.uri.charAt(request.uri.length - 1) === '/') {
-                request.uri += 'index.html';
-            } else {
-                request.uri += '/index.html';
-            }
+            request.uri += '/index.html';
         }
     }
 
