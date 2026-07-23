@@ -26,16 +26,24 @@ export const useThemeStore = defineStore('theme', () => {
         isDark.value = !isDark.value;
     };
 
+    function updateDomTheme(val) {
+        if (!hasDocument) return;
+
+        // Never apply dark mode class to html element when on public routes (landing page, pricing, blog, etc.)
+        const pathname = hasWindow ? window.location.pathname : '';
+        const isPublicPage = pathname === '/' || 
+            ['/pricing', '/blog', '/use-cases', '/terms', '/privacy-policy', '/contact', '/connectors', '/mcp', '/plugins', '/extension', '/research', '/memwyre-vs-', '/chatgpt-memory', '/claude-memory', '/cursor-memory', '/mcp-memory', '/what-is-ai-memory', '/ai-memory-benchmark-locomo'].some(p => pathname.startsWith(p));
+
+        if (val && !isPublicPage) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }
+
     // Watch for changes and update DOM/localStorage
     watch(isDark, (val) => {
-        if (hasDocument) {
-            if (val) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        }
-
+        updateDomTheme(val);
         storage.setItem('theme', val ? 'dark' : 'light');
     }, { immediate: true });
 
