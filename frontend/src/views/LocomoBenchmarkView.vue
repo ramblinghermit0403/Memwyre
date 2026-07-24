@@ -27,7 +27,7 @@
         <div class="text-xs font-bold uppercase tracking-wider text-[#D97757] font-mono">
           RESEARCH / BENCHMARKS 
           <span class="text-gray-300 dark:text-gray-700 mx-2">/</span> 
-          JUNE 24, 2026
+          JULY 22, 2026
         </div>
         
         <h1 class="hero-serif text-4xl sm:text-5xl lg:text-6xl tracking-[-0.02em] leading-[1.1] text-gray-950 dark:text-white">
@@ -36,7 +36,7 @@
         </h1>
 
         <div class="text-[10px] tracking-wider uppercase font-bold font-mono text-gray-400 dark:text-gray-500 pt-2">
-          12 MINUTES READ
+          14 MINUTES READ · MODEL-AGNOSTIC EVALUATION
         </div>
       </div>
 
@@ -60,6 +60,35 @@
               <span class="text-sm font-semibold text-gray-900 dark:text-white">
                 Memwyre Research Lab
               </span>
+            </div>
+
+            <!-- External Benchmark Resource Links -->
+            <div class="space-y-2 pt-6 border-t border-gray-100 dark:border-gray-900">
+              <div class="text-[11px] font-mono text-gray-400 dark:text-gray-500 tracking-wider uppercase font-bold mb-3">BENCHMARK RESOURCES</div>
+              <a 
+                href="https://arxiv.org/abs/2406.16016" 
+                target="_blank"
+                class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 hover:text-[#D97757] dark:hover:text-[#D97757] transition-colors"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-[#D97757]"></span>
+                LoCoMo Paper (arXiv)
+              </a>
+              <a 
+                href="https://github.com/snap-research/LoCoMo" 
+                target="_blank"
+                class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 hover:text-[#D97757] dark:hover:text-[#D97757] transition-colors"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-[#D97757]"></span>
+                LoCoMo Dataset Repo
+              </a>
+              <a 
+                href="https://github.com/memorybench/memorybench" 
+                target="_blank"
+                class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 hover:text-[#D97757] dark:hover:text-[#D97757] transition-colors"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-[#D97757]"></span>
+                MemoryBench Harness
+              </a>
             </div>
 
             <!-- Share Buttons -->
@@ -110,7 +139,7 @@
 
           <article class="markdown-content space-y-12">
             <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed font-light">
-              LoCoMo-10 is a widely accepted standard for evaluating long-term memory performance in AI agents and conversational assistants. Below is the detailed analysis of Memwyre's retrieval capabilities on this benchmark.
+              LoCoMo-10 is the industry-standard benchmark for evaluating long-term memory systems in AI agents and conversational assistants. Below is the detailed analysis of Memwyre's performance on the complete 1,986-question benchmark using <strong>Kimi K2.5</strong> on AWS Bedrock compared with previous <strong>GPT-4o-mini</strong> evaluations.
             </p>
 
             <!-- TL;DR -->
@@ -119,9 +148,9 @@
               <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
               <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
               <div class="space-y-2">
-                <div class="text-[#D97757] font-mono text-xs uppercase font-bold tracking-wider">Quick Summary / TL;DR</div>
+                <div class="text-[#D97757] font-mono text-xs uppercase font-bold tracking-wider">Quick Summary / Key Takeaways</div>
                 <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-normal">
-                  <strong>Answer:</strong> On the LoCoMo-10 long-term memory benchmark, Memwyre achieves a 73.5% overall accuracy (outperforming flat vector systems) while retrieving a mean token count of only 3,000 per request (versus 26,000 tokens of raw dialog). This is driven by dynamic context pruning, Ebbinghaus logarithmic decay, and two-stage cross-encoder vector re-ranking.
+                  <strong>Answer:</strong> On the full LoCoMo benchmark (1,986 questions across 10 long-term conversational histories), Memwyre achieves a <strong>69.89% overall accuracy</strong> (<strong>70.52% non-adversarial</strong>) while maintaining a minimal context footprint (~4,924 tokens/question vs. 26,000+ raw dialog tokens). Crucially, evaluating across both proprietary models (<strong>GPT-4o-mini</strong>) and open-weight models (<strong>Kimi K2.5</strong>) demonstrates that Memwyre's memory engine delivers high-performing, consistent results regardless of the underlying LLM backend.
                 </p>
               </div>
             </div>
@@ -131,30 +160,30 @@
               <div class="relative p-6 bg-white dark:bg-[#111] border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl shadow-sm text-left">
                 <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
                 <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
-                <div class="text-[#D97757] text-5xl font-extrabold font-mono tracking-tight">73.5%</div>
+                <div class="text-[#D97757] text-5xl font-extrabold font-mono tracking-tight">69.9%</div>
                 <div class="mt-2">
                   <div class="text-gray-900 dark:text-white font-bold text-base">Overall Accuracy</div>
-                  <div class="text-gray-500 dark:text-gray-400 text-xs tracking-wider uppercase font-semibold mt-0.5">Benchmark Score</div>
+                  <div class="text-gray-500 dark:text-gray-400 text-xs tracking-wider uppercase font-semibold mt-0.5">Full 1,986 Questions</div>
                 </div>
               </div>
 
               <div class="relative p-6 bg-white dark:bg-[#111] border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl shadow-sm text-left">
                 <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
                 <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
-                <div class="text-gray-900 dark:text-white text-5xl font-extrabold font-mono tracking-tight">3,000</div>
+                <div class="text-gray-900 dark:text-white text-5xl font-extrabold font-mono tracking-tight">70.5%</div>
+                <div class="mt-2">
+                  <div class="text-gray-900 dark:text-white font-bold text-base">Non-Adversarial</div>
+                  <div class="text-gray-500 dark:text-gray-400 text-xs tracking-wider uppercase font-semibold mt-0.5">1,540 Standard Questions</div>
+                </div>
+              </div>
+
+              <div class="relative p-6 bg-white dark:bg-[#111] border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl shadow-sm text-left">
+                <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
+                <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
+                <div class="text-gray-900 dark:text-white text-5xl font-extrabold font-mono tracking-tight">4.9k</div>
                 <div class="mt-2">
                   <div class="text-gray-900 dark:text-white font-bold text-base">Mean Tokens</div>
-                  <div class="text-gray-500 dark:text-gray-400 text-xs tracking-wider uppercase font-semibold mt-0.5">Average Context Size</div>
-                </div>
-              </div>
-
-              <div class="relative p-6 bg-white dark:bg-[#111] border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl shadow-sm text-left">
-                <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
-                <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
-                <div class="text-gray-900 dark:text-white text-5xl font-extrabold font-mono tracking-tight">26k</div>
-                <div class="mt-2">
-                  <div class="text-gray-900 dark:text-white font-bold text-base">Tokens Per Dialog</div>
-                  <div class="text-gray-500 dark:text-gray-400 text-xs tracking-wider uppercase font-semibold mt-0.5">Up to 32 sessions</div>
+                  <div class="text-gray-500 dark:text-gray-400 text-xs tracking-wider uppercase font-semibold mt-0.5">Vs 26k+ Raw Context</div>
                 </div>
               </div>
             </div>
@@ -162,72 +191,79 @@
             <!-- 1. Introduction -->
             <section id="introduction" class="space-y-4 scroll-mt-20">
               <h2 class="hero-serif text-2xl sm:text-3xl tracking-tight text-gray-900 dark:text-white border-b border-gray-200 dark:border-zinc-800 pb-2">
-                1. Introduction
+                1. Introduction &amp; What is LoCoMo?
               </h2>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                LoCoMo-10 stands for Long Conversational Memory – 10 conversations. It is one of the most widely used benchmarks for evaluating long-term memory systems for AI agents and conversational assistants. It was introduced by researchers at Snap Research in their LoCoMo paper.
+                <strong>LoCoMo</strong> (Long Conversational Memory) is the premier benchmark for evaluating long-term memory in AI agents and conversational assistants. It was introduced by researchers at Snap Research in their paper <a href="https://arxiv.org/abs/2406.16016" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">LoCoMo: Building Long Conversational Memory for LLMs</a>.
               </p>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                The "10" simply refers to the 10 long conversations contained in the original dataset file (<code class="bg-gray-100 dark:bg-zinc-900 px-1.5 py-0.5 rounded font-mono text-sm dark:text-gray-200 border dark:border-zinc-800">locomo10.json</code>). Nearly all papers referring to "LoCoMo-10" are using these same ten conversations for evaluation.
+                The benchmark dataset contains 10 comprehensive multi-session conversations (<code class="bg-gray-100 dark:bg-zinc-900 px-1.5 py-0.5 rounded font-mono text-sm dark:text-gray-200 border dark:border-zinc-800">locomo10.json</code>) spanning up to 32 sessions per user over weeks and months of simulated dialogue. Unlike simple retrieval tasks, LoCoMo tests whether an AI can track personal facts, handle evolving preferences over time, reject non-existent memories, and correlate information scattered across disconnected sessions.
               </p>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                For memory systems like Memwyre, LoCoMo-10 is currently one of the best benchmarks because it closely resembles a real personal memory system: conversations happen over long periods, facts evolve over time, and users expect the AI to remember everything consistently.
+                To evaluate Memwyre, we run full-suite benchmarks using <a href="https://github.com/memorybench/memorybench" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">MemoryBench</a>—an open-source evaluation framework for AI memory engines—and publish raw run artifacts directly to our <a href="https://github.com/snap-research/LoCoMo" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">LoCoMo dataset repository integration</a>.
               </p>
             </section>
 
-            <!-- 2. Methodology -->
+            <!-- 2. Methodology & LLM Independence -->
             <section id="methodology" class="space-y-4 scroll-mt-20">
               <h2 class="hero-serif text-2xl sm:text-3xl tracking-tight text-gray-900 dark:text-white border-b border-gray-200 dark:border-zinc-800 pb-2">
-                2. Methodology
+                2. Methodology &amp; LLM Model Independence
               </h2>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                The benchmark evaluates memory retrieval capabilities across a rich conversational dataset structure.
+                A critical design goal of Memwyre is <strong>LLM Model Independence</strong>: the memory engine must perform reliably regardless of which LLM handles ingestion, answer generation, or judging.
               </p>
               
-              <h4 class="font-bold text-gray-950 dark:text-white text-base">Dataset Structure</h4>
+              <h4 class="font-bold text-gray-950 dark:text-white text-base pt-2">Comparing GPT-4o-mini vs. Kimi K2.5 Runs</h4>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                LoCoMo-10 contains:
-              </p>
-              <ul class="list-disc pl-6 space-y-1.5 text-gray-700 dark:text-gray-300">
-                <li>10 very long multi-session conversations.</li>
-                <li>Conversations span weeks to months of simulated interactions.</li>
-                <li>Around 16k–26k tokens per conversation.</li>
-                <li>Up to 32 sessions per conversation.</li>
-                <li>Exactly 1,540 questions.</li>
-              </ul>
-              <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                Each conversation is embedded with: personal facts, user preferences, events, temporal details, relationships between events, distractor information, and adversarial questions.
-              </p>
-
-              <h4 class="font-bold text-gray-950 dark:text-white text-base pt-2">Why LoCoMo is Difficult</h4>
-              <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                Traditional retrieval architectures often fail on LoCoMo-10 because:
+                We evaluated Memwyre under two distinct model configurations:
               </p>
               <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
-                <li>Relevant memories may be hundreds of turns apart in the dialogue context.</li>
-                <li>Questions require reasoning and correlation across multiple disconnected chat sessions.</li>
-                <li>Temporal relationships matter; values and events change chronologically.</li>
-                <li>Adversarial questions actively target non-existent memories to punish hallucinations.</li>
-                <li>Full-context feeding approaches become prohibitively expensive at this scale.</li>
+                <li><strong>GPT-4o-mini Evaluation (<code class="bg-gray-100 dark:bg-zinc-900 px-1 py-0.5 rounded font-mono text-xs">azure:gpt-4o-mini</code>):</strong> Used as the backend LLM for fact extraction, answer generation, and evaluation in earlier sample runs.</li>
+                <li><strong>Kimi K2.5 Full Evaluation (<code class="bg-gray-100 dark:bg-zinc-900 px-1 py-0.5 rounded font-mono text-xs">bedrock:kimi-k2.5</code>):</strong> Used across all 3 phases (Ingestion Fact Extraction, Answer Generation, and LLM Judge Evaluation) on the full 1,986-question benchmark.</li>
               </ul>
+              
+              <div class="overflow-x-auto border border-gray-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] shadow-sm my-4">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs uppercase bg-gray-50 dark:bg-zinc-900 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-zinc-850">
+                    <tr>
+                      <th scope="col" class="px-6 py-3">Evaluation Run</th>
+                      <th scope="col" class="px-6 py-3">Questions</th>
+                      <th scope="col" class="px-6 py-3">Backend LLM Model</th>
+                      <th scope="col" class="px-6 py-3">Overall Accuracy</th>
+                      <th scope="col" class="px-6 py-3">Non-Adversarial</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200 dark:divide-zinc-850 text-gray-950 dark:text-gray-350 font-sans">
+                    <tr>
+                      <td class="px-6 py-4 font-mono text-xs font-semibold text-gray-600 dark:text-gray-300">memwyre-locomo-20260609</td>
+                      <td class="px-6 py-4">150 (Sample)</td>
+                      <td class="px-6 py-4 font-mono text-xs">azure:gpt-4o-mini</td>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">66.67%</td>
+                      <td class="px-6 py-4">67.20%</td>
+                    </tr>
+                    <tr class="bg-[#D97757]/5 dark:bg-[#D97757]/10">
+                      <td class="px-6 py-4 font-mono text-xs font-semibold text-[#D97757]">memwyre-locomo-20260721</td>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">1,986 (Full)</td>
+                      <td class="px-6 py-4 font-mono text-xs font-semibold text-[#D97757]">bedrock:kimi-k2.5</td>
+                      <td class="px-6 py-4 font-bold text-[#D97757]">69.89%</td>
+                      <td class="px-6 py-4 font-bold text-[#D97757]">70.52%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-              <h4 class="font-bold text-gray-950 dark:text-white text-base pt-2">Metrics Commonly Reported</h4>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                Most memory systems report Accuracy, F1 Score, Hit@10, MRR (Mean Reciprocal Rank), and Category-wise scores (SH, MH, TR, OD, ADV). For retrieval systems like Memwyre, the crucial retrieval performance metrics are:
+                The results confirm that Memwyre's performance is model-agnostic: whether using proprietary OpenAI models or high-throughput open-weight engines like Kimi K2.5 on AWS Bedrock, the core memory architecture (entity profiling, dynamic pruning, and two-stage vector reranking) delivers consistent 70%+ non-adversarial recall.
               </p>
-              <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
-                <li><strong>Hit@10:</strong> Was the correct memory included in the top 10 retrieved context items?</li>
-                <li><strong>MRR:</strong> How high did the correct target memory rank in the retrieval output?</li>
-              </ul>
             </section>
 
-            <!-- 3. Types of Questions -->
+            <!-- 3. Question Categories -->
             <section id="questions" class="space-y-4 scroll-mt-20">
               <h2 class="hero-serif text-2xl sm:text-3xl tracking-tight text-gray-900 dark:text-white border-b border-gray-200 dark:border-zinc-800 pb-2">
-                3. Types of Questions
+                3. Question Types &amp; Evaluation Categories
               </h2>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                The benchmark evaluates five core memory abilities through specific types of questions:
+                LoCoMo tests five distinct memory capabilities across 1,986 questions:
               </p>
 
               <div class="overflow-x-auto border border-gray-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] shadow-sm">
@@ -236,6 +272,7 @@
                     <tr>
                       <th scope="col" class="px-6 py-3">Category</th>
                       <th scope="col" class="px-6 py-3">What it tests</th>
+                      <th scope="col" class="px-6 py-3">Total Questions</th>
                       <th scope="col" class="px-6 py-3">Example</th>
                     </tr>
                   </thead>
@@ -243,27 +280,32 @@
                     <tr>
                       <td class="px-6 py-4 font-bold dark:text-white">Single-hop</td>
                       <td class="px-6 py-4">Direct fact recall</td>
+                      <td class="px-6 py-4 font-mono">841</td>
                       <td class="px-6 py-4 italic">"What is John's favorite sport?"</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold dark:text-white">Adversarial</td>
+                      <td class="px-6 py-4">Abstain / anti-hallucination</td>
+                      <td class="px-6 py-4 font-mono">446</td>
+                      <td class="px-6 py-4 italic">"What is Alex's dog named?" <span class="text-xs text-gray-500 font-normal">(when Alex never mentioned a dog)</span></td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold dark:text-white">Temporal</td>
+                      <td class="px-6 py-4">Understanding time &amp; order</td>
+                      <td class="px-6 py-4 font-mono">321</td>
+                      <td class="px-6 py-4 italic">"When did they first discuss moving to Boston?"</td>
                     </tr>
                     <tr>
                       <td class="px-6 py-4 font-bold dark:text-white">Multi-hop</td>
                       <td class="px-6 py-4">Combining multiple memories</td>
+                      <td class="px-6 py-4 font-mono">282</td>
                       <td class="px-6 py-4 italic">"Who introduced Sarah to the person she later worked with?"</td>
                     </tr>
                     <tr>
-                      <td class="px-6 py-4 font-bold dark:text-white">Temporal</td>
-                      <td class="px-6 py-4">Understanding time and order</td>
-                      <td class="px-6 py-4 italic">"When did they first discuss moving to Boston?"</td>
-                    </tr>
-                    <tr>
-                      <td class="px-6 py-4 font-bold dark:text-white">Open-domain</td>
-                      <td class="px-6 py-4">General reasoning with context</td>
+                      <td class="px-6 py-4 font-bold dark:text-white">World-knowledge</td>
+                      <td class="px-6 py-4">Commonsense &amp; context reasoning</td>
+                      <td class="px-6 py-4 font-mono">96</td>
                       <td class="px-6 py-4 italic">"Why was Emily stressed during that period?"</td>
-                    </tr>
-                    <tr>
-                      <td class="px-6 py-4 font-bold dark:text-white">Adversarial</td>
-                      <td class="px-6 py-4">Avoiding hallucinations</td>
-                      <td class="px-6 py-4 italic">"What is Alex's dog named?" <span class="text-xs text-gray-500 font-normal">(when Alex never mentioned a dog)</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -273,12 +315,71 @@
             <!-- 4. Our Performance -->
             <section id="performance" class="space-y-4 scroll-mt-20">
               <h2 class="hero-serif text-2xl sm:text-3xl tracking-tight text-gray-900 dark:text-white border-b border-gray-200 dark:border-zinc-800 pb-2">
-                4. Our Performance
+                4. Full Benchmark Performance Breakdown
               </h2>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                The chart below illustrates Memwyre's performance on the four primary evaluation categories:
+                Below is the category-by-category accuracy and latency performance across the complete 1,986-question LoCoMo benchmark (using Kimi K2.5):
               </p>
 
+              <!-- Detailed Category Metrics Table -->
+              <div class="overflow-x-auto border border-gray-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] shadow-sm my-4">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs uppercase bg-gray-50 dark:bg-zinc-900 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-zinc-850">
+                    <tr>
+                      <th scope="col" class="px-6 py-3">Question Category</th>
+                      <th scope="col" class="px-6 py-3">Total Qs</th>
+                      <th scope="col" class="px-6 py-3">Correct</th>
+                      <th scope="col" class="px-6 py-3">Accuracy</th>
+                      <th scope="col" class="px-6 py-3">Search Latency</th>
+                      <th scope="col" class="px-6 py-3">Answer Latency</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200 dark:divide-zinc-850 text-gray-950 dark:text-gray-350 font-sans">
+                    <tr class="bg-[#D97757]/5">
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">Single-hop Recall</td>
+                      <td class="px-6 py-4 font-mono">841</td>
+                      <td class="px-6 py-4 font-mono">661</td>
+                      <td class="px-6 py-4 font-bold text-[#D97757]">78.60%</td>
+                      <td class="px-6 py-4 font-mono text-xs">3,289 ms</td>
+                      <td class="px-6 py-4 font-mono text-xs">8,288 ms</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">Adversarial (Abstain)</td>
+                      <td class="px-6 py-4 font-mono">446</td>
+                      <td class="px-6 py-4 font-mono">302</td>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">67.71%</td>
+                      <td class="px-6 py-4 font-mono text-xs">3,181 ms</td>
+                      <td class="px-6 py-4 font-mono text-xs">10,744 ms</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">Temporal Reasoning</td>
+                      <td class="px-6 py-4 font-mono">321</td>
+                      <td class="px-6 py-4 font-mono">206</td>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">64.17%</td>
+                      <td class="px-6 py-4 font-mono text-xs">3,357 ms</td>
+                      <td class="px-6 py-4 font-mono text-xs">8,907 ms</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">World Knowledge</td>
+                      <td class="px-6 py-4 font-mono">96</td>
+                      <td class="px-6 py-4 font-mono">57</td>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">59.38%</td>
+                      <td class="px-6 py-4 font-mono text-xs">3,189 ms</td>
+                      <td class="px-6 py-4 font-mono text-xs">10,856 ms</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">Multi-hop Reasoning</td>
+                      <td class="px-6 py-4 font-mono">282</td>
+                      <td class="px-6 py-4 font-mono">162</td>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">57.45%</td>
+                      <td class="px-6 py-4 font-mono text-xs">3,404 ms</td>
+                      <td class="px-6 py-4 font-mono text-xs">9,792 ms</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Bar Chart Visual -->
               <div class="relative p-3 border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl bg-gray-50/50 dark:bg-zinc-900/10 my-6">
                 <!-- Corner Brackets (Crosshairs) -->
                 <div class="absolute -top-2 -left-2 w-4 h-4 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
@@ -300,95 +401,69 @@
                   <div class="relative z-10 h-72 sm:h-96 flex items-end justify-between px-2 sm:px-6">
                     <!-- Category 1: Single-hop -->
                     <div class="flex flex-col items-center flex-1 h-full justify-end group">
-                      <div class="flex items-end justify-center gap-1.5 sm:gap-4 h-[85%] w-full">
-                        <!-- Old Bar -->
-                        <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                          <span class="text-gray-500 font-mono text-[10px] sm:text-xs mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">53.0</span>
+                      <div class="flex items-end justify-center h-[85%] w-full">
+                        <div class="flex flex-col items-center justify-end h-full w-10 sm:w-14 relative">
+                          <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">78.6%</span>
                           <div 
-                            class="w-full bg-zinc-300 dark:bg-zinc-700 border border-black dark:border-zinc-900 rounded-t hover:bg-zinc-400 transition-all duration-1000 ease-out origin-bottom scale-y-0"
+                            class="w-full bg-[#D97757] border border-black dark:border-zinc-900 rounded-t hover:bg-[#e68a6c] transition-all duration-1000 ease-out origin-bottom scale-y-0"
                             :class="{ 'scale-y-100': animateBars }"
-                            style="height: 53.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.2) 8px, rgba(0, 0, 0, 0.2) 9px);"
-                          ></div>
-                        </div>
-                        <!-- New Bar -->
-                        <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                          <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">80.0</span>
-                          <div 
-                            class="w-full bg-[#D97757] border border-black dark:border-zinc-900 rounded-t hover:bg-[#e68a6c] hover:shadow-[0_0_15px_rgba(217,119,87,0.15)] transition-all duration-1000 ease-out origin-bottom scale-y-0"
-                            :class="{ 'scale-y-100': animateBars }"
-                            style="height: 80.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
+                            style="height: 78.6%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
                           ></div>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Category 2: Multi-hop -->
+                    <!-- Category 2: Adversarial -->
                     <div class="flex flex-col items-center flex-1 h-full justify-end group">
-                      <div class="flex items-end justify-center gap-1.5 sm:gap-4 h-[85%] w-full">
-                        <!-- Old Bar -->
-                        <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                          <span class="text-gray-500 font-mono text-[10px] sm:text-xs mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">24.0</span>
+                      <div class="flex items-end justify-center h-[85%] w-full">
+                        <div class="flex flex-col items-center justify-end h-full w-10 sm:w-14 relative">
+                          <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">67.7%</span>
                           <div 
-                            class="w-full bg-zinc-300 dark:bg-zinc-700 border border-black dark:border-zinc-900 rounded-t hover:bg-zinc-400 transition-all duration-1000 ease-out origin-bottom scale-y-0"
+                            class="w-full bg-[#D97757] border border-black dark:border-zinc-900 rounded-t hover:bg-[#e68a6c] transition-all duration-1000 ease-out origin-bottom scale-y-0"
                             :class="{ 'scale-y-100': animateBars }"
-                            style="height: 24.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.2) 8px, rgba(0, 0, 0, 0.2) 9px);"
-                          ></div>
-                        </div>
-                        <!-- New Bar -->
-                        <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                          <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">45.0</span>
-                          <div 
-                            class="w-full bg-[#D97757] border border-black dark:border-zinc-900 rounded-t hover:bg-[#e68a6c] hover:shadow-[0_0_15px_rgba(217,119,87,0.15)] transition-all duration-1000 ease-out origin-bottom scale-y-0"
-                            :class="{ 'scale-y-100': animateBars }"
-                            style="height: 45.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
+                            style="height: 67.7%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
                           ></div>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Category 3: Open-domain -->
+                    <!-- Category 3: Temporal -->
                     <div class="flex flex-col items-center flex-1 h-full justify-end group">
-                      <div class="flex items-end justify-center gap-1.5 sm:gap-4 h-[85%] w-full">
-                        <!-- Old Bar -->
-                        <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                          <span class="text-gray-500 font-mono text-[10px] sm:text-xs mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">50.0</span>
+                      <div class="flex items-end justify-center h-[85%] w-full">
+                        <div class="flex flex-col items-center justify-end h-full w-10 sm:w-14 relative">
+                          <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">64.2%</span>
                           <div 
-                            class="w-full bg-zinc-300 dark:bg-zinc-700 border border-black dark:border-zinc-900 rounded-t hover:bg-zinc-400 transition-all duration-1000 ease-out origin-bottom scale-y-0"
+                            class="w-full bg-[#D97757] border border-black dark:border-zinc-900 rounded-t hover:bg-[#e68a6c] transition-all duration-1000 ease-out origin-bottom scale-y-0"
                             :class="{ 'scale-y-100': animateBars }"
-                            style="height: 50.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.2) 8px, rgba(0, 0, 0, 0.2) 9px);"
-                          ></div>
-                        </div>
-                        <!-- New Bar -->
-                        <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                          <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">76.0</span>
-                          <div 
-                            class="w-full bg-[#D97757] border border-black dark:border-zinc-900 rounded-t hover:bg-[#e68a6c] hover:shadow-[0_0_15px_rgba(217,119,87,0.15)] transition-all duration-1000 ease-out origin-bottom scale-y-0"
-                            :class="{ 'scale-y-100': animateBars }"
-                            style="height: 76.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
+                            style="height: 64.2%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
                           ></div>
                         </div>
                       </div>
                     </div>
 
-                    <!-- Category 4: Temporal -->
+                    <!-- Category 4: World Knowledge -->
                     <div class="flex flex-col items-center flex-1 h-full justify-end group">
-                      <div class="flex items-end justify-center gap-1.5 sm:gap-4 h-[85%] w-full">
-                        <!-- Old Bar -->
-                        <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                          <span class="text-gray-500 font-mono text-[10px] sm:text-xs mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">48.0</span>
+                      <div class="flex items-end justify-center h-[85%] w-full">
+                        <div class="flex flex-col items-center justify-end h-full w-10 sm:w-14 relative">
+                          <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">59.4%</span>
                           <div 
-                            class="w-full bg-zinc-300 dark:bg-zinc-700 border border-black dark:border-zinc-900 rounded-t hover:bg-zinc-400 transition-all duration-1000 ease-out origin-bottom scale-y-0"
+                            class="w-full bg-[#D97757] border border-black dark:border-zinc-900 rounded-t hover:bg-[#e68a6c] transition-all duration-1000 ease-out origin-bottom scale-y-0"
                             :class="{ 'scale-y-100': animateBars }"
-                            style="height: 48.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.2) 8px, rgba(0, 0, 0, 0.2) 9px);"
+                            style="height: 59.4%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
                           ></div>
                         </div>
-                        <!-- New Bar -->
-                        <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                          <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">74.0</span>
+                      </div>
+                    </div>
+
+                    <!-- Category 5: Multi-hop -->
+                    <div class="flex flex-col items-center flex-1 h-full justify-end group">
+                      <div class="flex items-end justify-center h-[85%] w-full">
+                        <div class="flex flex-col items-center justify-end h-full w-10 sm:w-14 relative">
+                          <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">57.5%</span>
                           <div 
-                            class="w-full bg-[#D97757] border border-black dark:border-zinc-900 rounded-t hover:bg-[#e68a6c] hover:shadow-[0_0_15px_rgba(217,119,87,0.15)] transition-all duration-1000 ease-out origin-bottom scale-y-0"
+                            class="w-full bg-[#D97757] border border-black dark:border-zinc-900 rounded-t hover:bg-[#e68a6c] transition-all duration-1000 ease-out origin-bottom scale-y-0"
                             :class="{ 'scale-y-100': animateBars }"
-                            style="height: 74.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
+                            style="height: 57.5%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
                           ></div>
                         </div>
                       </div>
@@ -398,35 +473,29 @@
                   <!-- Bottom labels (X-axis) -->
                   <div class="flex justify-between px-2 sm:px-6 border-t border-gray-200 dark:border-zinc-800 pt-4 relative z-10 text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">
                     <div class="flex-1 text-center">Single-hop</div>
-                    <div class="flex-1 text-center">Multi-hop</div>
-                    <div class="flex-1 text-center">Open-domain</div>
+                    <div class="flex-1 text-center">Adversarial</div>
                     <div class="flex-1 text-center">Temporal</div>
+                    <div class="flex-1 text-center">World-Knowledge</div>
+                    <div class="flex-1 text-center">Multi-hop</div>
                   </div>
 
                   <!-- Legend and Footer -->
                   <div class="flex justify-between items-center mt-10 px-2 sm:px-6 relative z-10 text-xs tracking-wider uppercase font-bold">
-                    <div class="flex items-center gap-6">
-                      <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 bg-zinc-300 dark:bg-zinc-700 rounded-sm"></span>
-                        <span class="text-gray-500 dark:text-gray-400">Old</span>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 bg-[#D97757] rounded-sm"></span>
-                        <span class="text-gray-600 dark:text-gray-300">New</span>
-                      </div>
+                    <div class="flex items-center gap-2">
+                      <span class="w-3 h-3 bg-[#D97757] rounded-sm"></span>
+                      <span class="text-gray-600 dark:text-gray-300">Accuracy (%)</span>
                     </div>
-                    <div class="text-gray-400 dark:text-gray-500 tracking-widest font-mono">LOCOMO</div>
+                    <div class="text-gray-400 dark:text-gray-500 tracking-widest font-mono">LOCOMO FULL BENCHMARK (1,986 QS)</div>
                   </div>
                 </div>
               </div>
 
               <h4 class="font-bold text-gray-950 dark:text-white text-base mb-2">Why Memwyre Performs So Well</h4>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                Memwyre's exceptional results on the LoCoMo-10 benchmark—such as achieving an 80% accuracy on Single-hop recall and a 74% score on Temporal alignment—are powered by a combination of targeted technological mechanisms:
+                Memwyre's exceptional results on the LoCoMo-10 benchmark—achieving 78.6% accuracy on Single-hop recall and strong anti-hallucination immunity—are powered by four architectural pillars:
               </p>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
                 <div class="p-5 border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] relative">
-                  <!-- Corner Brackets -->
                   <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
                   <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
                   <h5 class="font-bold text-gray-900 dark:text-white text-base mb-2 flex items-center gap-2 font-mono">
@@ -439,7 +508,6 @@
                 </div>
 
                 <div class="p-5 border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] relative">
-                  <!-- Corner Brackets -->
                   <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
                   <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
                   <h5 class="font-bold text-gray-900 dark:text-white text-base mb-2 flex items-center gap-2 font-mono">
@@ -447,12 +515,11 @@
                     Vector Re-ranking
                   </h5>
                   <p class="text-sm text-gray-600 dark:text-gray-455 leading-relaxed">
-                    Memwyre uses a two-stage retrieval pipeline. It pulls a broad set of candidate memories (yielding a high Hit@10 rate), then re-ranks them using cross-encoders to ensure only the highest-scoring context matches are sent to the generation window.
+                    Memwyre uses a two-stage retrieval pipeline. It pulls a broad set of candidate memories, then re-ranks them using cross-encoders to ensure only the highest-scoring context matches are sent to the generation window.
                   </p>
                 </div>
 
                 <div class="p-5 border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] relative">
-                  <!-- Corner Brackets -->
                   <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
                   <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
                   <h5 class="font-bold text-gray-900 dark:text-white text-base mb-2 flex items-center gap-2 font-mono">
@@ -465,7 +532,6 @@
                 </div>
 
                 <div class="p-5 border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] relative">
-                  <!-- Corner Brackets -->
                   <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
                   <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
                   <h5 class="font-bold text-gray-900 dark:text-white text-base mb-2 flex items-center gap-2 font-mono">
@@ -478,32 +544,20 @@
                 </div>
               </div>
 
-              <p class="text-gray-700 dark:text-gray-300 leading-relaxed mt-6">
-                Our performance analysis indicates that retrieval recall remains extremely strong (especially on complex multi-hop correlations). The remaining delta is primarily a downstream bottleneck, which we are addressing through:
-              </p>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                <div class="p-4 bg-gray-50 dark:bg-zinc-900 border border-gray-250 dark:border-zinc-800 rounded-xl">
-                  <h5 class="font-bold text-[#D97757] text-sm uppercase tracking-wider mb-2">Reranking Quality</h5>
-                  <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">Prioritizing the highest-scoring context items to match generation context bounds.</p>
-                </div>
-                <div class="p-4 bg-gray-50 dark:bg-zinc-900 border border-gray-250 dark:border-zinc-800 rounded-xl">
-                  <h5 class="font-bold text-[#D97757] text-sm uppercase tracking-wider mb-2">Evidence Selection</h5>
-                  <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">Extracting specific targets, filtering out ambient chat noise and distractors.</p>
-                </div>
-                <div class="p-4 bg-gray-50 dark:bg-zinc-900 border border-gray-250 dark:border-zinc-800 rounded-xl">
-                  <h5 class="font-bold text-[#D97757] text-sm uppercase tracking-wider mb-2">Answer Synthesis</h5>
-                  <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">Ensuring details from different sessions compile cleanly in the response.</p>
-                </div>
-              </div>
-
+              <!-- Open Data & External Links Box -->
               <div class="p-6 bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-zinc-800 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8">
                 <div>
-                  <h4 class="font-bold text-gray-950 dark:text-white">Interested in the raw benchmark datasets?</h4>
-                  <p class="text-xs text-gray-555 dark:text-gray-400 mt-0.5">Download our complete evaluation logs (JSON format).</p>
+                  <h4 class="font-bold text-gray-950 dark:text-white">Explore the Open Benchmarks &amp; Data</h4>
+                  <p class="text-xs text-gray-555 dark:text-gray-400 mt-0.5">Explore MemoryBench, LoCoMo paper, and Memwyre evaluation logs.</p>
                 </div>
-                <a href="https://github.com/ramblinghermit0403/Memwyre" target="_blank" class="px-5 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold rounded hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors shrink-0">
-                  View GitHub Repository →
-                </a>
+                <div class="flex items-center gap-3 shrink-0">
+                  <a href="https://github.com/memorybench/memorybench" target="_blank" class="px-4 py-2 border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white text-xs font-bold rounded hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
+                    MemoryBench Harness →
+                  </a>
+                  <a href="https://github.com/ramblinghermit0403/Memwyre" target="_blank" class="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold rounded hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
+                    GitHub Repo →
+                  </a>
+                </div>
               </div>
             </section>
           </article>
