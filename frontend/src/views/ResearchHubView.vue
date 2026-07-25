@@ -137,7 +137,7 @@ const papers = [
     title: 'The LoCoMo Benchmark Report',
     excerpt: 'Our core evaluation matrix checking long-context recall, entity traversal, and temporal consistency across 1,540 simulated developer query runs.',
     readTime: 'Active',
-    date: 'ACCURACY: 73.5% | HIT@10: 88.8%',
+    date: 'ACCURACY: 70.5% | HIT@10: 79.9%',
     link: '/ai-memory-benchmark-locomo',
     cover: '/blog-covers/ai-memory-benchmark-locomo-v2.png'
   }
