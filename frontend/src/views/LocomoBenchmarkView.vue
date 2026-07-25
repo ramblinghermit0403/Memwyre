@@ -82,7 +82,7 @@
                 LoCoMo Dataset Repo
               </a>
               <a 
-                href="https://github.com/memorybench/memorybench" 
+                href="https://github.com/supermemoryai/memorybench" 
                 target="_blank"
                 class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 hover:text-[#D97757] dark:hover:text-[#D97757] transition-colors"
               >
@@ -200,7 +200,7 @@
                 The benchmark dataset contains 10 comprehensive multi-session conversations (<code class="bg-gray-100 dark:bg-zinc-900 px-1.5 py-0.5 rounded font-mono text-sm dark:text-gray-200 border dark:border-zinc-800">locomo10.json</code>) spanning up to 32 sessions per user over weeks and months of simulated dialogue. Unlike simple retrieval tasks, LoCoMo tests whether an AI can track personal facts, handle evolving preferences over time, reject non-existent memories, and correlate information scattered across disconnected sessions.
               </p>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                To evaluate Memwyre, we run full-suite benchmarks using <a href="https://github.com/memorybench/memorybench" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">MemoryBench</a>—an open-source evaluation framework for AI memory engines—and publish raw run artifacts directly to our <a href="https://github.com/snap-research/LoCoMo" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">LoCoMo dataset repository integration</a>.
+                To evaluate Memwyre, we run full-suite benchmarks using <a href="https://github.com/supermemoryai/memorybench" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">MemoryBench</a>—an open-source evaluation framework for AI memory engines—and publish raw run artifacts directly to our <a href="https://github.com/snap-research/LoCoMo" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">LoCoMo dataset repository integration</a>.
               </p>
             </section>
 
@@ -551,7 +551,7 @@
                   <p class="text-xs text-gray-555 dark:text-gray-400 mt-0.5">Explore MemoryBench, LoCoMo paper, and Memwyre evaluation logs.</p>
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
-                  <a href="https://github.com/memorybench/memorybench" target="_blank" class="px-4 py-2 border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white text-xs font-bold rounded hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
+                  <a href="https://github.com/supermemoryai/memorybench" target="_blank" class="px-4 py-2 border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white text-xs font-bold rounded hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
                     MemoryBench Harness →
                   </a>
                   <a href="https://github.com/ramblinghermit0403/Memwyre" target="_blank" class="px-4 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold rounded hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
