@@ -238,8 +238,8 @@
                       <td class="px-6 py-4 font-semibold text-gray-800 dark:text-gray-200">GPT-4o-mini Evaluation</td>
                       <td class="px-6 py-4 font-mono">1,986</td>
                       <td class="px-6 py-4 font-mono text-xs">GPT-4o-mini</td>
-                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">69.67%</td>
-                      <td class="px-6 py-4">70.20%</td>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">70.67%</td>
+                      <td class="px-6 py-4">71.20%</td>
                     </tr>
                     <tr class="bg-[#D97757]/5 dark:bg-[#D97757]/10">
                       <td class="px-6 py-4 font-semibold text-[#D97757]">Kimi K2.5 Evaluation</td>
