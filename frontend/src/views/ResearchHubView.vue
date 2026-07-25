@@ -139,7 +139,7 @@ const papers = [
     readTime: 'Active',
     date: 'ACCURACY: 73.5% | HIT@10: 88.8%',
     link: '/ai-memory-benchmark-locomo',
-    cover: '/blog-covers/ai-memory-benchmark-locomo.png'
+    cover: '/blog-covers/ai-memory-benchmark-locomo-v2.png'
   }
 ];
 </script>
