@@ -197,8 +197,39 @@
                 <strong>LoCoMo</strong> (Long Conversational Memory) is the premier benchmark for evaluating long-term memory in AI agents and conversational assistants. It was introduced by researchers at Snap Research in their paper <a href="https://arxiv.org/abs/2406.16016" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">LoCoMo: Building Long Conversational Memory for LLMs</a>.
               </p>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                The benchmark dataset contains 10 comprehensive multi-session conversations spanning up to 32 sessions per user over weeks and months of simulated dialogue. Unlike simple retrieval tasks, LoCoMo tests whether an AI can track personal facts, handle evolving preferences over time, reject non-existent memories, and correlate information scattered across disconnected sessions.
+                The benchmark dataset contains 10 comprehensive multi-session conversations spanning up to 35 sessions per user over weeks and months of simulated dialogue. Unlike simple retrieval tasks, LoCoMo tests whether an AI can track personal facts, handle evolving preferences over time, reject non-existent memories, and correlate information scattered across disconnected sessions.
               </p>
+              
+              <!-- LoCoMo Scale & Context Specs Box -->
+              <div class="p-5 border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] relative my-4">
+                <div class="absolute -top-1.5 -left-1.5 w-3 h-3 pointer-events-none border-t-2 border-l-2 border-gray-400 dark:border-zinc-700"></div>
+                <div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 pointer-events-none border-b-2 border-r-2 border-gray-400 dark:border-zinc-700"></div>
+                
+                <h4 class="text-xs font-mono font-bold uppercase tracking-wider text-[#D97757] mb-3">LoCoMo Benchmark Dataset Scale</h4>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+                  <div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 font-medium">Conversations</div>
+                    <div class="text-lg font-extrabold font-mono text-gray-900 dark:text-white">10 Histories</div>
+                    <div class="text-[11px] text-gray-400 dark:text-gray-500">27.2 avg sessions (up to 35)</div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 font-medium">Total Questions</div>
+                    <div class="text-lg font-extrabold font-mono text-gray-900 dark:text-white">1,986 Qs</div>
+                    <div class="text-[11px] text-gray-400 dark:text-gray-500">Includes 446 adversarial</div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 font-medium">Avg Tokens / Conv</div>
+                    <div class="text-lg font-extrabold font-mono text-gray-900 dark:text-white">~20,079</div>
+                    <div class="text-[11px] text-gray-400 dark:text-gray-500">Min 12.2k | Max 23.4k</div>
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 font-medium">Total Corpus</div>
+                    <div class="text-lg font-extrabold font-mono text-[#D97757]">~200,789</div>
+                    <div class="text-[11px] text-gray-400 dark:text-gray-500">Tokens concatenated</div>
+                  </div>
+                </div>
+              </div>
+
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                 To evaluate Memwyre, we run full-suite benchmarks using <a href="https://github.com/supermemoryai/memorybench" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">MemoryBench</a>—an open-source evaluation framework for AI memory engines—and publish raw evaluation artifacts to our <a href="https://github.com/snap-research/LoCoMo" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">LoCoMo dataset integration</a>.
               </p>
