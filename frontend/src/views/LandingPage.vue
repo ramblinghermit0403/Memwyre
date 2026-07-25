@@ -1111,10 +1111,10 @@
                   <div class="absolute top-1.5 left-0 w-full h-px bg-gray-400"></div>
                   <div class="absolute left-1.5 top-0 h-full w-px bg-gray-400"></div>
                 </div>
-                <div class="text-[#D97757] text-4xl font-extrabold font-mono tracking-tight">73.5</div>
+                <div class="text-[#D97757] text-4xl font-extrabold font-mono tracking-tight">70.5%</div>
                 <div class="text-left">
-                  <div class="text-gray-900 font-bold text-base leading-tight">Overall Accuracy</div>
-                  <div class="text-gray-500 text-xs tracking-widest uppercase font-semibold mt-0.5">Benchmark Score</div>
+                  <div class="text-gray-900 font-bold text-base leading-tight">Non-Adversarial Recall</div>
+                  <div class="text-gray-500 text-xs tracking-widest uppercase font-semibold mt-0.5">Full 1,986 Benchmark Suite</div>
                 </div>
               </div>
               <div class="relative flex items-center gap-5 bg-white border border-dashed border-gray-300 rounded p-5 shadow-sm transition-all duration-300 hover:border-gray-400 hover:shadow-md">
@@ -1135,10 +1135,10 @@
                   <div class="absolute top-1.5 left-0 w-full h-px bg-gray-400"></div>
                   <div class="absolute left-1.5 top-0 h-full w-px bg-gray-400"></div>
                 </div>
-                <div class="text-gray-900 text-4xl font-extrabold font-mono tracking-tight">3000</div>
+                <div class="text-gray-900 text-4xl font-extrabold font-mono tracking-tight">4.9k</div>
                 <div class="text-left">
-                  <div class="text-gray-900 font-bold text-base leading-tight">Mean Tokens</div>
-                  <div class="text-gray-500 text-xs tracking-widest uppercase font-semibold mt-0.5">Average Context Size</div>
+                  <div class="text-gray-900 font-bold text-base leading-tight">Mean Context Tokens</div>
+                  <div class="text-gray-500 text-xs tracking-widest uppercase font-semibold mt-0.5">Vs 26k+ Raw Context</div>
                 </div>
               </div>
             </div>
@@ -1191,11 +1191,11 @@
                       </div>
                       <!-- New Bar -->
                       <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                        <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">80.0</span>
+                        <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">78.6</span>
                         <div 
                           class="w-full bg-[#D97757] border border-black rounded-t hover:bg-[#e68a6c] hover:shadow-[0_0_15px_rgba(217,119,87,0.15)] transition-all duration-1000 ease-out origin-bottom scale-y-0"
                           :class="{ 'scale-y-100': animateBars }"
-                          style="height: 80.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
+                          style="height: 78.6%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
                         ></div>
                       </div>
                     </div>
@@ -1215,17 +1215,17 @@
                       </div>
                       <!-- New Bar -->
                       <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                        <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">45.0</span>
+                        <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">57.5</span>
                         <div 
                           class="w-full bg-[#D97757] border border-black rounded-t hover:bg-[#e68a6c] hover:shadow-[0_0_15px_rgba(217,119,87,0.15)] transition-all duration-1000 ease-out origin-bottom scale-y-0"
                           :class="{ 'scale-y-100': animateBars }"
-                          style="height: 45.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
+                          style="height: 57.5%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
                         ></div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- Category 3: Open-domain -->
+                  <!-- Category 3: Adversarial -->
                   <div class="flex flex-col items-center flex-1 h-full justify-end group">
                     <div class="flex items-end justify-center gap-1.5 sm:gap-4 h-[85%] w-full">
                       <!-- Old Bar -->
@@ -1239,11 +1239,11 @@
                       </div>
                       <!-- New Bar -->
                       <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                        <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">76.0</span>
+                        <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">67.7</span>
                         <div 
                           class="w-full bg-[#D97757] border border-black rounded-t hover:bg-[#e68a6c] hover:shadow-[0_0_15px_rgba(217,119,87,0.15)] transition-all duration-1000 ease-out origin-bottom scale-y-0"
                           :class="{ 'scale-y-100': animateBars }"
-                          style="height: 76.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
+                          style="height: 67.7%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
                         ></div>
                       </div>
                     </div>
@@ -1263,11 +1263,11 @@
                       </div>
                       <!-- New Bar -->
                       <div class="flex flex-col items-center justify-end h-full w-7 sm:w-12 relative">
-                        <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">74.0</span>
+                        <span class="text-[#D97757] font-mono text-[10px] sm:text-xs font-bold mb-1 transition-all duration-500 delay-500 opacity-0" :class="{ 'opacity-100': animateBars }">64.2</span>
                         <div 
                           class="w-full bg-[#D97757] border border-black rounded-t hover:bg-[#e68a6c] hover:shadow-[0_0_15px_rgba(217,119,87,0.15)] transition-all duration-1000 ease-out origin-bottom scale-y-0"
                           :class="{ 'scale-y-100': animateBars }"
-                          style="height: 74.0%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
+                          style="height: 64.2%; background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0, 0, 0, 0.25) 8px, rgba(0, 0, 0, 0.25) 9px);"
                         ></div>
                       </div>
                     </div>
@@ -1278,7 +1278,7 @@
                 <div class="flex justify-between px-2 sm:px-6 border-t border-gray-200 pt-4 relative z-10 text-xs sm:text-sm font-medium text-gray-500">
                   <div class="flex-1 text-center">Single-hop</div>
                   <div class="flex-1 text-center">Multi-hop</div>
-                  <div class="flex-1 text-center">Open-domain</div>
+                  <div class="flex-1 text-center">Adversarial</div>
                   <div class="flex-1 text-center">Temporal</div>
                 </div>
 
@@ -1310,7 +1310,7 @@
                   <div class="space-y-1.5">
                     <div class="flex justify-between items-center text-xs font-semibold text-gray-800">
                       <span>Single-hop</span>
-                      <span class="font-mono text-[10px] text-gray-400">Old: 53.0% / <span class="text-[#D97757] font-bold">New: 80.0%</span></span>
+                      <span class="font-mono text-[10px] text-gray-400">Old: 53.0% / <span class="text-[#D97757] font-bold">New: 78.6%</span></span>
                     </div>
                     <div class="space-y-1">
                       <!-- Old Bar -->
@@ -1319,7 +1319,7 @@
                       </div>
                       <!-- New Bar -->
                       <div class="w-full bg-[#D97757]/10 h-2.5 rounded overflow-hidden relative">
-                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '80.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
+                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '78.6%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
                       </div>
                     </div>
                   </div>
@@ -1328,7 +1328,7 @@
                   <div class="space-y-1.5">
                     <div class="flex justify-between items-center text-xs font-semibold text-gray-800">
                       <span>Multi-hop</span>
-                      <span class="font-mono text-[10px] text-gray-400">Old: 24.0% / <span class="text-[#D97757] font-bold">New: 45.0%</span></span>
+                      <span class="font-mono text-[10px] text-gray-400">Old: 24.0% / <span class="text-[#D97757] font-bold">New: 57.5%</span></span>
                     </div>
                     <div class="space-y-1">
                       <!-- Old Bar -->
@@ -1337,16 +1337,16 @@
                       </div>
                       <!-- New Bar -->
                       <div class="w-full bg-[#D97757]/10 h-2.5 rounded overflow-hidden relative">
-                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '45.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
+                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '57.5%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- Category 3: Open-domain -->
+                  <!-- Category 3: Adversarial -->
                   <div class="space-y-1.5">
                     <div class="flex justify-between items-center text-xs font-semibold text-gray-800">
-                      <span>Open-domain</span>
-                      <span class="font-mono text-[10px] text-gray-400">Old: 50.0% / <span class="text-[#D97757] font-bold">New: 76.0%</span></span>
+                      <span>Adversarial</span>
+                      <span class="font-mono text-[10px] text-gray-400">Old: 50.0% / <span class="text-[#D97757] font-bold">New: 67.7%</span></span>
                     </div>
                     <div class="space-y-1">
                       <!-- Old Bar -->
@@ -1355,7 +1355,7 @@
                       </div>
                       <!-- New Bar -->
                       <div class="w-full bg-[#D97757]/10 h-2.5 rounded overflow-hidden relative">
-                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '76.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
+                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '67.7%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
                       </div>
                     </div>
                   </div>
@@ -1364,7 +1364,7 @@
                   <div class="space-y-1.5">
                     <div class="flex justify-between items-center text-xs font-semibold text-gray-800">
                       <span>Temporal</span>
-                      <span class="font-mono text-[10px] text-gray-400">Old: 48.0% / <span class="text-[#D97757] font-bold">New: 74.0%</span></span>
+                      <span class="font-mono text-[10px] text-gray-400">Old: 48.0% / <span class="text-[#D97757] font-bold">New: 64.2%</span></span>
                     </div>
                     <div class="space-y-1">
                       <!-- Old Bar -->
@@ -1373,7 +1373,7 @@
                       </div>
                       <!-- New Bar -->
                       <div class="w-full bg-[#D97757]/10 h-2.5 rounded overflow-hidden relative">
-                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '74.0%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
+                        <div class="bg-[#D97757] h-full rounded transition-all duration-1000 ease-out origin-left scale-x-0" :class="{ 'scale-x-100': animateBars }" :style="{ width: animateBars ? '64.2%' : '0%' }" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 6px, rgba(0, 0, 0, 0.25) 6px, rgba(0, 0, 0, 0.25) 7px);"></div>
                       </div>
                     </div>
                   </div>
