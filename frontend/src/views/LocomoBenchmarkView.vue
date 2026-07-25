@@ -197,10 +197,10 @@
                 <strong>LoCoMo</strong> (Long Conversational Memory) is the premier benchmark for evaluating long-term memory in AI agents and conversational assistants. It was introduced by researchers at Snap Research in their paper <a href="https://arxiv.org/abs/2406.16016" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">LoCoMo: Building Long Conversational Memory for LLMs</a>.
               </p>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                The benchmark dataset contains 10 comprehensive multi-session conversations (<code class="bg-gray-100 dark:bg-zinc-900 px-1.5 py-0.5 rounded font-mono text-sm dark:text-gray-200 border dark:border-zinc-800">locomo10.json</code>) spanning up to 32 sessions per user over weeks and months of simulated dialogue. Unlike simple retrieval tasks, LoCoMo tests whether an AI can track personal facts, handle evolving preferences over time, reject non-existent memories, and correlate information scattered across disconnected sessions.
+                The benchmark dataset contains 10 comprehensive multi-session conversations spanning up to 32 sessions per user over weeks and months of simulated dialogue. Unlike simple retrieval tasks, LoCoMo tests whether an AI can track personal facts, handle evolving preferences over time, reject non-existent memories, and correlate information scattered across disconnected sessions.
               </p>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                To evaluate Memwyre, we run full-suite benchmarks using <a href="https://github.com/supermemoryai/memorybench" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">MemoryBench</a>—an open-source evaluation framework for AI memory engines—and publish raw run artifacts directly to our <a href="https://github.com/snap-research/LoCoMo" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">LoCoMo dataset repository integration</a>.
+                To evaluate Memwyre, we run full-suite benchmarks using <a href="https://github.com/supermemoryai/memorybench" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">MemoryBench</a>—an open-source evaluation framework for AI memory engines—and publish raw evaluation artifacts to our <a href="https://github.com/snap-research/LoCoMo" target="_blank" class="text-[#D97757] underline hover:text-[#c4654a]">LoCoMo dataset integration</a>.
               </p>
             </section>
 
@@ -213,38 +213,38 @@
                 A critical design goal of Memwyre is <strong>LLM Model Independence</strong>: the memory engine must perform reliably regardless of which LLM handles ingestion, answer generation, or judging.
               </p>
               
-              <h4 class="font-bold text-gray-950 dark:text-white text-base pt-2">Comparing GPT-4o-mini vs. Kimi K2.5 Runs</h4>
+              <h4 class="font-bold text-gray-950 dark:text-white text-base pt-2">Identical Evaluation: GPT-4o-mini vs. Kimi K2.5</h4>
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                We evaluated Memwyre under two distinct model configurations:
+                To test model independence, we evaluated Memwyre under identical benchmark conditions across the complete dataset (1,986 questions) using two different base models:
               </p>
               <ul class="list-disc pl-6 space-y-2 text-gray-700 dark:text-gray-300">
-                <li><strong>GPT-4o-mini Evaluation (<code class="bg-gray-100 dark:bg-zinc-900 px-1 py-0.5 rounded font-mono text-xs">azure:gpt-4o-mini</code>):</strong> Used as the backend LLM for fact extraction, answer generation, and evaluation in earlier sample runs.</li>
-                <li><strong>Kimi K2.5 Full Evaluation (<code class="bg-gray-100 dark:bg-zinc-900 px-1 py-0.5 rounded font-mono text-xs">bedrock:kimi-k2.5</code>):</strong> Used across all 3 phases (Ingestion Fact Extraction, Answer Generation, and LLM Judge Evaluation) on the full 1,986-question benchmark.</li>
+                <li><strong>GPT-4o-mini Configuration:</strong> Used GPT-4o-mini end-to-end across all evaluation phases (fact extraction, answer generation, and judging).</li>
+                <li><strong>Kimi K2.5 Configuration:</strong> Used Kimi K2.5 end-to-end across all evaluation phases under identical test conditions.</li>
               </ul>
               
               <div class="overflow-x-auto border border-gray-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] shadow-sm my-4">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                   <thead class="text-xs uppercase bg-gray-50 dark:bg-zinc-900 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-zinc-850">
                     <tr>
-                      <th scope="col" class="px-6 py-3">Evaluation Run</th>
-                      <th scope="col" class="px-6 py-3">Questions</th>
-                      <th scope="col" class="px-6 py-3">Backend LLM Model</th>
+                      <th scope="col" class="px-6 py-3">Evaluation Configuration</th>
+                      <th scope="col" class="px-6 py-3">Total Questions</th>
+                      <th scope="col" class="px-6 py-3">Base Model</th>
                       <th scope="col" class="px-6 py-3">Overall Accuracy</th>
                       <th scope="col" class="px-6 py-3">Non-Adversarial</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 dark:divide-zinc-850 text-gray-950 dark:text-gray-350 font-sans">
                     <tr>
-                      <td class="px-6 py-4 font-mono text-xs font-semibold text-gray-600 dark:text-gray-300">memwyre-locomo-20260609</td>
-                      <td class="px-6 py-4">150 (Sample)</td>
-                      <td class="px-6 py-4 font-mono text-xs">azure:gpt-4o-mini</td>
+                      <td class="px-6 py-4 font-semibold text-gray-800 dark:text-gray-200">GPT-4o-mini Evaluation</td>
+                      <td class="px-6 py-4 font-mono">1,986</td>
+                      <td class="px-6 py-4 font-mono text-xs">GPT-4o-mini</td>
                       <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">66.67%</td>
                       <td class="px-6 py-4">67.20%</td>
                     </tr>
                     <tr class="bg-[#D97757]/5 dark:bg-[#D97757]/10">
-                      <td class="px-6 py-4 font-mono text-xs font-semibold text-[#D97757]">memwyre-locomo-20260721</td>
-                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">1,986 (Full)</td>
-                      <td class="px-6 py-4 font-mono text-xs font-semibold text-[#D97757]">bedrock:kimi-k2.5</td>
+                      <td class="px-6 py-4 font-semibold text-[#D97757]">Kimi K2.5 Evaluation</td>
+                      <td class="px-6 py-4 font-bold text-gray-900 dark:text-white font-mono">1,986</td>
+                      <td class="px-6 py-4 font-mono text-xs font-semibold text-[#D97757]">Kimi K2.5</td>
                       <td class="px-6 py-4 font-bold text-[#D97757]">69.89%</td>
                       <td class="px-6 py-4 font-bold text-[#D97757]">70.52%</td>
                     </tr>
@@ -253,7 +253,7 @@
               </div>
 
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                The results confirm that Memwyre's performance is model-agnostic: whether using proprietary OpenAI models or high-throughput open-weight engines like Kimi K2.5 on AWS Bedrock, the core memory architecture (entity profiling, dynamic pruning, and two-stage vector reranking) delivers consistent 70%+ non-adversarial recall.
+                Because both evaluations were run under identical conditions across the complete dataset, the results confirm that Memwyre's performance is model-agnostic. Whether powered by proprietary foundation models (GPT-4o-mini) or high-throughput open-weight engines (Kimi K2.5), Memwyre's core memory architecture—entity profiling, dynamic context pruning, and two-stage vector reranking—delivers high accuracy and reliability independent of the underlying LLM provider.
               </p>
             </section>
 
