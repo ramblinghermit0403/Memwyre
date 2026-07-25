@@ -368,8 +368,6 @@
                       <th scope="col" class="px-6 py-3">Total Qs</th>
                       <th scope="col" class="px-6 py-3">Correct</th>
                       <th scope="col" class="px-6 py-3">Accuracy</th>
-                      <th scope="col" class="px-6 py-3">Search Latency</th>
-                      <th scope="col" class="px-6 py-3">Answer Latency</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 dark:divide-zinc-850 text-gray-950 dark:text-gray-350 font-sans">
@@ -378,40 +376,30 @@
                       <td class="px-6 py-4 font-mono">841</td>
                       <td class="px-6 py-4 font-mono">661</td>
                       <td class="px-6 py-4 font-bold text-[#D97757]">78.60%</td>
-                      <td class="px-6 py-4 font-mono text-xs">3,289 ms</td>
-                      <td class="px-6 py-4 font-mono text-xs">8,288 ms</td>
                     </tr>
                     <tr>
                       <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">Adversarial (Abstain)</td>
                       <td class="px-6 py-4 font-mono">446</td>
                       <td class="px-6 py-4 font-mono">302</td>
                       <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">67.71%</td>
-                      <td class="px-6 py-4 font-mono text-xs">3,181 ms</td>
-                      <td class="px-6 py-4 font-mono text-xs">10,744 ms</td>
                     </tr>
                     <tr>
                       <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">Temporal Reasoning</td>
                       <td class="px-6 py-4 font-mono">321</td>
                       <td class="px-6 py-4 font-mono">206</td>
                       <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">64.17%</td>
-                      <td class="px-6 py-4 font-mono text-xs">3,357 ms</td>
-                      <td class="px-6 py-4 font-mono text-xs">8,907 ms</td>
                     </tr>
                     <tr>
                       <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">World Knowledge</td>
                       <td class="px-6 py-4 font-mono">96</td>
                       <td class="px-6 py-4 font-mono">57</td>
                       <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">59.38%</td>
-                      <td class="px-6 py-4 font-mono text-xs">3,189 ms</td>
-                      <td class="px-6 py-4 font-mono text-xs">10,856 ms</td>
                     </tr>
                     <tr>
                       <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">Multi-hop Reasoning</td>
                       <td class="px-6 py-4 font-mono">282</td>
                       <td class="px-6 py-4 font-mono">162</td>
                       <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">57.45%</td>
-                      <td class="px-6 py-4 font-mono text-xs">3,404 ms</td>
-                      <td class="px-6 py-4 font-mono text-xs">9,792 ms</td>
                     </tr>
                   </tbody>
                 </table>
