@@ -131,7 +131,7 @@
           <!-- Cover Image -->
           <div class="w-full aspect-[2/1] rounded-xl overflow-hidden mb-10 bg-gray-50 border border-gray-150 dark:bg-zinc-900/30 dark:border-zinc-800/80">
             <img 
-              src="/blog-covers/ai-memory-benchmark-locomo.png" 
+              src="/blog-covers/ai-memory-benchmark-locomo-v2.png" 
               alt="LoCoMo Benchmark" 
               class="w-full h-full object-cover"
             />

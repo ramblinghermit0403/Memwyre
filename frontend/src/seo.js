@@ -177,7 +177,7 @@ export const PUBLIC_ROUTE_SEO = {
   '/ai-memory-benchmark-locomo': {
     title: 'LoCoMo Benchmark Report | Evaluating AI Memory Networks',
     description: 'Read the LoCoMo Benchmark Report: methodology, datasets, competitors, findings, and conclusions comparing Memwyre, Mem0, Zep, and Supermemory.',
-    ogImage: '/blog-covers/ai-memory-benchmark-locomo.png',
+    ogImage: '/blog-covers/ai-memory-benchmark-locomo-v2.png',
   },
   '/research': {
     title: 'Memwyre Research Hub | Advancing AI Long-Term Context Retention',
