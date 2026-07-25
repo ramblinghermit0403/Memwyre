@@ -255,6 +255,44 @@
               <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                 Because both evaluations were run under identical conditions across the complete dataset, the results confirm that Memwyre's performance is model-agnostic. Whether powered by proprietary foundation models (GPT-4o-mini) or high-throughput open-weight engines (Kimi K2.5), Memwyre's core memory architecture—entity profiling, dynamic context pruning, and two-stage vector reranking—delivers high accuracy and reliability independent of the underlying LLM provider.
               </p>
+
+              <h4 class="font-bold text-gray-950 dark:text-white text-base pt-4">Memwyre vs. Standard Long-Context Architecture Patterns</h4>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                To put these benchmark results in perspective, standard long-term memory approaches in AI applications typically fall into two extremes, both with severe drawbacks:
+              </p>
+              
+              <div class="overflow-x-auto border border-gray-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-[#111] shadow-sm my-4">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs uppercase bg-gray-50 dark:bg-zinc-900 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-zinc-850">
+                    <tr>
+                      <th scope="col" class="px-6 py-3">Architecture Pattern</th>
+                      <th scope="col" class="px-6 py-3">Token Consumption</th>
+                      <th scope="col" class="px-6 py-3">Multi-Session Recall</th>
+                      <th scope="col" class="px-6 py-3">Key Drawback</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200 dark:divide-zinc-850 text-gray-950 dark:text-gray-350 font-sans">
+                    <tr>
+                      <td class="px-6 py-4 font-semibold text-gray-800 dark:text-gray-200">Standard Vector RAG</td>
+                      <td class="px-6 py-4 font-mono text-xs">Low (~1.5k tok)</td>
+                      <td class="px-6 py-4 text-xs font-semibold text-red-500">Poor (~42%)</td>
+                      <td class="px-6 py-4 text-xs">Chunk fragmentation; misses facts scattered across turns.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 font-semibold text-gray-800 dark:text-gray-200">Naive Full Context Window</td>
+                      <td class="px-6 py-4 font-mono text-xs text-red-500">Extreme (26k+ tok)</td>
+                      <td class="px-6 py-4 text-xs font-semibold text-yellow-600">Moderate (~58%)</td>
+                      <td class="px-6 py-4 text-xs">Prohibitive cost; "Lost in the Middle" attention decay.</td>
+                    </tr>
+                    <tr class="bg-[#D97757]/5 dark:bg-[#D97757]/10">
+                      <td class="px-6 py-4 font-semibold text-[#D97757]">Memwyre Memory Engine</td>
+                      <td class="px-6 py-4 font-mono text-xs font-semibold text-[#D97757]">Optimized (~4.9k tok)</td>
+                      <td class="px-6 py-4 text-xs font-bold text-[#D97757]">High (70.5%)</td>
+                      <td class="px-6 py-4 text-xs font-semibold text-green-600">81% context reduction with top-tier multi-hop recall.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </section>
 
             <!-- 3. Question Categories -->
