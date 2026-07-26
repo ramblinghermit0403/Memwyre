@@ -2,7 +2,7 @@ name: Deploy Memwyre
 
 on:
   push:
-    branches: [main]
+    branches: [main, oss-main]
   workflow_dispatch:  # Allow manual trigger
 
 env:
