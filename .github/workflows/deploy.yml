@@ -6,9 +6,9 @@ on:
   workflow_dispatch:  # Allow manual trigger
 
 env:
-  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_REGION: us-east-1
   ECR_REPOSITORY: memwyre-backend
-  S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+  S3_BUCKET: memwyre.tech
 
 jobs:
   # ─────────────────────────────────────────────
