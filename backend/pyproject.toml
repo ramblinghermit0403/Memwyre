@@ -51,7 +51,6 @@ dependencies = [
     "uvicorn>=0.40.0",
     "gunicorn>=22.0.0",
     "youtube-transcript-api>=1.2.0",
-    "sentence-transformers>=5.5.1",
 ]
 
 [[tool.uv.index]]

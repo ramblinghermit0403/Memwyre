@@ -71,31 +71,60 @@ class RetrievalService:
             except Exception as profile_e:
                 print(f"RetrievalV2: Entity profile injection failed: {profile_e}")
 
-        # PHASE 1: CROSS-ENCODER RERANKING (profiles excluded)
+        # PHASE 1: API-BASED RERANKING (Zero Local RAM/CPU Overhead)
         if results and len(results) > 1:
             try:
-                from sentence_transformers import CrossEncoder
-                if not hasattr(self, "reranker"):
-                    print("RetrievalV2: Loading CrossEncoder model (ms-marco-MiniLM-L-6-v2)...")
-                    self.reranker = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2', max_length=512)
+                documents = [r["text"] for r in results]
+                reranked_data = None
                 
-                import math
-                def sigmoid(x):
-                    # Use temperature scaling (e.g., T=3.0) to prevent 
-                    # the logits from compressing too hard at 1.0
-                    return 1 / (1 + math.exp(-x / 3.0))
+                # Attempt 1: Pinecone Inference Rerank API
+                if hasattr(vector_store, "pc") and vector_store.pc:
+                    try:
+                        res = vector_store.pc.inference.rerank(
+                            model="bge-reranker-large",
+                            query=query,
+                            documents=documents,
+                            top_n=len(results)
+                        )
+                        if hasattr(res, "data") and res.data:
+                            reranked_data = [(item.index, item.score) for item in res.data]
+                    except Exception as pc_e:
+                        print(f"RetrievalV2: Pinecone Rerank API info/fallback: {pc_e}")
 
-                pairs = [[query, r["text"]] for r in results]
-                scores = self.reranker.predict(pairs)
-                
-                # Overwrite score with cross-encoder logit for final sorting
-                for i, r in enumerate(results):
-                    r["rerank_score"] = float(sigmoid(scores[i]))
-                    r["original_score"] = r.get("score", 0.0)
-                    r["score"] = r["rerank_score"]
-                    
-                # Sort by the new rerank score
-                results.sort(key=lambda x: x["score"], reverse=True)
+                # Attempt 2: NVIDIA NIM Rerank API
+                if not reranked_data:
+                    nvidia_key = settings.EMBEDDING_API_KEY or settings.LLM_API_KEY
+                    if nvidia_key and not nvidia_key.startswith("nvapi-your"):
+                        try:
+                            import httpx
+                            resp = httpx.post(
+                                "https://integrate.api.nvidia.com/v1/rerank",
+                                json={
+                                    "model": "nvidia/nv-rerank-qa-mistral-4b",
+                                    "query": {"text": query},
+                                    "passages": [{"text": d} for d in documents]
+                                },
+                                headers={"Authorization": f"Bearer {nvidia_key}"},
+                                timeout=5.0
+                            )
+                            if resp.status_code == 200:
+                                data = resp.json().get("rankings", [])
+                                reranked_data = [(item["index"], item["logit"]) for item in data]
+                        except Exception as nv_e:
+                            print(f"RetrievalV2: NVIDIA Rerank API fallback info: {nv_e}")
+
+                if reranked_data:
+                    for orig_idx, score in reranked_data:
+                        if orig_idx < len(results):
+                            results[orig_idx]["rerank_score"] = float(score)
+                            results[orig_idx]["original_score"] = results[orig_idx].get("score", 0.0)
+                            results[orig_idx]["score"] = float(score)
+
+                    results.sort(key=lambda x: x.get("score", 0.0), reverse=True)
+                else:
+                    for r in results:
+                        r["rerank_score"] = r.get("score", 0.0)
+                        r["original_score"] = r.get("score", 0.0)
 
                 if debug_info is not None:
                     rerank_debug = []
@@ -104,8 +133,8 @@ class RetrievalService:
                         rerank_debug.append({
                             "text": r["text"][:100] + "..." if len(r["text"]) > 100 else r["text"],
                             "type": r.get("metadata", {}).get("type", "unknown"),
-                            "original_score": r["original_score"],
-                            "rerank_score": r["rerank_score"],
+                            "original_score": r.get("original_score", 0.0),
+                            "rerank_score": r.get("rerank_score", 0.0),
                             "is_dropped": is_dropped
                         })
                     debug_info["reranking"] = rerank_debug
