@@ -28,6 +28,11 @@ chown ubuntu:ubuntu /opt/memwyre
 echo "=== Installing AWS CLI ==="
 apt-get install -y awscli
 
+echo "=== Setting up Let's Encrypt options ==="
+mkdir -p /opt/memwyre/certbot/conf
+curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > /opt/memwyre/certbot/conf/options-ssl-nginx.conf
+curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > /opt/memwyre/certbot/conf/ssl-dhparams.pem
+
 echo "=== Done! ==="
 echo ""
 echo "Next steps:"
@@ -36,4 +41,5 @@ echo "2. Configure AWS CLI:  aws configure"
 echo "3. Copy .env.prod to /opt/memwyre/.env.prod"
 echo "4. Copy docker-compose.prod.yml to /opt/memwyre/"
 echo "5. Login to ECR:  aws ecr get-login-password | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com"
-echo "6. Deploy:  cd /opt/memwyre && bash scripts/compose-up.sh -f docker-compose.prod.yml"
+echo "6. Initialize certificates: cd /opt/memwyre && chmod +x deploy/init-letsencrypt.sh && ./deploy/init-letsencrypt.sh"
+echo "7. Deploy:  cd /opt/memwyre && bash scripts/compose-up.sh -f docker-compose.prod.yml"

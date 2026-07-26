@@ -157,7 +157,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: docker-compose.prod.yml
+          source: docker-compose.prod.yml,deploy/nginx/,deploy/init-letsencrypt.sh
           target: /opt/memwyre/
 
       - name: Get ECR login password
@@ -209,6 +209,6 @@ jobs:
 
             # Health check
             sleep 10
-            curl -sf http://localhost:8000/health || (echo "Health check failed!" && exit 1)
+            curl -sf https://api.memwyre.tech/health || (echo "Health check failed!" && exit 1)
             echo "Deployment successful!"
 

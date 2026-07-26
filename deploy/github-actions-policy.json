@@ -19,7 +19,7 @@
                 "ecr:UploadLayerPart",
                 "ecr:CompleteLayerUpload"
             ],
-            "Resource": "arn:aws:ecr:ap-south-1:911167915656:repository/memwyre-backend"
+            "Resource": "arn:aws:ecr:us-east-1:011939521109:repository/memwyre-backend"
         },
         {
             "Sid": "S3Deploy",
