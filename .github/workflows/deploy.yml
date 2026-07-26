@@ -181,6 +181,9 @@ jobs:
             # Login to ECR (password obtained from GitHub runner)
             echo "$ECR_PASSWORD" | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
 
+            # Prune old images and containers before pull to free up disk space
+            sudo docker system prune -af || true
+
             # Construct image name
             ECR_IMAGE="$ECR_REGISTRY/memwyre-backend:latest"
 

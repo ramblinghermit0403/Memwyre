@@ -51,6 +51,15 @@ dependencies = [
     "uvicorn>=0.40.0",
     "gunicorn>=22.0.0",
     "youtube-transcript-api>=1.2.0",
-    "yt-dlp>=2024.0.0",
     "sentence-transformers>=5.5.1",
 ]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
+
