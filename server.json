@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.memwyreai/memwyre",
+  "title": "Memwyre",
+  "description": "Universal persistent memory and knowledge retrieval layer for AI agents and LLMs.",
+  "version": "1.0.0",
+  "homepage": "https://memwyre.tech",
+  "repository": {
+    "url": "https://github.com/memwyreai/Memwyre",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://server.memwyre.tech/mcp/",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer token generated from your Memwyre dashboard (e.g. Bearer bv_sk_...)",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
