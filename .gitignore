@@ -24,24 +24,47 @@ brain_vault.db
 chroma_db/
 frontend/docs/.vitepress/cache
 
-# Temporary logs, database, zips, and scratch folders
+# Separated Plugins & Browser Extension (Hosted in dedicated repos under memwyreai org)
+openclaw-plugin/
+claude-plugin/
+opencode-plugin/
+extension/
+portfolio/
+
+# Temporary logs, build outputs, database, zips, and scratch folders
 *.log
 *.zip
 *.db
+*.pem
+*.bak
 pytest_output.txt
+pricing_history.txt
+temp_logs.txt
+debug_hook.txt
+frontend/build*.txt
+frontend/map_b64.txt
 .temp_research/
 scratch/
 tmp/
 
-# Development & Agent Configs
+# Development, Local Secrets, and Agent Configs
 .cursor/
 .agent/
+.agents/
 .codex/
+.codex.bak/
 .benchmarks/
+.grok/
+.impeccable/
+.opencode/
+.github/agents/
+.github/hooks/
+.github/skills/
+skills-lock.json
+mapping.json
+route53.json
+litellm_config.yaml
 
 # Internal Documentation
 ai_brain_vault_srs.md
 system_design.md
-
-# Ignore portfolio folder in public release
-portfolio/
