@@ -1,2 +1,3 @@
 # Exclude frontend code from GitHub's language statistics
 components/** linguist-vendored
+views/** linguist-vendored
